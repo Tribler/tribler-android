@@ -15,8 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -66,7 +69,7 @@ public class MainActivity extends Activity
     	Bitmap bmLOTR = BitmapFactory.decodeResource(this.getResources(), R.drawable.lotr);
     	Bitmap bmTuckerdale = BitmapFactory.decodeResource(this.getResources(), R.drawable.tuckerdale);
 
-    	for(int i = 0; i < 10; i++)
+    	for(int i = 0; i < 11; i++)
     	{
     		gridArray.add(new ThumbItem("Sintel", bmSintel, ThumbItem.TORRENT_HEALTH.GREEN));
     		gridArray.add(new ThumbItem("Avatar", bmAvatar, ThumbItem.TORRENT_HEALTH.RED));
@@ -77,11 +80,18 @@ public class MainActivity extends Activity
 		gridView = (GridView) findViewById(R.id.ThumbsGrid);
 		customThumbs = new ThumbAdapter(this, R.layout.thumb_item, gridArray);
 		gridView.setAdapter(customThumbs);
-
+		gridView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id){
+				ThumbItem clickItem = (ThumbItem) parent.getItemAtPosition(position);
+				Toast.makeText(getApplicationContext() , clickItem.getTitle() + " (id: " + id + ")", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));   
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }    
     
     @Override

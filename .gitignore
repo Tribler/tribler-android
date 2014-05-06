@@ -37,3 +37,4 @@ local.properties
 .classpath
 .settings/
 .loadpath
+tests/.classpath

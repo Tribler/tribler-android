@@ -1,9 +1,13 @@
 package org.tribler.tsap;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -11,13 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     * Fragment managing the behaviours, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
@@ -25,8 +30,11 @@ public class MainActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    GridView gridView;
+    ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
+    ThumbAdapter customThumbs;
 
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -39,15 +47,50 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-    }
+    }*/
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setContentView(R.layout.activity_main);
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();    	
+    	
+        
+    	//set grid view item
+    	Bitmap bmSintel = BitmapFactory.decodeResource(this.getResources(), R.drawable.sintel);
+    	Bitmap bmAvatar = BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar);
+    	Bitmap bmLOTR = BitmapFactory.decodeResource(this.getResources(), R.drawable.lotr);
+    	Bitmap bmTuckerdale = BitmapFactory.decodeResource(this.getResources(), R.drawable.tuckerdale);
+
+    	for(int i = 0; i < 10; i++)
+    	{
+    		gridArray.add(new ThumbItem("Sintel", bmSintel, ThumbItem.TORRENT_HEALTH.GREEN));
+    		gridArray.add(new ThumbItem("Avatar", bmAvatar, ThumbItem.TORRENT_HEALTH.RED));
+    		gridArray.add(new ThumbItem("Lord of the Rings", bmLOTR, ThumbItem.TORRENT_HEALTH.GREEN));
+    		gridArray.add(new ThumbItem("Tucker and Dale vs. Evil", bmTuckerdale, ThumbItem.TORRENT_HEALTH.RED));
+    	}
+		
+		gridView = (GridView) findViewById(R.id.ThumbsGrid);
+		customThumbs = new ThumbAdapter(this, R.layout.thumb_item, gridArray);
+		gridView.setAdapter(customThumbs);
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));   
+    }    
+    
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+                .commit();        
     }
 
     public void onSectionAttached(int number) {
@@ -129,8 +172,8 @@ public class MainActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
 

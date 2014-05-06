@@ -25,6 +25,8 @@ public class MainActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    
+    private ChannelListFragment channelFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +41,22 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        channelFragment = new ChannelListFragment();
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        if(position == 2)
+        {
+        	fragmentManager.beginTransaction().replace(R.id.container, channelFragment).commit();
+        }
+        else
+        {
+        	fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
+        }
+        
     }
 
     public void onSectionAttached(int number) {

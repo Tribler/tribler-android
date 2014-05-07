@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:paddingBottom="15dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="@string/video_info_title"
         android:textSize="23sp"
         android:textStyle="bold" />

@@ -120,5 +120,20 @@
         android:layout_toRightOf="@id/video_info_details"
         android:contentDescription="@string/sintel_thumbnail_descr"
         android:src="@drawable/sintel_thumbnail" />
-
+    
+    <Button 
+        android:id="@+id/video_info_stream_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/video_info_thumbnail"
+        android:layout_marginTop="10dp"
+        android:text="@string/video_info_stream_button" />
+    
+    <Button 
+        android:id="@+id/video_info_download_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/video_info_stream_video"
+        android:text="@string/video_info_download_button" />
+    
 </RelativeLayout>

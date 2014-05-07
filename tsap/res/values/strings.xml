@@ -22,5 +22,7 @@
     <string name="video_details_seeders_example">74 seeders</string>
     <string name="video_details_leechers_example">3 leechers</string>
     <string name="sintel_thumbnail_descr">Sintel thumbnail</string>
+    <string name="video_info_stream_button">Play video</string>
+    <string name="video_info_download_button">Download video</string>
 
 </resources>

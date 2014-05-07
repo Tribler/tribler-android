@@ -37,6 +37,7 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 			holder.txtTitle = (TextView) row.findViewById(R.id.ThumbTitle);
 			holder.imageItem = (ImageView) row.findViewById(R.id.ThumbImage);
 			holder.txtHealth = (TextView) row.findViewById(R.id.ThumbHealth);
+			holder.txtSize = (TextView) row.findViewById(R.id.ThumbSize);
 			row.setTag(holder);
 		} else {
 			holder = (ThumbHolder) row.getTag();
@@ -44,7 +45,9 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		
 		ThumbItem item = data.get(position);
 		holder.txtTitle.setText(item.getTitle());
-		holder.txtHealth.setText("Health: " + item.getHealth().toString());
+		holder.txtHealth.setText(item.getHealth().toString());
+		holder.txtHealth.setTextColor(item.getHealthColor());
+		holder.txtSize.setText(item.getSize() + " MiB");
 		holder.imageItem.setImageBitmap(item.getThumbnail());
 
 		return row;
@@ -54,5 +57,6 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		TextView txtTitle;
 		ImageView imageItem;
 		TextView txtHealth;
+		TextView txtSize;
 	}
 }

@@ -71,10 +71,10 @@ public class MainActivity extends Activity
 
     	for(int i = 0; i < 11; i++)
     	{
-    		gridArray.add(new ThumbItem("Sintel", bmSintel, ThumbItem.TORRENT_HEALTH.GREEN));
-    		gridArray.add(new ThumbItem("Avatar", bmAvatar, ThumbItem.TORRENT_HEALTH.RED));
-    		gridArray.add(new ThumbItem("Lord of the Rings", bmLOTR, ThumbItem.TORRENT_HEALTH.GREEN));
-    		gridArray.add(new ThumbItem("Tucker and Dale vs. Evil", bmTuckerdale, ThumbItem.TORRENT_HEALTH.RED));
+    		gridArray.add(new ThumbItem("Sintel", bmSintel, ThumbItem.TORRENT_HEALTH.GREEN, 500));
+    		gridArray.add(new ThumbItem("Avatar", bmAvatar, ThumbItem.TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Lord of the Rings", bmLOTR, ThumbItem.TORRENT_HEALTH.YELLOW, 4321));
+    		gridArray.add(new ThumbItem("Tucker and Dale vs. Evil", bmTuckerdale, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
     	}
 		
 		gridView = (GridView) findViewById(R.id.ThumbsGrid);

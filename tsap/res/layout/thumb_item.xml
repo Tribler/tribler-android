@@ -20,21 +20,40 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginTop="2dp"
         android:singleLine="true" 
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:ellipsize="end"
         android:textStyle="bold">
     </TextView>
     
-   	<TextView
-        android:id="@+id/ThumbHealth"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="-1dp"
-        android:singleLine="true" 
-        android:textSize="10sp">
-    </TextView>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center_horizontal"
+    android:orientation="horizontal"
+    android:padding="0dp">
+    
+	   	<TextView
+    	    android:id="@+id/ThumbSize"
+        	android:layout_width="43dp"
+	        android:layout_height="wrap_content"
+    	    android:layout_gravity="bottom|left"
+        	android:layout_marginTop="-1dp"
+        	android:gravity="left"
+	        android:singleLine="true" 
+    	    android:textSize="7sp">
+	    </TextView>
+    
+ 		<TextView
+        	android:id="@+id/ThumbHealth"
+	        android:layout_width="50dp"
+    	    android:layout_height="wrap_content"
+        	android:layout_gravity="bottom|right"
+	        android:layout_marginTop="-1dp"
+	        android:gravity="right"
+    	    android:singleLine="true" 
+        	android:textSize="7sp">
+	    </TextView>
 
-	
-
+	</LinearLayout>
 </LinearLayout>

@@ -39,19 +39,27 @@ public class ThumbGridFragment extends Fragment {
     	//set grid view item
     	Bitmap bmSintel = decodeSampledBitmapFromResource(this.getResources(), R.drawable.sintel, w, h);
     	Bitmap bmTOS = decodeSampledBitmapFromResource(this.getResources(), R.drawable.tos, w, h);
-    	//Bitmap bmBBB = decodeSampledBitmapFromResource(this.getResources(), R.drawable.bigbuckbunny, w, h);
+    	Bitmap bmDracula = decodeSampledBitmapFromResource(this.getResources(), R.drawable.dracula, w, h);
     	Bitmap bmKingkong = decodeSampledBitmapFromResource(this.getResources(), R.drawable.kingkong, w, h);
     	Bitmap bmLastman = decodeSampledBitmapFromResource(this.getResources(), R.drawable.lastman, w, h);
+    	Bitmap bmDracD = decodeSampledBitmapFromResource(this.getResources(), R.drawable.dracula_daughter, w, h);
     	Bitmap bm50ft = decodeSampledBitmapFromResource(this.getResources(), R.drawable.fiftyft, w, h);
+    	Bitmap bmLustymen = decodeSampledBitmapFromResource(this.getResources(), R.drawable.lustymen, w, h);
+    	Bitmap bmMantis = decodeSampledBitmapFromResource(this.getResources(), R.drawable.mantis, w, h);
+    	Bitmap bmSof = decodeSampledBitmapFromResource(this.getResources(), R.drawable.sof, w, h);
 
     	for(int i = 0; i < 11; i++)
     	{
     		gridArray.add(new ThumbItem("Sintel", bmSintel, ThumbItem.TORRENT_HEALTH.GREEN, 500));
-    		gridArray.add(new ThumbItem("Tears of Steal", bmTOS, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		//gridArray.add(new ThumbItem("Big Buck Bunny", bmBBB, ThumbItem.TORRENT_HEALTH.YELLOW, 4321));
+    		gridArray.add(new ThumbItem("Dracula", bmDracula, ThumbItem.TORRENT_HEALTH.YELLOW, 4321));
     		gridArray.add(new ThumbItem("King Kong", bmKingkong, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
+    		gridArray.add(new ThumbItem("Tears of Steal", bmTOS, ThumbItem.TORRENT_HEALTH.RED, 423));
     		gridArray.add(new ThumbItem("To The Last Man", bmLastman, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
     		gridArray.add(new ThumbItem("Attack of the 50 ft woman", bm50ft, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
+    		gridArray.add(new ThumbItem("Draculas Daughter", bmDracD, ThumbItem.TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Lusty Men", bmLustymen, ThumbItem.TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Mantis", bmMantis, ThumbItem.TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Son of Frankenstein", bmSof, ThumbItem.TORRENT_HEALTH.RED, 423));
     	}
 		
 		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);

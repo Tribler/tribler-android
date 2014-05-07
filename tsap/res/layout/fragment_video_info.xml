@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:paddingBottom="10dp"
+        android:paddingBottom="15dp"
         android:text="@string/video_info_title"
-        android:textSize="20sp"
+        android:textSize="23sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_details_type"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_details_upload_date"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -46,15 +46,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_details_filesize"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/video_details_health_title"
+            android:id="@+id/video_details_seeders_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/video_details_health"
-            android:textSize="15sp"
+            android:text="@string/video_details_seeders"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/video_details_leechers_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/video_details_leechers"
+            android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -72,34 +80,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_details_type_example"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/video_details_upload_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_details_upload_date_example"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/video_details_filesize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_details_filesize_example"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/video_details_health"
+            android:id="@+id/video_details_seeders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/video_details_health_example"
-            android:textSize="15sp" />
+            android:text="@string/video_details_seeders_example"
+            android:textSize="18sp" />
+        
+        <TextView
+            android:id="@+id/video_details_leechers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/video_details_leechers_example"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/video_info_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/video_info_title"
         android:layout_toRightOf="@id/video_info_details"

@@ -54,7 +54,7 @@ public class ThumbGridFragment extends Fragment {
     		gridArray.add(new ThumbItem("Attack of the 50 ft woman", bm50ft, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
     	}
 		
-		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_item, gridArray);
+		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);
 		gridView.setAdapter(customThumbs);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override

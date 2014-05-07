@@ -51,29 +51,25 @@ public class MainActivity extends Activity
         if(position == 2)
         {
         	fragmentManager.beginTransaction().replace(R.id.container, channelFragment).commit();
+        	mTitle = getString(R.string.title_section_channels);
         }
         else
         {
         	fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
+        	switch (position)
+        	{
+	            case 0:
+	                mTitle = getString(R.string.title_section_home);
+	                break;
+	            case 1:
+	                mTitle = getString(R.string.title_section_results);
+	                break;
+	            case 3:
+	                mTitle = getString(R.string.title_section_downloads);
+	                break;
+        	}
         }
         
-    }
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section_home);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section_results);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section_channels);
-                break;
-            case 4:
-                mTitle = getString(R.string.title_section_downloads);
-                break;
-        }
     }
 
     public void restoreActionBar() {
@@ -146,8 +142,6 @@ public class MainActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
 

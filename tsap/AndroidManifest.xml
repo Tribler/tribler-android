@@ -23,8 +23,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.tribler.tsap.ChannelListActivity"
-            android:label="@string/title_activity_channel_list" >
+            android:name="org.tribler.tsap.ChannelActivity"
+            android:label="@string/title_activity_channel" >
         </activity>
     </application>
 

@@ -28,6 +28,7 @@ public class MainActivity extends Activity
      * Fragment managing the behaviours, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private ThumbGridFragment mThumbGridFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -61,46 +62,27 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();    	
-    	
-        
-    	//set grid view item
-    	Bitmap bmSintel = BitmapFactory.decodeResource(this.getResources(), R.drawable.sintel);
-    	Bitmap bmAvatar = BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar);
-    	Bitmap bmLOTR = BitmapFactory.decodeResource(this.getResources(), R.drawable.lotr);
-    	Bitmap bmTuckerdale = BitmapFactory.decodeResource(this.getResources(), R.drawable.tuckerdale);
-
-    	for(int i = 0; i < 11; i++)
-    	{
-    		gridArray.add(new ThumbItem("Sintel", bmSintel, ThumbItem.TORRENT_HEALTH.GREEN, 500));
-    		gridArray.add(new ThumbItem("Avatar", bmAvatar, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Lord of the Rings", bmLOTR, ThumbItem.TORRENT_HEALTH.YELLOW, 4321));
-    		gridArray.add(new ThumbItem("Tucker and Dale vs. Evil", bmTuckerdale, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-    	}
-		
-		gridView = (GridView) findViewById(R.id.ThumbsGrid);
-		customThumbs = new ThumbAdapter(this, R.layout.thumb_item, gridArray);
-		gridView.setAdapter(customThumbs);
-		gridView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id){
-				ThumbItem clickItem = (ThumbItem) parent.getItemAtPosition(position);
-				Toast.makeText(getApplicationContext() , clickItem.getTitle() + " (id: " + id + ")", Toast.LENGTH_SHORT).show();
-			}
-		});
 		
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        
+        mThumbGridFragment = new ThumbGridFragment(); //(ThumbGridFragment) getFragmentManager().findFragmentById(R.id.ThumbsGrid);
     }    
     
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();        
+        if(position == 1)
+        {
+         fragmentManager.beginTransaction().replace(R.id.container, mThumbGridFragment).commit();
+        }
+        else
+        {
+         fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
+        }     
     }
 
     public void onSectionAttached(int number) {

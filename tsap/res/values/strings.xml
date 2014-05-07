@@ -11,5 +11,14 @@
     <string name="action_settings">Settings</string>
     <string name="title_section_downloads">Downloads</string>
     <string name="video_info_title">Sintel 2010</string>
+    <string name="video_details_type">Type:</string>
+    <string name="video_details_filesize">Filesize:</string>
+    <string name="video_details_upload_date">Uploaded:</string>
+    <string name="video_details_health">Health:</string>
+    <string name="video_details_type_example">Video</string>
+    <string name="video_details_filesize_example">441.90 MB in 4 files</string>
+    <string name="video_details_upload_date_example">2013\-06\-08</string>
+    <string name="video_details_health_example">74 seeders, 3 leechers</string>
+    <string name="sintel_thumbnail_descr">Sintel thumbnail</string>
 
 </resources>

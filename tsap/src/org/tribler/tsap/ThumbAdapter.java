@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PorterDuff.Mode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -36,7 +38,7 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 			holder = new ThumbHolder();
 			holder.txtTitle = (TextView) row.findViewById(R.id.ThumbTitle);
 			holder.imageItem = (ImageView) row.findViewById(R.id.ThumbImage);
-			holder.txtHealth = (TextView) row.findViewById(R.id.ThumbHealth);
+			holder.pbHealth = (ProgressBar) row.findViewById(R.id.ThumbHealth);
 			holder.txtSize = (TextView) row.findViewById(R.id.ThumbSize);
 			row.setTag(holder);
 		} else {
@@ -45,8 +47,8 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		
 		ThumbItem item = data.get(position);
 		holder.txtTitle.setText(item.getTitle());
-		holder.txtHealth.setText(item.getHealth().toString());
-		holder.txtHealth.setTextColor(item.getHealthColor());
+		holder.pbHealth.setProgress(item.getHealth().ordinal());
+		holder.pbHealth.getProgressDrawable().setColorFilter(item.getHealthColor(), Mode.SRC_IN);
 		holder.txtSize.setText(item.getSize() + " MiB");
 		holder.imageItem.setImageBitmap(item.getThumbnail());
 
@@ -56,7 +58,7 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 	static class ThumbHolder {
 		TextView txtTitle;
 		ImageView imageItem;
-		TextView txtHealth;
+		ProgressBar pbHealth;
 		TextView txtSize;
 	}
 }

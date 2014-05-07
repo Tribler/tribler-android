@@ -35,7 +35,7 @@
     
 	   	<TextView
     	    android:id="@+id/ThumbSize"
-        	android:layout_width="43dp"
+        	android:layout_width="70dp"
 	        android:layout_height="wrap_content"
     	    android:layout_gravity="bottom|left"
         	android:layout_marginTop="-1dp"
@@ -44,16 +44,15 @@
     	    android:textSize="7sp">
 	    </TextView>
     
- 		<TextView
-        	android:id="@+id/ThumbHealth"
-	        android:layout_width="50dp"
-    	    android:layout_height="wrap_content"
-        	android:layout_gravity="bottom|right"
-	        android:layout_marginTop="-1dp"
-	        android:gravity="right"
-    	    android:singleLine="true" 
-        	android:textSize="7sp">
-	    </TextView>
-
+		<ProgressBar
+			android:id="@+id/ThumbHealth"
+			style="?android:attr/progressBarStyleHorizontal"
+			android:layout_width="30dp"
+			android:layout_height="8dp"
+			android:layout_gravity="bottom|right"
+			android:max="3"
+			android:progress="0"
+			android:layout_marginTop="-4dp" >
+		</ProgressBar>
 	</LinearLayout>
 </LinearLayout>

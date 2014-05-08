@@ -88,6 +88,18 @@ public class MainActivity extends Activity
         actionBar.setTitle(mTitle);
     }
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (!mNavigationDrawerFragment.isDrawerOpen()) {
+			// Only show items in the action bar relevant to this screen
+			// if the drawer is not showing. Otherwise, let the drawer
+			// decide what to show in the action bar.
+			getMenuInflater().inflate(R.menu.main, menu);
+			restoreActionBar();
+			return true;
+		}
+		return super.onCreateOptionsMenu(menu);
+	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

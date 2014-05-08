@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Tribler TSAP</string>
+    <string name="app_name">TSAP</string>
     <string name="title_section_home">Home</string>
     <string name="title_section_results">Results</string>
     <string name="title_section_channels">Channels</string>
@@ -10,6 +10,20 @@
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="title_section_downloads">Downloads</string>
-    <string name="title_activity_channel">Channel</string>
+	<string name="title_activity_channel">Channel</string>    		<string name="video_info_title">Sintel 2010</string>
+    <string name="video_details_type">Type:</string>
+    <string name="video_details_filesize">Filesize:</string>
+    <string name="video_details_upload_date">Uploaded:</string>
+    <string name="video_details_seeders">Seeders:</string>
+    <string name="video_details_leechers">Leechers:</string>
+    <string name="video_details_type_example">Video</string>
+    <string name="video_details_filesize_example">441.90 MB</string>
+    <string name="video_details_upload_date_example">2013-06-08</string>
+    <string name="video_details_seeders_example">74 seeders</string>
+    <string name="video_details_leechers_example">3 leechers</string>
+    <string name="sintel_thumbnail_descr">Sintel thumbnail</string>
+    <string name="video_info_stream_button">Play video</string>
+    <string name="video_info_download_button">Download video</string>
+    <string name="video_details_description_example">"Sintel is a short computer animated film by the Blender Institute, part of the Blender Foundation. Like the foundation's previous films Elephants Dream and Big Buck Bunny, the film was made using Blender, a free software application for animation created and supported by the same foundation. Sintel was produced by Ton Roosendaal, chairman of the Foundation, and directed by Colin Levy, an artist at Pixar Animation Studios. (code-named Durian)"</string>
 
 </resources>

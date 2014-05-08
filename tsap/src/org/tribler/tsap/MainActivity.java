@@ -1,9 +1,13 @@
 package org.tribler.tsap;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -11,20 +15,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     * Fragment managing the behaviours, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private ThumbGridFragment mThumbGridFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private GridView gridView;
+    private ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
+    private ThumbAdapter customThumbs;
+	private ChannelListFragment channelFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +52,7 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        channelFragment = new ChannelListFragment();
     }
 
     @Override

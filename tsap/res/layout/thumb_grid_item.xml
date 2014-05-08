@@ -1,0 +1,59 @@
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+	android:background="@android:color/white"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/ThumbImage"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_gravity="top|center_horizontal"
+        android:src="@drawable/default_thumb" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/ThumbTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginTop="2dp"
+        android:singleLine="true" 
+        android:textSize="10sp"
+        android:ellipsize="end"
+        android:textStyle="bold">
+    </TextView>
+    
+	<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+	    android:layout_gravity="bottom|center_horizontal"
+    	android:orientation="horizontal"
+	    android:padding="0dp">
+    
+	   	<TextView
+    	    android:id="@+id/ThumbSize"
+        	android:layout_width="70dp"
+	        android:layout_height="wrap_content"
+    	    android:layout_gravity="bottom|left"
+        	android:layout_marginTop="-1dp"
+        	android:gravity="left"
+	        android:singleLine="true" 
+    	    android:textSize="7sp">
+	    </TextView>
+    
+		<ProgressBar
+			android:id="@+id/ThumbHealth"
+			style="?android:attr/progressBarStyleHorizontal"
+			android:layout_width="30dp"
+			android:layout_height="8dp"
+			android:layout_gravity="bottom|right"
+			android:max="3"
+			android:progress="0"
+			android:layout_marginTop="-4dp" >
+		</ProgressBar>
+	</LinearLayout>
+</LinearLayout>

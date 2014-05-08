@@ -47,6 +47,7 @@
         android:singleLine="true"
         android:text="rating: "
         android:textSize="13sp" />
+    
     <ImageView
         android:id="@+id/firststar"
         android:layout_width="wrap_content"

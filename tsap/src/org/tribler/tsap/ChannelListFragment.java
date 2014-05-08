@@ -29,6 +29,7 @@ public class ChannelListFragment extends ListFragment
          
         // Binding resources Array to ListAdapter
         this.setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.list_item, R.id.channelname, channelNames));
+        //((ArrayAdapter)getListAdapter()).getFilter().filter("Open");
         
         
         /*ActionBar actionBar = getActivity().getActionBar();
@@ -50,7 +51,6 @@ public class ChannelListFragment extends ListFragment
 	{
 		// selected item
         String product = ((TextView)((RelativeLayout) v).findViewById(R.id.channelname)).getText().toString();
-        //((ArrayAdapter)getListAdapter()).getFilter().filter(product);
          
         // Launching new Activity on selecting single List Item
         Intent i = new Intent(getActivity().getApplicationContext(), ChannelActivity.class);

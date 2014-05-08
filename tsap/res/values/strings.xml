@@ -10,7 +10,8 @@
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="title_section_downloads">Downloads</string>
-	<string name="title_activity_channel">Channel</string>    		<string name="video_info_title">Sintel 2010</string>
+	<string name="title_activity_channel">Channel</string>
+	<string name="video_info_title">Sintel 2010</string>
     <string name="video_details_type">Type:</string>
     <string name="video_details_filesize">Filesize:</string>
     <string name="video_details_upload_date">Uploaded:</string>

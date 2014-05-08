@@ -1,4 +1,4 @@
-package org.tribler.tsap;
+package org.tribler.tsap.thumbgrid;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -25,25 +25,25 @@ public class ThumbItem {
 		}
 	}
 	
-	Bitmap thumbnail;
+	int thumbnailId;
 	String title;
 	TORRENT_HEALTH health;
 	int size;
 	
-	public ThumbItem(String title, Bitmap thumbnail, TORRENT_HEALTH health, int size) {
+	public ThumbItem(String title, int thumbnailId, TORRENT_HEALTH health, int size) {
 		super();
-		this.thumbnail = thumbnail;
+		this.thumbnailId = thumbnailId;
 		this.title = title;
 		this.health = health;
 		this.size = size;
 	}
 	
-	public Bitmap getThumbnail() {
-		return thumbnail;
+	public int getThumbnailId() {
+		return thumbnailId;
 	}
 	
-	public void setThumbnail(Bitmap thumbnail) {
-		this.thumbnail = thumbnail;
+	public void setThumbnail(int thumbnailId) {
+		this.thumbnailId = thumbnailId;
 	}
 	
 	public String getTitle() {

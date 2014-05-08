@@ -34,9 +34,6 @@ public class MainActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private GridView gridView;
-    private ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
-    private ThumbAdapter customThumbs;
 	private ChannelListFragment channelFragment;
 
     @Override

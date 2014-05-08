@@ -52,6 +52,8 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        
+        mThumbGridFragment = new ThumbGridFragment();
         channelFragment = new ChannelListFragment();
     }
 
@@ -59,9 +61,18 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        switch(position)
+        {
+        case 1:
+        	fragmentManager.beginTransaction().replace(R.id.container, mThumbGridFragment).commit();
+        	break;
+        case 2:
+        	fragmentManager.beginTransaction().replace(R.id.container, channelFragment).commit();
+        	break;
+        default:
+            fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
+        	break;
+        }
     }
 
     public void onSectionAttached(int number) {

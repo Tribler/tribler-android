@@ -25,7 +25,6 @@ public class ThumbItem {
 		}
 	}
 	
-	
 	Bitmap thumbnail;
 	String title;
 	TORRENT_HEALTH health;

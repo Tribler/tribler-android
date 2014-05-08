@@ -5,7 +5,7 @@
     android:descendantFocusability="blocksDescendants">
 
     <CheckBox
-        android:id="@+id/favoritetoggle"
+        android:id="@+id/channel_favoritetoggle"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
@@ -14,23 +14,23 @@
  		android:button="@drawable/star_toggle"/>
     
     <TextView
-        android:id="@+id/channelname"
+        android:id="@+id/channel_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/favoritetoggle"
+        android:layout_toRightOf="@id/channel_favoritetoggle"
         android:gravity="center_vertical"
         android:textSize="18sp"
         android:text="blabla"/>
 
     <TextView
-        android:id="@+id/torrentamount"
+        android:id="@+id/channel_torrentamount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/favoritetoggle"
+        android:layout_toRightOf="@id/channel_favoritetoggle"
         android:layout_marginRight="6dip"
         android:ellipsize="marquee"
         android:singleLine="true"
@@ -38,49 +38,49 @@
         android:textSize="13sp"/>
 	
     <TextView
-        android:id="@+id/rating"
+        android:id="@+id/channel_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/torrentamount"
+        android:layout_toRightOf="@id/channel_torrentamount"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="rating: "
         android:textSize="13sp" />
     
     <ImageView
-        android:id="@+id/firststar"
+        android:id="@+id/channel_firststar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/rating"
+        android:layout_toRightOf="@id/channel_rating"
 		android:src="@drawable/rating_star_selected"/>
     <ImageView
-        android:id="@+id/secondstar"
+        android:id="@+id/channel_secondstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/firststar"
+        android:layout_toRightOf="@id/channel_firststar"
 		android:src="@drawable/rating_star_selected"/>
     <ImageView
-        android:id="@+id/thirdstar"
+        android:id="@+id/channel_thirdstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/secondstar"
+        android:layout_toRightOf="@id/channel_secondstar"
 		android:src="@drawable/rating_star_selected"/>
     <ImageView
-        android:id="@+id/fourthstar"
+        android:id="@+id/channel_fourthstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/thirdstar"
+        android:layout_toRightOf="@id/channel_thirdstar"
 		android:src="@drawable/rating_star_selected"/>
     <ImageView
-        android:id="@+id/fifthstar"
+        android:id="@+id/channel_fifthstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/fourthstar"
+        android:layout_toRightOf="@id/channel_fourthstar"
 		android:src="@drawable/rating_star_not_selected"/>
 </RelativeLayout> 

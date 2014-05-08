@@ -2,40 +2,70 @@ package org.tribler.tsap;
 
 import java.util.LinkedList;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-class ChannelListAdapter extends BaseAdapter// implements Filterable
+class ChannelListAdapter extends ArrayAdapter<Channel>
 {
-	LinkedList<Channel> contentList;
-	@Override
-	public int getCount() {
-		return contentList.size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return contentList.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	Context context;
+	int resource;
+	LayoutInflater inflater;
 	
+	public ChannelListAdapter(Context context, int resource) {
+		super(context, resource);
+		this.context = context;
+		this.resource = resource;
+		inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
 	@Override
-	public boolean areAllItemsEnabled()
+	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		return true;
+		View view;
+		Channel channel = getItem(position);
+		
+		if (convertView == null)
+		{
+            view = inflater.inflate(resource, parent, false);
+        }
+		else
+		{
+            view = convertView;
+        }
+		
+		((TextView)view.findViewById(R.id.channel_name)).setText(channel.getName());
+		((CheckBox)view.findViewById(R.id.channel_favoritetoggle)).setChecked(channel.getFollowing());
+		((TextView)view.findViewById(R.id.channel_torrentamount)).setText("Torrents: " + channel.getTorrentAmount());
+		
+		int rating = channel.getRating();
+		if(rating >= 1)
+			((ImageView)view.findViewById(R.id.channel_firststar)).setImageResource(R.drawable.rating_star_selected);
+		else
+			((ImageView)view.findViewById(R.id.channel_firststar)).setImageResource(R.drawable.rating_star_not_selected);
+		if(rating >= 2)
+			((ImageView)view.findViewById(R.id.channel_secondstar)).setImageResource(R.drawable.rating_star_selected);
+		else
+			((ImageView)view.findViewById(R.id.channel_secondstar)).setImageResource(R.drawable.rating_star_not_selected);
+		if(rating >= 3)
+			((ImageView)view.findViewById(R.id.channel_thirdstar)).setImageResource(R.drawable.rating_star_selected);
+		else
+			((ImageView)view.findViewById(R.id.channel_thirdstar)).setImageResource(R.drawable.rating_star_not_selected);
+		if(rating >= 4)
+			((ImageView)view.findViewById(R.id.channel_fourthstar)).setImageResource(R.drawable.rating_star_selected);
+		else
+			((ImageView)view.findViewById(R.id.channel_fourthstar)).setImageResource(R.drawable.rating_star_not_selected);
+		if(rating >= 5)
+			((ImageView)view.findViewById(R.id.channel_fifthstar)).setImageResource(R.drawable.rating_star_selected);
+		else
+			((ImageView)view.findViewById(R.id.channel_fifthstar)).setImageResource(R.drawable.rating_star_not_selected);		
+		
+		return view;
 	}
 }

@@ -34,9 +34,10 @@ public class MainActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    GridView gridView;
-    ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
-    ThumbAdapter customThumbs;
+    private GridView gridView;
+    private ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
+    private ThumbAdapter customThumbs;
+	private ChannelListFragment channelFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        channelFragment = new ChannelListFragment();
     }
 
     @Override

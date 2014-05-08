@@ -38,3 +38,6 @@ local.properties
 .settings/
 .loadpath
 tests/.classpath
+
+# Meld files
+*.orig

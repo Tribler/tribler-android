@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">TSAP</string>
+    <string name="app_name">Tribler TSAP</string>
     <string name="title_section_home">Home</string>
     <string name="title_section_results">Results</string>
     <string name="title_section_channels">Channels</string>

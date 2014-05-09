@@ -1,6 +1,10 @@
-package org.tribler.tsap;
+package org.tribler.tsap.thumbgrid;
 
 import java.util.ArrayList;
+
+import org.tribler.tsap.R;
+
+import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,13 +21,19 @@ import android.widget.TextView;
 public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 	Context context;
 	int layoutResourceId;
-	ArrayList<ThumbItem> data = new ArrayList<ThumbItem>();
+	
+	private int mThumbWidth;
+	private int mThumbHeight;
 	
 	public ThumbAdapter(Context context, int layoutResourceId, ArrayList<ThumbItem> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
-		this.data = data;
+		this.addAll(data);
+		
+		float s = getContext().getResources().getDisplayMetrics().density;
+    	mThumbWidth = (int)(100 * s);
+    	mThumbHeight = (int)(150 * s);
 	}
 	
 	@Override
@@ -44,15 +54,23 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		} else {
 			holder = (ThumbHolder) row.getTag();
 		}
-		
-		ThumbItem item = data.get(position);
+    	
+		ThumbItem item = this.getItem(position);
 		holder.txtTitle.setText(item.getTitle());
 		holder.pbHealth.setProgress(item.getHealth().ordinal());
 		holder.pbHealth.getProgressDrawable().setColorFilter(item.getHealthColor(), Mode.SRC_IN);
 		holder.txtSize.setText(item.getSize() + " MiB");
-		holder.imageItem.setImageBitmap(item.getThumbnail());
+		loadBitmap(item.getThumbnailId(), holder.imageItem);
 
 		return row;
+	}
+	
+	public void loadBitmap(int resId, ImageView mImageView) {
+		Picasso.with(context)
+			.load(resId)
+			.placeholder(R.drawable.default_thumb)
+			.resize(mThumbWidth, mThumbHeight)
+			.into(mImageView);		
 	}
 
 	static class ThumbHolder {
@@ -61,4 +79,6 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		ProgressBar pbHealth;
 		TextView txtSize;
 	}
+	
+
 }

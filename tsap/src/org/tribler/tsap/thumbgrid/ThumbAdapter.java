@@ -8,7 +8,6 @@ import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff.Mode;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +25,6 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 	private int mThumbWidth;
 	private int mThumbHeight;
 	
-	ThumbCache mThumbCache;
-	
 	public ThumbAdapter(Context context, int layoutResourceId, ArrayList<ThumbItem> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
@@ -37,14 +34,6 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		float s = getContext().getResources().getDisplayMetrics().density;
     	mThumbWidth = (int)(100 * s);
     	mThumbHeight = (int)(150 * s);
-		
-	    // Get max available VM memory, exceeding this amount will throw an
-	    // OutOfMemory exception. Stored in kilobytes as LruCache takes an
-	    // int in its constructor.
-	    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-	    // Use 1/8th of the available memory for this memory cache.
-		this.mThumbCache = new ThumbCache(maxMemory / 8, maxMemory * 2, "thumbgrid");
 	}
 	
 	@Override
@@ -77,22 +66,11 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 	}
 	
 	public void loadBitmap(int resId, ImageView mImageView) {
-	    final String imageKey = String.valueOf(resId);
-
-	    final Bitmap bitmap = mThumbCache.getThumb(imageKey);
-	    if (bitmap != null) {
-	        mImageView.setImageBitmap(bitmap);
-	    } else {
-	        //mImageView.setImageResource(R.drawable.image_placeholder);
-	        //BitmapWorkerTask task = new BitmapWorkerTask(mImageView);
-	        //task.execute(resId);
-	    	
-	    	ThumbLoader mThumbLoader = new ThumbLoader(this.context, resId, mThumbWidth, mThumbHeight);
-	    	Bitmap mNewBitmap = mThumbLoader.getThumb();
-	    	mThumbCache.addThumb(imageKey, mNewBitmap);
-	    	
-	    	mImageView.setImageBitmap(mNewBitmap);
-	    }
+		Picasso.with(context)
+			.load(resId)
+			.placeholder(R.drawable.default_thumb)
+			.resize(mThumbWidth, mThumbHeight)
+			.into(mImageView);		
 	}
 
 	static class ThumbHolder {

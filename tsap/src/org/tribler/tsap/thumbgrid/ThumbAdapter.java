@@ -3,17 +3,13 @@ package org.tribler.tsap.thumbgrid;
 import java.util.ArrayList;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.R.drawable;
-import org.tribler.tsap.R.id;
-import org.tribler.tsap.util.DiskLruCache;
+
+import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff.Mode;
-import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +23,10 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 	Context context;
 	int layoutResourceId;
 	
-	LruCache<String, Bitmap> memCache;
-	DiskLruCache dskCache;
+	private int mThumbWidth;
+	private int mThumbHeight;
+	
+	ThumbCache mThumbCache;
 	
 	public ThumbAdapter(Context context, int layoutResourceId, ArrayList<ThumbItem> data) {
 		super(context, layoutResourceId, data);
@@ -36,53 +34,17 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		this.context = context;
 		this.addAll(data);
 		
+		float s = getContext().getResources().getDisplayMetrics().density;
+    	mThumbWidth = (int)(100 * s);
+    	mThumbHeight = (int)(150 * s);
+		
 	    // Get max available VM memory, exceeding this amount will throw an
 	    // OutOfMemory exception. Stored in kilobytes as LruCache takes an
 	    // int in its constructor.
 	    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
 	    // Use 1/8th of the available memory for this memory cache.
-	    final int cacheSize = maxMemory / 2; // TODO: make it 8!
-
-	    memCache = new LruCache<String, Bitmap>(cacheSize) {
-	        @Override
-	        protected int sizeOf(String key, Bitmap bitmap) {
-	            // The cache size will be measured in kilobytes rather than
-	            // number of items.
-	            return bitmap.getByteCount() / 1024;
-	        }
-	    };
-	}
-	
-	private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-	    if (getBitmapFromMemCache(key) == null) {
-	        memCache.put(key, bitmap);
-	    }
-	}
-
-	private Bitmap getBitmapFromMemCache(String key) {
-	    return (Bitmap) memCache.get(key);
-	}
-	
-	public void loadBitmap(int resId, ImageView mImageView) {
-	    final String imageKey = String.valueOf(resId);
-
-	    final Bitmap bitmap = getBitmapFromMemCache(imageKey);
-	    if (bitmap != null) {
-	        mImageView.setImageBitmap(bitmap);
-	    } else {
-	        //mImageView.setImageResource(R.drawable.image_placeholder);
-	        //BitmapWorkerTask task = new BitmapWorkerTask(mImageView);
-	        //task.execute(resId);
-			float s = this.getContext().getResources().getDisplayMetrics().density;
-	    	int w = (int)(100 * s);
-	    	int h = (int)(150 * s);
-	    	
-	    	Bitmap mNewBitmap = decodeSampledBitmapFromResource(this.context.getResources(), resId, w, h);
-	    	addBitmapToMemoryCache(imageKey, mNewBitmap);
-	    	
-	    	mImageView.setImageBitmap(mNewBitmap);
-	    }
+		this.mThumbCache = new ThumbCache(maxMemory / 8, maxMemory * 2, "thumbgrid");
 	}
 	
 	@Override
@@ -113,6 +75,25 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 
 		return row;
 	}
+	
+	public void loadBitmap(int resId, ImageView mImageView) {
+	    final String imageKey = String.valueOf(resId);
+
+	    final Bitmap bitmap = mThumbCache.getThumb(imageKey);
+	    if (bitmap != null) {
+	        mImageView.setImageBitmap(bitmap);
+	    } else {
+	        //mImageView.setImageResource(R.drawable.image_placeholder);
+	        //BitmapWorkerTask task = new BitmapWorkerTask(mImageView);
+	        //task.execute(resId);
+	    	
+	    	ThumbLoader mThumbLoader = new ThumbLoader(this.context, resId, mThumbWidth, mThumbHeight);
+	    	Bitmap mNewBitmap = mThumbLoader.getThumb();
+	    	mThumbCache.addThumb(imageKey, mNewBitmap);
+	    	
+	    	mImageView.setImageBitmap(mNewBitmap);
+	    }
+	}
 
 	static class ThumbHolder {
 		TextView txtTitle;
@@ -121,42 +102,5 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		TextView txtSize;
 	}
 	
-	private static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-			int reqWidth, int reqHeight) {
 
-		// First decode with inJustDecodeBounds=true to check dimensions
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeResource(res, resId, options);
-
-		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
-		return BitmapFactory.decodeResource(res, resId, options);
-	}
-
-	private static int calculateInSampleSize(
-			BitmapFactory.Options options, int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-
-			final int halfHeight = height / 2;
-			final int halfWidth = width / 2;
-
-			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
-			// height and width larger than the requested height and width.
-			while ((halfHeight / inSampleSize) > reqHeight
-					&& (halfWidth / inSampleSize) > reqWidth) {
-				inSampleSize *= 2;
-			}
-		}
-
-		return inSampleSize;
-	} 
 }

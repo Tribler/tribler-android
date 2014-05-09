@@ -41,4 +41,8 @@ class Channel
 		this.torrentAmount = rand.nextInt(10000);
 		this.rating = rand.nextInt(6);
 	}
+	public String toString()
+	{
+		return name;
+	}
 }

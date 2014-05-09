@@ -1,15 +1,17 @@
 package org.tribler.tsap;
 
-import java.util.ArrayList;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.GridView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -19,6 +21,8 @@ public class MainActivity extends Activity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
+    private SearchView mSearchView;
+    private OnQueryTextListener currentSearchListener;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -50,10 +54,12 @@ public class MainActivity extends Activity
         case 0:
         	fragmentManager.beginTransaction().replace(R.id.container, mThumbGridFragment).commit();
         	mTitle = getString(R.string.title_section_home);
+        	currentSearchListener = null;
         	break;
         case 1:
         	fragmentManager.beginTransaction().replace(R.id.container, channelFragment).commit();
         	mTitle = getString(R.string.title_section_channels);
+        	currentSearchListener = channelFragment;
         	break;
         }
     }
@@ -73,8 +79,22 @@ public class MainActivity extends Activity
 			// decide what to show in the action bar.
 			getMenuInflater().inflate(R.menu.main, menu);
 			restoreActionBar();
+			
+			MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
+			mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+			if(currentSearchListener != null)
+			{
+				mSearchView.setOnQueryTextListener(currentSearchListener);
+				mSearchView.setQueryHint(mTitle);
+			}
+			else
+			{
+				//remove the search button
+			}
+
 			return true;
 		}
+	    
 		return super.onCreateOptionsMenu(menu);
 	}
 

@@ -21,7 +21,6 @@ import android.widget.SearchView.OnQueryTextListener;
 
 public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
-	private ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +30,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
+    	
+    	ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
     	
     	View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
     		

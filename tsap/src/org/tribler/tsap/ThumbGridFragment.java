@@ -17,8 +17,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.SearchView.OnQueryTextListener;
 
-public class ThumbGridFragment extends Fragment {
+public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
 	private ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
 	
@@ -60,6 +61,26 @@ public class ThumbGridFragment extends Fragment {
 		});
        
         return v;
+    }
+    
+	public boolean onQueryTextChange(String query)
+	{
+        // Called when the action bar search text has changed.  Update
+        // the search filter, and restart the loader to do a new query
+        // with this filter.
+		GridView gridView = (GridView) this.getView().findViewById(R.id.ThumbsGrid);
+		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
+        return true;
+    }
+	
+	@Override
+	public boolean onQueryTextSubmit(String query)
+	{
+		GridView gridView = (GridView) this.getView().findViewById(R.id.ThumbsGrid);
+		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
+		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+        // Don't care about this.
+        return true;
     }
     
 }

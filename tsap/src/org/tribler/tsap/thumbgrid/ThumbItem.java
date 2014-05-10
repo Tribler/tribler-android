@@ -1,8 +1,6 @@
 package org.tribler.tsap.thumbgrid;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
-
 
 public class ThumbItem {
 	

@@ -51,15 +51,15 @@ public class ChannelListFragment extends ListFragment  implements OnQueryTextLis
         // Called when the action bar search text has changed.  Update
         // the search filter, and restart the loader to do a new query
         // with this filter.
-		((ArrayAdapter)getListAdapter()).getFilter().filter(query);
+		((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
         return true;
     }
 	
 	@Override
 	public boolean onQueryTextSubmit(String query)
 	{
-		((ArrayAdapter)getListAdapter()).getFilter().filter(query);
-		Toast.makeText(getActivity(), query, 1).show();
+		((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
+		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
         // Don't care about this.
         return true;
     }

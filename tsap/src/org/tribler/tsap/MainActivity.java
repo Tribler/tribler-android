@@ -54,7 +54,7 @@ public class MainActivity extends Activity
         case 0:
         	fragmentManager.beginTransaction().replace(R.id.container, mThumbGridFragment).commit();
         	mTitle = getString(R.string.title_section_home);
-        	currentSearchListener = null;
+        	currentSearchListener = mThumbGridFragment;
         	break;
         case 1:
         	fragmentManager.beginTransaction().replace(R.id.container, channelFragment).commit();

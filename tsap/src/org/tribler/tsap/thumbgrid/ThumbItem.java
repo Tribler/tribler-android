@@ -77,4 +77,9 @@ public class ThumbItem {
 		return TORRENT_HEALTH.toColor(this.health);
 	}
 	
+	public String toString()
+	{
+		return this.title;
+	}
+	
 }

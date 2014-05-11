@@ -25,5 +25,6 @@
     <string name="video_info_stream_button">Play video</string>
     <string name="video_info_download_button">Download video</string>
     <string name="video_details_description_example">"Sintel is a short computer animated film by the Blender Institute, part of the Blender Foundation. Like the foundation's previous films Elephants Dream and Big Buck Bunny, the film was made using Blender, a free software application for animation created and supported by the same foundation. Sintel was produced by Ton Roosendaal, chairman of the Foundation, and directed by Colin Levy, an artist at Pixar Animation Studios. (code-named Durian)"</string>
+    <string name="title_section_videoinfo">Video info (test)</string>
 
 </resources>

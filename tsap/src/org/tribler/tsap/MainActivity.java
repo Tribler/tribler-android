@@ -27,6 +27,9 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 	private ChannelListFragment channelFragment = new ChannelListFragment();
+	
+	/* Temporary */
+	private VideoInfoFragment mVideoInfoFragment = new VideoInfoFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,10 @@ public class MainActivity extends Activity
         	mTitle = getString(R.string.title_section_channels);
         	currentSearchListener = channelFragment;
         	break;
+        case 2:
+        	fragmentManager.beginTransaction().replace(R.id.container, mVideoInfoFragment).commit();
+        	mTitle = getString(R.string.title_section_videoinfo);
+        	currentSearchListener = null;
         }
     }
 

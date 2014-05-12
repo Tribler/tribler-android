@@ -41,3 +41,6 @@ tests/.classpath
 
 # Meld files
 *.orig
+
+# PyCharm
+.idea

@@ -5,6 +5,12 @@ rm -r Tribler-0.1.0/Tribler
 echo "Copy new Tribler code"
 cp -r tribler/Tribler Tribler-0.1.0/
 
+echo "Remove pyc and pyo files"
+pushd Tribler-0.1.0/Tribler
+find -name '*.pyc' -exec echo {} \;
+find -name '*.pyo' -exec echo {} \;
+popd
+
 echo "Make tarball"
 tar cvzf Tribler-0.1.0.tar.gz Tribler-0.1.0
 

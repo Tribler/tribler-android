@@ -7,8 +7,8 @@ cp -r tribler/Tribler Tribler-0.1.0/
 
 echo "Remove pyc and pyo files"
 pushd Tribler-0.1.0/Tribler
-find -name '*.pyc' -exec echo {} \;
-find -name '*.pyo' -exec echo {} \;
+find -name '*.pyc' -exec rm {} \;
+find -name '*.pyo' -exec rm {} \;
 popd
 
 echo "Make tarball"

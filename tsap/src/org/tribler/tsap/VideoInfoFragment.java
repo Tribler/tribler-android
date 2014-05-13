@@ -31,11 +31,11 @@ public class VideoInfoFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		view = inflater.inflate(R.layout.fragment_video_info, container,
-				false);
+		view = inflater.inflate(R.layout.fragment_video_info, container, false);
 		context = container.getContext();
 		if (getArguments() != null)
 			torrentID = getArguments().getInt("torrentID", 0);
+
 		TorrentManager.initiliazeTorrents();
 		setValues();
 		return view;
@@ -46,36 +46,34 @@ public class VideoInfoFragment extends Fragment {
 	 */
 	private void setValues() {
 		Torrent selectedTorrent = getCurrentTorrent();
-		TextView title = (TextView) view.findViewById(
-				R.id.video_info_title);
+		TextView title = (TextView) view.findViewById(R.id.video_info_title);
 		title.setText(selectedTorrent.getName());
 
-		TextView type = (TextView) view.findViewById(
-				R.id.video_details_type);
+		TextView type = (TextView) view.findViewById(R.id.video_details_type);
 		type.setText(selectedTorrent.getType());
 
-		TextView date = (TextView) view.findViewById(
-				R.id.video_details_upload_date);
+		TextView date = (TextView) view
+				.findViewById(R.id.video_details_upload_date);
 		date.setText(selectedTorrent.getUploadDate());
 
-		TextView size = (TextView) view.findViewById(
-				R.id.video_details_filesize);
+		TextView size = (TextView) view
+				.findViewById(R.id.video_details_filesize);
 		size.setText(selectedTorrent.getFilesize());
 
-		TextView seeders = (TextView) view.findViewById(
-				R.id.video_details_seeders);
+		TextView seeders = (TextView) view
+				.findViewById(R.id.video_details_seeders);
 		seeders.setText(selectedTorrent.getSeeders());
 
-		TextView leechers = (TextView) view.findViewById(
-				R.id.video_details_leechers);
+		TextView leechers = (TextView) view
+				.findViewById(R.id.video_details_leechers);
 		leechers.setText(selectedTorrent.getLeechers());
 
-		TextView descr = (TextView) view.findViewById(
-				R.id.video_info_description);
+		TextView descr = (TextView) view
+				.findViewById(R.id.video_info_description);
 		descr.setText(selectedTorrent.getDescription());
 
-		ImageView thumb = (ImageView) view.findViewById(
-				R.id.video_info_thumbnail);
+		ImageView thumb = (ImageView) view
+				.findViewById(R.id.video_info_thumbnail);
 		loadBitmap(selectedTorrent.getThumbnailID(), thumb);
 	}
 
@@ -88,16 +86,13 @@ public class VideoInfoFragment extends Fragment {
 			return TorrentManager.getTorrentById(torrentID);
 		return TorrentManager.getTorrentById(0);
 	}
-	
+
 	private void loadBitmap(int resId, ImageView mImageView) {
 		float dens = context.getResources().getDisplayMetrics().density;
-    	int thumbWidth = (int)(100 * dens);
-    	int thumbHeight = (int)(150 * dens);
-		Picasso.with(context)
-			.load(resId)
-			.placeholder(R.drawable.default_thumb)
-			.resize(thumbWidth, thumbHeight)
-			.into(mImageView);		
+		int thumbWidth = (int) (100 * dens);
+		int thumbHeight = (int) (150 * dens);
+		Picasso.with(context).load(resId).placeholder(R.drawable.default_thumb)
+				.resize(thumbWidth, thumbHeight).into(mImageView);
 	}
 
 }

@@ -94,7 +94,8 @@ public class MainActivity extends Activity
 			}
 			else
 			{
-				//remove the search button
+				mSearchMenuItem.setEnabled(false);
+				mSearchMenuItem.setVisible(false);
 			}
 
 			return true;

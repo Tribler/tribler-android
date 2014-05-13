@@ -49,3 +49,7 @@ tests/.classpath
 
 # PyCharm
 .idea
+
+# Python
+.pyo
+.pyc

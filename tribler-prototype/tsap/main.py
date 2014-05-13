@@ -14,7 +14,7 @@ from Tribler.Core.SessionConfig import SessionStartupConfig
 
 _logger = logging.getLogger(__name__)
 print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-print os.getcwd()
+print ' os.getcwd(): %s' % os.getcwd()
 print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 
 def define_communities():
@@ -72,5 +72,5 @@ if __name__ == '__main__':
     #s._logger.setLevel(logging.DEBUG)
 
     print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-    print 'libTribler session started!'
+    print ' libTribler session started!'
     print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'

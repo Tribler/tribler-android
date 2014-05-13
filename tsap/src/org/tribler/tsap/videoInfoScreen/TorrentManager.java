@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.thumbgrid.ThumbItem;
 
 /**
  * Used to retrieve torrents by their id
@@ -33,8 +32,7 @@ public class TorrentManager {
 		return torrents.get(id);
 	}
 	
-	/**
-	 * 
+	/** 
 	 * @return the number of torrents in the list
 	 */
 	public static int getNumberOfTorrents()
@@ -44,4 +42,12 @@ public class TorrentManager {
 		return 0;
 	}
 
+	/**
+	 * @param id the id of the torrent
+	 * @return True iff the list contains a torrent at index=id
+	 */
+	public static boolean containsTorrentWithID(int id)
+	{
+		return (id>=0 && id<torrents.size() && torrents.get(id) != null);
+	}
 }

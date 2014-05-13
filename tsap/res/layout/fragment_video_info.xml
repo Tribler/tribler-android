@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_info_fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
@@ -138,14 +139,14 @@
         android:layout_below="@id/video_info_stream_video"
         android:text="@string/video_info_download_button" />
 
-    <ScrollView
-        android:id="@+id/video_info_description"
+    <ScrollView        
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/video_info_download_video"
         android:paddingTop="10dp" >
 
         <TextView
+            android:id="@+id/video_info_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_details_description_example"

@@ -1,7 +1,5 @@
 package org.tribler.tsap.videoInfoScreen;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * A class that stores the metadata of a torrent
@@ -11,7 +9,7 @@ import java.util.Date;
 public class Torrent {
 	private String name;
 	private String type;
-	private Date uploadDate;
+	private String uploadDate;
 	private double filesize;
 	private int seeders;
 	private int leechers;
@@ -28,7 +26,7 @@ public class Torrent {
 	 * @param upDate
 	 *            The upload date of the torrent
 	 * @param fsize
-	 *            The filesize of the torrent
+	 *            The filesize of the torrent in MB
 	 * @param seed
 	 *            The numbers of seeders for the torrent
 	 * @param leech
@@ -38,7 +36,7 @@ public class Torrent {
 	 * @param tID
 	 *            The id of the torrent's thumbnail
 	 */
-	public Torrent(String nm, String tp, Date upDate, double fsize, int seed,
+	public Torrent(String nm, String tp, String upDate, double fsize, int seed,
 			int leech, String descr, int tID) {
 		this.name = nm;
 		this.type = tp;
@@ -68,35 +66,28 @@ public class Torrent {
 	 * @return the upload date of the torrent
 	 */
 	public String getUploadDate() {
-		return formatDate();
-	}
-
-	/**
-	 * @return the formatted string containing the date
-	 */
-	private String formatDate() {
-		return SimpleDateFormat.getDateInstance().format(uploadDate);
+		return uploadDate;
 	}
 
 	/**
 	 * @return the filesize of the torrent
 	 */
-	public double getFilesize() {
-		return filesize;
+	public String getFilesize() {
+		return Double.toString(filesize)+" MB";
 	}
 
 	/**
 	 * @return the number of seeders
 	 */
-	public int getSeeders() {
-		return seeders;
+	public String getSeeders() {
+		return Integer.toString(seeders);
 	}
 
 	/**
 	 * @return the number of leechers
 	 */
-	public int getLeechers() {
-		return leechers;
+	public String getLeechers() {
+		return Integer.toString(leechers);
 	}
 
 	/**

@@ -122,7 +122,7 @@
         android:layout_below="@id/video_info_title"
         android:layout_toRightOf="@id/video_info_details"
         android:contentDescription="@string/sintel_thumbnail_descr"
-        android:src="@drawable/sintel_thumbnail" />
+        android:src="@drawable/default_thumb" />
 
     <Button
         android:id="@+id/video_info_stream_video"

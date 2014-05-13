@@ -6,13 +6,14 @@ package org.tribler.tsap;
 import org.tribler.tsap.videoInfoScreen.Torrent;
 import org.tribler.tsap.videoInfoScreen.TorrentManager;
 
-import android.app.Activity;
+import com.squareup.picasso.Picasso;
+
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,14 +23,16 @@ import android.widget.TextView;
  */
 public class VideoInfoFragment extends Fragment {
 
-	private int torrentID = 0;
+	private int torrentID = 5;
 	private View view;
+	private Context context;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_video_info, container,
 				false);
+		context = container.getContext();
 		TorrentManager.initiliazeTorrents();
 		setValues();
 		return view;
@@ -70,7 +73,8 @@ public class VideoInfoFragment extends Fragment {
 
 		ImageView thumb = (ImageView) view.findViewById(
 				R.id.video_info_thumbnail);
-		thumb.setImageResource(selectedTorrent.getThumbnailID());
+		//thumb.setImageResource(selectedTorrent.getThumbnailID());
+		loadBitmap(selectedTorrent.getThumbnailID(), thumb);
 	}
 
 	/**
@@ -81,6 +85,17 @@ public class VideoInfoFragment extends Fragment {
 		if (TorrentManager.containsTorrentWithID(torrentID))
 			return TorrentManager.getTorrentById(torrentID);
 		return TorrentManager.getTorrentById(0);
+	}
+	
+	private void loadBitmap(int resId, ImageView mImageView) {
+		float dens = context.getResources().getDisplayMetrics().density;
+    	int thumbWidth = (int)(100 * dens);
+    	int thumbHeight = (int)(150 * dens);
+		Picasso.with(context)
+			.load(resId)
+			.placeholder(R.drawable.default_thumb)
+			.resize(thumbWidth, thumbHeight)
+			.into(mImageView);		
 	}
 
 }

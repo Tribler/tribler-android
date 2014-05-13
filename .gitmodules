@@ -1,0 +1,3 @@
+[submodule "tribler-prototype/tribler"]
+	path = tribler-prototype/tribler
+	url = https://github.com/Tribler/tribler.git

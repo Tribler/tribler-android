@@ -3,10 +3,16 @@ package org.tribler.tsap.videoInfoScreen;
 import java.util.ArrayList;
 import java.util.Date;
 
-
+/**
+ * Used to retrieve torrents by their id
+ * @author niels *
+ */
 public class TorrentManager {
 	private static ArrayList<Torrent> torrents;
 	
+	/**
+	 * Initializes the torrent list with some torrent stubs
+	 */
 	public static void initiliazeTorrents()
 	{
 		torrents = new ArrayList<Torrent>();
@@ -15,6 +21,10 @@ public class TorrentManager {
 		torrents.add(new Torrent("King Kong","Video",new Date(2007,7,8),600.59,66,2,"King Kong"));
 	}
 	
+	/** 
+	 * @param id the position of the torrent in the list
+	 * @return the torrent belonging to the id
+	 */
 	public static Torrent getTorrentById(int id)
 	{
 		return torrents.get(id);

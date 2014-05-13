@@ -23,7 +23,7 @@ import android.widget.TextView;
  */
 public class VideoInfoFragment extends Fragment {
 
-	private int torrentID = 5;
+	private int torrentID = 0;
 	private View view;
 	private Context context;
 
@@ -73,7 +73,6 @@ public class VideoInfoFragment extends Fragment {
 
 		ImageView thumb = (ImageView) view.findViewById(
 				R.id.video_info_thumbnail);
-		//thumb.setImageResource(selectedTorrent.getThumbnailID());
 		loadBitmap(selectedTorrent.getThumbnailID(), thumb);
 	}
 

@@ -52,7 +52,7 @@ def define_communities():
 if __name__ == '__main__':
 
     config = SessionStartupConfig()
-    #self.config.set_state_dir(self.getStateDir())
+    config.set_state_dir("/data/data/org.tsap.tribler.full/.Tribler")
     config.set_torrent_checking(False)
     config.set_multicast_local_peer_discovery(False)
     config.set_megacache(False)

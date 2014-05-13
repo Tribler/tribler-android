@@ -16,6 +16,7 @@ public class Torrent {
 	private int seeders;
 	private int leechers;
 	private String description;
+	private int thumbnailID;
 
 	/**
 	 * Constructor: initializes the class variables
@@ -34,9 +35,11 @@ public class Torrent {
 	 *            The number of leechers for the torrent
 	 * @param descr
 	 *            The description of the torrent
+	 * @param tID
+	 *            The id of the torrent's thumbnail
 	 */
 	public Torrent(String nm, String tp, Date upDate, double fsize, int seed,
-			int leech, String descr) {
+			int leech, String descr, int tID) {
 		this.name = nm;
 		this.type = tp;
 		this.uploadDate = upDate;
@@ -44,6 +47,7 @@ public class Torrent {
 		this.seeders = seed;
 		this.leechers = leech;
 		this.description = descr;
+		this.thumbnailID = tID;
 	}
 
 	/**
@@ -100,6 +104,13 @@ public class Torrent {
 	 */
 	public String getDescription() {
 		return description;
+	}
+
+	/**
+	 * @return the id of the thumbnail of this torrent
+	 */
+	public int getThumbnailID() {
+		return thumbnailID;
 	}
 
 }

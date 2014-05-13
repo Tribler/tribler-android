@@ -7,6 +7,7 @@ import org.tribler.tsap.thumbgrid.ThumbItem;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +54,17 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id){
-				ThumbItem clickItem = (ThumbItem) parent.getItemAtPosition(position);
-				Toast.makeText(v.getContext() , clickItem.getTitle() + " (id: " + id + ")", Toast.LENGTH_SHORT).show();
+//				ThumbItem clickItem = (ThumbItem) parent.getItemAtPosition(position);
+//				Toast.makeText(v.getContext() , clickItem.getTitle() + " (id: " + id + ")", Toast.LENGTH_SHORT).show();
+				VideoInfoFragment vidFrag = new VideoInfoFragment();
+				Bundle args = new Bundle();
+				args.putInt("torrentID", (int) id);
+				vidFrag.setArguments(args);
+				
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				transaction.replace(R.id.container,vidFrag);
+				transaction.addToBackStack(null);
+				transaction.commit();
 			}
 		});
        

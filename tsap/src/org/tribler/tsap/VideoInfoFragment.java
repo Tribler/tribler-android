@@ -30,9 +30,12 @@ public class VideoInfoFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_video_info, container,
 				false);
 		context = container.getContext();
+		if (getArguments() != null)
+			torrentID = getArguments().getInt("torrentID", 0);
 		TorrentManager.initiliazeTorrents();
 		setValues();
 		return view;

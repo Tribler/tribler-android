@@ -61,8 +61,8 @@ else
 	rm -rv "${CURRENTFOLDERPATH}/app/*"
 fi
 
-if [ ! -f "${CURRENTFOLDERPATH}/tribler/main.py" ]; then
-	echo -e "${red}${CURRENTFOLDERPATH}/tribler/main.py is missing{$NC}" {
+if [ ! -f "${CURRENTFOLDERPATH}/tsap/main.py" ]; then
+	echo -e "${red}${CURRENTFOLDERPATH}/tsap/main.py is missing{$NC}" {
 	exit
 fi
 

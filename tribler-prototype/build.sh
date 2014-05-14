@@ -85,7 +85,7 @@ rm -rf "${PY4APATH}/dist/${DIRNAME}"
 # Build a distribute folder with all the packages now that kivy has been set
 pushd $PY4APATH
 #./distribute.sh -m "openssl pycrypto m2crypto sqlite3 pyasn1 dispersy netifaces Tribler" -d $DIRNAME
-./distribute.sh -m "openssl pycrypto m2crypto sqlite3 pyasn1 netifaces Tribler" -d $DIRNAME
+./distribute.sh -m "openssl libswift pycrypto m2crypto sqlite3 pyasn1 netifaces Tribler" -d $DIRNAME
 popd
 
 cd "${PY4APATH}/dist/${DIRNAME}/"

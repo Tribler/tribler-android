@@ -17,8 +17,6 @@ public class MainActivity extends Activity
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
     private ChannelListFragment channelFragment = new ChannelListFragment();
-//    private SearchView mSearchView;
-//    private OnQueryTextListener currentSearchListener;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -51,17 +49,11 @@ public class MainActivity extends Activity
         case 0:
         	fragmentManager.beginTransaction().replace(R.id.container, mThumbGridFragment).commit();
         	mTitle = getString(R.string.title_section_home);
-//        	currentSearchListener = mThumbGridFragment;
         	break;
         case 1:
         	fragmentManager.beginTransaction().replace(R.id.container, channelFragment).commit();
         	mTitle = getString(R.string.title_section_channels);
-//        	currentSearchListener = channelFragment;
         	break;
-//        case 2:
-//        	fragmentManager.beginTransaction().replace(R.id.container, mVideoInfoFragment).commit();
-//        	mTitle = getString(R.string.title_section_videoinfo);
-//        	currentSearchListener = null;
         }
     }
 
@@ -80,20 +72,6 @@ public class MainActivity extends Activity
 			// decide what to show in the action bar.
 			getMenuInflater().inflate(R.menu.main_activity, menu);
 			restoreActionBar();
-			
-//			MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
-//			mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-//			if(currentSearchListener != null)
-//			{
-//				mSearchView.setOnQueryTextListener(currentSearchListener);
-//				mSearchView.setQueryHint(mTitle);
-//			}
-//			else
-//			{
-//				mSearchMenuItem.setEnabled(false);
-//				mSearchMenuItem.setVisible(false);
-//			}
-
 			return true;
 		}
 	    

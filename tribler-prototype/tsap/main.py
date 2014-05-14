@@ -1,9 +1,13 @@
 __author__ = 'user'
 
 import os
+import sys
 import logging
+import shutil
 
 logging.basicConfig(level=logging.DEBUG)
+
+print sys.platform
 
 if 'ANDROID_APP_PATH' in os.environ:
     print "We are running on android/p4a"
@@ -64,8 +68,23 @@ def define_communities():
     _logger.info("tribler: communities are ready in %.2f seconds", diff)
 
 if __name__ == '__main__':
+    # Prepare swift binary on Android
+    if 'ANDROID_APP_PATH' in os.environ:
+        swift_path_source = os.path.join(os.getcwd(), 'swift')
+        swift_path_dest = os.path.join(os.environ['ANDROID_PRIVATE'], 'swift')
+
+        if not os.path.exists(swift_path_dest):
+            if not os.path.exists(swift_path_source):
+                _logger.error("Looked at %s and %s, but couldn't find a libswift binary!" % (swift_path_source, swift_path_dest))
+                exit()
+
+            _logger.warn("Copy swift binary (%s -> %s)" % (swift_path_source, swift_path_dest))
+            shutil.copy2(swift_path_source, swift_path_dest)
+            os.chmod(swift_path_dest, 0777)
 
     config = SessionStartupConfig()
+
+    _logger.info("Set tribler_sate_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
     config.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
     config.set_torrent_checking(False)
     config.set_multicast_local_peer_discovery(False)

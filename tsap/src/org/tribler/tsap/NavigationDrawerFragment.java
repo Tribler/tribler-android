@@ -56,6 +56,11 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    
+    //used to store position of currently loaded fragment from navigation drawer
+    //(first -1 at startup (as no fragment loaded), then ==mCurrentSelectedPosition
+    private int mCurrentLoadedFragmentPosition=-1; 
+   
 
     public NavigationDrawerFragment() {
     }
@@ -187,7 +192,16 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
+    	// Don't reload fragment and close drawers
+    	if(position == mCurrentLoadedFragmentPosition)
+    	{
+    		mDrawerLayout.closeDrawers();
+    		return;
+    	}
+    	
+    	//update position and load fragment
         mCurrentSelectedPosition = position;
+        mCurrentLoadedFragmentPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }

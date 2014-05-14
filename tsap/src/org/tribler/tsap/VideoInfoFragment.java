@@ -3,17 +3,24 @@
  */
 package org.tribler.tsap;
 
+import java.io.File;
+
 import org.tribler.tsap.videoInfoScreen.Torrent;
 import org.tribler.tsap.videoInfoScreen.TorrentManager;
+import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import com.squareup.picasso.Picasso;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +33,7 @@ public class VideoInfoFragment extends Fragment {
 	private int torrentID = 0;
 	private View view;
 	private Context context;
+	private View.OnClickListener mViewButtonOnClickListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +83,26 @@ public class VideoInfoFragment extends Fragment {
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
 		loadBitmap(selectedTorrent.getThumbnailID(), thumb);
+		setViewButtonListener();
+	}
+	
+	private void setViewButtonListener()
+	{
+		Button viewButton = (Button) view.findViewById(R.id.video_info_stream_video);
+		mViewButtonOnClickListener = new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + "/Django.mp4";
+				//File f = new File(file);
+				String URL = "http://inventos.ru/video/sintel/sintel-q3.mp4";
+				Uri link = Uri.parse(URL);//Uri.fromFile(f);
+		        Intent intent = new Intent(Intent.ACTION_VIEW, link, getActivity().getApplicationContext(), VideoPlayerActivity.class);
+		        //intent.setType("video/*");
+		        startActivity(intent);				
+			}
+		};
+		viewButton.setOnClickListener(mViewButtonOnClickListener);
 	}
 
 	/**

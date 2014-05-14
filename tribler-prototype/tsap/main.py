@@ -1,21 +1,35 @@
 __author__ = 'user'
 
 import os
-os.environ["PYTHON_EGG_CACHE"] = "/data/data/org.tsap.tribler.full/cache"
-
-
-import kivy
-kivy.require('1.0.9')
 import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+if 'ANDROID_APP_PATH' in os.environ:
+    print "We are running on android/p4a"
+
+    # Set P4A egg cache
+    os.environ["PYTHON_EGG_CACHE"] = "/data/data/org.tsap.tribler.full/cache"
+
+    # Set tribler data dir
+    os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.environ['ANDROID_PRIVATE'], '.Tribler')
+else:
+    print "We are running on a pc"
+
+    os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.getcwd(), '.Tribler-data')
+
+#print os.environ
+
+#import kivy
+#kivy.require('1.0.9')
 from datetime import time
 from Tribler.Core.Session import Session
 from Tribler.Core.SessionConfig import SessionStartupConfig
 
 
 _logger = logging.getLogger(__name__)
-print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-print ' os.getcwd(): %s' % os.getcwd()
-print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+_logger.error("THIS IS AN ERROR")
+print 'os.getcwd(): %s' % os.getcwd()
 
 def define_communities():
     from Tribler.community.search.community import SearchCommunity
@@ -52,7 +66,7 @@ def define_communities():
 if __name__ == '__main__':
 
     config = SessionStartupConfig()
-    config.set_state_dir("/data/data/org.tsap.tribler.full/.Tribler")
+    config.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
     config.set_torrent_checking(False)
     config.set_multicast_local_peer_discovery(False)
     config.set_megacache(False)
@@ -71,6 +85,4 @@ if __name__ == '__main__':
     #dispersy.callback.call(define_communities)
     #s._logger.setLevel(logging.DEBUG)
 
-    print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-    print ' libTribler session started!'
-    print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+    print 'libTribler session started!'

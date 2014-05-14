@@ -54,8 +54,6 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id){
-//				ThumbItem clickItem = (ThumbItem) parent.getItemAtPosition(position);
-//				Toast.makeText(v.getContext() , clickItem.getTitle() + " (id: " + id + ")", Toast.LENGTH_SHORT).show();
 				VideoInfoFragment vidFrag = new VideoInfoFragment();
 				Bundle args = new Bundle();
 				args.putInt("torrentID", (int) id);

@@ -1,3 +1,6 @@
 [submodule "tribler-prototype/tribler"]
 	path = tribler-prototype/tribler
 	url = git@github.com:wtud/tribler.git
+[submodule "tribler-prototype/pidcat"]
+	path = tribler-prototype/pidcat
+	url = git@github.com:wtud/pidcat.git

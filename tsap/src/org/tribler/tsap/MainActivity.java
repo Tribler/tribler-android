@@ -16,6 +16,7 @@ public class MainActivity extends Activity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
+    private ChannelListFragment channelFragment = new ChannelListFragment();
 //    private SearchView mSearchView;
 //    private OnQueryTextListener currentSearchListener;
 
@@ -23,11 +24,8 @@ public class MainActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-	private ChannelListFragment channelFragment = new ChannelListFragment();
 	
-	/* Temporary */
-	private VideoInfoFragment mVideoInfoFragment = new VideoInfoFragment();
-
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +58,9 @@ public class MainActivity extends Activity
         	mTitle = getString(R.string.title_section_channels);
 //        	currentSearchListener = channelFragment;
         	break;
-        case 2:
-        	fragmentManager.beginTransaction().replace(R.id.container, mVideoInfoFragment).commit();
-        	mTitle = getString(R.string.title_section_videoinfo);
+//        case 2:
+//        	fragmentManager.beginTransaction().replace(R.id.container, mVideoInfoFragment).commit();
+//        	mTitle = getString(R.string.title_section_videoinfo);
 //        	currentSearchListener = null;
         }
     }

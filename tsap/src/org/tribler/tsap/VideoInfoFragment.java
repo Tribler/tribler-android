@@ -36,7 +36,7 @@ public class VideoInfoFragment extends Fragment {
 		if (getArguments() != null)
 			torrentID = getArguments().getInt("torrentID", 0);
 
-		TorrentManager.initiliazeTorrents();
+		TorrentManager.initializeTorrents();
 		setValues();
 		return view;
 	}

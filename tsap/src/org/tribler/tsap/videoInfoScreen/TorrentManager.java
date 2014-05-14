@@ -14,7 +14,7 @@ public class TorrentManager {
 	/**
 	 * Initializes the torrent list with some torrent stubs
 	 */
-	public static void initiliazeTorrents()
+	public static void initializeTorrents()
 	{
 		torrents = new ArrayList<Torrent>();
 		torrents.add(new Torrent("Sintel","Video","2010-06-08",400.51,73,3,"Sintel is a short computer animated film by the Blender Institute, part of the Blender Foundation. Like the foundation's previous films Elephants Dream and Big Buck Bunny, the film was made using Blender, a free software application for animation created and supported by the same foundation. Sintel was produced by Ton Roosendaal, chairman of the Foundation, and directed by Colin Levy, an artist at Pixar Animation Studios. (code-named Durian)",R.drawable.sintel));

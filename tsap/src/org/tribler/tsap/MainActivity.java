@@ -50,6 +50,7 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch(position)
         {
         case 0:
@@ -94,7 +95,8 @@ public class MainActivity extends Activity
 			}
 			else
 			{
-				//remove the search button
+				mSearchMenuItem.setEnabled(false);
+				mSearchMenuItem.setVisible(false);
 			}
 
 			return true;

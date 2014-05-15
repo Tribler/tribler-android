@@ -2,7 +2,7 @@ package org.tribler.tsap;
 
 import java.util.Random;
 
-class Channel
+public class Channel
 {
 	private String name;
 	private boolean following;
@@ -26,14 +26,14 @@ class Channel
 		return rating;
 	}
 	
-	Channel(String name, boolean following, int torrentAmount, int rating)
+	public Channel(String name, boolean following, int torrentAmount, int rating)
 	{
 		this.name = name;
 		this.following = following;
 		this.torrentAmount = torrentAmount;
 		this.rating = rating;
 	}
-	Channel(String name)
+	public Channel(String name)
 	{
 		Random rand = new Random();
 		this.name = name;

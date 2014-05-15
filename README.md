@@ -15,7 +15,7 @@ This project has the following dependencies:
 
 Below, some screenshots of the current GUI are shown.
 
-![home_screen_landscape](screenshots/home_screen_landscape.png
+![home_screen_landscape|width=300px](screenshots/home_screen_landscape.png
 )
 *Home screen showing list of media files.*
 

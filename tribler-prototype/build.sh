@@ -88,10 +88,15 @@ pushd $PY4APATH
 ./distribute.sh -m "openssl pycrypto m2crypto sqlite3 pyasn1 netifaces Tribler" -d $DIRNAME
 popd
 
-cd "${PY4APATH}/dist/${DIRNAME}/"
+# FIXME: copy precompiled swift binary
+cp "${CURRENTFOLDERPATH}/swift.arm" "${CURRENTFOLDERPATH}/tsap/swift"
 
-#./build.py --package org.tsap.tribler.full --name "a-TSAP Tribler" --version 0.9 --dir "${CURRENTFOLDERPATH}/app" debug --permission INTERNET --icon $APPLOGO --presplash $APPSPLASH
+# Build apk
+cd "${PY4APATH}/dist/${DIRNAME}/"
 ./build.py --package org.tsap.tribler.full --name "a-TSAP Tribler" --version 0.9 --dir "${CURRENTFOLDERPATH}/tsap" debug --permission INTERNET --icon $APPLOGO --presplash $APPSPLASH
+
+# FIXME: rm precompiled swift binary
+rm "${CURRENTFOLDERPATH}/tsap/swift"
 
 # Copy the .apk files to our own app folder
 find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;

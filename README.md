@@ -5,11 +5,11 @@ An ongoing port effort to run [Tribler](https://github.com/tribler/tribler/) on 
 ## Dependencies
 
 This project has the following dependencies:
-*[Tribler](https://github.com/tribler/tribler/)
-*[libswift](https://github.com/libswift/libswift)
-*[Python for Android](https://github.com/kivy/python-for-android)
-*[Picasso](https://github.com/square/picasso)
-*[VLC for Android](http://www.videolan.org/vlc/download-android.html)
+* [Tribler](https://github.com/tribler/tribler/)
+* [libswift](https://github.com/libswift/libswift)
+* [Python for Android](https://github.com/kivy/python-for-android)
+* [Picasso](https://github.com/square/picasso)
+* [VLC for Android](http://www.videolan.org/vlc/download-android.html)
 
 ## Screenshots
 

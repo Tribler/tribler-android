@@ -93,7 +93,7 @@ cp "${CURRENTFOLDERPATH}/swift.arm" "${CURRENTFOLDERPATH}/tsap/swift"
 
 # Build apk
 cd "${PY4APATH}/dist/${DIRNAME}/"
-./build.py --package org.tsap.tribler.full --name "a-TSAP Tribler" --version 0.9 --dir "${CURRENTFOLDERPATH}/tsap" debug --permission INTERNET --icon $APPLOGO --presplash $APPSPLASH
+./build.py --package org.tsap.tribler.full --name "a-TSAP Tribler" --version 0.9 --dir "${CURRENTFOLDERPATH}/tsap" debug --permission ACCESS_NETWORK_STATE --permission ACCESS_WIFI_STATE --permission INTERNET --icon $APPLOGO --presplash $APPSPLASH
 
 # FIXME: rm precompiled swift binary
 rm "${CURRENTFOLDERPATH}/tsap/swift"

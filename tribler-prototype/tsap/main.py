@@ -7,7 +7,7 @@ import shutil
 
 logging.basicConfig(level=logging.DEBUG)
 
-print sys.platform
+print 'sys.platform: %s\nos.name: %s' % (sys.platform, os.name)
 
 if 'ANDROID_APP_PATH' in os.environ:
     print "We are running on android/p4a"

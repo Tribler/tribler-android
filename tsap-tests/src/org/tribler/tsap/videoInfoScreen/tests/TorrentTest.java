@@ -5,6 +5,10 @@ import org.tribler.tsap.videoInfoScreen.Torrent;
 
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for the Torrent class
+ * @author Niels Spruit
+ */
 public class TorrentTest extends TestCase {
 	
 	private Torrent mTorrent;

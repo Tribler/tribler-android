@@ -7,6 +7,10 @@ import org.tribler.tsap.thumbgrid.ThumbItem.TORRENT_HEALTH;
 import android.graphics.Color;
 import android.test.AndroidTestCase;
 
+/**
+ * Unit tests for the ThumbItem class
+ * @author Niels Spruit
+ */
 public class ThumbItemTest extends AndroidTestCase {
 	
 private ThumbItem mThumbItem;

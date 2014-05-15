@@ -4,6 +4,10 @@ import org.tribler.tsap.videoInfoScreen.TorrentManager;
 
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for the TorrentManager class
+ * @author Niels Spruit
+ */
 public class TorrentManagerTest extends TestCase {
 	
 	@Override

@@ -15,11 +15,11 @@ This project has the following dependencies:
 
 Below, some screenshots of the current GUI are shown.
 
-![home_screen_landscape](screenshots/home_screen_landscape.png)
+![home_screen_landscape](screenshots/home_screen_landscape_readme.png)
 *Home screen showing list of media files.*
 
-![channels_screen_landscape](screenshots/channels_screen_landscape.png)
+![channels_screen_landscape](screenshots/channels_screen_landscape_readme.png)
 *List of channels containing torrents.*
 
-![info_screen_portrait](screenshots/info_screen_portrait.png)
+![info_screen_portrait](screenshots/info_screen_portrait_readme.png)
 *Info about a torrent with the option to play it using the built-in VLC player.*

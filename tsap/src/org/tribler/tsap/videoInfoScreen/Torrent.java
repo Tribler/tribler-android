@@ -4,7 +4,7 @@ package org.tribler.tsap.videoInfoScreen;
 /**
  * A class that stores the metadata of a torrent
  * 
- * @author niels
+ * @author Niels Spruit
  */
 public class Torrent {
 	private String name;
@@ -102,6 +102,14 @@ public class Torrent {
 	 */
 	public int getThumbnailID() {
 		return thumbnailID;
+	}
+	
+	/**
+	 * @return the string representation of this torrent
+	 */
+	public String toString()
+	{
+		return name;
 	}
 
 }

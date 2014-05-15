@@ -36,7 +36,7 @@ _logger.error("THIS IS AN ERROR")
 print 'os.getcwd(): %s' % os.getcwd()
 
 def define_communities():
-    from Tribler.community.search.community import SearchCommunity
+    #from Tribler.community.search.community import SearchCommunity
     from Tribler.community.allchannel.community import AllChannelCommunity
     from Tribler.community.channel.community import ChannelCommunity
     from Tribler.community.channel.preview import PreviewChannelCommunity
@@ -46,7 +46,7 @@ def define_communities():
     now = time()
 
     # must be called on the Dispersy thread
-    dispersy.define_auto_load(SearchCommunity, s.dispersy_member, load=True)
+    #dispersy.define_auto_load(SearchCommunity, s.dispersy_member, load=True)
     dispersy.define_auto_load(AllChannelCommunity, s.dispersy_member, load=True)
 
     # load metadata community
@@ -100,8 +100,8 @@ if __name__ == '__main__':
     s = Session(config)
     s.start()
 
-    #dispersy = s.get_dispersy_instance()
-    #dispersy.callback.call(define_communities)
+    dispersy = s.get_dispersy_instance()
+    dispersy.callback.call(define_communities)
     #s._logger.setLevel(logging.DEBUG)
 
     print 'libTribler session started!'

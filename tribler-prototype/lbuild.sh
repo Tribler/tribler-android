@@ -10,5 +10,7 @@ source /home/user/Documents/Projects/bep/setenv_x86.sh &&
 adb uninstall org.tsap.tribler.full &&
 adb install app/a-TSAPTribler-0.9-debug.apk &&
 ./adb_killswift.sh &&
+adb logcat -c &&
+adb shell am start -n org.tsap.tribler.full/org.renpy.android.PythonActivity &&
 echo Listening for logcat output.. &&
-python pidcat/pidcat.py org.tsap.tribler.full -c
+python pidcat/pidcat.py org.tsap.tribler.full -t

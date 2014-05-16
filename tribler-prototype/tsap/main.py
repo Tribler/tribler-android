@@ -81,18 +81,18 @@ class RunApp():
             from Tribler.community.channel.preview import PreviewChannelCommunity
             from Tribler.community.metadata.community import MetadataCommunity
 
-            _logger.info("tribler: Preparing communities...")
+            _logger.info("@@@@@@@@@@ tribler: Preparing communities...")
             now = time()
 
             # must be called on the Dispersy thread
-            #comm = dispersy.define_auto_load(SearchCommunity, s.dispersy_member, load=True)
-            _logger.info("Loaded dispersy communities: %s" % comm)
-            comm = dispersy.define_auto_load(AllChannelCommunity, s.dispersy_member, load=True)
-            _logger.info("Loaded dispersy communities: %s" % comm)
+            comm = dispersy.define_auto_load(SearchCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
+            comm = dispersy.define_auto_load(AllChannelCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             # load metadata community
-            #comm = dispersy.define_auto_load(MetadataCommunity, s.dispersy_member, load=True)
-            _logger.info("Loaded dispersy communities: %s" % comm)
+            comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing
             # 6.1 clients.  We will disable the BarterCommunity for version 6.2, giving people some time to upgrade
@@ -103,13 +103,13 @@ class RunApp():
             #                               (swift_process,),
             #                               load=True)
 
-            #comm = dispersy.define_auto_load(ChannelCommunity, s.dispersy_member, load=True)
-            _logger.info("Loaded dispersy communities: %s" % comm)
-            #comm = dispersy.define_auto_load(PreviewChannelCommunity, s.dispersy_member)
-            _logger.info("Loaded dispersy communities: %s" % comm)
+            comm = dispersy.define_auto_load(ChannelCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
+            comm = dispersy.define_auto_load(PreviewChannelCommunity, self.session.dispersy_member, kargs={'integrate_with_tribler': False})
+            _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             diff = time() - now
-            _logger.info("tribler: communities are ready in %.2f seconds", diff)
+            _logger.info("@@@@@@@@@@ tribler: communities are ready in %.2f seconds", diff)
 
         swift_process = self.session.get_swift_proc() and self.session.get_swift_process()
         dispersy = self.session.get_dispersy_instance()

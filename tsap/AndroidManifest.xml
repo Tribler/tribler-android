@@ -7,6 +7,9 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="19" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -26,6 +29,11 @@
         <activity
             android:name="org.tribler.tsap.ChannelActivity"
             android:label="@string/title_activity_channel" >
+        </activity>
+        <activity
+            android:name="org.videolan.vlc.gui.video.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.VLC.Fullscreen" >
         </activity>
     </application>
 

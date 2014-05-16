@@ -1,5 +1,7 @@
 package org.tribler.tsap;
 
+import org.videolan.vlc.VLCApplication;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -37,6 +39,9 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        
+        // Send the current context to VLC
+        VLCApplication.setContext(getApplicationContext());
     }
 
     @Override

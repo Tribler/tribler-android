@@ -38,28 +38,39 @@ print 'os.getcwd(): %s' % os.getcwd()
 class RunApp():
 
     dispersy = None
-    config = None
+    sconfig = None
+    session = None
+
 
     def __init__(self):
         config = SessionStartupConfig()
 
         _logger.info("Set tribler_sate_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
-        config.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
-        config.set_torrent_checking(False)
-        config.set_multicast_local_peer_discovery(False)
-        config.set_megacache(False)
-        #config.set_dispersy(False)
-        #config.set_swift_proc(False)
-        config.set_mainline_dht(False)
-        config.set_torrent_collecting(False)
-        config.set_libtorrent(False)
-        config.set_dht_torrent_collecting(False)
-        config.set_videoplayer(False)
 
-        s = Session(config)
-        s.start()
+        cfgfilename = Session.get_default_config_filename(os.environ['TRIBLER_STATE_DIR'])
+        try:
+            self.sconfig = SessionStartupConfig.load(cfgfilename)
+        except:
+            self.sconfig = SessionStartupConfig()
+            self.sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
 
-        dispersy = s.get_dispersy_instance()
+        #self.sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
+        self.sconfig.set_torrent_checking(False)
+        self.sconfig.set_multicast_local_peer_discovery(False)
+        self.sconfig.set_megacache(False)
+        #self.sconfig.set_dispersy(False)
+        #self.sconfig.set_swift_proc(False)
+        self.sconfig.set_mainline_dht(False)
+        self.sconfig.set_torrent_collecting(False)
+        self.sconfig.set_libtorrent(False)
+        self.sconfig.set_dht_torrent_collecting(False)
+        self.sconfig.set_videoplayer(False)
+
+        self.sconfig.set_dispersy_tunnel_over_swift(False)
+        self.sconfig.set_torrent_collecting_max_torrents(500)
+
+        self.session = Session(self.sconfig)
+        self.session.start()
 
         def define_communities():
             _logger.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
@@ -100,10 +111,13 @@ class RunApp():
             diff = time() - now
             _logger.info("tribler: communities are ready in %.2f seconds", diff)
 
-        dispersy.callback.call(define_communities)
+        swift_process = self.session.get_swift_proc() and self.session.get_swift_process()
+        dispersy = self.session.get_dispersy_instance()
+        #dispersy.callback.call(define_communities)
 
         print 'libTribler session started!'
 
+        self.dispersy = self.session.lm.dispersy
 
 
 if __name__ == '__main__':

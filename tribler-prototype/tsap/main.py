@@ -113,7 +113,7 @@ class RunApp():
 
         swift_process = self.session.get_swift_proc() and self.session.get_swift_process()
         dispersy = self.session.get_dispersy_instance()
-        #dispersy.callback.call(define_communities)
+        dispersy.callback.call(define_communities)
 
         print 'libTribler session started!'
 

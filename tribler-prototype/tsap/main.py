@@ -4,6 +4,7 @@ import os
 import sys
 import logging
 import shutil
+import time
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -25,22 +26,31 @@ else:
 
 #print os.environ
 
-#import kivy
-#kivy.require('1.0.9')
-from datetime import time
+# Tribler Session
 from Tribler.Core.Session import Session
 from Tribler.Core.SessionConfig import SessionStartupConfig
 
+# Tribler communities
+#from Tribler.community.search.community import SearchCommunity
+#from Tribler.community.allchannel.community import AllChannelCommunity
+#from Tribler.community.channel.community import ChannelCommunity
+#from Tribler.community.channel.preview import PreviewChannelCommunity
+#from Tribler.community.metadata.community import MetadataCommunity
 
+
+# Init logger
 _logger = logging.getLogger(__name__)
 _logger.error("THIS IS AN ERROR")
 print 'os.getcwd(): %s' % os.getcwd()
+
 
 class RunApp():
 
     dispersy = None
     sconfig = None
     session = None
+
+    dispersy_init = False
 
 
     def __init__(self):
@@ -83,7 +93,7 @@ class RunApp():
             from Tribler.community.metadata.community import MetadataCommunity
 
             _logger.info("@@@@@@@@@@ tribler: Preparing communities...")
-            now = time()
+            #now = time()
 
             # must be called on the Dispersy thread
             comm = dispersy.define_auto_load(SearchCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
@@ -112,18 +122,30 @@ class RunApp():
             diff = time() - now
             _logger.info("@@@@@@@@@@ tribler: communities are ready in %.2f seconds", diff)
 
+            self.dispersy_init = True
+
         swift_process = self.session.get_swift_proc() and self.session.get_swift_process()
         dispersy = self.session.get_dispersy_instance()
         dispersy.callback.call(define_communities)
 
         print 'libTribler session started!'
 
-        self.dispersy = self.session.lm.dispersy
+        while not self.dispersy_init:
+            _logger.info("Waiting for dispersy communities to initialize..")
+            time.sleep(.5)
+
+        _logger.info("Dispersy communitites initialized!")
+
+        #SearchCommunity.create_search("")
+
+
+
+        #self.dispersy = self.session.lm.dispersy
 
 
 if __name__ == '__main__':
     # Prepare swift binary on Android
-    if 'ANDROID_APP_PATH' in os.environ:
+    if 'ANDROID_PRIVATE' in os.environ:
         swift_path_source = os.path.join(os.getcwd(), 'swift')
         swift_path_dest = os.path.join(os.environ['ANDROID_PRIVATE'], 'swift')
 

@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 print 'sys.platform: %s\nos.name: %s' % (sys.platform, os.name)
 
-if 'ANDROID_APP_PATH' in os.environ:
+if 'ANDROID_PRIVATE' in os.environ:
     print "We are running on android/p4a"
 
     # Set P4A egg cache
@@ -21,6 +21,7 @@ else:
     print "We are running on a pc"
 
     os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.getcwd(), '.Tribler-data')
+    os.environ['ANDROID_EMULATE'] = "Yes"
 
 #print os.environ
 

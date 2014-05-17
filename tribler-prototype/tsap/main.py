@@ -18,11 +18,18 @@ if 'ANDROID_PRIVATE' in os.environ:
 
     # Set tribler data dir
     os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.environ['ANDROID_PRIVATE'], '.Tribler')
+
+    # Running on Android
+    os.environ['ANDROID_HOST'] = "YES"
 else:
     print "We are running on a pc"
 
+    # Set tribler data dir
     os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.getcwd(), '.Tribler-data')
-    os.environ['ANDROID_EMULATE'] = "Yes"
+
+    # Test Android code
+    os.environ['ANDROID_HOST'] = "SIMULATED"
+    os.environ['ANDROID_PRIVATE'] = os.getcwd()
 
 #print os.environ
 
@@ -145,7 +152,7 @@ class RunApp():
 
 if __name__ == '__main__':
     # Prepare swift binary on Android
-    if 'ANDROID_PRIVATE' in os.environ:
+    if 'ANDROID_HOST' in os.environ and os.environ['ANDROID_HOST'] == "YES":
         swift_path_source = os.path.join(os.getcwd(), 'swift')
         swift_path_dest = os.path.join(os.environ['ANDROID_PRIVATE'], 'swift')
 

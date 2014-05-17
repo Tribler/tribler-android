@@ -68,9 +68,11 @@ class RunApp():
         cfgfilename = Session.get_default_config_filename(os.environ['TRIBLER_STATE_DIR'])
         try:
             self.sconfig = SessionStartupConfig.load(cfgfilename)
+            _logger.info("Loaded previous configuration file from %s" % cfgfilename)
         except:
             self.sconfig = SessionStartupConfig()
             self.sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
+            _logger.info("No previous configuration file found, creating one in %s" % os.environ['TRIBLER_STATE_DIR'])
 
         #self.sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
         self.sconfig.set_torrent_checking(False)
@@ -138,10 +140,10 @@ class RunApp():
         print 'libTribler session started!'
 
         while not self.dispersy_init:
-            _logger.info("Waiting for dispersy communities to initialize..")
+            _logger.info("@@@ Waiting for dispersy communities to initialize..")
             time.sleep(.5)
 
-        _logger.info("Dispersy communitites initialized!")
+        _logger.info("@@@ Dispersy communitites initialized!")
 
         #SearchCommunity.create_search("")
 

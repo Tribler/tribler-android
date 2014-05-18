@@ -44,6 +44,8 @@ from Tribler.Core.SessionConfig import SessionStartupConfig
 #from Tribler.community.channel.preview import PreviewChannelCommunity
 #from Tribler.community.metadata.community import MetadataCommunity
 
+# wut
+from datetime import time as timef
 
 # Init logger
 _logger = logging.getLogger(__name__)
@@ -102,7 +104,7 @@ class RunApp():
             from Tribler.community.metadata.community import MetadataCommunity
 
             _logger.info("@@@@@@@@@@ tribler: Preparing communities...")
-            #now = time()
+            now = timef()
 
             # must be called on the Dispersy thread
             comm = dispersy.define_auto_load(SearchCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
@@ -128,7 +130,7 @@ class RunApp():
             comm = dispersy.define_auto_load(PreviewChannelCommunity, self.session.dispersy_member, kargs={'integrate_with_tribler': False})
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
-            diff = time() - now
+            diff = timef() - now
             _logger.info("@@@@@@@@@@ tribler: communities are ready in %.2f seconds", diff)
 
             self.dispersy_init = True

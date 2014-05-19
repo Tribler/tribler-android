@@ -157,7 +157,7 @@ class RunApp():
 
         _logger.error("@@@ Adding 'sintel' to search keywords")
         self.searchkeywords.append(u"sintel")
-        self.searchkeywords.append(u"game of thrones")
+        #self.searchkeywords.append(u"game of thrones")
 
         nr_req = False
         while not nr_req:

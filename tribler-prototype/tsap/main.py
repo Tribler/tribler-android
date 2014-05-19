@@ -25,7 +25,8 @@ else:
     print "We are running on a pc"
 
     # Set tribler data dir
-    os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.getcwd(), '.Tribler-data')
+    os.environ['TRIBLER_STATE_DIR'] = os.path.abspath(os.path.join(os.getcwd(), '../.Tribler-data'))
+    print os.environ['TRIBLER_STATE_DIR']
 
     # Test Android code
     os.environ['ANDROID_HOST'] = "SIMULATED"
@@ -39,7 +40,7 @@ from Tribler.Core.SessionConfig import SessionStartupConfig
 
 # Tribler communities
 #from Tribler.community.search.community import SearchCommunity
-#from Tribler.community.allchannel.community import AllChannelCommunity
+from Tribler.community.allchannel.community import AllChannelCommunity
 #from Tribler.community.channel.community import ChannelCommunity
 #from Tribler.community.channel.preview import PreviewChannelCommunity
 #from Tribler.community.metadata.community import MetadataCommunity
@@ -55,9 +56,10 @@ print 'os.getcwd(): %s' % os.getcwd()
 
 class RunApp():
 
-    dispersy = None
+    dispersylm = None
     sconfig = None
     session = None
+    searchkeywords = []
 
     dispersy_init = False
 
@@ -79,7 +81,7 @@ class RunApp():
         #self.sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
         self.sconfig.set_torrent_checking(False)
         self.sconfig.set_multicast_local_peer_discovery(False)
-        self.sconfig.set_megacache(False)
+        #self.sconfig.set_megacache(False)
         #self.sconfig.set_dispersy(False)
         #self.sconfig.set_swift_proc(False)
         self.sconfig.set_mainline_dht(False)
@@ -104,17 +106,17 @@ class RunApp():
             from Tribler.community.metadata.community import MetadataCommunity
 
             _logger.info("@@@@@@@@@@ tribler: Preparing communities...")
-            now = timef()
+            #now = timef()
 
             # must be called on the Dispersy thread
-            comm = dispersy.define_auto_load(SearchCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(SearchCommunity, self.session.dispersy_member, load=True) #, kargs={'integrate_with_tribler': False})
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
-            comm = dispersy.define_auto_load(AllChannelCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(AllChannelCommunity, self.session.dispersy_member, load=True) #, kargs={'integrate_with_tribler': False})
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             # load metadata community
-            comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
-            _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
+            #comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True) #, kargs={'integrate_with_tribler': False})
+            #_logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing
             # 6.1 clients.  We will disable the BarterCommunity for version 6.2, giving people some time to upgrade
@@ -125,13 +127,13 @@ class RunApp():
             #                               (swift_process,),
             #                               load=True)
 
-            comm = dispersy.define_auto_load(ChannelCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(ChannelCommunity, self.session.dispersy_member, load=True) #, kargs={'integrate_with_tribler': False})
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
-            comm = dispersy.define_auto_load(PreviewChannelCommunity, self.session.dispersy_member, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(PreviewChannelCommunity, self.session.dispersy_member) #, kargs={'integrate_with_tribler': False})
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
-            diff = timef() - now
-            _logger.info("@@@@@@@@@@ tribler: communities are ready in %.2f seconds", diff)
+            #diff = timef() - now
+            _logger.info("@@@@@@@@@@ tribler: communities are ready in %.2f seconds", 0) #diff)
 
             self.dispersy_init = True
 
@@ -139,19 +141,53 @@ class RunApp():
         dispersy = self.session.get_dispersy_instance()
         dispersy.callback.call(define_communities)
 
+        self.dispersylm = self.session.lm.dispersy
+
         print 'libTribler session started!'
 
         while not self.dispersy_init:
-            _logger.info("@@@ Waiting for dispersy communities to initialize..")
+            _logger.error("@@@ Waiting for dispersy communities to initialize..")
             time.sleep(.5)
 
-        _logger.info("@@@ Dispersy communitites initialized!")
+        _logger.error("@@@ Dispersy communitites initialized!")
 
-        #SearchCommunity.create_search("")
+        #_logger.info("@@@ Sleeping 10s to give dispersy time to find peers")
+        #time.sleep(10)
 
 
+        _logger.error("@@@ Adding 'sintel' to search keywords")
+        self.searchkeywords.append(u"sintel")
+        self.searchkeywords.append(u"game of thrones")
 
-        #self.dispersy = self.session.lm.dispersy
+        nr_req = False
+        while not nr_req:
+            time.sleep(5)
+            _logger.error("@@@ DOING DISPERSY SEARCH CALL")
+            nr_req = self.searchDispersy()
+            _logger.error("@@@ %s" % ("DISPERSY SEARCH CALL SUCCESS" if nr_req else "DISPERSY SEARCH CALL FAILED, RETRY IN 5s"))
+
+
+    def searchDispersy(self):
+        _logger.info("@@@ Telling dispersy to search for keywords")
+        nr_requests_made = 0
+        if self.dispersylm:
+            for community in self.dispersylm.get_communities(): #self.dispersy.get_communities():
+                if isinstance(community, AllChannelCommunity):
+                    nr_requests_made = community.create_channelsearch(self.searchkeywords, self.gotDispersyRemoteHits)
+                    if not nr_requests_made:
+                        _logger.error("Could not send search in AllChannelCommunity, no verified candidates found")
+                    break
+
+            else:
+                _logger.error("Could not send search in AllChannelCommunity, community not found")
+
+        else:
+            _logger.error("Could not send search in AllChannelCommunity, Dispersy not found")
+
+        return nr_requests_made
+
+    def gotDispersyRemoteHits(self, keywords, results, candidate):
+        _logger.error("!!!!!!! gotDispersyRemoteHist: got %s unfiltered results for %s %s %s\n%s", len(results), keywords, candidate, time(), results)
 
 
 if __name__ == '__main__':

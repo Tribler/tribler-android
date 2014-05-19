@@ -30,4 +30,6 @@ then
 	mv recipe.sh recipe.sh.orig
 	sed -e "s/^MD5_Tribler=.*/MD5_Tribler=$MD5SUM/" recipe.sh.orig > recipe.sh
 	popd > /dev/null
+else
+	echo "No tribler recipe found or P4A_PATH not set."
 fi

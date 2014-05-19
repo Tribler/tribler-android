@@ -1,6 +1,7 @@
 package org.tribler.tsap;
 
 import org.videolan.vlc.VLCApplication;
+import org.videolan.vlc.MediaDatabase.mediaColumn;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -93,5 +94,10 @@ public class MainActivity extends Activity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    public ChannelListFragment getChannelListFragment()
+    {
+    	return channelFragment;
     }
 }

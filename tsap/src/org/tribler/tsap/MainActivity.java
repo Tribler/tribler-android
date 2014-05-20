@@ -1,7 +1,6 @@
 package org.tribler.tsap;
 
 import org.videolan.vlc.VLCApplication;
-import org.videolan.vlc.MediaDatabase.mediaColumn;
 
 import android.app.ActionBar;
 import android.app.Activity;

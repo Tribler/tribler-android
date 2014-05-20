@@ -3,26 +3,23 @@
  */
 package org.tribler.tsap;
 
-import java.io.File;
-
 import org.tribler.tsap.videoInfoScreen.Torrent;
 import org.tribler.tsap.videoInfoScreen.TorrentManager;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
-
-import com.squareup.picasso.Picasso;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * @author niels

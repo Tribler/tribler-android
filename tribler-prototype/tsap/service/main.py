@@ -41,7 +41,7 @@ else:
 
 # Local files
 from searchmanager import SearchManager
-from sessionservice import TriblerSession
+from triblersession import TriblerSession
 from xmlrpc import XMLRPCServer
 
 

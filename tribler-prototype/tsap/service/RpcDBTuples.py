@@ -3,12 +3,14 @@ __author__ = 'user'
 # This file exposes some DB Tuples that are defined in Tribler.Main.Utility.GuiDBTuples.
 # Because the tuples found in said package are tied to some vwxGUI functions, it overrides those
 
-from Tribler.Main.Utility.GuiDBTuples import cache
+from Tribler.Main.Utility.GuiDBTuples import cache, cacheProperty
 from Tribler.Main.Utility.GuiDBTuples import Channel as vwxChannel
+from Tribler.Main.Utility.GuiDBTuples import RemoteChannel as vwxRemoteChannel
+from Tribler.Main.Utility.GuiDBTuples import ChannelTorrent as vwxChannelTorrent
+from Tribler.Main.Utility.GuiDBTuples import RemoteChannelTorrent as vwxRemoteChannelTorrent
 
 
 class Channel(vwxChannel):
-
     @cache
     def getState(self):
     #    if self.isDispersy():
@@ -34,3 +36,12 @@ class Channel(vwxChannel):
 #            results = ChannelManager.getInstance().getMostPopularTorrentsFromChannel(self.id, ['Torrent.Name'], family_filter=GUIUtility.getInstance().getFamilyFilter(), limit=num_torrents)
 #            self.popular_torrents = [result[0] for result in results]
         pass
+
+class RemoteChannel(vwxRemoteChannel):
+    pass
+
+class ChannelTorrent(vwxChannelTorrent):
+    pass
+
+class RemoteChannelTorrent(vwxRemoteChannelTorrent):
+    pass

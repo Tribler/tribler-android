@@ -161,8 +161,11 @@ class SearchManager():
         _logger.error("@@@@@@@@@ DISPERY CALLBACK!")
         _logger.error("@@@@@ CALL BACK DATA: %s\n%s" % (kws, answers))
 
-        channels = self.getChannelsByCID(answers.keys())
+        # Ignore searches we don't want (anymore)
+        if not self._channel_keywords == kws:
+            return
 
+        channels = self.getChannelsByCID(answers.keys())
         for channel in channels:
             try:
                 _logger.error("@@@@@ Channel found:\n%s" % str(channel[0]))

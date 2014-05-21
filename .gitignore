@@ -55,3 +55,6 @@ tests/.classpath
 # Python
 *.pyo
 *.pyc
+
+# Linux (gedit) backup/temp files
+*~

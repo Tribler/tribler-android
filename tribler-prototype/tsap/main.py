@@ -6,7 +6,7 @@ import logging
 import time
 
 # SETUP ENVIRONMENT, DO THIS FIRST
-from service.environment import init_environment
+from service.Environment import init_environment
 init_environment()
 
 # Init logger

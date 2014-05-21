@@ -12,7 +12,7 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
 # DB Tuples
-from rpcdbtuples import Channel
+from RpcDBTuples import Channel
 
 # Tribler communities
 from Tribler.community.search.community import SearchCommunity
@@ -21,10 +21,13 @@ from Tribler.community.allchannel.community import AllChannelCommunity
 #from Tribler.community.channel.preview import PreviewChannelCommunity
 #from Tribler.community.metadata.community import MetadataCommunity
 
+from Tribler.Core.Search.SearchManager import split_into_keywords
+
 
 class SearchManager():
 
     _session = None
+    _remotelock = None
 
     _channel_keywords = []
     _channel_results = []
@@ -51,6 +54,7 @@ class SearchManager():
         self.connected = False
 
         self._session = session
+        self._remotelock = threading.Lock()
 
         self._connect()
 
@@ -81,37 +85,60 @@ class SearchManager():
 
     def _xmlrpc_register(self, xmlrpc):
         # channels
-        xmlrpc.register_function(self.search_channel_local, "search.local_channel")
-        xmlrpc.register_function(self.search_channel_remote, "search.remote_channel")
+        xmlrpc.register_function(self.search_channel_set_keywords, "search.keywords.set_channels")
+        xmlrpc.register_function(self.search_channel_get_local, "search.local.get_channels")
+        xmlrpc.register_function(self.search_channel_do_remote, "search.remote.do_channels")
+        xmlrpc.register_function(self.search_channel_get_results, "search.remote.get_channels")
 
         # torrents
-        xmlrpc.register_function(self.search_torrent_local, "search.local_torrent")
-        xmlrpc.register_function(self.search_torrent_remote, "search.remote_torrent")
+        xmlrpc.register_function(self.search_torrent_set_keywords, "search.keywords.set_torrents")
+        xmlrpc.register_function(self.search_torrent_get_local, "search.local.get_torrents")
+        xmlrpc.register_function(self.search_torrent_do_remote, "search.remote.do_torrents")
+        xmlrpc.register_function(self.search_torrent_get_results, "search.remote.get_torrents")
 
-    def search_channel_local(self, keyword):
+        # both
+        xmlrpc.register_function(self.search_set_keywords, "search.keywords.set_all")
+        xmlrpc.register_function(self.search_do_remote, "search.remote.do_all")
+
+    def search_set_keywords(self, keywords):
+        return self.search_channel_set_keywords(keywords) and self.search_torrent_set_keywords(keywords)
+
+    def search_do_remote(self):
+        return self.search_channel_do_remote() and self.search_torrent_do_remote()
+
+    def search_channel_set_keywords(self, keywords):
+        keywords = split_into_keywords(unicode(keywords))
+        keywords = [keyword for keyword in keywords if len(keyword) > 1]
+
+        if keywords == self._channel_keywords:
+            return
+
+        try:
+            self._remotelock.acquire()
+
+            self._channel_keywords = keywords
+            self._channel_results = []
+        finally:
+            self._remotelock.release()
+
+    def search_channel_get_local(self):
         channel_results = {}
-        hits = self._channelcast_db.searchChannels(keyword)
+        hits = self._channelcast_db.searchChannels(self._channel_keywords)
 
         _, channels = self._createChannels(hits)
 
         for channel in channels:
-            channel_results[channel.id] = channel
+            channel_results[str(channel.id)] = channel
+
+        _logger.info("@@@@ Found some local channels: %s" % channel_results)
 
         return channel_results
 
-    def _createChannels(self, hits, filterTorrents=True):
-        channels = []
-        for hit in hits:
-            channel = Channel(*hit)
-            channels.append(channel)
+    def search_channel_get_results(self):
+        pass
 
-        return len(channels), channels
-
-    def search_channel_remote(self, keyword):
+    def search_channel_do_remote(self):
         nr_requests_made = 0
-
-        #self._channel_keywords.append(keyword)
-        self._channel_keywords.append(u"vodo")
 
         if self._dispersy:
             for community in self._dispersy.get_communities():
@@ -134,18 +161,34 @@ class SearchManager():
         _logger.error("@@@@@ CALL BACK DATA: %s\n%s" % (kws, answers))
 
         channels = self.getChannelsByCID(answers.keys())
-        _logger.error("@@@@@ Channels found:\n%s" % channels)
+
+        for channel in channels:
+            try:
+                _logger.error("@@@@@ Channel found:\n%s" % str(channel[0]))
+            except:
+                pass
         self._channel_results = channels
 
     def getChannelsByCID(self, channel_cids):
         channels = self._channelcast_db.getChannelsByCID(channel_cids)
         return self._createChannels(channels)
 
-    def search_torrent_local(self, keyword):
+    def _createChannels(self, hits, filterTorrents=True):
+        channels = []
+        for hit in hits:
+            channel = Channel(*hit)
+            channels.append(channel)
+
+        return len(channels), channels
+
+    def search_torrent_set_keywords(self, keywords):
         pass
 
-    def search_torrent_remote(self, keyword):
+    def search_torrent_get_local(self):
         pass
 
-    def _search_torrent_remote_callback(self):
+    def search_torrent_do_remote(self):
+        pass
+
+    def search_torrent_get_results(self):
         pass

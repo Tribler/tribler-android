@@ -6,11 +6,11 @@ import sys
 import os
 
 # SETUP ENVIRONMENT, DO THIS FIRST
-from environment import init_environment
+from Environment import init_environment
 init_environment('from service')
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
 
 arg = os.getenv('PYTHON_SERVICE_ARGUMENT')
@@ -40,9 +40,9 @@ else:
     os.environ['ANDROID_PRIVATE'] = os.getcwd()
 
 # Local files
-from searchmanager import SearchManager
-from triblersession import TriblerSession
-from xmlrpc import XMLRPCServer
+from SearchManager import SearchManager
+from TriblerSession import TriblerSession
+from XMLRpc import XMLRPCServer
 
 
 def loginfo(str):

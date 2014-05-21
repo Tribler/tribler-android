@@ -56,8 +56,6 @@ if [ ! -e "${CURRENTFOLDERPATH}/app" ]; then
 	echo -e "${red}${CURRENTFOLDERPATH}/app does not exist! Attempting to create it${NC}"
 	mkdir -p "${CURRENTFOLDERPATH}/app"
 else
-	echo -e "${yellow}Press any key to remove {$CURRENTFOLDERPATH}/app or Control + C to abort.${NC}"
-	read
 	rm -rv "${CURRENTFOLDERPATH}/app/*"
 fi
 
@@ -68,8 +66,8 @@ fi
 
 # Check if destination exist
 if [ -e "${PY4APATH}/dist/${DIRNAME}" ]; then
-	echo -e "${red}The distribution ${PY4APATH}/dist/${DIRNAME} already exist${NC}"
-	echo -e "${red}Press a key to remove it, or Control + C to abort.${NC}"
+	echo -e "${yellow}The distribution ${PY4APATH}/dist/${DIRNAME} already exist${NC}"
+	echo -e "${yellow}Press a key to remove it, or Control + C to abort.${NC}"
 	read
 	rm -rf "${PY4APATH}/dist/${DIRNAME}"
 fi
@@ -100,8 +98,5 @@ rm "${CURRENTFOLDERPATH}/tsap/swift"
 
 # Copy the .apk files to our own app folder
 find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
-
-# Delete the distribute and build now that the app has been made in the AT3 folder
-rm -rf "${PY4APATH}/dist/${DIRNAME}"
 
 echo -e "${green}All done!${NC} Everything seems to be in order (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ "

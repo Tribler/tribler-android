@@ -1,6 +1,7 @@
 __author__ = 'user'
 
 import threading
+from time import time
 
 # Setup logger
 import logging
@@ -25,9 +26,19 @@ from Tribler.Core.Search.SearchManager import split_into_keywords
 
 
 class SearchManager():
+    # Code to make this a singleton
+    __single = None
+
+    connected = False
 
     _session = None
-    _remotelock = None
+    _dispersy = None
+    _remote_lock = None
+
+    _misc_db = None
+    _torrent_db = None
+    _channelcast_db = None
+    _votecast_db = None
 
     _channel_keywords = []
     _channel_results = []
@@ -35,26 +46,13 @@ class SearchManager():
     _torrent_keywords = []
     _torrent_results = []
 
-    # Code to make this a singleton
-    __single = None
-
-    connected = False
-
-    _misc_db = None
-    _torrent_db = None
-    _channelcast_db = None
-    _votecast_db = None
-
-    _dispersy = None
-
-
     def __init__(self, session, xmlrpc=None):
         if SearchManager.__single:
             raise RuntimeError("ChannelManager is singleton")
         self.connected = False
 
         self._session = session
-        self._remotelock = threading.Lock()
+        self._remote_lock = threading.Lock()
 
         self._connect()
 
@@ -96,7 +94,7 @@ class SearchManager():
         xmlrpc.register_function(self.search_torrent_do_remote, "search.remote.do_torrents")
         xmlrpc.register_function(self.search_torrent_get_results, "search.remote.get_torrents")
 
-        # both
+        # all
         xmlrpc.register_function(self.search_set_keywords, "search.keywords.set_all")
         xmlrpc.register_function(self.search_do_remote, "search.remote.do_all")
 
@@ -114,12 +112,12 @@ class SearchManager():
             return
 
         try:
-            self._remotelock.acquire()
+            self._remote_lock.acquire()
 
             self._channel_keywords = keywords
             self._channel_results = []
         finally:
-            self._remotelock.release()
+            self._remote_lock.release()
 
     def search_channel_get_local(self):
         channel_results = {}
@@ -182,7 +180,19 @@ class SearchManager():
         return len(channels), channels
 
     def search_torrent_set_keywords(self, keywords):
-        pass
+        keywords = split_into_keywords(unicode(keywords))
+        keywords = [keyword for keyword in keywords if len(keyword) > 1]
+
+        if keywords == self._torrent_keywords:
+            return
+
+        try:
+            self._remote_lock.acquire()
+
+            self._torrent_keywords = keywords
+            self._torrent_results = []
+        finally:
+            self._remote_lock.release()
 
     def search_torrent_get_local(self):
         pass

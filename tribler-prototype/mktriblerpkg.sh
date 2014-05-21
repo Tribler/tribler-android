@@ -19,6 +19,11 @@ MD5SUM=`md5sum Tribler-0.1.0.tar.gz`
 echo $MD5SUM > Tribler-0.1.0.tar.gz.md5
 cat Tribler-0.1.0.tar.gz.md5
 
+if [ ! -e "${P4A_PATH}" ]; then
+	echo -e "P4A_PATH not set, autosetting the md5sum in the recipe is not possible.\nPress any key if you want to continue to upload this package"
+	read
+fi
+
 echo "Copy to server.."
 scp Tribler-0.1.0.tar.gz Tribler-0.1.0.tar.gz.md5 fr:/var/www/default/tsap/
 

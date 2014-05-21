@@ -3,11 +3,11 @@ package org.tribler.tsap.videoInfoScreen;
 import java.util.ArrayList;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 
 /**
- * Used to retrieve torrents by their id
- * @author niels *
+ * Used to retrieve Torrent objects by their ID
+ * @author Niels Spruit
  */
 public class TorrentManager {
 	private static ArrayList<Torrent> torrents;
@@ -18,22 +18,16 @@ public class TorrentManager {
 	public static void initializeTorrents()
 	{
 		torrents = new ArrayList<Torrent>();
-		torrents.add(new Torrent("Sintel","Video","2010-06-08",400.51,73,3,"Sintel is a short computer animated film by the Blender Institute, part of the Blender Foundation. Like the foundation's previous films Elephants Dream and Big Buck Bunny, the film was made using Blender, a free software application for animation created and supported by the same foundation. Sintel was produced by Ton Roosendaal, chairman of the Foundation, and directed by Colin Levy, an artist at Pixar Animation Studios. (code-named Durian)",R.drawable.sintel));
-		torrents.add(new Torrent("Dracula","Video","2010-10-08",500,56,6,"Dracula",R.drawable.dracula));
-		torrents.add(new Torrent("King Kong","Video","2010-07-23",600.59,66,2,"King Kong",R.drawable.kingkong));
-	
-	
-//		gridArray.add(new ThumbItem("Sintel", R.drawable.sintel, ThumbItem.TORRENT_HEALTH.GREEN, 500));
-//		gridArray.add(new ThumbItem("Dracula", R.drawable.dracula, ThumbItem.TORRENT_HEALTH.YELLOW, 4321));
-//		gridArray.add(new ThumbItem("King Kong", R.drawable.kingkong, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-//		gridArray.add(new ThumbItem("Tears of Steal", R.drawable.tos, ThumbItem.TORRENT_HEALTH.RED, 423));
-//		gridArray.add(new ThumbItem("To The Last Man", R.drawable.lastman, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-//		gridArray.add(new ThumbItem("Attack of the 50 ft woman", R.drawable.fiftyft, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-//		gridArray.add(new ThumbItem("Draculas Daughter", R.drawable.dracula_daughter, ThumbItem.TORRENT_HEALTH.RED, 423));
-//		gridArray.add(new ThumbItem("Lusty Men", R.drawable.lustymen, ThumbItem.TORRENT_HEALTH.RED, 423));
-//		gridArray.add(new ThumbItem("Mantis", R.drawable.mantis, ThumbItem.TORRENT_HEALTH.RED, 423));
-//		gridArray.add(new ThumbItem("Son of Frankenstein", R.drawable.sof, ThumbItem.TORRENT_HEALTH.RED, 423));
-//	
+		torrents.add(new Torrent("Sintel","Video","2010-06-08",400.51,73,3,TORRENT_HEALTH.GREEN,"Sintel is a short computer animated film by the Blender Institute, part of the Blender Foundation. Like the foundation's previous films Elephants Dream and Big Buck Bunny, the film was made using Blender, a free software application for animation created and supported by the same foundation. Sintel was produced by Ton Roosendaal, chairman of the Foundation, and directed by Colin Levy, an artist at Pixar Animation Studios. (code-named Durian)",R.drawable.sintel));
+		torrents.add(new Torrent("Dracula","Video","2010-10-08",4321,56,6,TORRENT_HEALTH.YELLOW,"Dracula...",R.drawable.dracula));
+		torrents.add(new Torrent("King Kong","Video","2010-07-23",12353,66,2,TORRENT_HEALTH.UNKNOWN,"King Kong...",R.drawable.kingkong));
+		torrents.add(new Torrent("Tears of Steal","Video","2003-01-23",423.12,102,12,TORRENT_HEALTH.RED,"Tears of Steel...",R.drawable.tos));
+		torrents.add(new Torrent("To The Last Man","Video","2000-03-28",1235.2,22,0,TORRENT_HEALTH.UNKNOWN,"To The Last Man...",R.drawable.lastman));
+		torrents.add(new Torrent("Attack of the 50 ft woman","Video","2003-01-23",413.123,45,2,TORRENT_HEALTH.UNKNOWN,"Attack of the 50 ft woman...",R.drawable.fiftyft));
+		torrents.add(new Torrent("Draculas Daughter","Video","2013-11-23",124,2,0,TORRENT_HEALTH.RED,"Draculas Daughter...",R.drawable.dracula_daughter));		
+		torrents.add(new Torrent("Lusty Men","Video","2001-11-09",564.1,234,33,TORRENT_HEALTH.GREEN,"Lusty Men...",R.drawable.lustymen));
+		torrents.add(new Torrent("Mantis","Video","1999-12-15",124.5,8,1,TORRENT_HEALTH.RED,"Mantis...",R.drawable.mantis));		
+		torrents.add(new Torrent("Son of Frankenstein","Video","2003-12-18",342.5,21,3,TORRENT_HEALTH.YELLOW,"Son of Frankenstein...",R.drawable.sof));	
 	}
 	
 	/** 

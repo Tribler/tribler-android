@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.R;
 import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
+import org.tribler.tsap.thumbgrid.ThumbItem;
 
 /**
  * Used to retrieve Torrent objects by their ID
@@ -56,5 +57,20 @@ public class TorrentManager {
 	public static boolean containsTorrentWithID(int id)
 	{
 		return (id>=0 && id<torrents.size() && torrents.get(id) != null);
+	}
+	
+	public static ArrayList<ThumbItem> getThumbItems()
+	{
+		ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
+		for(Torrent torrent: torrents)
+		{
+			gridArray.add(toThumbItem(torrent));
+		}
+		return gridArray;
+	}
+
+	private static ThumbItem toThumbItem(Torrent torrent) {		
+		int fz = (int) Math.round(torrent.getFilesize());
+		return new ThumbItem(torrent.getName(), torrent.getThumbnailID(), torrent.getHealth(), fz);
 	}
 }

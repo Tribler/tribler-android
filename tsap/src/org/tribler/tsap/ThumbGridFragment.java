@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbAdapter;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.videoInfoScreen.TorrentManager;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -37,27 +38,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
-    	
-    	ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
-    	
-    	View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
-    		
+    	    	
+    	View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);    		
     	GridView gridView = (GridView) v.findViewById(R.id.ThumbsGrid);
-        
-    	for(int i = 0; i < 3; i++)
-    	{
-    		gridArray.add(new ThumbItem("Sintel", R.drawable.sintel, TORRENT_HEALTH.GREEN, 500));
-    		gridArray.add(new ThumbItem("Dracula", R.drawable.dracula, TORRENT_HEALTH.YELLOW, 4321));
-    		gridArray.add(new ThumbItem("King Kong", R.drawable.kingkong, TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Tears of Steal", R.drawable.tos, TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("To The Last Man", R.drawable.lastman, TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Attack of the 50 ft woman", R.drawable.fiftyft, TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Draculas Daughter", R.drawable.dracula_daughter, TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Lusty Men", R.drawable.lustymen, TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Mantis", R.drawable.mantis, TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Son of Frankenstein", R.drawable.sof, TORRENT_HEALTH.RED, 423));
-    	}
     	
+    	ArrayList<ThumbItem> gridArray = TorrentManager.getThumbItems();
 		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);
 		gridView.setAdapter(customThumbs);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -73,8 +58,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 				transaction.addToBackStack(null);
 				transaction.commit();
 			}
-		});
-       
+		});       
         return v;
     }
     

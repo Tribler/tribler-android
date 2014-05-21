@@ -63,7 +63,7 @@ public class VideoInfoFragment extends Fragment {
 
 		TextView size = (TextView) view
 				.findViewById(R.id.video_details_filesize);
-		size.setText(selectedTorrent.getFilesize());
+		size.setText(Double.toString(selectedTorrent.getFilesize()));
 
 		TextView seeders = (TextView) view
 				.findViewById(R.id.video_details_seeders);

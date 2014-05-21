@@ -76,9 +76,17 @@ public class Torrent {
 	/**
 	 * @return the filesize of the torrent
 	 */
-	public String getFilesize() {
-		return Double.toString(filesize)+" MB";
+	public double getFilesize()
+	{
+		return filesize;
 	}
+	
+//	/**
+//	 * @return the filesize of the torrent in string format
+//	 */
+//	public String getFilesizeString() {
+//		return Double.toString(filesize)+" MB";
+//	}
 
 	/**
 	 * @return the number of seeders

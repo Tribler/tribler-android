@@ -22,6 +22,11 @@ cat Tribler-0.1.0.tar.gz.md5
 echo "Copy to server.."
 scp Tribler-0.1.0.tar.gz Tribler-0.1.0.tar.gz.md5 fr:/var/www/default/tsap/
 
+if [ $? -ne 0 ]; then
+    echo "Failed to upload to server, aborting"
+    exit
+fi
+
 if [ -f "${P4A_PATH}/recipes/Tribler/recipe.sh" ]
 then
 	echo "Replacing MD5SUM in ${P4A_PATH}/recipes/Tribler/recipe.sh"

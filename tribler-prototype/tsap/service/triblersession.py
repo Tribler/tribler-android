@@ -71,7 +71,7 @@ class TriblerSession():
         #self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
         self._sconfig.set_torrent_collecting(False)
-        self._sconfig.set_libtorrent(False)
+        #self._sconfig.set_libtorrent(False)
         self._sconfig.set_dht_torrent_collecting(False)
         self._sconfig.set_videoplayer(False)
 

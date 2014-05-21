@@ -15,7 +15,7 @@ This project has the following dependencies:
 For testing purposes:
 * [Android JUnit Report Test Runner](https://github.com/jsankey/android-junit-report) (Apache v2)
 
-## Screenshots (
+## Screenshots
 
 Below, some screenshots of the current GUI are shown.
 

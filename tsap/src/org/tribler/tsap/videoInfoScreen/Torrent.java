@@ -1,5 +1,7 @@
 package org.tribler.tsap.videoInfoScreen;
 
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
+
 
 /**
  * A class that stores the metadata of a torrent
@@ -13,6 +15,7 @@ public class Torrent {
 	private double filesize;
 	private int seeders;
 	private int leechers;
+	private TORRENT_HEALTH health;
 	private String description;
 	private int thumbnailID;
 
@@ -37,13 +40,14 @@ public class Torrent {
 	 *            The id of the torrent's thumbnail
 	 */
 	public Torrent(String nm, String tp, String upDate, double fsize, int seed,
-			int leech, String descr, int tID) {
+			int leech, TORRENT_HEALTH health, String descr, int tID) {
 		this.name = nm;
 		this.type = tp;
 		this.uploadDate = upDate;
 		this.filesize = fsize;
 		this.seeders = seed;
 		this.leechers = leech;
+		this.health = health;
 		this.description = descr;
 		this.thumbnailID = tID;
 	}
@@ -88,6 +92,13 @@ public class Torrent {
 	 */
 	public String getLeechers() {
 		return Integer.toString(leechers);
+	}
+
+	/**
+	 * @return the health of the torrent
+	 */
+	public TORRENT_HEALTH getHealth() {
+		return health;
 	}
 
 	/**

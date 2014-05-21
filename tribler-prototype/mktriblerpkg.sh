@@ -5,10 +5,11 @@ rm -r Tribler-0.1.0/Tribler
 echo "Copy new Tribler code.."
 cp -r tribler/Tribler Tribler-0.1.0/
 
-echo "Remove pyc and pyo files.."
+echo "Remove pyc, pyo and file.ext~ files.."
 pushd Tribler-0.1.0/Tribler
 find -name '*.pyc' -exec rm {} \;
 find -name '*.pyo' -exec rm {} \;
+find -name '*~' -exec rm {} \;
 popd
 
 echo "Make tarball.."

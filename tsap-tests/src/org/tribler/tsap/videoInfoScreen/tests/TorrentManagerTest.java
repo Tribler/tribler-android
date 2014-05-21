@@ -10,11 +10,20 @@ import junit.framework.TestCase;
  * @author Niels Spruit
  */
 public class TorrentManagerTest extends TestCase {
+	
+	private TorrentManager mTorrentManager;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		TorrentManager.initializeTorrents();
+		mTorrentManager = TorrentManager.getInstance();			
+	}
+	
+	/**
+	 * Tests whether the test fixture is set up correctly
+	 */
+	public void testPreconditions() {
+		assertNotNull("mTorrentManager is null", mTorrentManager);
 	}
 
 	/**
@@ -23,15 +32,15 @@ public class TorrentManagerTest extends TestCase {
 	 */
 	public void testTorrentManagerInitialized() {
 		assertTrue("no torrents in torrent manager",
-				TorrentManager.getNumberOfTorrents() > 0);
+				mTorrentManager.getNumberOfTorrents() > 0);
 	}
 
 	/**
 	 * Test whether the torrent manager contains three torrents
 	 */
 	public void testGetNumberOfTorrents() {
-		assertEquals("getNumberOfTorrents() incorrect", 3,
-				TorrentManager.getNumberOfTorrents());
+		assertEquals("getNumberOfTorrents() incorrect", 10,
+				mTorrentManager.getNumberOfTorrents());
 	}
 
 	/**
@@ -40,12 +49,12 @@ public class TorrentManagerTest extends TestCase {
 	 */
 	public void testContainsTorrentWithID() {
 		assertTrue("containsTorrentWithID(0) incorrect",
-				TorrentManager.containsTorrentWithID(0));
+				mTorrentManager.containsTorrentWithID(0));
 		assertTrue("containsTorrentWithID(1) incorrect",
-				TorrentManager.containsTorrentWithID(1));
+				mTorrentManager.containsTorrentWithID(1));
 		assertTrue("containsTorrentWithID(2) incorrect",
-				TorrentManager.containsTorrentWithID(2));
-		assertFalse("containsTorrentWithID(3) incorrect",
-				TorrentManager.containsTorrentWithID(3));
+				mTorrentManager.containsTorrentWithID(2));
+		assertFalse("containsTorrentWithID(getNumberOfTorrents()) incorrect",
+				mTorrentManager.containsTorrentWithID(mTorrentManager.getNumberOfTorrents()));
 	}
 }

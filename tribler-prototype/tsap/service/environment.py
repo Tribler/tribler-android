@@ -15,7 +15,7 @@ def init_environment(msg=None):
         print os.environ['ANDROID_PRIVATE']
         if split_path[1].lower() == 'service':
             os.environ['ANDROID_PRIVATE'] = split_path[0]
-            os.chdir(split_path[0])
+        #    os.chdir(split_path[0])
         print os.environ['ANDROID_PRIVATE']
 
         # Set P4A egg cache

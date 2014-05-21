@@ -8,11 +8,11 @@ pushd tmprunmain
 virtualenv --system-site-packages venv-tsap
 . venv-tsap/bin/activate
 pip install ../Tribler-0.1.0.tar.gz
-ln -s ../tribler/Tribler .
+#ln -s ../tribler/Tribler .
 popd
 
-cp tsap/* tmprunmain/
-cp tribler/swift tmprunmain/
+cp -rv tsap/* tmprunmain/
+cp -v tribler/swift tmprunmain/
 
 pushd tmprunmain
 

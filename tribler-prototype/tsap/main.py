@@ -19,13 +19,22 @@ print 'os.getcwd(): %s' % os.getcwd()
 print 'sys.platform: %s\nos.name: %s' % (sys.platform, os.name)
 
 if __name__ == '__main__':
-    from android import AndroidService
-    service = AndroidService("TSAP Tribler Session", "A tribler session is running..")
+    if os.environ['ANDROID_HOST'] == "YES":
+        # Start android service
+        from android import AndroidService
+        service = AndroidService("TSAP Tribler Session", "A tribler session is running..")
 
-    _logger.info("Starting service..")
-    service.start()
+        _logger.info("Starting service..")
+        service.start()
 
-    time.sleep(1000)
+        #_logger.info("Stopping service..")
+        #service.stop()
+    else:
+        # Just run services/main.py
+        import subprocess
 
-    _logger.info("Stopping service..")
-    service.stop()
+        os.chdir(os.path.join(os.getcwd(), 'service'))
+        subprocess.call(["python", "main.py"])#, shell=True)
+
+        #from service import main
+

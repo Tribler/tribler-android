@@ -2,6 +2,7 @@ package org.tribler.tsap;
 
 import java.util.ArrayList;
 
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbAdapter;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 
@@ -45,16 +46,16 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
         
     	for(int i = 0; i < 3; i++)
     	{
-    		gridArray.add(new ThumbItem("Sintel", R.drawable.sintel, ThumbItem.TORRENT_HEALTH.GREEN, 500));
-    		gridArray.add(new ThumbItem("Dracula", R.drawable.dracula, ThumbItem.TORRENT_HEALTH.YELLOW, 4321));
-    		gridArray.add(new ThumbItem("King Kong", R.drawable.kingkong, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Tears of Steal", R.drawable.tos, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("To The Last Man", R.drawable.lastman, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Attack of the 50 ft woman", R.drawable.fiftyft, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Draculas Daughter", R.drawable.dracula_daughter, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Lusty Men", R.drawable.lustymen, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Mantis", R.drawable.mantis, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Son of Frankenstein", R.drawable.sof, ThumbItem.TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Sintel", R.drawable.sintel, TORRENT_HEALTH.GREEN, 500));
+    		gridArray.add(new ThumbItem("Dracula", R.drawable.dracula, TORRENT_HEALTH.YELLOW, 4321));
+    		gridArray.add(new ThumbItem("King Kong", R.drawable.kingkong, TORRENT_HEALTH.UNKNOWN, 12353));
+    		gridArray.add(new ThumbItem("Tears of Steal", R.drawable.tos, TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("To The Last Man", R.drawable.lastman, TORRENT_HEALTH.UNKNOWN, 12353));
+    		gridArray.add(new ThumbItem("Attack of the 50 ft woman", R.drawable.fiftyft, TORRENT_HEALTH.UNKNOWN, 12353));
+    		gridArray.add(new ThumbItem("Draculas Daughter", R.drawable.dracula_daughter, TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Lusty Men", R.drawable.lustymen, TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Mantis", R.drawable.mantis, TORRENT_HEALTH.RED, 423));
+    		gridArray.add(new ThumbItem("Son of Frankenstein", R.drawable.sof, TORRENT_HEALTH.RED, 423));
     	}
     	
 		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);

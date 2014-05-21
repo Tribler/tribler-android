@@ -1,6 +1,5 @@
 __author__ = 'user'
 
-import threading
 import time
 import sys
 import os
@@ -51,7 +50,7 @@ class TriblerSession():
             os.chmod(swift_path_dest, 0777)
 
     def start_service(self):
-        _logger.info("Set tribler_sate_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
+        _logger.info("Set tribler_state_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
 
         cfgfilename = Session.get_default_config_filename(os.environ['TRIBLER_STATE_DIR'])
         try:

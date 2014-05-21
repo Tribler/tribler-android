@@ -97,6 +97,9 @@ class TriblerSession():
         def define_communities():
             _logger.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
+            integrate_with_tribler = True
+            comm_args = {'integrate_with_tribler': integrate_with_tribler}
+
             from Tribler.community.search.community import SearchCommunity
             from Tribler.community.allchannel.community import AllChannelCommunity
             from Tribler.community.channel.community import ChannelCommunity
@@ -107,13 +110,13 @@ class TriblerSession():
             #now = timef()
 
             # must be called on the Dispersy thread
-            comm = dispersy.define_auto_load(SearchCommunity, self._session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(SearchCommunity, self._session.dispersy_member, load=True, kargs=comm_args)
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
-            comm = dispersy.define_auto_load(AllChannelCommunity, self._session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(AllChannelCommunity, self._session.dispersy_member, load=True, kargs=comm_args)
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             # load metadata community
-            #comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            #comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs=comm_args)
             #_logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing
@@ -125,9 +128,9 @@ class TriblerSession():
             #                               (swift_process,),
             #                               load=True)
 
-            comm = dispersy.define_auto_load(ChannelCommunity, self._session.dispersy_member, load=True, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(ChannelCommunity, self._session.dispersy_member, load=True, kargs=comm_args)
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
-            comm = dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs={'integrate_with_tribler': False})
+            comm = dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
             _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
             #diff = timef() - now

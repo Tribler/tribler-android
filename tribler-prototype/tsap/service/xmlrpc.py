@@ -16,8 +16,6 @@ class XMLRPCServer:
         self._iface = iface
         self._port = port
 
-        pass
-
     def register_function(self, funct, name=None):
         self._server.register_function(funct, name)
 

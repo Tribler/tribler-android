@@ -52,6 +52,7 @@ class TriblerSession():
     def start_service(self):
         _logger.info("Set tribler_state_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
 
+        # Load configuration file (if exists)
         cfgfilename = Session.get_default_config_filename(os.environ['TRIBLER_STATE_DIR'])
         try:
             self._sconfig = SessionStartupConfig.load(cfgfilename)
@@ -77,10 +78,22 @@ class TriblerSession():
         self._sconfig.set_dispersy_tunnel_over_swift(False)
         self._sconfig.set_torrent_collecting_max_torrents(5000)
 
+        # Start session
         _logger.info("Starting tribler session")
         self._session = Session(self._sconfig)
         self._session.start()
 
+        #swift_process = self._session.get_swift_proc() and self._session.get_swift_process()
+
+        self._dispersy = self._session.lm.dispersy
+
+        _logger.info('libTribler session started!')
+
+        self.load_dispersy_communities()
+
+    def load_dispersy_communities(self, blocking=True):
+
+        # Dispersy init communitites callback function
         def define_communities():
             _logger.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
@@ -123,37 +136,17 @@ class TriblerSession():
             self._dispersy_init = True
 
         _logger.info("Set autoload_communities callback")
-        swift_process = self._session.get_swift_proc() and self._session.get_swift_process()
         dispersy = self._session.get_dispersy_instance()
-        #self.dispersy = self.session.get_dispersy_instance()
         dispersy.callback.call(define_communities)
 
-        self._dispersy = self._session.lm.dispersy
-
-        _logger.info('libTribler session started!')
-
-
+        if not blocking:
+            return
 
         while not self._dispersy_init:
             _logger.error("@@@ Waiting for dispersy communities to initialize..")
             time.sleep(.5)
 
         _logger.error("@@@ Dispersy communitites initialized!")
-
-
-#        #_logger.info("@@@ Sleeping 10s to give dispersy time to find peers")
-#        #time.sleep(10)
-
-#        _logger.error("@@@ Adding 'vodo' to search keywords")
-#        self.searchkeywords.append(u"vodo")
-#        #self.searchkeywords.append(u"game of thrones")
-
-#        nr_req = False
-#        while not nr_req:
-#            time.sleep(5)
-#            _logger.error("@@@ DOING DISPERSY SEARCH CALL")
-#            nr_req = self.searchDispersy()
-#            _logger.error("@@@ %s (%s)" % ("DISPERSY SEARCH CALL SUCCESS" if nr_req else "DISPERSY SEARCH CALL FAILED, RETRY IN 5s", nr_req))
 
 
     def stop_service(self):

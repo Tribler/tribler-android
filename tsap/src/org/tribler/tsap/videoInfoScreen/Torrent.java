@@ -80,13 +80,6 @@ public class Torrent {
 	{
 		return filesize;
 	}
-	
-//	/**
-//	 * @return the filesize of the torrent in string format
-//	 */
-//	public String getFilesizeString() {
-//		return Double.toString(filesize)+" MB";
-//	}
 
 	/**
 	 * @return the number of seeders

@@ -29,7 +29,6 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
-		this.addAll(data);
 		
 		float s = getContext().getResources().getDisplayMetrics().density;
     	mThumbWidth = (int)(100 * s);

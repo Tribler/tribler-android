@@ -87,6 +87,7 @@ class SearchManager():
         xmlrpc.register_function(self.search_channel_get_local, "search.local.get_channels")
         xmlrpc.register_function(self.search_channel_do_remote, "search.remote.do_channels")
         xmlrpc.register_function(self.search_channel_get_results, "search.remote.get_channels")
+        xmlrpc.register_function(self.search_channel_peek_results, "search.remote.peek_channels")
 
         # torrents
         xmlrpc.register_function(self.search_torrent_set_keywords, "search.keywords.set_torrents")
@@ -127,13 +128,15 @@ class SearchManager():
 
         for channel in channels:
             channel_results[str(channel.id)] = channel
-
-        _logger.info("@@@@ Found some local channels: %s" % channel_results)
+            _logger.info("@@@@ Found local channel: %s" % channel)
 
         return channel_results
 
     def search_channel_get_results(self):
         pass
+
+    def search_channel_peek_results(self):
+        return len(self._channel_results)
 
     def search_channel_do_remote(self):
         nr_requests_made = 0

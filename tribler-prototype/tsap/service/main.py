@@ -51,6 +51,7 @@ def loginfo(str):
 if __name__ == '__main__':
     _logger.info("Python egg chache: %s" % os.environ["PYTHON_EGG_CACHE"])
     _logger.info("$ANDROID_PRIVATE=%s", os.environ["ANDROID_PRIVATE"])
+    _logger.info("cwd: %s" % os.getcwd())
 
     _logger.info("Loading TriblerSessionService")
     tribler = TriblerSession()

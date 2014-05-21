@@ -31,6 +31,7 @@ public class VideoInfoFragment extends Fragment {
 	private View view;
 	private Context context;
 	private View.OnClickListener mViewButtonOnClickListener;
+	private TorrentManager mTorrentManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +42,7 @@ public class VideoInfoFragment extends Fragment {
 		if (getArguments() != null)
 			torrentID = getArguments().getInt("torrentID", 0);
 
-		TorrentManager.initializeTorrents();
+		mTorrentManager = TorrentManager.getInstance();
 		setValues();
 		return view;
 	}
@@ -107,9 +108,9 @@ public class VideoInfoFragment extends Fragment {
 	 *         exists, otherwise torrent with id=0 is returned
 	 */
 	private Torrent getCurrentTorrent() {
-		if (TorrentManager.containsTorrentWithID(torrentID))
-			return TorrentManager.getTorrentById(torrentID);
-		return TorrentManager.getTorrentById(0);
+		if (mTorrentManager.containsTorrentWithID(torrentID))
+			return mTorrentManager.getTorrentById(torrentID);
+		return mTorrentManager.getTorrentById(0);
 	}
 
 	private void loadBitmap(int resId, ImageView mImageView) {

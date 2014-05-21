@@ -7,16 +7,29 @@ import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 
 /**
- * Used to retrieve Torrent objects by their ID
+ * Singleton class used to retrieve Torrent objects by their ID
  * @author Niels Spruit
  */
 public class TorrentManager {
-	private static ArrayList<Torrent> torrents;
+	private static TorrentManager theInstance=null;
+	private ArrayList<Torrent> torrents;
+	
+	protected TorrentManager()
+	{
+		initializeTorrents();
+	}
+	
+	public static TorrentManager getInstance()
+	{
+		if(theInstance == null)
+			theInstance = new TorrentManager();
+		return theInstance;
+	}
 	
 	/**
 	 * Initializes the torrent list with some torrent stubs
 	 */
-	public static void initializeTorrents()
+	private void initializeTorrents()
 	{
 		torrents = new ArrayList<Torrent>();
 		torrents.add(new Torrent("Sintel","Video","2010-06-08",400.51,73,3,TORRENT_HEALTH.GREEN,"Sintel is a short computer animated film by the Blender Institute, part of the Blender Foundation. Like the foundation's previous films Elephants Dream and Big Buck Bunny, the film was made using Blender, a free software application for animation created and supported by the same foundation. Sintel was produced by Ton Roosendaal, chairman of the Foundation, and directed by Colin Levy, an artist at Pixar Animation Studios. (code-named Durian)",R.drawable.sintel));
@@ -35,7 +48,7 @@ public class TorrentManager {
 	 * @param id the position of the torrent in the list
 	 * @return the torrent belonging to the id
 	 */
-	public static Torrent getTorrentById(int id)
+	public Torrent getTorrentById(int id)
 	{
 		return torrents.get(id);
 	}
@@ -43,7 +56,7 @@ public class TorrentManager {
 	/** 
 	 * @return the number of torrents in the list
 	 */
-	public static int getNumberOfTorrents()
+	public int getNumberOfTorrents()
 	{
 		if(torrents != null)
 			return torrents.size();
@@ -54,12 +67,12 @@ public class TorrentManager {
 	 * @param id the id of the torrent
 	 * @return True iff the list contains a torrent at index=id
 	 */
-	public static boolean containsTorrentWithID(int id)
+	public boolean containsTorrentWithID(int id)
 	{
 		return (id>=0 && id<torrents.size() && torrents.get(id) != null);
 	}
 	
-	public static ArrayList<ThumbItem> getThumbItems()
+	public ArrayList<ThumbItem> getThumbItems()
 	{
 		ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
 		for(Torrent torrent: torrents)
@@ -69,7 +82,7 @@ public class TorrentManager {
 		return gridArray;
 	}
 
-	private static ThumbItem toThumbItem(Torrent torrent) {		
+	private ThumbItem toThumbItem(Torrent torrent) {		
 		int fz = (int) Math.round(torrent.getFilesize());
 		return new ThumbItem(torrent.getName(), torrent.getThumbnailID(), torrent.getHealth(), fz);
 	}

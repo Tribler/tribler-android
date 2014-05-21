@@ -42,7 +42,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
     	View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);    		
     	GridView gridView = (GridView) v.findViewById(R.id.ThumbsGrid);
     	
-    	ArrayList<ThumbItem> gridArray = TorrentManager.getThumbItems();
+    	ArrayList<ThumbItem> gridArray = TorrentManager.getInstance().getThumbItems();
 		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);
 		gridView.setAdapter(customThumbs);
 		gridView.setOnItemClickListener(new OnItemClickListener() {

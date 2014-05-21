@@ -57,13 +57,12 @@ if __name__ == '__main__':
     tribler = TriblerSession()
     tribler.start_service()
 
-    _logger.info("Loading SearchManager")
-    #sm = SearchManager(tribler._session)
-    #sm.search_channel('vodo')
-
     _logger.info("Loading XMLRPCServer")
     xmlrpc = XMLRPCServer(iface="0.0.0.0")
     xmlrpc.register_function(loginfo, "info")
+
+    _logger.info("Loading SearchManager")
+    sm = SearchManager(tribler._session, xmlrpc)
 
     _logger.info("Now running XMLRPC on http://%s:%s/tribler" % (xmlrpc._iface, xmlrpc._port))
     xmlrpc.start_server()

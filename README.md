@@ -12,7 +12,10 @@ This project has the following dependencies:
 * [Picasso](https://github.com/square/picasso) (Apache v2)
 * [VLC for Android](http://www.videolan.org/vlc/download-android.html) (GPL v2)
 
-## Screenshots
+For testing purposes:
+* [Android JUnit Report Test Runner](https://github.com/jsankey/android-junit-report) (Apache v2)
+
+## Screenshots (
 
 Below, some screenshots of the current GUI are shown.
 

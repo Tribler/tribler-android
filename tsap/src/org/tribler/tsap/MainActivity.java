@@ -94,4 +94,20 @@ public class MainActivity extends Activity
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    /** 
+     * @return this Activity's ChannelListFragment instance
+     */
+    public ChannelListFragment getChannelListFragment()
+    {
+    	return channelFragment;
+    }
+    
+    /**
+     * @return this Activity's ThumbGridFragment instance
+     */
+    public ThumbGridFragment getThumbGridFragment()
+    {
+    	return mThumbGridFragment;
+    }
 }

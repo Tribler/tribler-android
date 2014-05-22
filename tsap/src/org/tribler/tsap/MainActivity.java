@@ -10,11 +10,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * The activity that is started when the application is launched
+ * @author Dirk Schut, Wendo Sabée and Niels Spruit
+ *
+ */
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
-     * Fragment managing the behaviours, interactions and presentation of the navigation drawer.
+     * Fragments managing the behaviours, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
@@ -26,6 +31,10 @@ public class MainActivity extends Activity
     private CharSequence mTitle;
 	
 	
+    /**
+     * Initializes the navigation drawer and sends the context to VLC
+     * @param savedInstanceState The state of the saved instance
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +53,12 @@ public class MainActivity extends Activity
         VLCApplication.setContext(getApplicationContext());
     }
 
+    /**
+     * Updates the GUI according to the selected navigation drawer item by loading the correct fragment
+     * @param position The position of the navigation drawer item that has been clicked
+     */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch(position)
@@ -62,6 +74,9 @@ public class MainActivity extends Activity
         }
     }
 
+    /**
+     * Restores the action bar (e.g. the title is set to the current fragment)
+     */
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -69,6 +84,11 @@ public class MainActivity extends Activity
         actionBar.setTitle(mTitle);
     }
 
+    /**
+     * Creates the options menu containing the settings
+     * @param menu The menu that will be created
+     * @return True iff the menu has been set up correctly
+     */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -83,6 +103,11 @@ public class MainActivity extends Activity
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	/**
+	 * Defines the behaviour of selecting a menu item
+	 * @param item The menu item that the user has clicked
+	 * @return True iff the action belonging to the menu item has been handled correcly
+	 */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -96,7 +121,8 @@ public class MainActivity extends Activity
     }
     
     /** 
-     * @return this Activity's ChannelListFragment instance
+     * Returns the instance of the ChannelListFragment
+     * @return This Activity's ChannelListFragment instance
      */
     public ChannelListFragment getChannelListFragment()
     {
@@ -104,7 +130,8 @@ public class MainActivity extends Activity
     }
     
     /**
-     * @return this Activity's ThumbGridFragment instance
+     * Returns the instance of the ThumbGridFragment
+     * @return This Activity's ThumbGridFragment instance
      */
     public ThumbGridFragment getThumbGridFragment()
     {

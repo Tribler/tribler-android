@@ -50,7 +50,9 @@ public class TorrentManager {
 	 */
 	public Torrent getTorrentById(int id)
 	{
-		return torrents.get(id);
+		if(containsTorrentWithID(id))
+			return torrents.get(id);
+		return null;
 	}
 	
 	/** 

@@ -65,11 +65,11 @@ public class VideoInfoFragment extends Fragment {
 
 		TextView seeders = (TextView) view
 				.findViewById(R.id.video_details_seeders);
-		seeders.setText(selectedTorrent.getSeeders());
+		seeders.setText(Integer.toString(selectedTorrent.getSeeders()));
 
 		TextView leechers = (TextView) view
 				.findViewById(R.id.video_details_leechers);
-		leechers.setText(selectedTorrent.getLeechers());
+		leechers.setText(Integer.toString(selectedTorrent.getLeechers()));
 
 		TextView descr = (TextView) view
 				.findViewById(R.id.video_info_description);

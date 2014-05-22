@@ -84,15 +84,15 @@ public class Torrent {
 	/**
 	 * @return the number of seeders
 	 */
-	public String getSeeders() {
-		return Integer.toString(seeders);
+	public int getSeeders() {
+		return seeders;
 	}
 
 	/**
 	 * @return the number of leechers
 	 */
-	public String getLeechers() {
-		return Integer.toString(leechers);
+	public int getLeechers() {
+		return leechers;
 	}
 
 	/**

@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.thumbgrid.ThumbAdapter;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.videoInfoScreen.TorrentManager;
 
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,91 +17,124 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 
+/**
+ * Fragment that shows a grid of available torrents and handles its behaviour
+ * 
+ * @author Wendo Sabée
+ */
 public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
-	//stores the menu handler to remove the search item in onPause()
+	// stores the menu handler to remove the search item in onPause()
 	private Menu menu;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-	
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	super.onCreateView(inflater, container, savedInstanceState);
-    	
-    	ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
-    	
-    	View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
-    		
-    	GridView gridView = (GridView) v.findViewById(R.id.ThumbsGrid);
-        
-    	for(int i = 0; i < 3; i++)
-    	{
-    		gridArray.add(new ThumbItem("Sintel", R.drawable.sintel, ThumbItem.TORRENT_HEALTH.GREEN, 500));
-    		gridArray.add(new ThumbItem("Dracula", R.drawable.dracula, ThumbItem.TORRENT_HEALTH.YELLOW, 4321));
-    		gridArray.add(new ThumbItem("King Kong", R.drawable.kingkong, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Tears of Steal", R.drawable.tos, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("To The Last Man", R.drawable.lastman, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Attack of the 50 ft woman", R.drawable.fiftyft, ThumbItem.TORRENT_HEALTH.UNKNOWN, 12353));
-    		gridArray.add(new ThumbItem("Draculas Daughter", R.drawable.dracula_daughter, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Lusty Men", R.drawable.lustymen, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Mantis", R.drawable.mantis, ThumbItem.TORRENT_HEALTH.RED, 423));
-    		gridArray.add(new ThumbItem("Son of Frankenstein", R.drawable.sof, ThumbItem.TORRENT_HEALTH.RED, 423));
-    	}
-    	
-		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);
+
+	/**
+	 * Defines that this fragment has an own option menu
+	 * 
+	 * @param savedInstanceState
+	 *            The state of the saved instance
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	/**
+	 * Initializes the thumb grid fragment's GridView
+	 * 
+	 * @param inflater
+	 *            The inflater used to inflate the thumb grid layout
+	 * @param container
+	 *            The container view of this fragment
+	 * @param savedInstanceState
+	 *            The state of the saved instance
+	 * @return The created view
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+
+		View v = inflater.inflate(R.layout.fragment_thumb_grid, container,
+				false);
+		GridView gridView = (GridView) v.findViewById(R.id.ThumbsGrid);
+
+		ArrayList<ThumbItem> gridArray = TorrentManager.getInstance()
+				.getThumbItems();
+		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(),
+				R.layout.thumb_grid_item, gridArray);
 		gridView.setAdapter(customThumbs);
-		gridView.setOnItemClickListener(new OnItemClickListener() {
+		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
+		return v;
+	}
+
+	/**
+	 * Initializes the OnItemClickListener of the GridView
+	 * 
+	 * @return The newly created OnItemClickListener
+	 */
+	private OnItemClickListener initiliazeOnItemClickListener() {
+		return new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id){
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
 				VideoInfoFragment vidFrag = new VideoInfoFragment();
 				Bundle args = new Bundle();
 				args.putInt("torrentID", (int) id);
 				vidFrag.setArguments(args);
-				
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(R.id.container,vidFrag);
+
+				FragmentTransaction transaction = getFragmentManager()
+						.beginTransaction();
+				transaction.replace(R.id.container, vidFrag);
 				transaction.addToBackStack(null);
 				transaction.commit();
 			}
-		});
-       
-        return v;
-    }
-    
-    /**
-     * Removes the search menu item so that the app doesn't crash when selecting the channel list fragment from the navigation drawer.
-     */
-    @Override
-    public void onPause()
-    {
-    	menu.removeItem(R.id.action_search_thumbgrid);
-    	super.onPause();
-    }
-        
-    /**
-	 * Adds thumb grid fragment specific options to the options menu and stores the menu.
-	 * In this case, the search action is added and enabled.
+		};
+	}
+
+	/**
+	 * Removes the search menu item so that the app doesn't crash when selecting
+	 * the channel list fragment from the navigation drawer.
+	 */
+	@Override
+	public void onPause() {
+		menu.removeItem(R.id.action_search_thumbgrid);
+		super.onPause();
+	}
+
+	/**
+	 * Adds thumb grid fragment specific options to the options menu and stores
+	 * the menu. In this case, the search action is added and enabled.
+	 * 
+	 * @param menu
+	 *            The menu that will be created
+	 * @param inflater
+	 *            The inflater belonging to the menu
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		this.menu = menu;
 		inflater.inflate(R.menu.thumbgrid_fragment, menu);
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
-		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+		SearchView searchView = (SearchView) MenuItemCompat
+				.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
-		searchView.setQueryHint("Search videos");	
+		searchView.setQueryHint("Search videos");
 	}
 
+	/**
+	 * Defines the behaviour of selecting a menu item
+	 * 
+	 * @param item
+	 *            The menu item that has been clicked
+	 * @return True iff the menu item's behaviour is executed correctly
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -110,25 +144,41 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-    
-	public boolean onQueryTextChange(String query)
-	{
-        // Called when the action bar search text has changed.  Update
-        // the search filter, and restart the loader to do a new query
-        // with this filter.
-		GridView gridView = (GridView) this.getView().findViewById(R.id.ThumbsGrid);
+
+	/**
+	 * Filters the items in the grid according to the query
+	 * 
+	 * @param query
+	 *            The query that the user has typed in the search field
+	 * @return True iff the text change has been processed correctly
+	 */
+	public boolean onQueryTextChange(String query) {
+		// Called when the action bar search text has changed. Update
+		// the search filter, and restart the loader to do a new query
+		// with this filter.
+		GridView gridView = (GridView) this.getView().findViewById(
+				R.id.ThumbsGrid);
 		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
-        return true;
-    }
-	
+		return true;
+	}
+
+	/**
+	 * Filters the items in the grid according to the query and show a dialog
+	 * showing the submitted query
+	 * 
+	 * @param query
+	 *            The query that the user has typed in the search field
+	 * @return True iff the action belonging to submitting a query has been
+	 *         processed correctly
+	 */
 	@Override
-	public boolean onQueryTextSubmit(String query)
-	{
-		GridView gridView = (GridView) this.getView().findViewById(R.id.ThumbsGrid);
+	public boolean onQueryTextSubmit(String query) {
+		GridView gridView = (GridView) this.getView().findViewById(
+				R.id.ThumbsGrid);
 		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
-        // Don't care about this.
-        return true;
-    }
-    
+		// Don't care about this.
+		return true;
+	}
+
 }

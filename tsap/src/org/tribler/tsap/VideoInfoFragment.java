@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.tribler.tsap;
 
 import org.tribler.tsap.videoInfoScreen.Torrent;
@@ -22,8 +19,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 /**
- * @author niels
+ * Fragment that shows the detailed info belonging to the selected torrent in
+ * the thumb grid
  * 
+ * @author Niels Spruit
  */
 public class VideoInfoFragment extends Fragment {
 
@@ -31,7 +30,20 @@ public class VideoInfoFragment extends Fragment {
 	private View view;
 	private Context context;
 	private View.OnClickListener mViewButtonOnClickListener;
+	private TorrentManager mTorrentManager;
 
+	/**
+	 * Initializes the video info fragment's layout according to the selected
+	 * torrent
+	 * 
+	 * @param inflater
+	 *            The inflater used to inflate the video info layout
+	 * @param container
+	 *            The container view of this fragment
+	 * @param savedInstanceState
+	 *            The state of the saved instance
+	 * @return The created view
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -41,7 +53,7 @@ public class VideoInfoFragment extends Fragment {
 		if (getArguments() != null)
 			torrentID = getArguments().getInt("torrentID", 0);
 
-		TorrentManager.initializeTorrents();
+		mTorrentManager = TorrentManager.getInstance();
 		setValues();
 		return view;
 	}
@@ -63,15 +75,15 @@ public class VideoInfoFragment extends Fragment {
 
 		TextView size = (TextView) view
 				.findViewById(R.id.video_details_filesize);
-		size.setText(selectedTorrent.getFilesize());
+		size.setText(Double.toString(selectedTorrent.getFilesize()));
 
 		TextView seeders = (TextView) view
 				.findViewById(R.id.video_details_seeders);
-		seeders.setText(selectedTorrent.getSeeders());
+		seeders.setText(Integer.toString(selectedTorrent.getSeeders()));
 
 		TextView leechers = (TextView) view
 				.findViewById(R.id.video_details_leechers);
-		leechers.setText(selectedTorrent.getLeechers());
+		leechers.setText(Integer.toString(selectedTorrent.getLeechers()));
 
 		TextView descr = (TextView) view
 				.findViewById(R.id.video_info_description);
@@ -82,36 +94,49 @@ public class VideoInfoFragment extends Fragment {
 		loadBitmap(selectedTorrent.getThumbnailID(), thumb);
 		setViewButtonListener();
 	}
-	
-	private void setViewButtonListener()
-	{
-		Button viewButton = (Button) view.findViewById(R.id.video_info_stream_video);
+
+	/**
+	 * Sets the listener of the 'Play video' button to a listener that starts
+	 * VLC when the button is pressed
+	 */
+	private void setViewButtonListener() {
+		Button viewButton = (Button) view
+				.findViewById(R.id.video_info_stream_video);
 		mViewButtonOnClickListener = new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				//String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + "/Django.mp4";
-				//File f = new File(file);
 				String URL = "http://inventos.ru/video/sintel/sintel-q3.mp4";
-				Uri link = Uri.parse(URL);//Uri.fromFile(f);
-		        Intent intent = new Intent(Intent.ACTION_VIEW, link, getActivity().getApplicationContext(), VideoPlayerActivity.class);
-		        //intent.setType("video/*");
-		        startActivity(intent);				
+				Uri link = Uri.parse(URL);// Uri.fromFile(f);
+				Intent intent = new Intent(Intent.ACTION_VIEW, link,
+						getActivity().getApplicationContext(),
+						VideoPlayerActivity.class);
+				startActivity(intent);
 			}
 		};
 		viewButton.setOnClickListener(mViewButtonOnClickListener);
 	}
 
 	/**
-	 * @return the torrent with id=torrentID iff torrent with id=torrentID
+	 * Returns the selected torrent
+	 * 
+	 * @return The torrent with id=torrentID iff torrent with id=torrentID
 	 *         exists, otherwise torrent with id=0 is returned
 	 */
 	private Torrent getCurrentTorrent() {
-		if (TorrentManager.containsTorrentWithID(torrentID))
-			return TorrentManager.getTorrentById(torrentID);
-		return TorrentManager.getTorrentById(0);
+		if (mTorrentManager.containsTorrentWithID(torrentID))
+			return mTorrentManager.getTorrentById(torrentID);
+		return mTorrentManager.getTorrentById(0);
 	}
 
+	/**
+	 * Loads the thumbnail of the selected torrent
+	 * 
+	 * @param resId
+	 *            The resource id of the thumbnail
+	 * @param mImageView
+	 *            The ImageView in which the thumbnail should be loaded
+	 */
 	private void loadBitmap(int resId, ImageView mImageView) {
 		float dens = context.getResources().getDisplayMetrics().density;
 		int thumbWidth = (int) (100 * dens);

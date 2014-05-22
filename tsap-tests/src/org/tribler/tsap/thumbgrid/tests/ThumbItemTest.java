@@ -1,8 +1,8 @@
 package org.tribler.tsap.thumbgrid.tests;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbItem;
-import org.tribler.tsap.thumbgrid.ThumbItem.TORRENT_HEALTH;
 
 import android.graphics.Color;
 import android.test.AndroidTestCase;

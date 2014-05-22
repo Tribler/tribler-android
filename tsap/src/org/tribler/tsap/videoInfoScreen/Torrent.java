@@ -1,8 +1,9 @@
 package org.tribler.tsap.videoInfoScreen;
 
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 
 /**
- * A class that stores the metadata of a torrent
+ * A class that stores the detailed information of a torrent
  * 
  * @author Niels Spruit
  */
@@ -13,6 +14,7 @@ public class Torrent {
 	private double filesize;
 	private int seeders;
 	private int leechers;
+	private TORRENT_HEALTH health;
 	private String description;
 	private int thumbnailID;
 
@@ -37,78 +39,105 @@ public class Torrent {
 	 *            The id of the torrent's thumbnail
 	 */
 	public Torrent(String nm, String tp, String upDate, double fsize, int seed,
-			int leech, String descr, int tID) {
+			int leech, TORRENT_HEALTH health, String descr, int tID) {
 		this.name = nm;
 		this.type = tp;
 		this.uploadDate = upDate;
 		this.filesize = fsize;
 		this.seeders = seed;
 		this.leechers = leech;
+		this.health = health;
 		this.description = descr;
 		this.thumbnailID = tID;
 	}
 
 	/**
-	 * @return the name of the torrent
+	 * Returns the name of the torrent
+	 * 
+	 * @return The name of the torrent
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @return the type of the torrent
+	 * Returns the type of the torrent
+	 * 
+	 * @return The type of the torrent
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @return the upload date of the torrent
+	 * Returns a string representing the upload date of the torrent
+	 * 
+	 * @return The upload date of the torrent as a String
 	 */
 	public String getUploadDate() {
 		return uploadDate;
 	}
 
 	/**
-	 * @return the filesize of the torrent
+	 * Returns the file size of the torrent
+	 * 
+	 * @return The file size of the torrent
 	 */
-	public String getFilesize() {
-		return Double.toString(filesize)+" MB";
+	public double getFilesize() {
+		return filesize;
 	}
 
 	/**
-	 * @return the number of seeders
+	 * Returns the number of seeder of this torrent
+	 * 
+	 * @return The number of seeders of this torrent
 	 */
-	public String getSeeders() {
-		return Integer.toString(seeders);
+	public int getSeeders() {
+		return seeders;
 	}
 
 	/**
-	 * @return the number of leechers
+	 * Returns the number of leechers of this torrent
+	 * 
+	 * @return The number of leechers of this torrent
 	 */
-	public String getLeechers() {
-		return Integer.toString(leechers);
+	public int getLeechers() {
+		return leechers;
 	}
 
 	/**
-	 * @return the torrent description
+	 * Returns the health of this torrent
+	 * 
+	 * @return The health of the torrent
+	 */
+	public TORRENT_HEALTH getHealth() {
+		return health;
+	}
+
+	/**
+	 * Returns the description of this torrent
+	 * 
+	 * @return The torrent description
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * @return the id of the thumbnail of this torrent
+	 * Returns the resource id of the thumbnail of this torrent
+	 * 
+	 * @return The id of the thumbnail resource of this torrent
 	 */
 	public int getThumbnailID() {
 		return thumbnailID;
 	}
-	
+
 	/**
-	 * @return the string representation of this torrent
+	 * Returns the string representation of this torrent
+	 * 
+	 * @return The name of the torrent
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return name;
 	}
 

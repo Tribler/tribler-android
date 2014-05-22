@@ -1,6 +1,7 @@
 package org.tribler.tsap.videoInfoScreen.tests;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.videoInfoScreen.Torrent;
 
 import junit.framework.TestCase;
@@ -18,7 +19,7 @@ public class TorrentTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		mTorrent = new Torrent("Sintel 2010", "Video", "2011-08-07", 426.89,
-				54, 4, "Sintel is a...", R.drawable.sintel);
+				54, 4,TORRENT_HEALTH.GREEN, "Sintel is a...", R.drawable.sintel);
 	}
 
 	/**
@@ -36,10 +37,11 @@ public class TorrentTest extends TestCase {
 		assertEquals("getType() incorrect", "Video", mTorrent.getType());
 		assertEquals("getUploadDate() incorrect", "2011-08-07",
 				mTorrent.getUploadDate());
-		assertEquals("getFileSize() incorrect", "426.89 MB",
+		assertEquals("getFileSize() incorrect", 426.89,
 				mTorrent.getFilesize());
-		assertEquals("getSeeders() incorrect", "54", mTorrent.getSeeders());
-		assertEquals("getLeechers() incorrect", "4", mTorrent.getLeechers());
+		assertEquals("getSeeders() incorrect", 54, mTorrent.getSeeders());
+		assertEquals("getLeechers() incorrect", 4, mTorrent.getLeechers());
+		assertEquals("getHealth() incorrect", TORRENT_HEALTH.GREEN, mTorrent.getHealth());
 		assertEquals("getDescription() incorrect", "Sintel is a...",
 				mTorrent.getDescription());
 		assertEquals("getThumbnailID() incorrect", R.drawable.sintel,

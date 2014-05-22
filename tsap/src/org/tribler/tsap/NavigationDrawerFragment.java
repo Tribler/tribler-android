@@ -61,6 +61,10 @@ public class NavigationDrawerFragment extends Fragment {
     //(first -1 at startup (as no fragment loaded), then ==mCurrentSelectedPosition
     private int mCurrentLoadedFragmentPosition=-1; 
 
+    /**
+     * Read the flag of the saved instance indicating whether the user has learned the navigation drawer and selects an item
+     * @param savedInstanceState The saved instance state containing the flag
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,13 +83,22 @@ public class NavigationDrawerFragment extends Fragment {
         selectItem(mCurrentSelectedPosition);
     }
 
+    /**
+     * Indicates that this fragment would like to influence the set of actions in the action bar.
+     * @param savedInstanceState The state of the saved instance
+     */
     @Override
     public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
     }
 
+    /**
+     * Initializes the navigation drawer's ListView
+     * @param inflater The inflater used to inflate the navigation drawer layout
+     * @param container The container view of this fragment
+     * @param savedInstanceState The state of the saved instance
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -109,6 +122,10 @@ public class NavigationDrawerFragment extends Fragment {
         return mDrawerListView;
     }
 
+    /**
+     * Indicates whether the navigation drawer is open or not
+     * @return True iff the navigation drawer is open
+     */
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
@@ -130,9 +147,6 @@ public class NavigationDrawerFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the navigation drawer and the action bar app icon.
         mDrawerToggle = getActionBarDrawerToggle();       
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
@@ -152,6 +166,10 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
     
+    /**
+     * Returns a new ActionBarDrawerToggle that ties together the the proper interactions between the navigation drawer and the action bar app icon
+     * @return A new ActionBarDrawerToggle instance
+     */
     private ActionBarDrawerToggle getActionBarDrawerToggle()
     {
     	return new ActionBarDrawerToggle(
@@ -192,6 +210,10 @@ public class NavigationDrawerFragment extends Fragment {
         };       
     }
 
+    /**
+     * Selects the navigation drawer item that the user has pressed
+     * @param position The position of the navigation drawer item to be selected
+     */
     private void selectItem(int position) {
     	// Don't reload fragment and close drawers
     	if(position == mCurrentLoadedFragmentPosition)
@@ -214,6 +236,10 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    /**
+     * Initializes the callback variable
+     * @param activity The activity belonging to this fragment
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -224,29 +250,40 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    /**
+     * Resets the callback variable
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
     }
 
+    /**
+     * Saves the selected position of the navigation drawer
+     * @param outState The bundle in which the selected position is stored
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
+    /**
+     * Forwards the new configuration to the drawer toggle component
+     * @param newConfig The new configuration
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Forward the new configuration the drawer toggle component.
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * If the drawer is open, show the global app actions in the action bar. See also {@link #showGlobalContextActionBar()}, which controls the top-left area of the action bar.
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // If the drawer is open, show the global app actions in the action bar. See also
-        // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
             inflater.inflate(R.menu.drawer_fragment, menu);
             showGlobalContextActionBar();
@@ -254,12 +291,16 @@ public class NavigationDrawerFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /**
+	 * Defines the behaviour of selecting a menu item
+	 * @param item The menu item that has been clicked
+	 * @return True iff the menu item's behaviour is executed correctly
+	 */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -274,6 +315,10 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setTitle(R.string.app_name);
     }
 
+    /**
+     * Returns the activity's action bar
+     * @return The action bar of the application
+     */
     private ActionBar getActionBar() {
         return getActivity().getActionBar();
     }
@@ -284,6 +329,7 @@ public class NavigationDrawerFragment extends Fragment {
     public static interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
+         * @param position The position of the selected item
          */
         void onNavigationDrawerItemSelected(int position);
     }

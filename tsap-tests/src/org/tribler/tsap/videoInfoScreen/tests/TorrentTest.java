@@ -39,8 +39,8 @@ public class TorrentTest extends TestCase {
 				mTorrent.getUploadDate());
 		assertEquals("getFileSize() incorrect", 426.89,
 				mTorrent.getFilesize());
-		assertEquals("getSeeders() incorrect", "54", mTorrent.getSeeders());
-		assertEquals("getLeechers() incorrect", "4", mTorrent.getLeechers());
+		assertEquals("getSeeders() incorrect", 54, mTorrent.getSeeders());
+		assertEquals("getLeechers() incorrect", 4, mTorrent.getLeechers());
 		assertEquals("getHealth() incorrect", TORRENT_HEALTH.GREEN, mTorrent.getHealth());
 		assertEquals("getDescription() incorrect", "Sintel is a...",
 				mTorrent.getDescription());

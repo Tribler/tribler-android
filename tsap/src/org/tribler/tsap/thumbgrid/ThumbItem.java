@@ -3,10 +3,10 @@ package org.tribler.tsap.thumbgrid;
 
 public class ThumbItem {
 	
-	int thumbnailId;
-	String title;
-	TORRENT_HEALTH health;
-	int size;
+	private int thumbnailId;
+	private String title;
+	private TORRENT_HEALTH health;
+	private int size;
 	
 	public ThumbItem(String title, int thumbnailId, TORRENT_HEALTH health, int size) {
 		super();

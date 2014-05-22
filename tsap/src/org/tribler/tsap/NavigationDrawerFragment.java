@@ -98,6 +98,7 @@ public class NavigationDrawerFragment extends Fragment {
      * @param inflater The inflater used to inflate the navigation drawer layout
      * @param container The container view of this fragment
      * @param savedInstanceState The state of the saved instance
+     * @return The created view
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

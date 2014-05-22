@@ -23,17 +23,32 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
+/**
+ * Fragment that shows a grid of available torrents and handles its behaviour
+ * @author Wendo Sabée
+ */
 public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
 	//stores the menu handler to remove the search item in onPause()
 	private Menu menu;
 	
+	/**
+	 * Defines that this fragment has an own option menu
+	 * @param savedInstanceState The state of the saved instance
+	 */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 	
+    /**
+     * Initializes the thumb grid fragment's GridView
+     * @param inflater The inflater used to inflate the thumb grid layout
+     * @param container The container view of this fragment
+     * @param savedInstanceState The state of the saved instance
+     * @return The created view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	super.onCreateView(inflater, container, savedInstanceState);
@@ -49,7 +64,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
     }
 
 	/**
-	 * @return
+	 * Initializes the OnItemClickListener of the GridView
+	 * @return The newly created OnItemClickListener
 	 */
 	private OnItemClickListener initiliazeOnItemClickListener() {
 		return new OnItemClickListener() {
@@ -81,6 +97,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
     /**
 	 * Adds thumb grid fragment specific options to the options menu and stores the menu.
 	 * In this case, the search action is added and enabled.
+	 * @param menu The menu that will be created
+	 * @param inflater The inflater belonging to the menu
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -92,6 +110,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		searchView.setQueryHint("Search videos");	
 	}
 
+	/**
+	 * Defines the behaviour of selecting a menu item
+	 * @param item The menu item that has been clicked
+	 * @return True iff the menu item's behaviour is executed correctly
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -102,6 +125,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		}
 	}
     
+	/**
+	 * Filters the items in the grid according to the query
+	 * @param query The query that the user has typed in the search field
+	 * @return True iff the text change has been processed correctly
+	 */
 	public boolean onQueryTextChange(String query)
 	{
         // Called when the action bar search text has changed.  Update
@@ -112,6 +140,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
         return true;
     }
 	
+	/**
+	 * Filters the items in the grid according to the query and show a dialog showing the submitted query
+	 * @param query The query that the user has typed in the search field
+	 * @return True iff the action belonging to submitting a query has been processed correctly
+	 */
 	@Override
 	public boolean onQueryTextSubmit(String query)
 	{

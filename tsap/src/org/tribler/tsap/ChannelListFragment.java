@@ -67,6 +67,8 @@ public class ChannelListFragment extends ListFragment implements
 	/**
 	 * Adds channel fragment specific options to the options menu.
 	 * In this case, the search action is added and enabled.
+	 * @param menu The menu that will be created
+	 * @param inflater The inflater belonging to the menu
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

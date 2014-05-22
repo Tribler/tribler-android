@@ -13,7 +13,7 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
 # DB Tuples
-from RpcDBTuples import Channel
+from RpcDBTuples import Channel, RemoteChannel, ChannelTorrent, RemoteChannelTorrent
 
 # Tribler communities
 from Tribler.community.search.community import SearchCommunity
@@ -135,7 +135,49 @@ class SearchManager():
         return channel_results
 
     def search_channel_get_results(self):
-        pass
+        begintime = time()
+
+        try:
+            self._remote_lock.acquire()
+
+            if len(self._channel_results) <= 0:
+                return False
+
+            for remoteItem, permid in self._channel_results:
+
+                channel = None
+                if not isinstance(remoteItem, Channel):
+                    channel_id, _, infohash, torrent_name, timestamp = remoteItem
+
+                    if channel_id not in self._channel_results:
+                        channel = self.getChannel(channel_id)
+                    else:
+                        channel = self._channel_results[channel_id]
+
+                    torrent = channel.getTorrent(infohash)
+                    if not torrent:
+                        torrent = RemoteChannelTorrent(torrent_id=None, infohash=infohash, name=torrent_name, channel=channel, query_permids=set())
+                        channel.addTorrent(torrent)
+
+                    if not torrent.query_permids:
+                        torrent.query_permids = set()
+                    torrent.query_permids.add(permid)
+
+                    channel.nr_torrents += 1
+                    channel.modified = max(channel.modified, timestamp)
+                else:
+                    channel = remoteItem
+
+                if channel and not channel.id in self._channel_results:
+                    self._channel_results[channel.id] = channel
+                    hitsUpdated = True # TODO: USE THIS SOMEHOW LATER
+        finally:
+            self._remote_lock.release()
+
+        _logger.debug("ChannelManager: getChannelHits took %s", time() - begintime)
+
+        print self._channel_results
+        return self._channel_results
 
     def search_channel_peek_results(self):
         return len(self._channel_results)

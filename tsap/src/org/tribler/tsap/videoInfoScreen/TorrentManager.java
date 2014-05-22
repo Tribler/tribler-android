@@ -14,11 +14,18 @@ public class TorrentManager {
 	private static TorrentManager theInstance=null;
 	private ArrayList<Torrent> torrents;
 	
+	/**
+	 * Constructor: initialized the torrent list
+	 */
 	protected TorrentManager()
 	{
 		initializeTorrents();
 	}
 	
+	/**
+	 * Returns the singleton instance of this class
+	 * @return The singleton instance of this class 
+	 */
 	public static TorrentManager getInstance()
 	{
 		if(theInstance == null)
@@ -45,8 +52,9 @@ public class TorrentManager {
 	}
 	
 	/** 
-	 * @param id the position of the torrent in the list
-	 * @return the torrent belonging to the id
+	 * Returns the torrent belonging to id
+	 * @param id The position of the torrent in the list
+	 * @return The torrent belonging to the id
 	 */
 	public Torrent getTorrentById(int id)
 	{
@@ -56,7 +64,8 @@ public class TorrentManager {
 	}
 	
 	/** 
-	 * @return the number of torrents in the list
+	 * Returns the number of torrents in the list
+	 * @return The number of torrents in the list
 	 */
 	public int getNumberOfTorrents()
 	{
@@ -66,7 +75,8 @@ public class TorrentManager {
 	}
 
 	/**
-	 * @param id the id of the torrent
+	 * Indicates whether the torrent list contains a torrent as index=id
+	 * @param id The id of the torrent
 	 * @return True iff the list contains a torrent at index=id
 	 */
 	public boolean containsTorrentWithID(int id)
@@ -74,6 +84,10 @@ public class TorrentManager {
 		return (id>=0 && id<torrents.size() && torrents.get(id) != null);
 	}
 	
+	/**
+	 * Returns a thumb item list belonging to the torrent list
+	 * @return The list of thumb items
+	 */
 	public ArrayList<ThumbItem> getThumbItems()
 	{
 		ArrayList<ThumbItem> gridArray = new ArrayList<ThumbItem>();
@@ -84,6 +98,11 @@ public class TorrentManager {
 		return gridArray;
 	}
 
+	/**
+	 * Converts a torrent into a thumb item
+	 * @param torrent The torrent that needs to be converted
+	 * @return The thumb item with the information of the torrent 
+	 */
 	private ThumbItem toThumbItem(Torrent torrent) {		
 		int fz = (int) Math.round(torrent.getFilesize());
 		return new ThumbItem(torrent.getName(), torrent.getThumbnailID(), torrent.getHealth(), fz);

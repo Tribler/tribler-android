@@ -45,7 +45,15 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
     	ArrayList<ThumbItem> gridArray = TorrentManager.getInstance().getThumbItems();
 		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);
 		gridView.setAdapter(customThumbs);
-		gridView.setOnItemClickListener(new OnItemClickListener() {
+		gridView.setOnItemClickListener(initiliazeOnItemClickListener());       
+        return v;
+    }
+
+	/**
+	 * @return
+	 */
+	private OnItemClickListener initiliazeOnItemClickListener() {
+		return new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id){
 				VideoInfoFragment vidFrag = new VideoInfoFragment();
@@ -58,9 +66,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 				transaction.addToBackStack(null);
 				transaction.commit();
 			}
-		});       
-        return v;
-    }
+		};
+	}
     
     /**
      * Removes the search menu item so that the app doesn't crash when selecting the channel list fragment from the navigation drawer.

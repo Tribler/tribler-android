@@ -56,5 +56,8 @@ tests/.classpath
 *.pyo
 *.pyc
 
-# Linux (gedit) backup/temp files
+# Other
 *~
+lint-results.xml
+junitreports/
+

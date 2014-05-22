@@ -9,15 +9,13 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-class ChannelListAdapter extends ArrayAdapter<Channel>
+public class ChannelListAdapter extends ArrayAdapter<Channel>
 {
-	Context context;
-	int resource;
-	LayoutInflater inflater;
+	private int resource;
+	private LayoutInflater inflater;
 	
 	public ChannelListAdapter(Context context, int resource) {
 		super(context, resource);
-		this.context = context;
 		this.resource = resource;
 		inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -28,19 +26,25 @@ class ChannelListAdapter extends ArrayAdapter<Channel>
 		View view;
 		Channel channel = getItem(position);
 		
-		if (convertView == null)
+		view = convertView;
+		if (view == null)
 		{
             view = inflater.inflate(resource, parent, false);
-        }
-		else
-		{
-            view = convertView;
         }
 		
 		((TextView)view.findViewById(R.id.channel_name)).setText(channel.getName());
 		((CheckBox)view.findViewById(R.id.channel_favoritetoggle)).setChecked(channel.getFollowing());
 		((TextView)view.findViewById(R.id.channel_torrentamount)).setText("Torrents: " + channel.getTorrentAmount());
 		
+		setRatingView(view, channel);				
+		return view;
+	}
+
+	/**
+	 * @param view
+	 * @param channel
+	 */
+	private void setRatingView(View view, Channel channel) {
 		int rating = channel.getRating();
 		if(rating >= 1)
 			((ImageView)view.findViewById(R.id.channel_firststar)).setImageResource(R.drawable.rating_star_selected);
@@ -61,8 +65,6 @@ class ChannelListAdapter extends ArrayAdapter<Channel>
 		if(rating >= 5)
 			((ImageView)view.findViewById(R.id.channel_fifthstar)).setImageResource(R.drawable.rating_star_selected);
 		else
-			((ImageView)view.findViewById(R.id.channel_fifthstar)).setImageResource(R.drawable.rating_star_not_selected);		
-		
-		return view;
+			((ImageView)view.findViewById(R.id.channel_fifthstar)).setImageResource(R.drawable.rating_star_not_selected);
 	}
 }

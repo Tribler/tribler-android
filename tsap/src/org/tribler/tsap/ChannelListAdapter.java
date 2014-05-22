@@ -9,17 +9,33 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Adapter belonging to the ChannelListFragment that holds the channels
+ * @author Dirk Schut
+ */
 public class ChannelListAdapter extends ArrayAdapter<Channel>
 {
 	private int resource;
 	private LayoutInflater inflater;
 	
+	/**
+	 * Constructor: initializes the instance variables
+	 * @param context The context of this adapter
+	 * @param resource The resource that is necessary to inflate the view
+	 */
 	public ChannelListAdapter(Context context, int resource) {
 		super(context, resource);
 		this.resource = resource;
 		inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	/**
+	 * Returns the view belonging to the specified position in the channel list
+	 * @param position The position of which the view should be returned
+	 * @param convertView The view necessary update the text and image views
+	 * @param parent The parent view group 
+	 * @return The view belonging to position
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
@@ -41,8 +57,9 @@ public class ChannelListAdapter extends ArrayAdapter<Channel>
 	}
 
 	/**
-	 * @param view
-	 * @param channel
+	 * Displays the star images according to the rating of the channel
+	 * @param view The parent view 
+	 * @param channel The channel of which the rating should be shown
 	 */
 	private void setRatingView(View view, Channel channel) {
 		int rating = channel.getRating();

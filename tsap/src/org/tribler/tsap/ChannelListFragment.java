@@ -15,8 +15,17 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Fragment that shows a list of available channels and handles its behaviour
+ * @author Dirk Schut
+ */
 public class ChannelListFragment extends ListFragment implements
 		OnQueryTextListener {
+	
+	/**
+	 * Initializes the channel adapter 
+	 * @param savedInstanceState The state of the saved instance
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,6 +43,13 @@ public class ChannelListFragment extends ListFragment implements
 		this.setListAdapter(adapter);
 	}
 
+	/**
+	 * Launches a new ChannelActivity with the data of the clicked channel
+	 * @param l The ListView belonging to this fragment
+	 * @param v The View of this fragment
+	 * @param position The position of the selected item in the list
+	 * @param id The ID of the selected item
+	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// selected item
@@ -61,6 +77,11 @@ public class ChannelListFragment extends ListFragment implements
 		searchView.setQueryHint("Search channels");
 	}
 
+	/**
+	 * Defines the behaviour of selecting a menu item
+	 * @param item The menu item that has been clicked
+	 * @return True iff the menu item's behaviour is executed correctly
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -71,6 +92,11 @@ public class ChannelListFragment extends ListFragment implements
 		}
 	}
 
+	/**
+	 * Filters the items in the list according to the query
+	 * @param query The query that the user has typed in the search field
+	 * @return True iff the text change has been processed correctly
+	 */
 	public boolean onQueryTextChange(String query) {
 		// Called when the action bar search text has changed. Update
 		// the search filter, and restart the loader to do a new query
@@ -79,6 +105,11 @@ public class ChannelListFragment extends ListFragment implements
 		return true;
 	}
 
+	/**
+	 * Filters the items in the list according to the query and show a dialog showing the submitted query
+	 * @param query The query that the user has typed in the search field
+	 * @return True iff the action belonging to submitting a query has been processed correctly
+	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
 		((ChannelListAdapter) getListAdapter()).getFilter().filter(query);

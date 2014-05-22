@@ -257,8 +257,30 @@ class SearchManager():
     def search_torrent_get_local(self):
         pass
 
-    def search_torrent_do_remote(self):
-        pass
-
     def search_torrent_get_results(self):
         pass
+
+    def search_torrent_do_remote(self):
+        nr_requests_made = 0
+        if self._dispersy:
+            for community in self._dispersy.get_communities():
+                if isinstance(community, SearchCommunity):
+                    nr_requests_made = community.create_search(self._torrent_keywords, self._search_torrent_remote_callback)
+                    if not nr_requests_made:
+                        _logger.info("Could not send search in SearchCommunity, no verified candidates found")
+                    break
+
+            else:
+                _logger.info("Could not send search in SearchCommunity, community not found")
+
+        else:
+            _logger.info("Could not send search in SearchCommunity, Dispersy not found")
+
+        return nr_requests_made
+
+    def _search_torrent_remote_callback(self, keywords, results, candidate):
+#        try:
+        _logger.debug("TorrentSearchGridManager: gotRemoteHist: got %s unfiltered results for %s %s %s", len(results), keywords, candidate, time())
+        return
+
+

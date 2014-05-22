@@ -62,7 +62,7 @@ if __name__ == '__main__':
     xmlrpc.register_function(loginfo, "info")
 
     _logger.info("Loading SearchManager")
-    sm = SearchManager(tribler._session, xmlrpc)
+    sm = SearchManager(tribler.get_session(), xmlrpc)
 
     _logger.info("Now running XMLRPC on http://%s:%s/tribler" % (xmlrpc._iface, xmlrpc._port))
     xmlrpc.start_server()

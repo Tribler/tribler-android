@@ -49,6 +49,9 @@ class TriblerSession():
             shutil.copy2(swift_path_source, swift_path_dest)
             os.chmod(swift_path_dest, 0777)
 
+    def get_session(self):
+        return self._session
+
     def start_service(self):
         _logger.info("Set tribler_state_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
 

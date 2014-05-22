@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.tribler.tsap;
 
 import org.tribler.tsap.videoInfoScreen.Torrent;
@@ -91,12 +88,9 @@ public class VideoInfoFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				//String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + "/Django.mp4";
-				//File f = new File(file);
 				String URL = "http://inventos.ru/video/sintel/sintel-q3.mp4";
 				Uri link = Uri.parse(URL);//Uri.fromFile(f);
 		        Intent intent = new Intent(Intent.ACTION_VIEW, link, getActivity().getApplicationContext(), VideoPlayerActivity.class);
-		        //intent.setType("video/*");
 		        startActivity(intent);				
 			}
 		};

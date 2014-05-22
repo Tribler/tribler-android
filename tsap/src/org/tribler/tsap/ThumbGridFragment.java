@@ -2,14 +2,13 @@ package org.tribler.tsap;
 
 import java.util.ArrayList;
 
-import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbAdapter;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.tribler.tsap.videoInfoScreen.TorrentManager;
 
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,11 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 
 public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 

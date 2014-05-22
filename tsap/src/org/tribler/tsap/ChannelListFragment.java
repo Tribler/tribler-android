@@ -26,10 +26,6 @@ public class ChannelListFragment extends ListFragment implements
 		String[] channelNames = getResources().getStringArray(
 				R.array.channelNames);
 
-		// Binding resources Array to ListAdapter
-		// this.setListAdapter(new ArrayAdapter<String>(getActivity(),
-		// R.layout.list_item, R.id.channelname, channelNames));
-
 		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
 				R.layout.list_item);
 		for (int i = 0; i < channelNames.length; i++) {

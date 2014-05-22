@@ -44,3 +44,9 @@ tests/.classpath
 
 # PyCharm
 .idea
+
+# Other
+*~
+lint-results.xml
+junitreports/
+

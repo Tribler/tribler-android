@@ -209,13 +209,23 @@ class SearchManager():
         if not self._channel_keywords == kws:
             return
 
-        channels = self.getChannelsByCID(answers.keys())
-        for channel in channels:
-            try:
-                _logger.error("@@@@@ Channel found:\n%s" % str(channel[0]))
-            except:
-                pass
-        self._channel_results = channels
+        try:
+            self._remote_lock.acquire()
+
+            channels = self.getChannelsByCID(answers.keys())
+            for channel in channels:
+                try:
+                    _logger.error("@@@@@ Channel found:\n%s" % str(channel[0]))
+                except:
+                    pass
+
+            self._channel_results.append(channels)
+        finally:
+            self._remote_lock.release()
+
+    def getChannel(self, channel_id):
+        channel = self.channelcast_db.getChannel(channel_id)
+        return self._getChannel(channel)
 
     def getChannelsByCID(self, channel_cids):
         channels = self._channelcast_db.getChannelsByCID(channel_cids)

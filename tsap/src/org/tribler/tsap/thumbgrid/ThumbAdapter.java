@@ -19,8 +19,8 @@ import android.widget.TextView;
 
 
 public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
-	Context context;
-	int layoutResourceId;
+	private Context context;
+	private int layoutResourceId;
 	
 	private int mThumbWidth;
 	private int mThumbHeight;
@@ -54,17 +54,25 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 			holder = (ThumbHolder) row.getTag();
 		}
     	
+		initializeHolderView(position, holder);
+
+		return row;
+	}
+
+	/**
+	 * @param position
+	 * @param holder
+	 */
+	private void initializeHolderView(int position, ThumbHolder holder) {
 		ThumbItem item = this.getItem(position);
 		holder.txtTitle.setText(item.getTitle());
 		holder.pbHealth.setProgress(item.getHealth().ordinal());
 		holder.pbHealth.getProgressDrawable().setColorFilter(item.getHealthColor(), Mode.SRC_IN);
 		holder.txtSize.setText(item.getSize() + " MiB");
 		loadBitmap(item.getThumbnailId(), holder.imageItem);
-
-		return row;
 	}
 	
-	public void loadBitmap(int resId, ImageView mImageView) {
+	private void loadBitmap(int resId, ImageView mImageView) {
 		Picasso.with(context)
 			.load(resId)
 			.placeholder(R.drawable.default_thumb)
@@ -72,7 +80,7 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 			.into(mImageView);		
 	}
 
-	static class ThumbHolder {
+	private static class ThumbHolder {
 		TextView txtTitle;
 		ImageView imageItem;
 		ProgressBar pbHealth;

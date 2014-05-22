@@ -110,7 +110,7 @@ class SearchManager():
         keywords = [keyword for keyword in keywords if len(keyword) > 1]
 
         if keywords == self._channel_keywords:
-            return
+            return True
 
         try:
             self._remote_lock.acquire()
@@ -119,6 +119,8 @@ class SearchManager():
             self._channel_results = []
         finally:
             self._remote_lock.release()
+
+        return True
 
     def search_channel_get_local(self):
         channel_results = {}

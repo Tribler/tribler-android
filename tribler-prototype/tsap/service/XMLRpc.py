@@ -7,8 +7,8 @@ from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/tribler',)
 
-class XMLRPCServer:
 
+class XMLRPCServer:
     def __init__(self, iface="127.0.0.1", port=8000):
         self._server = SimpleXMLRPCServer((iface, port), requestHandler=RequestHandler)
         self._server.register_introspection_functions()

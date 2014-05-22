@@ -2,9 +2,9 @@ package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 
-
 /**
- * A class that stores the detailed information of a torrent 
+ * A class that stores the detailed information of a torrent
+ * 
  * @author Niels Spruit
  */
 public class Torrent {
@@ -53,6 +53,7 @@ public class Torrent {
 
 	/**
 	 * Returns the name of the torrent
+	 * 
 	 * @return The name of the torrent
 	 */
 	public String getName() {
@@ -61,6 +62,7 @@ public class Torrent {
 
 	/**
 	 * Returns the type of the torrent
+	 * 
 	 * @return The type of the torrent
 	 */
 	public String getType() {
@@ -69,6 +71,7 @@ public class Torrent {
 
 	/**
 	 * Returns a string representing the upload date of the torrent
+	 * 
 	 * @return The upload date of the torrent as a String
 	 */
 	public String getUploadDate() {
@@ -77,15 +80,16 @@ public class Torrent {
 
 	/**
 	 * Returns the file size of the torrent
+	 * 
 	 * @return The file size of the torrent
 	 */
-	public double getFilesize()
-	{
+	public double getFilesize() {
 		return filesize;
 	}
 
 	/**
 	 * Returns the number of seeder of this torrent
+	 * 
 	 * @return The number of seeders of this torrent
 	 */
 	public int getSeeders() {
@@ -94,6 +98,7 @@ public class Torrent {
 
 	/**
 	 * Returns the number of leechers of this torrent
+	 * 
 	 * @return The number of leechers of this torrent
 	 */
 	public int getLeechers() {
@@ -102,6 +107,7 @@ public class Torrent {
 
 	/**
 	 * Returns the health of this torrent
+	 * 
 	 * @return The health of the torrent
 	 */
 	public TORRENT_HEALTH getHealth() {
@@ -110,6 +116,7 @@ public class Torrent {
 
 	/**
 	 * Returns the description of this torrent
+	 * 
 	 * @return The torrent description
 	 */
 	public String getDescription() {
@@ -118,18 +125,19 @@ public class Torrent {
 
 	/**
 	 * Returns the resource id of the thumbnail of this torrent
+	 * 
 	 * @return The id of the thumbnail resource of this torrent
 	 */
 	public int getThumbnailID() {
 		return thumbnailID;
 	}
-	
+
 	/**
 	 * Returns the string representation of this torrent
+	 * 
 	 * @return The name of the torrent
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return name;
 	}
 

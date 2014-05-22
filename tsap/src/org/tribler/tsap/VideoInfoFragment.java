@@ -19,8 +19,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 /**
- * Fragment that shows the detailed info belonging to the selected torrent in the thumb grid
- * @author Niels Spruit 
+ * Fragment that shows the detailed info belonging to the selected torrent in
+ * the thumb grid
+ * 
+ * @author Niels Spruit
  */
 public class VideoInfoFragment extends Fragment {
 
@@ -31,12 +33,17 @@ public class VideoInfoFragment extends Fragment {
 	private TorrentManager mTorrentManager;
 
 	/**
-     * Initializes the video info fragment's layout according to the selected torrent
-     * @param inflater The inflater used to inflate the video info layout
-     * @param container The container view of this fragment
-     * @param savedInstanceState The state of the saved instance
-     * @return The created view
-     */
+	 * Initializes the video info fragment's layout according to the selected
+	 * torrent
+	 * 
+	 * @param inflater
+	 *            The inflater used to inflate the video info layout
+	 * @param container
+	 *            The container view of this fragment
+	 * @param savedInstanceState
+	 *            The state of the saved instance
+	 * @return The created view
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -87,21 +94,24 @@ public class VideoInfoFragment extends Fragment {
 		loadBitmap(selectedTorrent.getThumbnailID(), thumb);
 		setViewButtonListener();
 	}
-	
+
 	/**
-	 * Sets the listener of the 'Play video' button to a listener that starts VLC when the button is pressed
+	 * Sets the listener of the 'Play video' button to a listener that starts
+	 * VLC when the button is pressed
 	 */
-	private void setViewButtonListener()
-	{
-		Button viewButton = (Button) view.findViewById(R.id.video_info_stream_video);
+	private void setViewButtonListener() {
+		Button viewButton = (Button) view
+				.findViewById(R.id.video_info_stream_video);
 		mViewButtonOnClickListener = new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String URL = "http://inventos.ru/video/sintel/sintel-q3.mp4";
-				Uri link = Uri.parse(URL);//Uri.fromFile(f);
-		        Intent intent = new Intent(Intent.ACTION_VIEW, link, getActivity().getApplicationContext(), VideoPlayerActivity.class);
-		        startActivity(intent);				
+				Uri link = Uri.parse(URL);// Uri.fromFile(f);
+				Intent intent = new Intent(Intent.ACTION_VIEW, link,
+						getActivity().getApplicationContext(),
+						VideoPlayerActivity.class);
+				startActivity(intent);
 			}
 		};
 		viewButton.setOnClickListener(mViewButtonOnClickListener);
@@ -109,6 +119,7 @@ public class VideoInfoFragment extends Fragment {
 
 	/**
 	 * Returns the selected torrent
+	 * 
 	 * @return The torrent with id=torrentID iff torrent with id=torrentID
 	 *         exists, otherwise torrent with id=0 is returned
 	 */
@@ -120,8 +131,11 @@ public class VideoInfoFragment extends Fragment {
 
 	/**
 	 * Loads the thumbnail of the selected torrent
-	 * @param resId The resource id of the thumbnail
-	 * @param mImageView The ImageView in which the thumbnail should be loaded
+	 * 
+	 * @param resId
+	 *            The resource id of the thumbnail
+	 * @param mImageView
+	 *            The ImageView in which the thumbnail should be loaded
 	 */
 	private void loadBitmap(int resId, ImageView mImageView) {
 		float dens = context.getResources().getDisplayMetrics().density;

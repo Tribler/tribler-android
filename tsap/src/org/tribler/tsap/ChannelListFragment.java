@@ -17,14 +17,17 @@ import android.widget.Toast;
 
 /**
  * Fragment that shows a list of available channels and handles its behaviour
+ * 
  * @author Dirk Schut
  */
 public class ChannelListFragment extends ListFragment implements
 		OnQueryTextListener {
-	
+
 	/**
-	 * Initializes the channel adapter 
-	 * @param savedInstanceState The state of the saved instance
+	 * Initializes the channel adapter
+	 * 
+	 * @param savedInstanceState
+	 *            The state of the saved instance
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,15 @@ public class ChannelListFragment extends ListFragment implements
 
 	/**
 	 * Launches a new ChannelActivity with the data of the clicked channel
-	 * @param l The ListView belonging to this fragment
-	 * @param v The View of this fragment
-	 * @param position The position of the selected item in the list
-	 * @param id The ID of the selected item
+	 * 
+	 * @param l
+	 *            The ListView belonging to this fragment
+	 * @param v
+	 *            The View of this fragment
+	 * @param position
+	 *            The position of the selected item in the list
+	 * @param id
+	 *            The ID of the selected item
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
@@ -65,23 +73,29 @@ public class ChannelListFragment extends ListFragment implements
 	}
 
 	/**
-	 * Adds channel fragment specific options to the options menu.
-	 * In this case, the search action is added and enabled.
-	 * @param menu The menu that will be created
-	 * @param inflater The inflater belonging to the menu
+	 * Adds channel fragment specific options to the options menu. In this case,
+	 * the search action is added and enabled.
+	 * 
+	 * @param menu
+	 *            The menu that will be created
+	 * @param inflater
+	 *            The inflater belonging to the menu
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.channel_fragment, menu);
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_channel);
-		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+		SearchView searchView = (SearchView) MenuItemCompat
+				.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
 		searchView.setQueryHint("Search channels");
 	}
 
 	/**
 	 * Defines the behaviour of selecting a menu item
-	 * @param item The menu item that has been clicked
+	 * 
+	 * @param item
+	 *            The menu item that has been clicked
 	 * @return True iff the menu item's behaviour is executed correctly
 	 */
 	@Override
@@ -96,7 +110,9 @@ public class ChannelListFragment extends ListFragment implements
 
 	/**
 	 * Filters the items in the list according to the query
-	 * @param query The query that the user has typed in the search field
+	 * 
+	 * @param query
+	 *            The query that the user has typed in the search field
 	 * @return True iff the text change has been processed correctly
 	 */
 	public boolean onQueryTextChange(String query) {
@@ -108,9 +124,13 @@ public class ChannelListFragment extends ListFragment implements
 	}
 
 	/**
-	 * Filters the items in the list according to the query and show a dialog showing the submitted query
-	 * @param query The query that the user has typed in the search field
-	 * @return True iff the action belonging to submitting a query has been processed correctly
+	 * Filters the items in the list according to the query and show a dialog
+	 * showing the submitted query
+	 * 
+	 * @param query
+	 *            The query that the user has typed in the search field
+	 * @return True iff the action belonging to submitting a query has been
+	 *         processed correctly
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {

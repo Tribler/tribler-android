@@ -21,7 +21,7 @@ public class ChannelListAdapter extends ArrayAdapter<Channel>
 	/**
 	 * Constructor: initializes the instance variables
 	 * @param context The context of this adapter
-	 * @param resource The resource that is necessary to inflate the view
+	 * @param resource The resource id of the layout
 	 */
 	public ChannelListAdapter(Context context, int resource) {
 		super(context, resource);

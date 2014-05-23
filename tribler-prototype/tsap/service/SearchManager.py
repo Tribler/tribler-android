@@ -24,6 +24,8 @@ from Tribler.community.allchannel.community import AllChannelCommunity
 
 from Tribler.Core.Search.SearchManager import split_into_keywords
 
+from Tribler.community.channel.community import ChannelCommunity, \
+    forceDispersyThread, forcePrioDispersyThread, warnDispersyThread
 
 class SearchManager():
     # Code to make this a singleton
@@ -260,6 +262,7 @@ class SearchManager():
     def search_torrent_get_results(self):
         pass
 
+    @forceDispersyThread
     def search_torrent_do_remote(self):
         nr_requests_made = 0
         if self._dispersy:

@@ -130,8 +130,10 @@ class SearchManager():
 
         _, channels = self._createChannels(hits)
 
+        _logger.info("@@@ Found %s local channels" % len(channels))
+
         for channel in channels:
-            channel_results[str(channel.id)] = channel
+            channel_results[str(channel.id)] = str(channel)
             _logger.info("@@@@ Found local channel: %s" % channel)
 
         return channel_results
@@ -179,7 +181,12 @@ class SearchManager():
         _logger.debug("ChannelManager: getChannelHits took %s", time() - begintime)
 
         print self._channel_results
-        return self._channel_results
+
+        results = []
+        for ch in self._channel_results:
+            print ch.torrents
+            results.append(str(ch))
+        return results
 
     def search_channel_peek_results(self):
         return len(self._channel_results)

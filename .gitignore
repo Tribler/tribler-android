@@ -1,3 +1,10 @@
+# p4a
+tribler-prototype/Tribler-0.1.0/Tribler
+tribler-prototype/tsap/Tribler
+Tribler-0.1.0.tar.gz*
+runmain
+tmprunmain
+
 # Built application files
 *.apk
 *.ap_
@@ -44,6 +51,10 @@ tests/.classpath
 
 # PyCharm
 .idea
+
+# Python
+*.pyo
+*.pyc
 
 # Other
 *~

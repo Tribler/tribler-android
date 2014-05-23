@@ -293,3 +293,64 @@ class SearchManager():
 #        try:
         _logger.debug("TorrentSearchGridManager: gotRemoteHist: got %s unfiltered results for %s %s %s", len(results), keywords, candidate, time())
         return
+
+
+    """
+            self._remote_lock.acquire()
+
+            if self._torrent_keywords == keywords:
+                self.gotRemoteHits = True
+
+                channeldict = {}
+                channels = set([result[-1] for result in results if result[-1]])
+                if len(channels) > 0:
+                    _, channels = self.getChannelsByCID(channels)
+
+                    for channel in channels:
+                        channeldict[channel.dispersy_cid] = channel
+
+                for result in results:
+                    categories = result[4]
+                    category_id = self._misc_db.categoryName2Id(categories)
+
+                    channel = channeldict.get(result[-1], False)
+                    if channel:
+                        remoteHit = RemoteChannelTorrent(-1, result[0], result[8], result[9], result[1], result[2], category_id, self.misc_db.torrentStatusName2Id(u'good'), result[6], result[7], channel, set([candidate]))
+                    else:
+                        remoteHit = RemoteTorrent(-1, result[0], result[8], result[9], result[1], result[2], category_id, self.misc_db.torrentStatusName2Id(u'good'), result[6], result[7], set([candidate]))
+
+                    # Guess matches
+                    keywordset = set(keywords)
+                    swarmnameset = set(split_into_keywords(remoteHit.name))
+                    matches = {'fileextensions': set()}
+                    matches['swarmname'] = swarmnameset & keywordset  # all keywords matching in swarmname
+                    matches['filenames'] = keywordset - matches['swarmname']  # remaining keywords should thus me matching in filenames or fileextensions
+
+                    if len(matches['filenames']) == 0:
+                        _, ext = os.path.splitext(result[0])
+                        ext = ext[1:]
+
+                        matches['filenames'] = matches['swarmname']
+                        matches['filenames'].discard(ext)
+
+                        if ext in keywordset:
+                            matches['fileextensions'].add(ext)
+                    remoteHit.assignRelevance(matches)
+                    remoteHit.misc_db = self.misc_db
+                    remoteHit.torrent_db = self.torrent_db
+                    remoteHit.channelcast_db = self.channelcast_db
+
+                    self.remoteHits.append(remoteHit)
+                    refreshGrid = True
+        finally:
+            self._remote_lock.release()
+
+            if self.gridmgr:
+                self.gridmgr.NewResult(keywords)
+
+            if refreshGrid:
+                self._logger.debug("TorrentSearchGridManager: gotRemoteHist: scheduling refresh")
+                self.refreshGrid(remote=True)
+            else:
+                self._logger.debug("TorrentSearchGridManager: gotRemoteHist: not scheduling refresh")
+    """

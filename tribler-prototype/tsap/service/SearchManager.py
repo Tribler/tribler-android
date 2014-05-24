@@ -233,12 +233,28 @@ class SearchManager():
             self._remote_lock.release()
 
     def getChannel(self, channel_id):
-        channel = self.channelcast_db.getChannel(channel_id)
+        channel = self._channelcast_db.getChannel(channel_id)
         return self._getChannel(channel)
+
+    def _getChannel(self, channel):
+        if channel:
+            channel = self._createChannel(channel)
+
+            # check if we need to convert our vote
+            if channel.isDispersy() and channel.my_vote != 0:
+                dispersy_id = self._votecast_db.getDispersyId(channel.id, None) or ''
+                if dispersy_id <= 0:
+                    timestamp = self._votecast_db.getTimestamp(channel.id, None)
+                    # TODO: self.do_vote(channel.id, channel.my_vote, timestamp)
+
+        return channel
 
     def getChannelsByCID(self, channel_cids):
         channels = self._channelcast_db.getChannelsByCID(channel_cids)
         return self._createChannels(channels)
+
+    def _createChannel(self, hit):
+        return Channel(*hit)
 
     def _createChannels(self, hits, filterTorrents=True):
         channels = []

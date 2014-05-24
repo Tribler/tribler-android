@@ -269,7 +269,7 @@ class SearchManager():
         keywords = [keyword for keyword in keywords if len(keyword) > 1]
 
         if keywords == self._torrent_keywords:
-            return
+            return True
 
         try:
             self._remote_lock.acquire()
@@ -279,11 +279,13 @@ class SearchManager():
         finally:
             self._remote_lock.release()
 
+        return True
+
     def search_torrent_get_local(self):
-        pass
+        return False
 
     def search_torrent_get_results(self):
-        pass
+        return False
 
     @forceDispersyThread
     def search_torrent_do_remote(self):

@@ -15,7 +15,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
  */
 public class BasicUiTestCase extends UiAutomatorTestCase {
 
-	protected void testStartTSAPPackageName() throws UiObjectNotFoundException {
+	public void testStartTSAPPackageName() throws UiObjectNotFoundException {
 		startTSAP();
 
 		// Validate that the package name is the expected one
@@ -28,7 +28,7 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 	 * Launches the TSAP app on the device
 	 * @throws UiObjectNotFoundException
 	 */
-	private void startTSAP() throws UiObjectNotFoundException {
+	protected void startTSAP() throws UiObjectNotFoundException {
 		// Simulate a short press on the HOME button.
 		getUiDevice().pressHome();
 

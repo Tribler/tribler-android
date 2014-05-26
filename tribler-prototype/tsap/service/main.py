@@ -40,8 +40,7 @@ else:
     os.environ['ANDROID_PRIVATE'] = os.getcwd()
 
 # Local files
-from SearchManager import SearchManager
-#from TorrentManager import TorrentManager
+from TorrentManager import TorrentManager
 from ChannelManager import ChannelManager
 from TriblerSession import TriblerSession
 from XMLRpc import XMLRPCServer
@@ -66,8 +65,8 @@ if __name__ == '__main__':
     _logger.info("Loading ChannelManager")
     cm = ChannelManager(tribler.get_session(), xmlrpc)
 
-    #_logger.info("Loading TorrentManager")
-    #tm = TorrentManager(tribler.get_session(), xmlrpc)
+    _logger.info("Loading TorrentManager")
+    tm = TorrentManager(tribler.get_session(), xmlrpc)
 
     _logger.info("Now running XMLRPC on http://%s:%s/tribler" % (xmlrpc._iface, xmlrpc._port))
     xmlrpc.start_server()

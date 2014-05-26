@@ -167,24 +167,21 @@ class ChannelManager():
         try:
             self._remote_lock.acquire()
 
-            channels = self.getChannelsByCID(answers.keys())
+            _, channels = self.getChannelsByCID(answers.keys())
             for channel in channels:
                 try:
                     _logger.error("@@@@@ Channel found:\n%s" % str(channel[0]))
                 except:
                     pass
 
-            self._channel_results.append(channels)
+            self._channel_results += channels
         finally:
             self._remote_lock.release()
 
     def get_remote_results(self):
         begintime = time()
 
-        print self._channel_results
-
         ret = self._prepare_channels(self._channel_results)
-        print ret
         return ret
 
         try:

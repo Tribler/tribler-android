@@ -9,6 +9,16 @@ from Tribler.Main.Utility.GuiDBTuples import RemoteChannel as vwxRemoteChannel
 from Tribler.Main.Utility.GuiDBTuples import ChannelTorrent as vwxChannelTorrent
 from Tribler.Main.Utility.GuiDBTuples import RemoteChannelTorrent as vwxRemoteChannelTorrent
 
+from Tribler.Main.Utility.GuiDBTuples import Torrent as vwxTorrent
+from Tribler.Main.Utility.GuiDBTuples import RemoteTorrent as vwxRemoteTorrent
+
+
+class Torrent(vwxTorrent):
+    pass
+
+class RemoteTorrent(vwxRemoteTorrent):
+    pass
+
 
 class Channel(vwxChannel):
     @cache

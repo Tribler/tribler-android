@@ -84,7 +84,6 @@ class ChannelManager():
             raise RuntimeError('ChannelManager already connected')
 
     def _xmlrpc_register(self, xmlrpc):
-        # channels
         xmlrpc.register_function(self.get_local, "channels.get_local")
         xmlrpc.register_function(self.search_remote, "channels.search_remote")
         xmlrpc.register_function(self.get_remote_results_count, "channels.get_remote_results_count")

@@ -3,18 +3,11 @@ package org.tribler.tsap.channels;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.R.array;
-import org.tribler.tsap.R.id;
-import org.tribler.tsap.R.layout;
-import org.tribler.tsap.R.menu;
 
-import de.timroes.axmlrpc.XMLRPCCallback;
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
-import de.timroes.axmlrpc.XMLRPCServerException;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,16 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Fragment that shows a list of available channels and handles its behaviour
  * 
  * @author Dirk Schut
  */
-public class ChannelListFragment extends ListFragment implements
-		OnQueryTextListener {
-
+public class ChannelListFragment extends ListFragment implements OnQueryTextListener, Observer
+{
+	AbstractChannelManager mChannelManager = null;
 	/**
 	 * Initializes the channel adapter
 	 * 
@@ -52,14 +44,15 @@ public class ChannelListFragment extends ListFragment implements
 		
 		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
 				R.layout.list_item);
-
-		// storing string resources into Array
-		//String[] channelNames = getResources().getStringArray(
-		//		R.array.channelNames);
 		
 		this.setListAdapter(adapter);
 
-		
+		try {
+			mChannelManager = new XMLRPCChannelManager(new URL("http://localhost:8000/tribler"));
+		} catch (MalformedURLException e) {
+			Log.e("ChannelListFragment", "URL was malformed.\n"+e.getStackTrace());
+		}
+		mChannelManager.addObserver(this);
 	}
 
 	/**
@@ -151,76 +144,20 @@ public class ChannelListFragment extends ListFragment implements
 	@Override
 	public boolean onQueryTextSubmit(String query)
 	{
-		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
-				R.layout.list_item);
-		/*for (int i = 0; i < channelNames.length; i++) {
-			adapter.add(new Channel(channelNames[i]));
-		}*/
-		
-		///////
-		
-		final ArrayList<Channel> tempList = new ArrayList<Channel>();
-		final ArrayList<Channel> waitList = new ArrayList<Channel>();
-		XMLRPCCallback listener = new XMLRPCCallback()
-		{
-			@Override
-		    public void onResponse(long id, Object result)
-			{
-				Log.i("XMLRPC", "Got response");
-				Object[] castResult = (Object[]) result;
-				Log.i("XMLRPC", "Got " + castResult.length + "results" );
-		        for(int i=0; i<castResult.length; i++)
-		        {
-		        	Log.i("XMLRPC", "creating channel");
-		        	Channel c = new Channel((Map<String, Object>)castResult[i]);
-		        	Log.i("XMLRPC", "Channel name: " + c.getName());
-		        	Log.i("XMLRPC", "KeySet:"+((Map<String, Object>)castResult[i]).keySet());
-		        	tempList.add(c);
-		        }
-		        waitList.add(null);
-		    }
-			@Override
-		    public void onError(long id, XMLRPCException error) {
-				Log.w("XMLRPC", error.getMessage());
-				Log.w("XMLRPC", "Error!");
-		        // Handling any error in the library
-		    }
-			@Override
-			public void onServerError(long id, XMLRPCServerException error) {
-				Log.w("XMLRPC", "ServerError!");
-				// TODO Auto-generated method stub
-				
-			}
-		};
-
-		XMLRPCClient client = null;
-		try {
-			client = new XMLRPCClient(new URL("http://localhost:8000/tribler"));
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		
-
-		client.callAsync(listener, "channels.get_local", query);
-		Log.w("XMLRPC", "started waiting");
-		while(waitList.size() == 0)
-		{
-		
-		}
-		Log.w("XMLRPC", "stopped waiting");
-		Log.i("XMLRPC", "tempListsize: " + tempList.size());
-		for(int i=0; i<tempList.size(); i++)
-		{
-			adapter.add(tempList.get(i));
-			Log.i("XMLRPC", "Channel name: " + tempList.get(i).getName());
-		}
-		Log.w("XMLRPC", "finished loading");
-		
-		//////
-		this.setListAdapter(adapter);
+		mChannelManager.getLocal(query);
 		// Don't care about this.
 		return true;
+	}
+	
+	/**
+	 * update function implemented from the observer interface. It will update the values of the list once more data is loaded.
+	 */
+	@Override
+	public void update(Observable observable, Object data)
+	{
+		@SuppressWarnings("unchecked")
+		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(), R.layout.list_item, (ArrayList<Channel>)data);
+		this.setListAdapter(adapter);
+		Log.v("ChannelListFragment", "Data updated and put into new adapter!");
 	}
 }

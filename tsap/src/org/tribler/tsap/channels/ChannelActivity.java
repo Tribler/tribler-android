@@ -1,7 +1,6 @@
 package org.tribler.tsap.channels;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

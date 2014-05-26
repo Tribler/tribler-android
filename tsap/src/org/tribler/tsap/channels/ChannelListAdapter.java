@@ -1,8 +1,8 @@
 package org.tribler.tsap.channels;
 
+import java.util.List;
+
 import org.tribler.tsap.R;
-import org.tribler.tsap.R.drawable;
-import org.tribler.tsap.R.id;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -32,6 +32,23 @@ public class ChannelListAdapter extends ArrayAdapter<Channel> {
 	 */
 	public ChannelListAdapter(Context context, int resource) {
 		super(context, resource);
+		this.resource = resource;
+		inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+	
+	/**
+	 * Constructor: initializes the instance variables and fills the adapter with data from a list
+	 * 
+	 * @param context
+	 *            The context of this adapter
+	 * @param resource
+	 *            The resource id of the layout
+	 * @param content
+	 * 			  The data to fill the list with
+	 */
+	public ChannelListAdapter(Context context, int resource, List<Channel> content) {
+		super(context, resource, content);
 		this.resource = resource;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

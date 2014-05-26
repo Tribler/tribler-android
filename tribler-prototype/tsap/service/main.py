@@ -41,6 +41,8 @@ else:
 
 # Local files
 from SearchManager import SearchManager
+#from TorrentManager import TorrentManager
+from ChannelManager import ChannelManager
 from TriblerSession import TriblerSession
 from XMLRpc import XMLRPCServer
 
@@ -58,11 +60,14 @@ if __name__ == '__main__':
     tribler.start_service()
 
     _logger.info("Loading XMLRPCServer")
-    xmlrpc = XMLRPCServer(iface="0.0.0.0")
+    xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8001)
     xmlrpc.register_function(loginfo, "info")
 
-    _logger.info("Loading SearchManager")
-    sm = SearchManager(tribler.get_session(), xmlrpc)
+    _logger.info("Loading ChannelManager")
+    cm = ChannelManager(tribler.get_session(), xmlrpc)
+
+    #_logger.info("Loading TorrentManager")
+    #tm = TorrentManager(tribler.get_session(), xmlrpc)
 
     _logger.info("Now running XMLRPC on http://%s:%s/tribler" % (xmlrpc._iface, xmlrpc._port))
     xmlrpc.start_server()

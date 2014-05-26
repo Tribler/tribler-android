@@ -1,6 +1,7 @@
 __author__ = 'user'
 
 import threading
+import binascii
 from time import time
 
 # Setup logger
@@ -118,7 +119,7 @@ class ChannelManager():
         assert isinstance(ch, Channel)
 
         return {'id': ch.id,
-                #'dispersy_cid': ch.dispersy_cid,
+                'dispersy_cid': binascii.hexlify(ch.dispersy_cid).upper() if ch.dispersy_cid else False,
                 'name': ch.name,
                 'description': ch.description,
                 'nr_torrent': ch.nr_torrents,

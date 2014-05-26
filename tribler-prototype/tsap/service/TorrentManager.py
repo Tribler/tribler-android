@@ -1,6 +1,7 @@
 __author__ = 'user'
 
 import threading
+import binascii
 from time import time
 
 # Setup logger
@@ -207,9 +208,9 @@ class TorrentManager():
     def _prepare_torrent(self, tr):
         assert isinstance(tr, RemoteTorrent)
 
-        return {'infohash': tr.infohash_as_hex or False,
-                'swift_hash': "HASH" if tr.swift_hash else False,
-                'swift_torrent_hash': "HASH" if tr.swift_torrent_hash else False,
+        return {'infohash': binascii.hexlify(tr.infohash).upper() if tr.infohash else False,
+                'swift_hash': binascii.hexlify(tr.swift_hash).upper() if tr.swift_hash else False,
+                'swift_torrent_hash': binascii.hexlify(tr.swift_torrent_hash).upper() if tr.swift_torrent_hash else False,
                 'torrent_file_name': tr.torrent_file_name or False,
                 'name': tr.name,
                 #'length': tr.length,

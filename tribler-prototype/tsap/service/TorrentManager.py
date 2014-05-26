@@ -202,10 +202,11 @@ class TorrentManager():
 
 
     def get_remote_results(self):
-        pass
+        print self._torrent_results
+        return self._torrent_results
 
     def get_remote_results_count(self):
-        pass
+        return len(self._torrent_results)
 
     def get_full_info(self):
         pass

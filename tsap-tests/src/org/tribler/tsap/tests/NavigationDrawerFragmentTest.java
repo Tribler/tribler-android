@@ -6,7 +6,6 @@ import org.tribler.tsap.R;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.DrawerLayout;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**

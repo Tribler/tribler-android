@@ -8,7 +8,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
-    <string name="title_section_downloads">Downloads</string>
 	<string name="title_activity_channel">Channel</string>
 	<string name="video_info_title">Sintel 2010</string>
     <string name="video_details_type">Type:</string>
@@ -40,15 +39,9 @@
     <string name="surface_fit_vertical">Fit vertical</string>
     <string name="surface_fill">Fill</string>
     <string name="surface_original">Center</string>
-    <string name="thumbnail">Thumbnail</string>
     <string name="unseekable_stream">Unseekable stream</string>
-    <string name="refresh">Refresh</string>
     <string name="track_audio">Audio track</string>
-    <string name="track_video">Video track</string>
     <string name="track_text">Subtitles track</string>
-    <string name="track_unknown">Unknown track</string>
-    <string name="track_codec_info">Codec: %1$s\n</string>
-    <string name="track_language_info">Language: %1$s\n</string>
     <string name="volume">Volume</string>
     <string name="brightness">Brightness</string>
     

@@ -1,7 +1,7 @@
 package org.tribler.tsap.tests;
 
 import junit.framework.TestCase;
-import org.tribler.tsap.Channel;
+import org.tribler.tsap.channels.Channel;
 
 /**
  * Unit tests for the Channel class

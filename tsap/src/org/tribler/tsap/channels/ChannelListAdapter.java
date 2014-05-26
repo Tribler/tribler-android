@@ -1,4 +1,8 @@
-package org.tribler.tsap;
+package org.tribler.tsap.channels;
+
+import org.tribler.tsap.R;
+import org.tribler.tsap.R.drawable;
+import org.tribler.tsap.R.id;
 
 import android.content.Context;
 import android.view.LayoutInflater;

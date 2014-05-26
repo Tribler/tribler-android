@@ -1,9 +1,25 @@
-package org.tribler.tsap;
+package org.tribler.tsap.channels;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Map;
+
+import org.tribler.tsap.R;
+import org.tribler.tsap.R.array;
+import org.tribler.tsap.R.id;
+import org.tribler.tsap.R.layout;
+import org.tribler.tsap.R.menu;
+
+import de.timroes.axmlrpc.XMLRPCCallback;
+import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
+import de.timroes.axmlrpc.XMLRPCServerException;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,17 +49,17 @@ public class ChannelListFragment extends ListFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-
-		// storing string resources into Array
-		String[] channelNames = getResources().getStringArray(
-				R.array.channelNames);
-
+		
 		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
 				R.layout.list_item);
-		for (int i = 0; i < channelNames.length; i++) {
-			adapter.add(new Channel(channelNames[i]));
-		}
+
+		// storing string resources into Array
+		//String[] channelNames = getResources().getStringArray(
+		//		R.array.channelNames);
+		
 		this.setListAdapter(adapter);
+
+		
 	}
 
 	/**
@@ -133,9 +149,77 @@ public class ChannelListFragment extends ListFragment implements
 	 *         processed correctly
 	 */
 	@Override
-	public boolean onQueryTextSubmit(String query) {
-		((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
-		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+	public boolean onQueryTextSubmit(String query)
+	{
+		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
+				R.layout.list_item);
+		/*for (int i = 0; i < channelNames.length; i++) {
+			adapter.add(new Channel(channelNames[i]));
+		}*/
+		
+		///////
+		
+		final ArrayList<Channel> tempList = new ArrayList<Channel>();
+		final ArrayList<Channel> waitList = new ArrayList<Channel>();
+		XMLRPCCallback listener = new XMLRPCCallback()
+		{
+			@Override
+		    public void onResponse(long id, Object result)
+			{
+				Log.i("XMLRPC", "Got response");
+				Object[] castResult = (Object[]) result;
+				Log.i("XMLRPC", "Got " + castResult.length + "results" );
+		        for(int i=0; i<castResult.length; i++)
+		        {
+		        	Log.i("XMLRPC", "creating channel");
+		        	Channel c = new Channel((Map<String, Object>)castResult[i]);
+		        	Log.i("XMLRPC", "Channel name: " + c.getName());
+		        	Log.i("XMLRPC", "KeySet:"+((Map<String, Object>)castResult[i]).keySet());
+		        	tempList.add(c);
+		        }
+		        waitList.add(null);
+		    }
+			@Override
+		    public void onError(long id, XMLRPCException error) {
+				Log.w("XMLRPC", error.getMessage());
+				Log.w("XMLRPC", "Error!");
+		        // Handling any error in the library
+		    }
+			@Override
+			public void onServerError(long id, XMLRPCServerException error) {
+				Log.w("XMLRPC", "ServerError!");
+				// TODO Auto-generated method stub
+				
+			}
+		};
+
+		XMLRPCClient client = null;
+		try {
+			client = new XMLRPCClient(new URL("http://localhost:8000/tribler"));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+
+		client.callAsync(listener, "channels.get_local", query);
+		Log.w("XMLRPC", "started waiting");
+		while(waitList.size() == 0)
+		{
+		
+		}
+		Log.w("XMLRPC", "stopped waiting");
+		Log.i("XMLRPC", "tempListsize: " + tempList.size());
+		for(int i=0; i<tempList.size(); i++)
+		{
+			adapter.add(tempList.get(i));
+			Log.i("XMLRPC", "Channel name: " + tempList.get(i).getName());
+		}
+		Log.w("XMLRPC", "finished loading");
+		
+		//////
+		this.setListAdapter(adapter);
 		// Don't care about this.
 		return true;
 	}

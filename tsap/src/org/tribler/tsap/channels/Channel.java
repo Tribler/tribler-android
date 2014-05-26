@@ -1,5 +1,6 @@
-package org.tribler.tsap;
+package org.tribler.tsap.channels;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -46,6 +47,19 @@ public class Channel {
 		this.following = rand.nextBoolean();
 		this.torrentAmount = rand.nextInt(10000);
 		this.rating = rand.nextInt(6);
+	}
+	
+	/**
+	 * Constructor: creates a channel with data from dictionary from XMLRPC
+	 * @param XMLRPCdictionary 
+	 * 			The dictionary returned from aXMLRPC
+	 */
+	public Channel(Map<String, Object> XMLRPCdictionary)
+	{
+		this.name = (String)XMLRPCdictionary.get("name");
+		this.following = false;
+		this.torrentAmount =  (Integer)XMLRPCdictionary.get("nr_torrent");
+		this.rating = 3;
 	}
 
 	/**

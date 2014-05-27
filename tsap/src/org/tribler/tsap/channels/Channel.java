@@ -136,12 +136,4 @@ public class Channel {
 	public String getDispersyCid() {
 		return dispersyCid;
 	}
-
-	/**
-	 * returns the hashcode
-	 */
-	@Override
-	public int hashCode() {
-		return dispersyCid.hashCode();
-	}
 }

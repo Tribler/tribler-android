@@ -178,7 +178,7 @@ public class ChannelListAdapter extends BaseAdapter {
 	 */
 	@Override
 	public long getItemId(int position) {
-		return content.get(position).hashCode();
+		return position;
 	}
 	
 	/**

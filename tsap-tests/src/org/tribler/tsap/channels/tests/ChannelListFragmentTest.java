@@ -1,6 +1,6 @@
-package org.tribler.tsap.tests;
+package org.tribler.tsap.channels.tests;
 
-import org.tribler.tsap.ChannelListFragment;
+import org.tribler.tsap.channels.ChannelListFragment;
 import org.tribler.tsap.MainActivity;
 
 import android.test.ActivityInstrumentationTestCase2;

@@ -59,7 +59,7 @@ if __name__ == '__main__':
     tribler.start_service()
 
     _logger.info("Loading XMLRPCServer")
-    xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8001)
+    xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8000)
     xmlrpc.register_function(loginfo, "info")
 
     _logger.info("Loading ChannelManager")

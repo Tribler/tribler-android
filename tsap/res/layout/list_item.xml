@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" 
@@ -53,7 +52,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_rating"
 		android:src="@drawable/rating_star_selected"
-		tools:ignore="ContentDescription"/>
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_secondstar"
         android:layout_width="wrap_content"
@@ -61,7 +60,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_firststar"
 		android:src="@drawable/rating_star_selected"
-		tools:ignore="ContentDescription"/>
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_thirdstar"
         android:layout_width="wrap_content"
@@ -69,7 +68,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_secondstar"
 		android:src="@drawable/rating_star_selected"
-		tools:ignore="ContentDescription"/>
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_fourthstar"
         android:layout_width="wrap_content"
@@ -77,7 +76,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_thirdstar"
 		android:src="@drawable/rating_star_selected"
-		tools:ignore="ContentDescription"/>
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_fifthstar"
         android:layout_width="wrap_content"
@@ -85,5 +84,5 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_fourthstar"
 		android:src="@drawable/rating_star_not_selected"
-		tools:ignore="ContentDescription" />
+		android:contentDescription="@string/rating_star_descr"/>
 </RelativeLayout> 

@@ -150,11 +150,23 @@ class TorrentManager():
                 remoteHit.torrent_db = self._torrent_db
                 remoteHit.channelcast_db = self._channelcast_db
 
-                self._results.append(remoteHit)
+                self._add_remote_result(remoteHit)
 
         finally:
             self._remote_lock.release()
         return
+
+    def _add_remote_result(self, torrent):
+
+        if torrent.infohash in self._result_infohashes:
+            _logger.error("Torrent duplicate: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
+            return False
+
+        self._results.append(torrent)
+        self._result_infohashes.append(torrent.infohash)
+
+        _logger.error("Channel added: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
+        return True
 
 
     def get_remote_results(self):

@@ -163,14 +163,23 @@ class ChannelManager():
 
             _, channels = self.getChannelsByCID(answers.keys())
             for channel in channels:
-                try:
-                    _logger.error("@@@@@ Channel found:\n%s" % str(channel[0]))
-                except:
-                    pass
-
-            self._channel_results += channels
+                self._add_remote_result(channel)
         finally:
             self._remote_lock.release()
+
+
+
+    def _add_remote_result(self, channel):
+
+        if channel.dispersy_cid in self._result_cids:
+            _logger.error("Channel duplicate: %s [%s]" % (channel.name, binascii.hexlify(channel.dispersy_cid)))
+            return False
+
+        self._results.append(channel)
+        self._result_cids.append(channel.dispersy_cid)
+
+        _logger.error("Channel added: %s [%s]" % (channel.name, binascii.hexlify(channel.dispersy_cid)))
+        return True
 
     def get_remote_results(self):
         begintime = time()

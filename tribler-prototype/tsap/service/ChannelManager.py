@@ -92,6 +92,8 @@ class ChannelManager():
         xmlrpc.register_function(self.subscribe, "channels.subscribe")
 
     def get_local(self, filter):
+        begintime = time()
+
         try:
             self._set_keywords(filter)
         except:
@@ -101,7 +103,7 @@ class ChannelManager():
 
         _, channels = self._createChannels(hits)
 
-        _logger.info("@@@ Found %s local channels" % len(channels))
+        _logger.error("@@@ Found %s local channels in %ss" % (len(channels), time() - begintime))
 
         return self._prepare_channels(channels)
 
@@ -182,6 +184,8 @@ class ChannelManager():
         begintime = time()
 
         ret = self._prepare_channels(self._channel_results)
+
+        _logger.error("@@@ Found %s remote channels in %ss" % (len(ret), time() - begintime))
         return ret
 
         try:

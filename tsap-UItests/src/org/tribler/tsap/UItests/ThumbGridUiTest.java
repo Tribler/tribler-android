@@ -27,11 +27,11 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		UiObject grid = new UiObject(
 				new UiSelector().className("android.widget.GridView"));
 		assertTrue("Grid doesn't exist", grid.exists());
-		assertTrue("Grid isn't enable", grid.isEnabled());
+		assertTrue("Grid isn't enabled", grid.isEnabled());
 	}
 
 	/**
-	 * Tests wheter the grid view is clickable and scrollable
+	 * Tests whether the grid view is clickable
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -57,7 +57,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 
 		UiObject grid = new UiObject(
 				new UiSelector().className("android.widget.GridView"));
-		assertTrue("Grid doesn't contain items", grid.getChildCount() > 0);
+		assertTrue("Grid doesn't contain any items", grid.getChildCount() > 0);
 	}
 
 	/**

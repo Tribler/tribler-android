@@ -62,7 +62,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item exists and is enabled
+	 * Tests whether the first item exists and is enabled
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -82,7 +82,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled checkbox
+	 * Tests whether the first item contains an existing and enabled checkbox
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -104,7 +104,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled title
+	 * Tests whether the first item contains an existing and enabled title
 	 * TextView
 	 * 
 	 * @throws RemoteException
@@ -127,7 +127,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled torrents
+	 * Tests whether the first item contains an existing and enabled torrents
 	 * TextView
 	 * 
 	 * @throws RemoteException
@@ -153,7 +153,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled 'first
+	 * Tests whether the first item contains an existing and enabled 'first
 	 * start' ImageView
 	 * 
 	 * @throws RemoteException
@@ -175,7 +175,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled 'second
+	 * Tests whether the first item contains an existing and enabled 'second
 	 * start' ImageView
 	 * 
 	 * @throws RemoteException
@@ -197,7 +197,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 	
 	/**
-	 * Test whether the first item contains an existing and enabled 'third
+	 * Tests whether the first item contains an existing and enabled 'third
 	 * start' ImageView
 	 * 
 	 * @throws RemoteException
@@ -219,7 +219,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 	
 	/**
-	 * Test whether the first item contains an existing and enabled 'fourth
+	 * Tests whether the first item contains an existing and enabled 'fourth
 	 * start' ImageView
 	 * 
 	 * @throws RemoteException
@@ -241,7 +241,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	}
 	
 	/**
-	 * Test whether the first item contains an existing and enabled 'fifth
+	 * Tests whether the first item contains an existing and enabled 'fifth
 	 * start' ImageView
 	 * 
 	 * @throws RemoteException
@@ -260,6 +260,49 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		assertTrue("Fifth star isn't enabled", fifthStar.isEnabled());
 		assertEquals("Fifth star isn't an ImageView",
 				"android.widget.ImageView", fifthStar.getClassName());
+	}
+	
+	/**
+	 * Tests whether the list view contains the search option
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testListSearchExists() throws RemoteException,
+			UiObjectNotFoundException {
+		openChannelList();
+
+		UiObject search = new UiObject(new UiSelector().description("Search"));
+
+		assertTrue("Search view doesn't exist", search.exists());
+		assertTrue("Search view isn't enabled", search.isEnabled());
+		assertTrue("Search view isn't clickable", search.isClickable());
+	}
+
+	/**
+	 * Tests whether the list view shows a search box when the search option is
+	 * clicked
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testListSearchClick() throws RemoteException,
+			UiObjectNotFoundException {
+		openChannelList();
+
+		UiObject search = new UiObject(new UiSelector().description("Search"));
+
+		assertTrue("Search view isn't clicked", search.click());
+
+		UiObject searchView = new UiObject(
+				new UiSelector().description("Search query"));
+		assertTrue("SearchView doesn't exist", searchView.exists());
+		assertTrue("SearchView isn't enabled", searchView.isEnabled());
+		assertTrue("SearchView isn't clickable", searchView.isClickable());
+		assertEquals("SearchView text isn't correct", "Search channels",
+				searchView.getText());
+		assertEquals("SearchView isn't an EditText", "android.widget.EditText",
+				searchView.getClassName());
 	}
 	
 	/**

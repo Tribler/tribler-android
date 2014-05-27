@@ -61,7 +61,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item exists and is enabled
+	 * Tests whether the first item exists and is enabled
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -81,7 +81,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled thumbnail
+	 * Tests whether the first item contains an existing and enabled thumbnail
 	 * ImageView
 	 * 
 	 * @throws RemoteException
@@ -104,7 +104,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled title
+	 * Tests whether the first item contains an existing and enabled title
 	 * TextView
 	 * 
 	 * @throws RemoteException
@@ -127,7 +127,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled size
+	 * Tests whether the first item contains an existing and enabled size
 	 * TextView
 	 * 
 	 * @throws RemoteException
@@ -151,7 +151,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the first item contains an existing and enabled health
+	 * Tests whether the first item contains an existing and enabled health
 	 * ProgressBar
 	 * 
 	 * @throws RemoteException
@@ -174,7 +174,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the grid view contains the search option
+	 * Tests whether the grid view contains the search option
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -191,7 +191,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the grid view shows a search box when the search option is
+	 * Tests whether the grid view shows a search box when the search option is
 	 * clicked
 	 * 
 	 * @throws RemoteException

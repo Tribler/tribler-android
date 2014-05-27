@@ -108,14 +108,7 @@ class ChannelManager():
         return self._prepare_channels(channels)
 
     def _prepare_channels(self, chs):
-        channels = []
-        for ch in chs:
-            try:
-                channels.append(self._prepare_channel(ch))
-            except:
-                pass
-
-        return channels
+        return [self._prepare_channel(ch) for ch in chs]
 
     def _prepare_channel(self, ch):
         assert isinstance(ch, Channel)

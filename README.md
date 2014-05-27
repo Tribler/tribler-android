@@ -1,6 +1,6 @@
-# Tribler Streaming for Android Project [![Build Status](http://jenkins.tribler.org/job/Build_Test-TSAP_Android_master/badge/icon)](http://jenkins.tribler.org/job/Build_Test-TSAP_Android_master/)
+# Tribler Streaming for Android Project 
 
-An ongoing port effort to run [Tribler](https://github.com/tribler/tribler/) on Android using [Python for Android](https://github.com/kivy/python-for-android/) and an Android GUI.
+An ongoing effort to run [Tribler](https://github.com/tribler/tribler/) on Android using [Python for Android](https://github.com/kivy/python-for-android/) and an Android GUI.
 
 ## Dependencies
 

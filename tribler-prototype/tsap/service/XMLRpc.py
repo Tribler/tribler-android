@@ -19,8 +19,5 @@ class XMLRPCServer:
     def register_function(self, funct, name=None):
         self._server.register_function(funct, name)
 
-    def register_class(self, cls, name=None):
-        self._server.register_function(cls, name)
-
     def start_server(self):
         self._server.serve_forever()

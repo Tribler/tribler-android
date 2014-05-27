@@ -15,14 +15,11 @@ public class NavigationDrawerLandscapeUiTest extends NavigationDrawerUiTest {
 	 * Launches the TSAP app on the device and sets the orientation to Right
 	 * 
 	 * @throws UiObjectNotFoundException
+	 * @throws RemoteException 
 	 */
 	@Override
-	protected void startTSAP() throws UiObjectNotFoundException {
+	protected void startTSAP() throws UiObjectNotFoundException, RemoteException {
 		super.startTSAP();
-		try {
-			getUiDevice().setOrientationRight();
-		} catch (RemoteException e) {
-			throw new UiObjectNotFoundException(e.getMessage());
-		}
+		getUiDevice().setOrientationRight();
 	}
 }

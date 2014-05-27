@@ -1,5 +1,7 @@
 package org.tribler.tsap.UItests;
 
+import android.os.RemoteException;
+
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
@@ -20,8 +22,9 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 	 * its package name)
 	 * 
 	 * @throws UiObjectNotFoundException
+	 * @throws RemoteException 
 	 */
-	public void testStartTSAPPackageName() throws UiObjectNotFoundException {
+	public void testStartTSAPPackageName() throws UiObjectNotFoundException, RemoteException {
 		startTSAP();
 
 		// Validate that the package name is the expected one
@@ -34,8 +37,9 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 	 * Launches the TSAP app on the device
 	 * 
 	 * @throws UiObjectNotFoundException
+	 * @throws RemoteException 
 	 */
-	protected void startTSAP() throws UiObjectNotFoundException {
+	protected void startTSAP() throws UiObjectNotFoundException, RemoteException {		
 		// Simulate a short press on the HOME button.
 		getUiDevice().pressHome();
 
@@ -74,5 +78,8 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 		UiObject tsapApp = appViews.getChildByText(new UiSelector()
 				.className(android.widget.TextView.class.getName()), "TSAP");
 		tsapApp.clickAndWaitForNewWindow();
+		
+		// Set the rotation to normal (=portrait mode)
+		getUiDevice().setOrientationNatural();
 	}
 }

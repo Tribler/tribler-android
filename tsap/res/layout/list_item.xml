@@ -22,8 +22,7 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_toRightOf="@id/channel_favoritetoggle"
         android:gravity="center_vertical"
-        android:textSize="18sp"
-        android:text="blabla"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/channel_torrentamount"
@@ -34,7 +33,6 @@
         android:layout_marginRight="6dip"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:text="torrents: 156"
         android:textSize="13sp"/>
 	
     <TextView
@@ -45,7 +43,6 @@
         android:layout_toRightOf="@id/channel_torrentamount"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:text="rating: "
         android:textSize="13sp" />
     
     <ImageView
@@ -54,33 +51,38 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_rating"
-		android:src="@drawable/rating_star_selected"/>
+		android:src="@drawable/rating_star_selected"
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_secondstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_firststar"
-		android:src="@drawable/rating_star_selected"/>
+		android:src="@drawable/rating_star_selected"
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_thirdstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_secondstar"
-		android:src="@drawable/rating_star_selected"/>
+		android:src="@drawable/rating_star_selected"
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_fourthstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_thirdstar"
-		android:src="@drawable/rating_star_selected"/>
+		android:src="@drawable/rating_star_selected"
+		android:contentDescription="@string/rating_star_descr"/>
     <ImageView
         android:id="@+id/channel_fifthstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/channel_fourthstar"
-		android:src="@drawable/rating_star_not_selected"/>
+		android:src="@drawable/rating_star_not_selected"
+		android:contentDescription="@string/rating_star_descr"/>
 </RelativeLayout> 

@@ -43,7 +43,6 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		UiObject grid = new UiObject(
 				new UiSelector().className("android.widget.GridView"));
 		assertTrue("Grid isn't clickable", grid.isClickable());
-		assertTrue("Grid isn't scrollable", grid.isScrollable());
 	}
 
 	/**

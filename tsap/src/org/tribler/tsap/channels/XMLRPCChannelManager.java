@@ -17,8 +17,6 @@ import org.tribler.tsap.XMLRPCCallTask;
  */
 class XMLRPCChannelManager extends AbstractChannelManager {
 	private XMLRPCClient mClient = null;
-	private String mCurrentQuery = "";
-	private boolean mIsSearching = false;
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server
@@ -80,28 +78,40 @@ class XMLRPCChannelManager extends AbstractChannelManager {
 		task.execute(mClient, "channels.get_local", query);
 	}
 
+	/**
+	 * Searches the remote dispersy data for channels fitting a certain query.
+	 * If there are enough peers for a search it will send true to all
+	 * observers, else it will send false. The results can be retrieved by
+	 * calling getRemoteResults(). The amount of found results can be retrieved
+	 * by calling getRemoteResultsCount().
+	 * 
+	 * @param query
+	 *            The query that Tribler will look for in the names of the
+	 *            channels
+	 */
 	void searchRemote(final String query) {
-		mCurrentQuery = query;
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Boolean hasPeers = (Boolean)result;
-				if(hasPeers)
-				{
-					mIsSearching = true;
-					Log.v("XMLRPC", "Looking for query " + query + " across peers.");
+				Boolean hasPeers = (Boolean) result;
+				if (hasPeers) {
+					Log.v("XMLRPC", "Looking for query " + query
+							+ " across peers.");
+				} else {
+					Log.v("XMLRPC", "Not enough peers found for query " + query
+							+ ".");
 				}
-				else
-				{
-					mIsSearching = false;
-					Log.v("XMLRPC", "Not enough peers found for query " + query + ".");
-				}
+				setChanged();
+				notifyObservers(hasPeers);
 			}
 		};
-		Log.v("XMLRPC", "Calling channels.search_remote");
 		task.execute(mClient, "channels.search_remote", query);
 	}
 
+	/**
+	 * It will send an Integer to all observers describing the amount of found
+	 * results.
+	 */
 	public void getRemoteResultsCount() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
@@ -111,17 +121,20 @@ class XMLRPCChannelManager extends AbstractChannelManager {
 				notifyObservers(count);
 			}
 		};
-		task.execute(mClient, "torrents.get_remote_results_count");
+		task.execute(mClient, "channels.get_remote_results_count");
 	}
-	
-	void getRemoteResults()
-	{
+
+	/**
+	 * It will send an ArrayList<Channel> all observers containing the found
+	 * channels.
+	 */
+	void getRemoteResults() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
 				Object[] arrayResult = (Object[]) result;
 				ArrayList<Channel> resultsList = new ArrayList<Channel>();
-				Log.v("XMLRPC", "Got " + arrayResult.length + "results");
+				Log.v("XMLRPC", "Got " + arrayResult.length + " results");
 				for (int i = 0; i < arrayResult.length; i++) {
 					@SuppressWarnings("unchecked")
 					Channel c = new Channel(
@@ -134,13 +147,5 @@ class XMLRPCChannelManager extends AbstractChannelManager {
 			}
 		};
 		task.execute(mClient, "channels.get_remote_results");
-	}
-
-	public boolean isSearching() {
-		return mIsSearching;
-	}
-
-	public String getCurrentQuery() {
-		return mCurrentQuery;
 	}
 }

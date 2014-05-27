@@ -25,16 +25,19 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 
 /**
- * Fragment that shows a list of available channels and handles its behaviour
+ * Fragment that shows a list of available channels and handles its behavior
  * 
  * @author Dirk Schut
  */
-public class ChannelListFragment extends ListFragment implements OnQueryTextListener, Observer
-{
-	AbstractChannelManager mChannelManager = null;
-	Handler mDataPollingHandler = new Handler();
-	final static long POLLING_PERIOD = 1500;
-	ArrayList<Channel> channelList = new ArrayList<Channel>();
+public class ChannelListFragment extends ListFragment implements
+		OnQueryTextListener, Observer {
+	private AbstractChannelManager mChannelManager = null;
+	private Handler mDataPollingHandler = new Handler();
+	private ArrayList<Channel> channelList = new ArrayList<Channel>();
+	private int mLastFoundResultAmount = 0;
+
+	public final static long POLLING_PERIOD = 500;
+
 	/**
 	 * Initializes the channel adapter
 	 * 
@@ -45,36 +48,35 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		
+
 		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
 				R.layout.list_item, channelList);
-		
-		adapter.add(new Channel("bla"));
-		
+
 		this.setListAdapter(adapter);
-		adapter.add(new Channel("bla2"));
-		adapter.clear();
-		adapter.add(new Channel("bla3"));
 
 		try {
-			mChannelManager = new XMLRPCChannelManager(new URL("http://localhost:8000/tribler"));
+			mChannelManager = new XMLRPCChannelManager(new URL(
+					"http://localhost:8000/tribler"));
 		} catch (MalformedURLException e) {
-			Log.e("ChannelListFragment", "URL was malformed.\n"+e.getStackTrace());
+			Log.e("ChannelListFragment",
+					"URL was malformed.\n" + e.getStackTrace());
 		}
 		mChannelManager.addObserver(this);
-		//search for all channels
+		// search for all channels
 		mChannelManager.searchRemote("");
-		//start with polling for new results
+		// start with polling for new results
 		setupDataPollingHandler();
 	}
-	
-	private void setupDataPollingHandler()
-	{
+
+	/**
+	 * Starts a thread that will request the amount of found channels from the
+	 * channelmanager every POLLING_PERIOD milliseconds
+	 */
+	private void setupDataPollingHandler() {
 		Runnable poller = new Runnable() {
 			@Override
 			public void run() {
 				mChannelManager.getRemoteResultsCount();
-				mChannelManager.getRemoteResults();
 				mDataPollingHandler.postDelayed(this, POLLING_PERIOD);
 			}
 		};
@@ -154,7 +156,7 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 		// Called when the action bar search text has changed. Update
 		// the search filter, and restart the loader to do a new query
 		// with this filter.
-		((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
+		// ((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
 		return true;
 	}
 
@@ -168,32 +170,46 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 	 *         processed correctly
 	 */
 	@Override
-	public boolean onQueryTextSubmit(String query)
-	{
-		((ChannelListAdapter)this.getListAdapter()).clear();
+	public boolean onQueryTextSubmit(String query) {
+		mLastFoundResultAmount = 0;
+		((ChannelListAdapter) this.getListAdapter()).clear();
+		mChannelManager.getLocal(query);
 		mChannelManager.searchRemote(query);
-		((ChannelListAdapter) getListAdapter()).getFilter().filter("");
-		// Don't care about this.
 		return true;
 	}
+
 	/**
-	 * update function implemented from the observer interface. It will update the values of the list once more data is loaded.
+	 * Update function implemented from the observer interface. It will handle
+	 * data sent by the channelManager. When the data is the amount of found
+	 * torrents it will check if new torrents are found and if so it will send a
+	 * request to get them. If the data is a list of channels all new channels
+	 * are added to the list. Channels that were already in the list are
+	 * discarded.
+	 * 
+	 * @param observable
+	 *            the sender of the data
+	 * @param the
+	 *            data that was sent
 	 */
 	@Override
-	public void update(Observable observable, Object data)
-	{
-		if(data instanceof ArrayList<?>)
-		{
-			//The only way to check if an ArrayList<Object> contains only Channels is to check each value
-			//since that is a lot of work and we send the data ourself we decided to just suppress the warning
+	public void update(Observable observable, Object data) {
+		if (data instanceof ArrayList<?>) {
+			// The only way to check if an ArrayList<Object> contains only
+			// Channels is to check each value
+			// since that is a lot of work and we send the data ourself we
+			// decided to just suppress the warning
 			@SuppressWarnings("unchecked")
-			ArrayList<Channel> newChannels = (ArrayList<Channel>)data;
-			((ChannelListAdapter)this.getListAdapter()).addAll(newChannels);
+			ArrayList<Channel> newChannels = (ArrayList<Channel>) data;
+			((ChannelListAdapter) this.getListAdapter()).addNew(newChannels);
 			Log.v("ChannelListFragment", "Data updated!");
-		}
-		else if(data instanceof Integer)
-		{
-			Log.i("ChannelListFragment", "Current search results count = " + (Integer)data);
+		} else if (data instanceof Integer) {
+			int resultAmount = (Integer) data;
+			if (resultAmount > mLastFoundResultAmount) {
+				Log.i("ChannelListFragment", "More search results found: "
+						+ resultAmount);
+				mChannelManager.getRemoteResults();
+				mLastFoundResultAmount = resultAmount;
+			}
 		}
 	}
 }

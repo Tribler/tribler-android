@@ -1,27 +1,30 @@
 package org.tribler.tsap.channels;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.tribler.tsap.R;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Adapter belonging to the ChannelListFragment that holds the channels
+ * Adapter for managing the data and views for a list of channels.
  * 
  * @author Dirk Schut
  */
-public class ChannelListAdapter extends ArrayAdapter<Channel> {
+public class ChannelListAdapter extends BaseAdapter {
 	private int resource;
 	private LayoutInflater inflater;
-	private List<Channel> content = null;
+	private ArrayList<Channel> content;
 
 	/**
 	 * Constructor: initializes the instance variables
@@ -32,32 +35,45 @@ public class ChannelListAdapter extends ArrayAdapter<Channel> {
 	 *            The resource id of the layout
 	 */
 	public ChannelListAdapter(Context context, int resource) {
-		super(context, resource);
+		content = new ArrayList<Channel>();
 		this.resource = resource;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
-	
+
 	/**
-	 * Constructor: initializes the instance variables and fills the adapter with data from a list
+	 * Constructor: initializes the instance variables and fills the adapter
+	 * with data from a list
 	 * 
 	 * @param context
 	 *            The context of this adapter
 	 * @param resource
 	 *            The resource id of the layout
 	 * @param content
-	 * 			  The data to fill the list with
+	 *            The data to fill the list with
 	 */
-	public ChannelListAdapter(Context context, int resource, List<Channel> content) {
-		super(context, resource, content);
+	public ChannelListAdapter(Context context, int resource,
+			Collection<Channel> initialContent) {
+		content = new ArrayList<Channel>();
+		content.addAll(initialContent);
 		this.resource = resource;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		this.content = content;
+	}
+	
+	/**
+	 * Returns the item at a certain position.
+	 * 
+	 * @param position
+	 * 	the position from which you want to retrieve the channel
+	 */
+	@Override
+	public Channel getItem(int position) {
+		return content.get(position);
 	}
 
 	/**
-	 * Returns the view belonging to the specified position in the channel list
+	 * Returns the view belonging to the specified position in the channel list.
 	 * 
 	 * @param position
 	 *            The position of which the view should be returned
@@ -130,12 +146,47 @@ public class ChannelListAdapter extends ArrayAdapter<Channel> {
 					.setImageResource(R.drawable.rating_star_not_selected);
 	}
 	
-	public void addNew(List<Channel> channelList)
-	{
-		for(int i=0; i<channelList.size(); i++)
-		{
-			if(!content.contains(channelList.get(i)))
-					add(channelList.get(i));
+	/**
+	 * Adds all channels from a list to the channelList that were not in the channelList already
+	 * @param channelList
+	 * 	list of channels to add
+	 */
+	public void addNew(List<Channel> channelList) {
+		Log.v("ChannelListFragment", "Adding items");
+		for (int i = 0; i < channelList.size(); i++) {
+			if (!content.contains(channelList.get(i)))
+			{
+				content.add(channelList.get(i));
+				Log.v("ChannelListFragment", "item added");
+			}
 		}
+		notifyDataSetChanged();
+	}
+	
+	/**
+	 * Returns the amount of channels.
+	 */
+	@Override
+	public int getCount() {
+		return content.size();
+	}
+
+	/**
+	 * Returns the Id of the item at a certain position.
+	 * @param
+	 *  the position
+	 */
+	@Override
+	public long getItemId(int position) {
+		return content.get(position).hashCode();
+	}
+	
+	/**
+	 * Removes all data from the list.
+	 */
+	public void clear()
+	{
+		content.clear();
+		notifyDataSetChanged();
 	}
 }

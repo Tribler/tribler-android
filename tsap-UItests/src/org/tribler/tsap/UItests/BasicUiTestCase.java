@@ -8,24 +8,31 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
 /**
  * Basic UI test case that launches the TSAP app. This class should be extended
- * for additional UI test cases. Each test case in the subclasses should
- * call the startTSAP method first to launch the app.
+ * for additional UI test cases. Each test case in the subclasses should call
+ * the startTSAP method first to launch the app.
  * 
  * @author Niels Spruit
  */
 public class BasicUiTestCase extends UiAutomatorTestCase {
 
+	/**
+	 * Test whether the startTSAP function starts the correct app (by checking
+	 * its package name)
+	 * 
+	 * @throws UiObjectNotFoundException
+	 */
 	public void testStartTSAPPackageName() throws UiObjectNotFoundException {
 		startTSAP();
 
 		// Validate that the package name is the expected one
 		UiObject tsapValidation = new UiObject(
 				new UiSelector().packageName("org.tribler.tsap"));
-		assertTrue("Unable to find TSAP app", tsapValidation.exists());		
+		assertTrue("Unable to find TSAP app", tsapValidation.exists());
 	}
 
 	/**
 	 * Launches the TSAP app on the device
+	 * 
 	 * @throws UiObjectNotFoundException
 	 */
 	protected void startTSAP() throws UiObjectNotFoundException {
@@ -64,10 +71,8 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 
 		// Create a UiSelector to find the TSAP app and simulate
 		// a user click to launch the app.
-		UiObject tsapApp = appViews
-				.getChildByText(new UiSelector()
-						.className(android.widget.TextView.class.getName()),
-						"TSAP");
+		UiObject tsapApp = appViews.getChildByText(new UiSelector()
+				.className(android.widget.TextView.class.getName()), "TSAP");
 		tsapApp.clickAndWaitForNewWindow();
 	}
 }

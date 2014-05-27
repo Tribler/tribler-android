@@ -11,6 +11,7 @@ import org.tribler.tsap.R;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +32,9 @@ import android.widget.TextView;
 public class ChannelListFragment extends ListFragment implements OnQueryTextListener, Observer
 {
 	AbstractChannelManager mChannelManager = null;
+	Handler mDataPollingHandler = new Handler();
+	final static long POLLING_PERIOD = 1500;
+	ArrayList<Channel> channelList = new ArrayList<Channel>();
 	/**
 	 * Initializes the channel adapter
 	 * 
@@ -43,9 +47,14 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 		setHasOptionsMenu(true);
 		
 		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
-				R.layout.list_item);
+				R.layout.list_item, channelList);
+		
+		adapter.add(new Channel("bla"));
 		
 		this.setListAdapter(adapter);
+		adapter.add(new Channel("bla2"));
+		adapter.clear();
+		adapter.add(new Channel("bla3"));
 
 		try {
 			mChannelManager = new XMLRPCChannelManager(new URL("http://localhost:8000/tribler"));
@@ -53,6 +62,23 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 			Log.e("ChannelListFragment", "URL was malformed.\n"+e.getStackTrace());
 		}
 		mChannelManager.addObserver(this);
+		//search for all channels
+		mChannelManager.searchRemote("");
+		//start with polling for new results
+		setupDataPollingHandler();
+	}
+	
+	private void setupDataPollingHandler()
+	{
+		Runnable poller = new Runnable() {
+			@Override
+			public void run() {
+				mChannelManager.getRemoteResultsCount();
+				mChannelManager.getRemoteResults();
+				mDataPollingHandler.postDelayed(this, POLLING_PERIOD);
+			}
+		};
+		mDataPollingHandler.postDelayed(poller, POLLING_PERIOD);
 	}
 
 	/**
@@ -144,20 +170,30 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 	@Override
 	public boolean onQueryTextSubmit(String query)
 	{
-		mChannelManager.getLocal(query);
+		((ChannelListAdapter)this.getListAdapter()).clear();
+		mChannelManager.searchRemote(query);
+		((ChannelListAdapter) getListAdapter()).getFilter().filter("");
 		// Don't care about this.
 		return true;
 	}
-	
 	/**
 	 * update function implemented from the observer interface. It will update the values of the list once more data is loaded.
 	 */
 	@Override
 	public void update(Observable observable, Object data)
 	{
-		@SuppressWarnings("unchecked")
-		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(), R.layout.list_item, (ArrayList<Channel>)data);
-		this.setListAdapter(adapter);
-		Log.v("ChannelListFragment", "Data updated and put into new adapter!");
+		if(data instanceof ArrayList<?>)
+		{
+			//The only way to check if an ArrayList<Object> contains only Channels is to check each value
+			//since that is a lot of work and we send the data ourself we decided to just suppress the warning
+			@SuppressWarnings("unchecked")
+			ArrayList<Channel> newChannels = (ArrayList<Channel>)data;
+			((ChannelListAdapter)this.getListAdapter()).addAll(newChannels);
+			Log.v("ChannelListFragment", "Data updated!");
+		}
+		else if(data instanceof Integer)
+		{
+			Log.i("ChannelListFragment", "Current search results count = " + (Integer)data);
+		}
 	}
 }

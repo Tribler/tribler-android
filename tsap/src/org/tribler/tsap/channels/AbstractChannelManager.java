@@ -18,4 +18,16 @@ abstract class AbstractChannelManager extends Observable
 	 * 		The query that Tribler will look for in the names of the channels
 	 */
 	abstract void getLocal(String query);
+	/**
+	 * Searches the remote dispersy data for channels fitting a certain query.
+	 * Results can be retrieved by calling getRemoteResults().
+	 * The amount of found results can be retrieved by calling getRemoteResultsCount().
+	 * @param query
+	 * 		The query that Tribler will look for in the names of the channels
+	 */
+	abstract void searchRemote(String query);
+	
+	abstract void getRemoteResultsCount();
+	
+	abstract void getRemoteResults();
 }

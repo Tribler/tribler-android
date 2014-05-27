@@ -21,6 +21,7 @@ import android.widget.TextView;
 public class ChannelListAdapter extends ArrayAdapter<Channel> {
 	private int resource;
 	private LayoutInflater inflater;
+	private List<Channel> content = null;
 
 	/**
 	 * Constructor: initializes the instance variables
@@ -52,6 +53,7 @@ public class ChannelListAdapter extends ArrayAdapter<Channel> {
 		this.resource = resource;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.content = content;
 	}
 
 	/**
@@ -126,5 +128,14 @@ public class ChannelListAdapter extends ArrayAdapter<Channel> {
 		else
 			((ImageView) view.findViewById(R.id.channel_fifthstar))
 					.setImageResource(R.drawable.rating_star_not_selected);
+	}
+	
+	public void addNew(List<Channel> channelList)
+	{
+		for(int i=0; i<channelList.size(); i++)
+		{
+			if(!content.contains(channelList.get(i)))
+					add(channelList.get(i));
+		}
 	}
 }

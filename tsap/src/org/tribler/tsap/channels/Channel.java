@@ -106,4 +106,12 @@ public class Channel {
 	public String toString() {
 		return name;
 	}
+	
+	public boolean equals(Object other)
+	{
+		if(other instanceof Channel)
+			return name.equals(((Channel)other).name);
+		else
+			return false;
+	}
 }

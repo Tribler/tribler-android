@@ -41,11 +41,9 @@ class TorrentManager():
     _channelcast_db = None
     _votecast_db = None
 
-    _channel_keywords = []
-    _channel_results = []
-
-    _torrent_keywords = []
-    _torrent_results = []
+    _keywords = []
+    _results = []
+    _result_infohashes = []
 
     def __init__(self, session, xmlrpc=None):
         self.connected = False
@@ -93,7 +91,7 @@ class TorrentManager():
         if self._dispersy:
             for community in self._dispersy.get_communities():
                 if isinstance(community, SearchCommunity):
-                    nr_requests_made = community.create_search(self._torrent_keywords, self._search_remote_callback)
+                    nr_requests_made = community.create_search(self._keywords, self._search_remote_callback)
                     if not nr_requests_made:
                         _logger.error("@@@@ Could not send search in SearchCommunity, no verified candidates found")
                     break
@@ -118,7 +116,7 @@ class TorrentManager():
         #    print "************ %s" % str(t)
 
         # Ignore searches we don't want (anymore)
-        if not self._torrent_keywords == keywords:
+        if not self._keywords == keywords:
             return
 
         try:
@@ -152,7 +150,7 @@ class TorrentManager():
                 remoteHit.torrent_db = self._torrent_db
                 remoteHit.channelcast_db = self._channelcast_db
 
-                self._torrent_results.append(remoteHit)
+                self._results.append(remoteHit)
 
         finally:
             self._remote_lock.release()
@@ -160,11 +158,11 @@ class TorrentManager():
 
 
     def get_remote_results(self):
-        count = max(len(self._torrent_results), 10)
-        return self._prepare_torrents(self._torrent_results[0:count])
+        count = max(len(self._results), 10)
+        return self._prepare_torrents(self._results[0:count])
 
     def get_remote_results_count(self):
-        return len(self._torrent_results)
+        return len(self._results)
 
     def get_full_info(self):
         pass
@@ -173,14 +171,14 @@ class TorrentManager():
         keywords = split_into_keywords(unicode(keywords))
         keywords = [keyword for keyword in keywords if len(keyword) > 1]
 
-        if keywords == self._torrent_keywords:
+        if keywords == self._keywords:
             return True
 
         try:
             self._remote_lock.acquire()
 
-            self._torrent_keywords = keywords
-            self._torrent_results = []
+            self._keywords = keywords
+            self._results = []
         finally:
             self._remote_lock.release()
 

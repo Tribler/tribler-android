@@ -7,37 +7,14 @@ import os
 
 # SETUP ENVIRONMENT, DO THIS FIRST
 from Environment import init_environment
-init_environment('from service')
+init_environment()
+print os.environ
 
 import logging
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
 
 arg = os.getenv('PYTHON_SERVICE_ARGUMENT')
-
-# Set up environment
-
-if 'ANDROID_PRIVATE' in os.environ:
-    print "We are running on android/p4a"
-
-    # Set P4A egg cache
-    os.environ["PYTHON_EGG_CACHE"] = "/data/data/org.tsap.tribler.full/cache"
-
-    # Set tribler data dir
-    os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.environ['ANDROID_PRIVATE'], '.Tribler')
-
-    # Running on Android
-    os.environ['ANDROID_HOST'] = "YES"
-else:
-    print "We are running on a pc"
-
-    # Set tribler data dir
-    os.environ['TRIBLER_STATE_DIR'] = os.path.abspath(os.path.join(os.getcwd(), '../.Tribler-data'))
-    print os.environ['TRIBLER_STATE_DIR']
-
-    # Test Android code
-    os.environ['ANDROID_HOST'] = "SIMULATED"
-    os.environ['ANDROID_PRIVATE'] = os.getcwd()
 
 # Local files
 from TorrentManager import TorrentManager

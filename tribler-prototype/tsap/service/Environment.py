@@ -2,11 +2,7 @@ __author__ = 'user'
 
 import os
 
-def init_environment(msg=None):
-
-    if not msg == None:
-        print msg
-
+def init_environment():
     if 'ANDROID_PRIVATE' in os.environ:
         print "We are running on android/p4a"
 

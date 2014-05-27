@@ -27,23 +27,25 @@ def loginfo(str):
     _logger.info(str)
 
 if __name__ == '__main__':
-    _logger.info("Python egg cache: %s" % os.environ["PYTHON_EGG_CACHE"])
-    _logger.info("$ANDROID_PRIVATE=%s", os.environ["ANDROID_PRIVATE"])
-    _logger.info("cwd: %s" % os.getcwd())
+    _logger.error("Python egg cache: %s" % os.environ["PYTHON_EGG_CACHE"])
+    _logger.error("$ANDROID_PRIVATE=%s", os.environ["ANDROID_PRIVATE"])
+    _logger.error("cwd: %s" % os.getcwd())
 
-    _logger.info("Loading TriblerSessionService")
+    _logger.error("Loading TriblerSessionService")
     tribler = TriblerSession()
     tribler.start_service()
 
-    _logger.info("Loading XMLRPCServer")
+    _logger.error("Loading XMLRPCServer")
     xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8000)
     xmlrpc.register_function(loginfo, "info")
 
-    _logger.info("Loading ChannelManager")
+    _logger.error("Loading ChannelManager")
     cm = ChannelManager(tribler.get_session(), xmlrpc)
 
-    _logger.info("Loading TorrentManager")
+    _logger.error("Loading TorrentManager")
     tm = TorrentManager(tribler.get_session(), xmlrpc)
 
-    _logger.info("Now running XMLRPC on http://%s:%s/tribler" % (xmlrpc._iface, xmlrpc._port))
+    #test_libtorrent(tribler.get_session())
+
+    _logger.error("Now running XMLRPC on http://%s:%s/tribler" % (xmlrpc._iface, xmlrpc._port))
     xmlrpc.start_server()

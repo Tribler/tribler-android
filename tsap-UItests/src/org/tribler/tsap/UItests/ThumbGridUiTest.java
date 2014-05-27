@@ -102,7 +102,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		assertEquals("Thumbnail view isn't an ImageView",
 				"android.widget.ImageView", thumbnail.getClassName());
 	}
-	
+
 	/**
 	 * Test whether the first item contains an existing and enabled title
 	 * TextView
@@ -117,13 +117,12 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		UiCollection grid = new UiCollection(
 				new UiSelector().className("android.widget.GridView"));
 		UiObject firstItem = grid.getChild(new UiSelector().index(0));
-		UiObject title = firstItem.getChild(new UiSelector()
-				.index(1));
+		UiObject title = firstItem.getChild(new UiSelector().index(1));
 
 		assertTrue("Title view doesn't exist", title.exists());
 		assertTrue("Title view isn't enabled", title.isEnabled());
-		assertEquals("Title view isn't a TextView",
-				"android.widget.TextView", title.getClassName());
+		assertEquals("Title view isn't a TextView", "android.widget.TextView",
+				title.getClassName());
 		assertFalse("Title is empty string", title.getText().equals(""));
 	}
 
@@ -141,16 +140,16 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		UiCollection grid = new UiCollection(
 				new UiSelector().className("android.widget.GridView"));
 		UiObject firstItem = grid.getChild(new UiSelector().index(0));
-		UiObject size = firstItem.getChild(new UiSelector()
-				.index(2)).getChild(new UiSelector().index(0));
+		UiObject size = firstItem.getChild(new UiSelector().index(2)).getChild(
+				new UiSelector().index(0));
 
 		assertTrue("Size view doesn't exist", size.exists());
 		assertTrue("Size view isn't enabled", size.isEnabled());
-		assertEquals("Size view isn't a TextView",
-				"android.widget.TextView", size.getClassName());
+		assertEquals("Size view isn't a TextView", "android.widget.TextView",
+				size.getClassName());
 		assertFalse("Size is empty string", size.getText().equals(""));
 	}
-	
+
 	/**
 	 * Test whether the first item contains an existing and enabled health
 	 * ProgressBar
@@ -165,15 +164,58 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		UiCollection grid = new UiCollection(
 				new UiSelector().className("android.widget.GridView"));
 		UiObject firstItem = grid.getChild(new UiSelector().index(0));
-		UiObject health = firstItem.getChild(new UiSelector()
-				.index(2)).getChild(new UiSelector().index(1));
+		UiObject health = firstItem.getChild(new UiSelector().index(2))
+				.getChild(new UiSelector().index(1));
 
 		assertTrue("Health view doesn't exist", health.exists());
 		assertTrue("Health view isn't enabled", health.isEnabled());
 		assertEquals("Health view isn't a ProgressBar",
 				"android.widget.ProgressBar", health.getClassName());
 	}
-	
+
+	/**
+	 * Test whether the grid view contains the search option
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testGridSearchExists() throws RemoteException,
+			UiObjectNotFoundException {
+		openThumbGrid();
+
+		UiObject search = new UiObject(new UiSelector().description("Search"));
+
+		assertTrue("Search view doesn't exist", search.exists());
+		assertTrue("Search view isn't enabled", search.isEnabled());
+		assertTrue("Search view isn't clickable", search.isClickable());
+	}
+
+	/**
+	 * Test whether the grid view shows a search box when the search option is
+	 * clicked
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testGridSearchClick() throws RemoteException,
+			UiObjectNotFoundException {
+		openThumbGrid();
+
+		UiObject search = new UiObject(new UiSelector().description("Search"));
+
+		assertTrue("Search view isn't clicked", search.click());
+
+		UiObject searchView = new UiObject(
+				new UiSelector().description("Search query"));
+		assertTrue("SearchView doesn't exist", searchView.exists());
+		assertTrue("SearchView isn't enabled", searchView.isEnabled());
+		assertTrue("SearchView isn't clickable", searchView.isClickable());
+		assertEquals("SearchView text isn't correct", "Search videos",
+				searchView.getText());
+		assertEquals("SearchView isn't an EditText", "android.widget.EditText",
+				searchView.getClassName());
+	}
+
 	/**
 	 * Launches the app, opens the navigation drawer and click the home item to
 	 * load the thumb grid

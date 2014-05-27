@@ -43,11 +43,9 @@ class ChannelManager():
     _channelcast_db = None
     _votecast_db = None
 
-    _channel_keywords = []
-    _channel_results = []
-
-    _torrent_keywords = []
-    _torrent_results = []
+    _keywords = []
+    _results = []
+    _result_cids = []
 
     def __init__(self, session, xmlrpc=None):
         if ChannelManager.__single:
@@ -99,7 +97,7 @@ class ChannelManager():
         except:
             return False
 
-        hits = self._channelcast_db.searchChannels(self._channel_keywords)
+        hits = self._channelcast_db.searchChannels(self._keywords)
 
         _, channels = self._createChannels(hits)
 
@@ -138,7 +136,7 @@ class ChannelManager():
         if self._dispersy:
             for community in self._dispersy.get_communities():
                 if isinstance(community, AllChannelCommunity):
-                    nr_requests_made = community.create_channelsearch(self._channel_keywords, self._search_remote_callback)
+                    nr_requests_made = community.create_channelsearch(self._keywords, self._search_remote_callback)
                     if not nr_requests_made:
                         _logger.info("Could not send search in AllChannelCommunity, no verified candidates found")
                     break
@@ -156,7 +154,8 @@ class ChannelManager():
         _logger.error("@@@@@ CALL BACK DATA: %s\n%s" % (kws, answers))
 
         # Ignore searches we don't want (anymore)
-        if not self._channel_keywords == kws:
+        if not self._keywords == kws:
+            _logger.error("Disregard search results for %s" % kws)
             return
 
         try:
@@ -176,7 +175,7 @@ class ChannelManager():
     def get_remote_results(self):
         begintime = time()
 
-        ret = self._prepare_channels(self._channel_results)
+        ret = self._prepare_channels(self._results)
 
         _logger.error("@@@ Found %s remote channels in %ss" % (len(ret), time() - begintime))
         return ret
@@ -227,7 +226,7 @@ class ChannelManager():
         return ret
 
     def get_remote_results_count(self):
-        return len(self._channel_results)
+        return len(self._results)
 
     def subscribe(self):
         return False
@@ -238,14 +237,14 @@ class ChannelManager():
         keywords = split_into_keywords(unicode(keywords))
         keywords = [keyword for keyword in keywords if len(keyword) > 1]
 
-        if keywords == self._channel_keywords:
+        if keywords == self._keywords:
             return True
 
         try:
             self._remote_lock.acquire()
 
-            self._channel_keywords = keywords
-            self._channel_results = []
+            self._keywords = keywords
+            self._results = []
         finally:
             self._remote_lock.release()
 

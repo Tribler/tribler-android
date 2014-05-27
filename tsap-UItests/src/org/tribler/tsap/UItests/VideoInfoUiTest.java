@@ -15,6 +15,22 @@ import com.android.uiautomator.core.UiSelector;
 public class VideoInfoUiTest extends BasicUiTestCase {
 	
 	/**
+	 * Tests whether the Video info view exists and is enabled
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testVideoInfoViewExists() throws RemoteException,
+			UiObjectNotFoundException {
+		openVideoInfoScreen();
+
+		UiObject infoView = new UiObject(
+				new UiSelector().className("android.widget.RelativeLayout"));
+		assertTrue("Video info view doesn't exist", infoView.exists());
+		assertTrue("Video info view isn't enabled", infoView.isEnabled());
+	}
+	
+	/**
 	 * Launches the app, opens the navigation drawer and click the home item to
 	 * load the thumb grid and then clicks the first item
 	 * 

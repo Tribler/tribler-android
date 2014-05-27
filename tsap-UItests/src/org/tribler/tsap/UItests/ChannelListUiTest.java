@@ -300,7 +300,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		assertTrue("SearchView isn't enabled", searchView.isEnabled());
 		assertTrue("SearchView isn't clickable", searchView.isClickable());
 		assertEquals("SearchView text isn't correct", "Search channels",
-				searchView.getText());
+				searchView.getText().trim());
 		assertEquals("SearchView isn't an EditText", "android.widget.EditText",
 				searchView.getClassName());
 	}

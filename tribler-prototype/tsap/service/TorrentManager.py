@@ -70,11 +70,6 @@ class TorrentManager():
         else:
             raise RuntimeError('ChannelManager already connected')
 
-    def search_channel_local_mock(self, filter):
-        return [{"name": "Channel 1", "stars": 3, "torrents": 20},
-                {"name": "Channel 2", "stars": 1, "torrents": 23},
-                {"name": "Channel 3", "stars": 5, "torrents": 42}]
-
     def _xmlrpc_register(self, xmlrpc):
         xmlrpc.register_function(self.get_local, "torrents.get_local")
         xmlrpc.register_function(self.search_remote, "torrents.search_remote")
@@ -82,9 +77,6 @@ class TorrentManager():
         xmlrpc.register_function(self.get_remote_results, "torrents.get_remote_results")
         #xmlrpc.register_function(self.get_by_channel, "torrents.get_by_channel")
         xmlrpc.register_function(self.get_full_info, "torrents.get_full_info")
-
-
-
 
     def get_local(self, filter):
         pass

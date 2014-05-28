@@ -2,11 +2,7 @@ __author__ = 'user'
 
 import os
 
-def init_environment(msg=None):
-
-    if not msg == None:
-        print msg
-
+def init_environment():
     if 'ANDROID_PRIVATE' in os.environ:
         print "We are running on android/p4a"
 
@@ -25,7 +21,7 @@ def init_environment(msg=None):
         os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.environ['ANDROID_PRIVATE'], '.Tribler')
 
         # Running on Android
-        os.environ['ANDROID_HOST'] = "YES"
+        os.environ['ANDROID_HOST'] = "ANDROID-99"  # TODO: SET SDK VERSION INSTEAD
     else:
         print "We are running on a pc"
 
@@ -34,5 +30,5 @@ def init_environment(msg=None):
         print os.environ['TRIBLER_STATE_DIR']
 
         # Test Android code
-        os.environ['ANDROID_HOST'] = "SIMULATED"
+        os.environ['ANDROID_HOST'] = "UBUNTU-99"
         os.environ['ANDROID_PRIVATE'] = os.getcwd()

@@ -19,7 +19,7 @@ print 'os.getcwd(): %s' % os.getcwd()
 print 'sys.platform: %s\nos.name: %s' % (sys.platform, os.name)
 
 if __name__ == '__main__':
-    if os.environ['ANDROID_HOST'] == "YES":
+    if os.environ['ANDROID_HOST'].startswith("ANDROID"):
         # Start android service
         from android import AndroidService
         service = AndroidService("TSAP Tribler Session", "A tribler session is running..")

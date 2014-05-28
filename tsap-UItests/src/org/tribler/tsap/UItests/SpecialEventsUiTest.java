@@ -15,7 +15,7 @@ import com.android.uiautomator.core.UiSelector;
 public class SpecialEventsUiTest extends BasicUiTestCase {
 
 	/**
-	 * Tests whether TSAP in closed and the launcher is opened when the back
+	 * Tests whether TSAP is closed and the launcher is opened when the back
 	 * button is pressed
 	 * 
 	 * @throws RemoteException
@@ -38,7 +38,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Tests whether TSAP in closed and the launcher is opened when the home
+	 * Tests whether TSAP is closed and the launcher is opened when the home
 	 * button is pressed
 	 * 
 	 * @throws RemoteException
@@ -61,9 +61,9 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Tests whether TSAP in closed and the systemUI is opened when the recent
-	 * apps button is pressed and that the recent apps window contains the TSAP
-	 * app
+	 * Tests whether TSAP is put in the background when the recent apps button
+	 * is pressed and that the recent apps window contains the TSAP app. Also
+	 * test whether TSAP is reopened when pressing back in recent apps
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -75,22 +75,23 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 
 		UiObject tsapValidation = new UiObject(
 				new UiSelector().packageName("org.tribler.tsap"));
-		assertFalse("Able to find TSAP app after pressing recent apps",
+		assertTrue("Unable to find TSAP app after pressing recent apps",
 				tsapValidation.exists());
 
-		UiObject systemUI = new UiObject(
-				new UiSelector().packageName("com.android.systemui"));
-		assertTrue("SystemUI doesn't exist after pressing recent apps",
-				systemUI.exists());
-
-		UiObject tsapItem = systemUI.getChild(new UiSelector().text("TSAP"));
+		UiObject tsapItem = new UiObject(new UiSelector().text("TSAP"));
 		assertTrue("TSAP doesn't exist in recent apps", tsapItem.exists());
 		assertTrue("TSAP isn't enabled in recent apps", tsapItem.isEnabled());
+
+		// close recents apps (so TSAP should be reopened)
+		getUiDevice().pressBack();
+		assertTrue(
+				"Unable to find TSAP app after pressing back button in recent apps",
+				tsapValidation.exists());
 	}
 
 	/**
-	 * Tests whether TSAP is closed and the systemUI is opened when the
-	 * notifications are opened
+	 * Tests whether TSAP is put in the background (but still exists) when the
+	 * notifications are opened.
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -102,18 +103,16 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 
 		UiObject tsapValidation = new UiObject(
 				new UiSelector().packageName("org.tribler.tsap"));
-		assertFalse("Able to find TSAP app after opening notifications",
+		assertTrue("Unable to find TSAP app after opening notifications",
 				tsapValidation.exists());
 
-		UiObject systemUI = new UiObject(
-				new UiSelector().packageName("com.android.systemui"));
-		assertTrue("SystemUI doesn't exist after opening notifications",
-				systemUI.exists());
+		// close notifications (so TSAP should be in foreground)
+		getUiDevice().pressBack();
 	}
 
 	/**
-	 * Tests whether TSAP is closed and the systemUI is opened when the quick
-	 * settings are opened
+	 * Tests whether TSAP is put in the background (but still exists) when the
+	 * quick settings are opened
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -125,16 +124,10 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 
 		UiObject tsapValidation = new UiObject(
 				new UiSelector().packageName("org.tribler.tsap"));
-		assertFalse("Able to find TSAP app after opening quick settings",
+		assertTrue("Unable to find TSAP app after opening quick settings",
 				tsapValidation.exists());
 
-		UiObject systemUI = new UiObject(
-				new UiSelector().packageName("com.android.systemui"));
-		assertTrue("SystemUI doesn't exist after opening quick settings",
-				systemUI.exists());
-	}
-
-	public void testSleepWakeUp() {
-
+		// close quick settings (so TSAP should be in foreground)
+		getUiDevice().pressBack();
 	}
 }

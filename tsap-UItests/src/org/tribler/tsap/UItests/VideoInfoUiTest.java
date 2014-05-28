@@ -428,7 +428,7 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 				new UiSelector().description("navigation_drawer"));
 		if (!navDrawer.exists()) {
 			UiObject upButton = new UiObject(
-					new UiSelector().description("Navigate up"));
+					new UiSelector().descriptionContains("navigation drawer"));
 			upButton.click();
 		}
 

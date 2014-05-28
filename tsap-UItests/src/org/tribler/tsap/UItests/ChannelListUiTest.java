@@ -195,7 +195,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		assertEquals("Second star isn't an ImageView",
 				"android.widget.ImageView", secondStar.getClassName());
 	}
-	
+
 	/**
 	 * Tests whether the first item contains an existing and enabled 'third
 	 * start' ImageView
@@ -217,7 +217,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		assertEquals("Third star isn't an ImageView",
 				"android.widget.ImageView", thirdStar.getClassName());
 	}
-	
+
 	/**
 	 * Tests whether the first item contains an existing and enabled 'fourth
 	 * start' ImageView
@@ -239,7 +239,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		assertEquals("Fourth star isn't an ImageView",
 				"android.widget.ImageView", fourthStar.getClassName());
 	}
-	
+
 	/**
 	 * Tests whether the first item contains an existing and enabled 'fifth
 	 * start' ImageView
@@ -261,7 +261,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		assertEquals("Fifth star isn't an ImageView",
 				"android.widget.ImageView", fifthStar.getClassName());
 	}
-	
+
 	/**
 	 * Tests whether the list view contains the search option
 	 * 
@@ -303,13 +303,14 @@ public class ChannelListUiTest extends BasicUiTestCase {
 				searchView.getText().trim());
 		assertEquals("SearchView isn't an EditText", "android.widget.EditText",
 				searchView.getClassName());
-		
-		//navigate up to hide the searchbox again (otherwise other tests will fail)
+
+		// navigate up to hide the searchbox again (otherwise other tests will
+		// fail)
 		UiObject upButton = new UiObject(
 				new UiSelector().description("Navigate up"));
 		upButton.click();
 	}
-	
+
 	/**
 	 * Launches the app, opens the navigation drawer and click the channels item
 	 * to load the channel list
@@ -325,7 +326,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 				new UiSelector().description("navigation_drawer"));
 		if (!navDrawer.exists()) {
 			UiObject upButton = new UiObject(
-					new UiSelector().description("Navigate up"));
+					new UiSelector().descriptionContains("navigation drawer"));
 			upButton.click();
 		}
 

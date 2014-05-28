@@ -23,10 +23,10 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	public void testUpButtonExists() throws UiObjectNotFoundException, RemoteException {
 		startTSAP();
 		UiObject upButton = new UiObject(
-				new UiSelector().description("Navigate up"));
+				new UiSelector().descriptionContains("navigation drawer"));
 		assertTrue("UpButton doesn't exist", upButton.exists());
 		assertTrue("UpBotton isn't enabled", upButton.isEnabled());
-		assertTrue("UpButton isn't clickable", upButton.isClickable());
+		assertTrue("UpButton isn't clickable", upButton.isClickable());		
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 				new UiSelector().description("navigation_drawer"));
 		if (!navDrawer.exists()) {
 			UiObject upButton = new UiObject(
-					new UiSelector().description("Navigate up"));
+					new UiSelector().descriptionContains("navigation drawer"));
 			upButton.click();
 		}
 	}

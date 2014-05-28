@@ -14,6 +14,7 @@ This project has the following dependencies:
 
 For testing purposes:
 * [Android JUnit Report Test Runner](https://github.com/jsankey/android-junit-report) (Apache v2)
+* [Automator-log-converter](https://github.com/dpreussler/automator-log-converter) (Apache v2)
 
 ## Screenshots
 

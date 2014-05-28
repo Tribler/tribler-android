@@ -11,12 +11,10 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Window;
 import android.widget.Toast;
 
 
@@ -25,7 +23,6 @@ public class PythonActivity extends Activity implements Runnable {
 
     // The SDLSurfaceView we contain.
     public static PythonActivity mActivity = null;
-    public static ApplicationInfo mInfo = null;
 
     // Did we launch our thread?
     private boolean mLaunchedThread = false;
@@ -40,13 +37,11 @@ public class PythonActivity extends Activity implements Runnable {
 
     boolean _isPaused = false;
 
-    private static final String DB_INITIALIZED = "db_initialized";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.mActivity = this;
+        PythonActivity.mActivity = this;
 
         resourceManager = new ResourceManager(this);
         externalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
@@ -66,8 +61,6 @@ public class PythonActivity extends Activity implements Runnable {
         } else {
             mPath = getFilesDir();
         }
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     /**

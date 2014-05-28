@@ -38,7 +38,7 @@ public class ThumbItem {
 
 	public ThumbItem(Map<String, Object> map) {
 		this.thumbnailId = R.drawable.dracula;
-		this.title = "Bla";
+		this.title = (String)map.get("name");
 		this.health = TORRENT_HEALTH.YELLOW;
 		this.size = 1000;
 	}

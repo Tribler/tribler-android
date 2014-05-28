@@ -29,8 +29,7 @@ public class XMLRPCCallTask extends AsyncTask<Object, Void, Object>
 		} catch (XMLRPCException e) {
 			Log.e("XMLRPC",
 					"Error while calling function: " + functionName +  " with aXMLRPC:");
-			Log.e("XMLRPC", e.getMessage());
-			Log.e("XMLRPC", "" + e.getStackTrace());
+			e.printStackTrace();
 		}
 		return result;
 	}

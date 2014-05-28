@@ -1,7 +1,13 @@
 package org.tribler.tsap;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
+import org.tribler.tsap.thumbgrid.AbstractTorrentManager;
+import org.tribler.tsap.thumbgrid.XMLRPCTorrentManager;
 import org.tribler.tsap.thumbgrid.ThumbAdapter;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.tribler.tsap.videoInfoScreen.TorrentManager;
@@ -10,6 +16,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,8 +35,10 @@ import android.widget.Toast;
  * 
  * @author Wendo Sabée
  */
-public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
+public class ThumbGridFragment extends Fragment implements OnQueryTextListener, Observer {
 
+	private AbstractTorrentManager mTorrentManager = null;
+	int mLastFoundResultAmount = 0;
 	// stores the menu handler to remove the search item in onPause()
 	private Menu menu;
 
@@ -43,6 +52,15 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+
+		try {
+			mTorrentManager = new XMLRPCTorrentManager(new URL(
+					"http://localhost:8000/tribler"));
+		} catch (MalformedURLException e) {
+			Log.e("ChannelListFragment",
+					"URL was malformed.\n" + e.getStackTrace());
+		}
+		mTorrentManager.addObserver(this);
 	}
 
 	/**
@@ -156,9 +174,9 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		// Called when the action bar search text has changed. Update
 		// the search filter, and restart the loader to do a new query
 		// with this filter.
-		GridView gridView = (GridView) this.getView().findViewById(
-				R.id.ThumbsGrid);
+		//GridView gridView = (GridView) this.getView().findViewById(R.id.ThumbsGrid);
 		//((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
+		mTorrentManager.getRemoteResultsCount();
 		return true;
 	}
 
@@ -173,12 +191,34 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		GridView gridView = (GridView) this.getView().findViewById(
-				R.id.ThumbsGrid);
+		//GridView gridView = (GridView) this.getView().findViewById(
+		//		R.id.ThumbsGrid);
 		//((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+		mLastFoundResultAmount = 0;
+		mTorrentManager.searchRemote(query);
 		// Don't care about this.
 		return true;
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		if (data instanceof Boolean)
+		{
+			Log.i("Thumbgrid", "Enough peers: "+ (Boolean)data);
+		}
+		if (data instanceof Integer)
+		{
+			Log.i("ChannelListFragment", "Integer returned");
+			int resultAmount = (Integer) data;
+			if (resultAmount > mLastFoundResultAmount) {
+				Log.i("ChannelListFragment", "More search results found: "
+						+ resultAmount);
+				//mChannelManager.getRemoteResults();
+				mLastFoundResultAmount = resultAmount;
+			}
+		}
+		
 	}
 
 }

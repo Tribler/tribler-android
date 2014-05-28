@@ -125,7 +125,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/video_info_title"
             android:layout_toRightOf="@id/video_info_details"
-            android:contentDescription="@string/sintel_thumbnail_descr"
+            android:contentDescription="@string/video_info_thumbnail_descr"
             android:src="@drawable/default_thumb" />
 
         <Button
@@ -134,6 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/video_info_thumbnail"
             android:layout_marginTop="10dp"
+            android:contentDescription="@string/video_info_stream_button"
             android:text="@string/video_info_stream_button" />
 
         <Button
@@ -141,6 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/video_info_stream_video"
+            android:contentDescription="@string/video_info_download_button"
             android:text="@string/video_info_download_button" />
 
         <TextView
@@ -150,6 +152,7 @@
             android:layout_below="@id/video_info_download_video"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:contentDescription="@string/video_info_descr_descr"
             android:text="@string/video_details_description_example"
             android:textSize="18sp" />
     </RelativeLayout>

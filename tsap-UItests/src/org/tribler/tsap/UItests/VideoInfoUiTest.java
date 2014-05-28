@@ -23,7 +23,6 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 	public void testVideoInfoViewExists() throws RemoteException,
 			UiObjectNotFoundException {
 		openVideoInfoScreen();
-
 		UiObject infoView = new UiObject(
 				new UiSelector().className("android.widget.RelativeLayout"));
 		assertTrue("Video info view doesn't exist", infoView.exists());
@@ -289,9 +288,8 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 			UiObjectNotFoundException {
 		openVideoInfoScreen();
 
-		UiObject infoView = new UiObject(
-				new UiSelector().className("android.widget.RelativeLayout"));
-		UiObject thumbnail = infoView.getChild(new UiSelector().index(3));
+		UiObject thumbnail = new UiObject(
+				new UiSelector().description("Video info thumbnail"));
 
 		assertTrue("Thumbnail view doesn't exist", thumbnail.exists());
 		assertTrue("Thumbnail view isn't enabled", thumbnail.isEnabled());
@@ -310,9 +308,8 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 			UiObjectNotFoundException {
 		openVideoInfoScreen();
 
-		UiObject infoView = new UiObject(
-				new UiSelector().className("android.widget.RelativeLayout"));
-		UiObject playButton = infoView.getChild(new UiSelector().index(4));
+		UiObject playButton = new UiObject(
+				new UiSelector().description("Play video"));
 
 		assertTrue("Play button doesn't exist", playButton.exists());
 		assertTrue("Play button isn't enabled", playButton.isEnabled());
@@ -334,9 +331,8 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 			UiObjectNotFoundException {
 		openVideoInfoScreen();
 
-		UiObject infoView = new UiObject(
-				new UiSelector().className("android.widget.RelativeLayout"));
-		UiObject downloadButton = infoView.getChild(new UiSelector().index(5));
+		UiObject downloadButton = new UiObject(
+				new UiSelector().description("Download video"));
 
 		assertTrue("Download button doesn't exist", downloadButton.exists());
 		assertTrue("Download button isn't enabled", downloadButton.isEnabled());
@@ -347,9 +343,10 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 		assertEquals("Download button text is incorrect", "Download video",
 				downloadButton.getText());
 	}
-	
+
 	/**
-	 * Tests whether the video info screen contains a non-empty description TextView
+	 * Tests whether the video info screen contains a non-empty description
+	 * TextView
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -358,17 +355,17 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 			UiObjectNotFoundException {
 		openVideoInfoScreen();
 
-		UiObject infoView = new UiObject(
-				new UiSelector().className("android.widget.RelativeLayout"));
-		UiObject description = infoView.getChild(new UiSelector().index(6));
+		UiObject description = new UiObject(
+				new UiSelector().description("Video description"));
 
 		assertTrue("Description view doesn't exist", description.exists());
 		assertTrue("Description view isn't enabled", description.isEnabled());
-		assertEquals("Description view isn't a TextView", "android.widget.TextView",
-				description.getClassName());
-		assertFalse("Description is empty string", description.getText().equals(""));
+		assertEquals("Description view isn't a TextView",
+				"android.widget.TextView", description.getClassName());
+		assertFalse("Description is empty string", description.getText()
+				.equals(""));
 	}
-	
+
 	/**
 	 * Tests whether the video info screen doesn't contain the search option
 	 * 
@@ -410,6 +407,15 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 				new UiSelector().className("android.widget.GridView"));
 		UiObject firstItem = grid.getChild(new UiSelector().index(0));
 		firstItem.click();
+	}
+
+	/**
+	 * Navigates back to the thumb grid view to make the next test run correctly
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		getUiDevice().pressBack();
 	}
 
 }

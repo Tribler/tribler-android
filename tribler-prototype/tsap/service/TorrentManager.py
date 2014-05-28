@@ -77,7 +77,8 @@ class TorrentManager():
         xmlrpc.register_function(self.get_full_info, "torrents.get_full_info")
 
     def get_local(self, filter):
-        pass
+        # TODO: GET LOCAL TORRENTS
+        return []
 
     @forceDispersyThread
     def search_remote(self, keywords):
@@ -104,7 +105,8 @@ class TorrentManager():
 
         _logger.info("@@@@ Made %s requests to the search community" % nr_requests_made)
 
-        return 44 #nr_requests_made
+        # TODO: FIX RETURN VALUE (CURRENTLY ALWAYS NONE)
+        return nr_requests_made
 
 
     @forceDispersyThread
@@ -154,6 +156,7 @@ class TorrentManager():
 
         finally:
             self._remote_lock.release()
+
         return
 
     def _add_remote_result(self, torrent):
@@ -177,6 +180,7 @@ class TorrentManager():
         return len(self._results)
 
     def get_full_info(self):
+        # TODO: GET FULL INFO FROM TORRENT
         pass
 
     def _set_keywords(self, keywords):

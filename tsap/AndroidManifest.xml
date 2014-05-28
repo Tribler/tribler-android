@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.tribler.tsap.ChannelActivity"
+            android:name="org.tribler.tsap.channels.ChannelActivity"
             android:label="@string/title_activity_channel" >
         </activity>
         <activity

@@ -1,23 +1,27 @@
-package org.tribler.tsap;
+package org.tribler.tsap.channels;
+
+import java.util.Collection;
+
+import org.tribler.tsap.AbstractArrayListAdapter;
+import org.tribler.tsap.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Adapter belonging to the ChannelListFragment that holds the channels
+ * Adapter for managing the data and views for a list of channels.
  * 
  * @author Dirk Schut
  */
-public class ChannelListAdapter extends ArrayAdapter<Channel> {
-	private int resource;
-	private LayoutInflater inflater;
-
+public class ChannelListAdapter extends AbstractArrayListAdapter<Channel> {
+	protected int resource;
+	protected LayoutInflater inflater;
+	
 	/**
 	 * Constructor: initializes the instance variables
 	 * 
@@ -27,14 +31,33 @@ public class ChannelListAdapter extends ArrayAdapter<Channel> {
 	 *            The resource id of the layout
 	 */
 	public ChannelListAdapter(Context context, int resource) {
-		super(context, resource);
+		super();
 		this.resource = resource;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/**
-	 * Returns the view belonging to the specified position in the channel list
+	 * Constructor: initializes the instance variables and fills the adapter
+	 * with data from a list
+	 * 
+	 * @param context
+	 *            The context of this adapter
+	 * @param resource
+	 *            The resource id of the layout
+	 * @param content
+	 *            The data to fill the list with
+	 */
+	public ChannelListAdapter(Context context, int resource,
+			Collection<Channel> initialContent) {
+		super(initialContent);
+		this.resource = resource;
+		inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	/**
+	 * Returns the view belonging to the specified position in the channel list.
 	 * 
 	 * @param position
 	 *            The position of which the view should be returned

@@ -2,6 +2,7 @@ package org.tribler.tsap.thumbgrid;
 
 import java.util.ArrayList;
 
+import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
 
 import com.squareup.picasso.Picasso;
@@ -12,7 +13,6 @@ import android.graphics.PorterDuff.Mode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,7 +22,7 @@ import android.widget.TextView;
  * 
  * @author Wendo Sabée
  */
-public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
+public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	private Context context;
 	private int layoutResourceId;
 
@@ -36,16 +36,33 @@ public class ThumbAdapter extends ArrayAdapter<ThumbItem> {
 	 *            The context of this adapter
 	 * @param layoutResourceId
 	 *            The resource id of the layout
+	 */
+	public ThumbAdapter(Context context, int layoutResourceId) {
+		super();
+		this.layoutResourceId = layoutResourceId;
+		this.context = context;
+
+		float s = context.getResources().getDisplayMetrics().density;
+		mThumbWidth = (int) (100 * s);
+		mThumbHeight = (int) (150 * s);
+	}
+	/**
+	 * Constructor: initializes the instance variables
+	 * 
+	 * @param context
+	 *            The context of this adapter
+	 * @param layoutResourceId
+	 *            The resource id of the layout
 	 * @param data
 	 *            The list of thumbitems
 	 */
 	public ThumbAdapter(Context context, int layoutResourceId,
 			ArrayList<ThumbItem> data) {
-		super(context, layoutResourceId, data);
+		super(data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
 
-		float s = getContext().getResources().getDisplayMetrics().density;
+		float s = context.getResources().getDisplayMetrics().density;
 		mThumbWidth = (int) (100 * s);
 		mThumbHeight = (int) (150 * s);
 	}

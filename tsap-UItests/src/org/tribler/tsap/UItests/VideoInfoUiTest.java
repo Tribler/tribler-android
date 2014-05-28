@@ -5,6 +5,7 @@ import android.os.RemoteException;
 import com.android.uiautomator.core.UiCollection;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 
 /**
@@ -355,6 +356,11 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 			UiObjectNotFoundException {
 		openVideoInfoScreen();
 
+		// scroll down
+		UiScrollable scrollview = new UiScrollable(
+				new UiSelector().className("android.widget.ScrollView"));
+		scrollview.scrollToEnd(20);
+
 		UiObject description = new UiObject(
 				new UiSelector().description("Video description"));
 
@@ -379,6 +385,32 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 		UiObject search = new UiObject(new UiSelector().description("Search"));
 
 		assertFalse("Search view exists", search.exists());
+	}
+
+	/**
+	 * Tests whether the 'Play video' Button behaves correctly when it is
+	 * pressed (=opens VLC)
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testVideoInfoPlayButtonClick() throws RemoteException,
+			UiObjectNotFoundException {
+		openVideoInfoScreen();
+
+		UiObject playButton = new UiObject(
+				new UiSelector().description("Play video"));
+
+		assertTrue("Play button click failed",
+				playButton.clickAndWaitForNewWindow());
+		assertFalse("Play button exists after clicking it", playButton.exists());
+
+		UiObject waitText = new UiObject(new UiSelector().text("Please wait…"));
+		assertTrue("VLC wait text doesn't exist", waitText.exists());
+		assertTrue("VLC wait text isn't enabled", waitText.isEnabled());
+
+		// navigate back to video info screen
+		getUiDevice().pressBack();
 	}
 
 	/**

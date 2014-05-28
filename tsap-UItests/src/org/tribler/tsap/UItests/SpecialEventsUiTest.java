@@ -1,7 +1,5 @@
 package org.tribler.tsap.UItests;
 
-import javax.crypto.SealedObject;
-
 import android.os.RemoteException;
 
 import com.android.uiautomator.core.UiObject;
@@ -63,13 +61,15 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Tests whether TSAP in closed and the systemUI is opened when the recent apps
-	 * button is pressed and that the recent apps window contains the TSAP app
+	 * Tests whether TSAP in closed and the systemUI is opened when the recent
+	 * apps button is pressed and that the recent apps window contains the TSAP
+	 * app
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testPressRecentApps() throws RemoteException, UiObjectNotFoundException {
+	public void testPressRecentApps() throws RemoteException,
+			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressRecentApps();
 
@@ -82,18 +82,56 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 				new UiSelector().packageName("com.android.systemui"));
 		assertTrue("SystemUI doesn't exist after pressing recent apps",
 				systemUI.exists());
-		
+
 		UiObject tsapItem = systemUI.getChild(new UiSelector().text("TSAP"));
 		assertTrue("TSAP doesn't exist in recent apps", tsapItem.exists());
 		assertTrue("TSAP isn't enabled in recent apps", tsapItem.isEnabled());
 	}
 
-	public void testOpenNotifications() {
+	/**
+	 * Tests whether TSAP is closed and the systemUI is opened when the
+	 * notifications are opened
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testOpenNotification() throws RemoteException,
+			UiObjectNotFoundException {
+		startTSAP();
+		getUiDevice().openNotification();
 
+		UiObject tsapValidation = new UiObject(
+				new UiSelector().packageName("org.tribler.tsap"));
+		assertFalse("Able to find TSAP app after opening notifications",
+				tsapValidation.exists());
+
+		UiObject systemUI = new UiObject(
+				new UiSelector().packageName("com.android.systemui"));
+		assertTrue("SystemUI doesn't exist after opening notifications",
+				systemUI.exists());
 	}
 
-	public void testOpenQuickSettings() {
+	/**
+	 * Tests whether TSAP is closed and the systemUI is opened when the quick
+	 * settings are opened
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testOpenQuickSettings() throws RemoteException,
+			UiObjectNotFoundException {
+		startTSAP();
+		getUiDevice().openQuickSettings();
 
+		UiObject tsapValidation = new UiObject(
+				new UiSelector().packageName("org.tribler.tsap"));
+		assertFalse("Able to find TSAP app after opening quick settings",
+				tsapValidation.exists());
+
+		UiObject systemUI = new UiObject(
+				new UiSelector().packageName("com.android.systemui"));
+		assertTrue("SystemUI doesn't exist after opening quick settings",
+				systemUI.exists());
 	}
 
 	public void testSleepWakeUp() {

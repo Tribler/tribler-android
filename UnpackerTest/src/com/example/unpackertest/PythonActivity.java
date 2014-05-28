@@ -1,33 +1,23 @@
 package com.example.unpackertest;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.KeyEvent;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
-import android.util.Log;
-import android.content.pm.PackageManager;
-import android.content.pm.ApplicationInfo;
-
-import java.io.InputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-
-import android.os.Handler;
-import android.database.Cursor;
 import java.util.List;
-import java.util.ArrayList;
-import android.content.SharedPreferences;
-import android.content.Context;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Window;
+import android.widget.Toast;
 
 
 public class PythonActivity extends Activity implements Runnable {
@@ -71,28 +61,6 @@ public class PythonActivity extends Activity implements Runnable {
         if (getIntent() != null && getIntent().getAction() != null &&
                 getIntent().getAction().equals("org.renpy.LAUNCH")) {
             mPath = new File(getIntent().getData().getSchemeSpecificPart());
-
-            Project p = Project.scanDirectory(mPath);
-
-            if (p != null) {
-                if (p.landscape) {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                } else {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                }
-            }
-
-            // Let old apps know they started.
-            try {
-                FileWriter f = new FileWriter(new File(mPath, ".launch"));
-                f.write("started");
-                f.close();
-            } catch (IOException e) {
-                // pass
-            }
-
-
-
         } else if (resourceManager.getString("public_version") != null) {
             mPath = externalStorage;
         } else {
@@ -100,25 +68,6 @@ public class PythonActivity extends Activity implements Runnable {
         }
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        // go to fullscreen mode if requested
-        try {
-            this.mInfo = this.getPackageManager().getApplicationInfo(
-                    this.getPackageName(), PackageManager.GET_META_DATA);
-            Log.v("python", "metadata fullscreen is" + this.mInfo.metaData.get("fullscreen"));
-            if ( (Integer)this.mInfo.metaData.get("fullscreen") == 1 ) {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-        }
-
-        
-        // Force the background window color if asked
-        if ( this.mInfo.metaData.containsKey("android.background_color") ) {
-            getWindow().getDecorView().setBackgroundColor(
-                this.mInfo.metaData.getInt("android.background_color"));
-        }
     }
 
     /**
@@ -360,4 +309,5 @@ public class PythonActivity extends Activity implements Runnable {
                 (iterator.next()).onActivityResult(requestCode, resultCode, intent);
         }
     }
+}
 

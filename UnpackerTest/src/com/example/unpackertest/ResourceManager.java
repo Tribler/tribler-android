@@ -5,7 +5,7 @@
  * org.renpy.pygame.) So this is the next best thing.
  */
 
-package org.renpy.android;
+package com.example.unpackertest;
 
 import android.app.Activity;
 import android.content.res.Resources;

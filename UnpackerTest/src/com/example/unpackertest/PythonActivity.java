@@ -29,7 +29,7 @@ public class PythonActivity extends Activity implements Runnable {
 
     private ResourceManager resourceManager;
 
-    // The path to the directory contaning our external storage.
+    // The path to the directory containing our external storage.
     private File externalStorage;
 
     // The path to the directory containing the game.

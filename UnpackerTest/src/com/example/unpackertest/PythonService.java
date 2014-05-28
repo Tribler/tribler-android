@@ -1,4 +1,4 @@
-package org.renpy.android;
+package com.example.unpackertest;
 
 import android.app.Service;
 import android.os.IBinder;
@@ -102,7 +102,7 @@ public class PythonService extends Service  implements Runnable {
         } catch(UnsatisfiedLinkError e) {
         }
 
-        this.mService = this;
+        PythonService.mService = this;
         nativeInitJavaEnv();
         nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
                 pythonServiceArgument);

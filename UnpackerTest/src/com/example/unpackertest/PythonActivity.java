@@ -45,11 +45,7 @@ import android.content.Context;
 public class PythonActivity extends Activity implements Runnable {
     private static String TAG = "Python";
 
-    // The audio thread for streaming audio...
-    private static AudioThread mAudioThread = null;
-
     // The SDLSurfaceView we contain.
-    public static SDLSurfaceView mView = null;
     public static PythonActivity mActivity = null;
     public static ApplicationInfo mInfo = null;
 
@@ -72,11 +68,7 @@ public class PythonActivity extends Activity implements Runnable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Hardware.context = this;
-        Action.context = this;
         this.mActivity = this;
-
-        getWindowManager().getDefaultDisplay().getMetrics(Hardware.metrics);
 
         resourceManager = new ResourceManager(this);
         externalStorage = new File(Environment.getExternalStorageDirectory(), getPackageName());
@@ -133,18 +125,7 @@ public class PythonActivity extends Activity implements Runnable {
         } catch (PackageManager.NameNotFoundException e) {
         }
 
-        if ( Configuration.use_billing ) {
-            mBillingHandler = new Handler();
-        }
-
-        // Start showing an SDLSurfaceView.
-        mView = new SDLSurfaceView(
-                this,
-                mPath.getAbsolutePath());
-
-        Hardware.view = mView;
-        setContentView(mView);
-
+        
         // Force the background window color if asked
         if ( this.mInfo.metaData.containsKey("android.background_color") ) {
             getWindow().getDecorView().setBackgroundColor(
@@ -270,27 +251,12 @@ public class PythonActivity extends Activity implements Runnable {
             System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingmath.so");
         } catch(UnsatisfiedLinkError e) {
         }
-
-        if ( mAudioThread == null ) {
-            Log.i("python", "Starting audio thread");
-            mAudioThread = new AudioThread(this);
-        }
-
-        runOnUiThread(new Runnable () {
-            public void run() {
-                mView.start();
-            }
-        });
     }
 
     @Override
     protected void onPause() {
         _isPaused = true;
         super.onPause();
-
-        if (mView != null) {
-            mView.onPause();
-        }
     }
 
     @Override
@@ -302,10 +268,6 @@ public class PythonActivity extends Activity implements Runnable {
             mLaunchedThread = true;
             new Thread(this).start();
         }
-
-        if (mView != null) {
-            mView.onResume();
-        }
     }
 
     public boolean isPaused() {
@@ -314,34 +276,14 @@ public class PythonActivity extends Activity implements Runnable {
 
     @Override
     public boolean onKeyDown(int keyCode, final KeyEvent event) {
-        //Log.i("python", "key2 " + mView + " " + mView.mStarted);
-        if (mView != null && mView.mStarted && SDLSurfaceView.nativeKey(keyCode, 1, event.getUnicodeChar())) {
-            return true;
-        } else {
+        
             return super.onKeyDown(keyCode, event);
-        }
     }
 
     @Override
     public boolean onKeyUp(int keyCode, final KeyEvent event) {
-        //Log.i("python", "key up " + mView + " " + mView.mStarted);
-        if (mView != null && mView.mStarted && SDLSurfaceView.nativeKey(keyCode, 0, event.getUnicodeChar())) {
-            return true;
-        } else {
             return super.onKeyUp(keyCode, event);
-        }
-    }
-
-    protected void onDestroy() {
-        mPurchaseDatabase.close();
-        mBillingService.unbind();
-
-        if (mView != null) {
-            mView.onDestroy();
-        }
-
-        //Log.i(TAG, "on destroy (exit1)");
-        System.exit(0);
+       
     }
 
     public static void start_service(String serviceTitle, String serviceDescription,
@@ -390,8 +332,6 @@ public class PythonActivity extends Activity implements Runnable {
     protected void onNewIntent(Intent intent) {
         if ( this.newIntentListeners == null )
             return;
-        if ( this.mView != null )
-            this.mView.onResume();
         synchronized ( this.newIntentListeners ) {
             Iterator<NewIntentListener> iterator = this.newIntentListeners.iterator();
             while ( iterator.hasNext() ) {
@@ -426,8 +366,6 @@ public class PythonActivity extends Activity implements Runnable {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if ( this.activityResultListeners == null )
             return;
-        if ( this.mView != null )
-            this.mView.onResume();
         synchronized ( this.activityResultListeners ) {
             Iterator<ActivityResultListener> iterator = this.activityResultListeners.iterator();
             while ( iterator.hasNext() )

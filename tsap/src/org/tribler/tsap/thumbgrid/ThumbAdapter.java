@@ -36,6 +36,23 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 *            The context of this adapter
 	 * @param layoutResourceId
 	 *            The resource id of the layout
+	 */
+	public ThumbAdapter(Context context, int layoutResourceId) {
+		super();
+		this.layoutResourceId = layoutResourceId;
+		this.context = context;
+
+		float s = context.getResources().getDisplayMetrics().density;
+		mThumbWidth = (int) (100 * s);
+		mThumbHeight = (int) (150 * s);
+	}
+	/**
+	 * Constructor: initializes the instance variables
+	 * 
+	 * @param context
+	 *            The context of this adapter
+	 * @param layoutResourceId
+	 *            The resource id of the layout
 	 * @param data
 	 *            The list of thumbitems
 	 */

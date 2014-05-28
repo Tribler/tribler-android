@@ -145,8 +145,8 @@ public class XMLRPCTorrentManager {
 							(Map<String, Object>) arrayResult[i]);
 					resultsList.add(item);
 				}
-				Map<String, Object> firstResult = (Map<String, Object>)arrayResult[0];
-				Log.v("XMPLRCChannelManager", "KeySet: "+firstResult.keySet());
+				//Map<String, Object> firstResult = (Map<String, Object>)arrayResult[0];
+				//Log.v("XMPLRCChannelManager", "KeySet: "+firstResult.keySet());
 				mAdapter.addNew(resultsList);
 			}
 		};

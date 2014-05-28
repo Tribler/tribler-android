@@ -35,6 +35,7 @@ import android.widget.Toast;
 public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
 	private XMLRPCTorrentManager mTorrentManager = null;
+	private ThumbAdapter mThumbAdapter;
 	int mLastFoundResultAmount = 0;
 	// stores the menu handler to remove the search item in onPause()
 	private Menu menu;
@@ -74,13 +75,13 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
 		ArrayList<ThumbItem> gridArray = TorrentManager.getInstance()
 				.getThumbItems();
-		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(),
+		mThumbAdapter = new ThumbAdapter(container.getContext(),
 				R.layout.thumb_grid_item, gridArray);
-		gridView.setAdapter(customThumbs);
+		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		try {
 			mTorrentManager = new XMLRPCTorrentManager(new URL(
-					"http://localhost:8000/tribler"), customThumbs);
+					"http://localhost:8000/tribler"), mThumbAdapter);
 		} catch (MalformedURLException e) {
 			Log.e("ChannelListFragment",
 					"URL was malformed.\n" + e.getStackTrace());

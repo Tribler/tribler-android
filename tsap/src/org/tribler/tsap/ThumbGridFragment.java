@@ -158,7 +158,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		// with this filter.
 		GridView gridView = (GridView) this.getView().findViewById(
 				R.id.ThumbsGrid);
-		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
+		//((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		return true;
 	}
 
@@ -175,7 +175,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	public boolean onQueryTextSubmit(String query) {
 		GridView gridView = (GridView) this.getView().findViewById(
 				R.id.ThumbsGrid);
-		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
+		//((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
 		// Don't care about this.
 		return true;

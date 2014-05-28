@@ -1,4 +1,4 @@
-package org.renpy.android;
+package com.example.unpackertest;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,18 +22,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 
-// Billing
-import org.renpy.android.Configuration;
-import org.renpy.android.billing.BillingService.RequestPurchase;
-import org.renpy.android.billing.BillingService.RestoreTransactions;
-import org.renpy.android.billing.Consts.PurchaseState;
-import org.renpy.android.billing.Consts.ResponseCode;
-import org.renpy.android.billing.PurchaseObserver;
-import org.renpy.android.billing.BillingService;
-import org.renpy.android.billing.PurchaseDatabase;
-import org.renpy.android.billing.Consts;
-import org.renpy.android.billing.ResponseHandler;
-import org.renpy.android.billing.Security;
 import android.os.Handler;
 import android.database.Cursor;
 import java.util.List;

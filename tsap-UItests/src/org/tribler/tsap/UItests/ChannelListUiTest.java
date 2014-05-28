@@ -149,7 +149,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		assertFalse("Torrents view is empty string",
 				torrents.getText().equals(""));
 		assertEquals("Torrents string doesn't start with 'Torrents:'",
-				"Torrents: ", torrents.getText().substring(0, 9));
+				"Torrents: ", torrents.getText().substring(0, 10));
 	}
 
 	/**

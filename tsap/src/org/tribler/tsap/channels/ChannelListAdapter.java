@@ -1,18 +1,14 @@
 package org.tribler.tsap.channels;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
+import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
-import org.tribler.tsap.ThreadPreconditions;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,11 +18,10 @@ import android.widget.TextView;
  * 
  * @author Dirk Schut
  */
-public class ChannelListAdapter extends BaseAdapter {
-	private int resource;
-	private LayoutInflater inflater;
-	private ArrayList<Channel> content;
-
+public class ChannelListAdapter extends AbstractArrayListAdapter<Channel> {
+	protected int resource;
+	protected LayoutInflater inflater;
+	
 	/**
 	 * Constructor: initializes the instance variables
 	 * 
@@ -36,7 +31,7 @@ public class ChannelListAdapter extends BaseAdapter {
 	 *            The resource id of the layout
 	 */
 	public ChannelListAdapter(Context context, int resource) {
-		content = new ArrayList<Channel>();
+		super();
 		this.resource = resource;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,22 +50,10 @@ public class ChannelListAdapter extends BaseAdapter {
 	 */
 	public ChannelListAdapter(Context context, int resource,
 			Collection<Channel> initialContent) {
-		content = new ArrayList<Channel>();
-		content.addAll(initialContent);
+		super(initialContent);
 		this.resource = resource;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
-	
-	/**
-	 * Returns the item at a certain position.
-	 * 
-	 * @param position
-	 * 	the position from which you want to retrieve the channel
-	 */
-	@Override
-	public Channel getItem(int position) {
-		return content.get(position);
 	}
 
 	/**
@@ -145,51 +128,5 @@ public class ChannelListAdapter extends BaseAdapter {
 		else
 			((ImageView) view.findViewById(R.id.channel_fifthstar))
 					.setImageResource(R.drawable.rating_star_not_selected);
-	}
-	
-	/**
-	 * Adds all channels from a list to the channelList that were not in the channelList already
-	 * @param channelList
-	 * 	list of channels to add
-	 */
-	public void addNew(List<Channel> channelList) {
-		ThreadPreconditions.checkOnMainThread();
-		Log.v("ChannelListFragment", "Adding items");
-		for (int i = 0; i < channelList.size(); i++) {
-			if (!content.contains(channelList.get(i)))
-			{
-				content.add(channelList.get(i));
-				Log.v("ChannelListFragment", "item added");
-			}
-		}
-		notifyDataSetChanged();
-	}
-	
-	/**
-	 * Returns the amount of channels.
-	 */
-	@Override
-	public int getCount() {
-		return content.size();
-	}
-
-	/**
-	 * Returns the Id of the item at a certain position.
-	 * @param
-	 *  the position
-	 */
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-	
-	/**
-	 * Removes all data from the list.
-	 */
-	public void clear()
-	{
-		ThreadPreconditions.checkOnMainThread();
-		content.clear();
-		notifyDataSetChanged();
 	}
 }

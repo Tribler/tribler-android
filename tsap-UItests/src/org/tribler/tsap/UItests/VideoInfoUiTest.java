@@ -50,7 +50,7 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 				title.getClassName());
 		assertFalse("Title is empty string", title.getText().equals(""));
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the type TextView
 	 * 
@@ -68,11 +68,12 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 
 		assertTrue("Type title view doesn't exist", typeTitle.exists());
 		assertTrue("Type title view isn't enabled", typeTitle.isEnabled());
-		assertEquals("Type title view isn't a TextView", "android.widget.TextView",
-				typeTitle.getClassName());
-		assertEquals("Type title is incorrect string","Type:", typeTitle.getText());
+		assertEquals("Type title view isn't a TextView",
+				"android.widget.TextView", typeTitle.getClassName());
+		assertEquals("Type title is incorrect string", "Type:",
+				typeTitle.getText());
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the uploaded TextView
 	 * 
@@ -89,12 +90,14 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 		UiObject uploadedTitle = parent.getChild(new UiSelector().index(1));
 
 		assertTrue("Uploaded title view doesn't exist", uploadedTitle.exists());
-		assertTrue("Uploaded title view isn't enabled", uploadedTitle.isEnabled());
-		assertEquals("Uploaded title view isn't a TextView", "android.widget.TextView",
-				uploadedTitle.getClassName());
-		assertEquals("Uploaded title is incorrect string","Uploaded:", uploadedTitle.getText());
+		assertTrue("Uploaded title view isn't enabled",
+				uploadedTitle.isEnabled());
+		assertEquals("Uploaded title view isn't a TextView",
+				"android.widget.TextView", uploadedTitle.getClassName());
+		assertEquals("Uploaded title is incorrect string", "Uploaded:",
+				uploadedTitle.getText());
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the filesize TextView
 	 * 
@@ -111,12 +114,14 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 		UiObject filesizeTitle = parent.getChild(new UiSelector().index(2));
 
 		assertTrue("Filesize title view doesn't exist", filesizeTitle.exists());
-		assertTrue("Filesize title view isn't enabled", filesizeTitle.isEnabled());
-		assertEquals("Filesize title view isn't a TextView", "android.widget.TextView",
-				filesizeTitle.getClassName());
-		assertEquals("Filesize title is incorrect string","Filesize:", filesizeTitle.getText());
+		assertTrue("Filesize title view isn't enabled",
+				filesizeTitle.isEnabled());
+		assertEquals("Filesize title view isn't a TextView",
+				"android.widget.TextView", filesizeTitle.getClassName());
+		assertEquals("Filesize title is incorrect string", "Filesize:",
+				filesizeTitle.getText());
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the seeders TextView
 	 * 
@@ -134,11 +139,12 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 
 		assertTrue("Seeders title view doesn't exist", seedersTitle.exists());
 		assertTrue("Seeders title view isn't enabled", seedersTitle.isEnabled());
-		assertEquals("Seeders title view isn't a TextView", "android.widget.TextView",
-				seedersTitle.getClassName());
-		assertEquals("Seeders title is incorrect string","Seeders:", seedersTitle.getText());
+		assertEquals("Seeders title view isn't a TextView",
+				"android.widget.TextView", seedersTitle.getClassName());
+		assertEquals("Seeders title is incorrect string", "Seeders:",
+				seedersTitle.getText());
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the leechers TextView
 	 * 
@@ -155,12 +161,14 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 		UiObject leechersTitle = parent.getChild(new UiSelector().index(4));
 
 		assertTrue("Leechers title view doesn't exist", leechersTitle.exists());
-		assertTrue("Leechers title view isn't enabled", leechersTitle.isEnabled());
-		assertEquals("Leechers title view isn't a TextView", "android.widget.TextView",
-				leechersTitle.getClassName());
-		assertEquals("Leechers title is incorrect string","Leechers:", leechersTitle.getText());
+		assertTrue("Leechers title view isn't enabled",
+				leechersTitle.isEnabled());
+		assertEquals("Leechers title view isn't a TextView",
+				"android.widget.TextView", leechersTitle.getClassName());
+		assertEquals("Leechers title is incorrect string", "Leechers:",
+				leechersTitle.getText());
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the type info TextView
 	 * 
@@ -180,9 +188,9 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 		assertTrue("Type view isn't enabled", type.isEnabled());
 		assertEquals("Type view isn't a TextView", "android.widget.TextView",
 				type.getClassName());
-		assertFalse("Type is empty string",type.getText().equals(""));
+		assertFalse("Type is empty string", type.getText().equals(""));
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the uploaded info TextView
 	 * 
@@ -200,11 +208,11 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 
 		assertTrue("Uploaded view doesn't exist", uploaded.exists());
 		assertTrue("Uploaded view isn't enabled", uploaded.isEnabled());
-		assertEquals("Uploaded view isn't a TextView", "android.widget.TextView",
-				uploaded.getClassName());
-		assertFalse("Uploaded is empty string",uploaded.getText().equals(""));
+		assertEquals("Uploaded view isn't a TextView",
+				"android.widget.TextView", uploaded.getClassName());
+		assertFalse("Uploaded is empty string", uploaded.getText().equals(""));
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the filesize info TextView
 	 * 
@@ -222,11 +230,11 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 
 		assertTrue("Filesize view doesn't exist", filesize.exists());
 		assertTrue("Filesize view isn't enabled", filesize.isEnabled());
-		assertEquals("Filesize view isn't a TextView", "android.widget.TextView",
-				filesize.getClassName());
-		assertFalse("Filesize is empty string",filesize.getText().equals(""));
+		assertEquals("Filesize view isn't a TextView",
+				"android.widget.TextView", filesize.getClassName());
+		assertFalse("Filesize is empty string", filesize.getText().equals(""));
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the seeders info TextView
 	 * 
@@ -244,11 +252,11 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 
 		assertTrue("Seeders view doesn't exist", seeders.exists());
 		assertTrue("Seeders view isn't enabled", seeders.isEnabled());
-		assertEquals("Seeders view isn't a TextView", "android.widget.TextView",
-				seeders.getClassName());
-		assertFalse("Seeders is empty string",seeders.getText().equals(""));
+		assertEquals("Seeders view isn't a TextView",
+				"android.widget.TextView", seeders.getClassName());
+		assertFalse("Seeders is empty string", seeders.getText().equals(""));
 	}
-	
+
 	/**
 	 * Tests whether the video info screen contains the leechers info TextView
 	 * 
@@ -266,9 +274,99 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 
 		assertTrue("Leechers view doesn't exist", leechers.exists());
 		assertTrue("Leechers view isn't enabled", leechers.isEnabled());
-		assertEquals("Leechers view isn't a TextView", "android.widget.TextView",
-				leechers.getClassName());
-		assertFalse("Leechers is empty string",leechers.getText().equals(""));
+		assertEquals("Leechers view isn't a TextView",
+				"android.widget.TextView", leechers.getClassName());
+		assertFalse("Leechers is empty string", leechers.getText().equals(""));
+	}
+
+	/**
+	 * Tests whether the video info screen contains a thumbnail ImageView
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testVideoInfoThumbnail() throws RemoteException,
+			UiObjectNotFoundException {
+		openVideoInfoScreen();
+
+		UiObject infoView = new UiObject(
+				new UiSelector().className("android.widget.RelativeLayout"));
+		UiObject thumbnail = infoView.getChild(new UiSelector().index(3));
+
+		assertTrue("Thumbnail view doesn't exist", thumbnail.exists());
+		assertTrue("Thumbnail view isn't enabled", thumbnail.isEnabled());
+		assertEquals("Thumbnail view isn't a ImageView",
+				"android.widget.ImageView", thumbnail.getClassName());
+	}
+
+	/**
+	 * Tests whether the video info screen contains a 'Play video' Button with
+	 * the correct properties
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testVideoInfoPlayButtonProperties() throws RemoteException,
+			UiObjectNotFoundException {
+		openVideoInfoScreen();
+
+		UiObject infoView = new UiObject(
+				new UiSelector().className("android.widget.RelativeLayout"));
+		UiObject playButton = infoView.getChild(new UiSelector().index(4));
+
+		assertTrue("Play button doesn't exist", playButton.exists());
+		assertTrue("Play button isn't enabled", playButton.isEnabled());
+		assertEquals("Play button isn't a Button", "android.widget.Button",
+				playButton.getClassName());
+		assertTrue("Play button isn't clickable", playButton.isClickable());
+		assertEquals("Play button text is incorrect", "Play video",
+				playButton.getText());
+	}
+
+	/**
+	 * Tests whether the video info screen contains a 'Download video' Button
+	 * with the correct properties
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testVideoInfoDownloadButtonProperties() throws RemoteException,
+			UiObjectNotFoundException {
+		openVideoInfoScreen();
+
+		UiObject infoView = new UiObject(
+				new UiSelector().className("android.widget.RelativeLayout"));
+		UiObject downloadButton = infoView.getChild(new UiSelector().index(5));
+
+		assertTrue("Download button doesn't exist", downloadButton.exists());
+		assertTrue("Download button isn't enabled", downloadButton.isEnabled());
+		assertEquals("Download button isn't a Button", "android.widget.Button",
+				downloadButton.getClassName());
+		assertTrue("Download button isn't clickable",
+				downloadButton.isClickable());
+		assertEquals("Download button text is incorrect", "Download video",
+				downloadButton.getText());
+	}
+	
+	/**
+	 * Tests whether the video info screen contains a non-empty description TextView
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testVideoInfoDescription() throws RemoteException,
+			UiObjectNotFoundException {
+		openVideoInfoScreen();
+
+		UiObject infoView = new UiObject(
+				new UiSelector().className("android.widget.RelativeLayout"));
+		UiObject description = infoView.getChild(new UiSelector().index(6));
+
+		assertTrue("Description view doesn't exist", description.exists());
+		assertTrue("Description view isn't enabled", description.isEnabled());
+		assertEquals("Description view isn't a TextView", "android.widget.TextView",
+				description.getClassName());
+		assertFalse("Description is empty string", description.getText().equals(""));
 	}
 
 	/**

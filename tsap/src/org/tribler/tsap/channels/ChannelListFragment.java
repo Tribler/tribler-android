@@ -142,7 +142,7 @@ public class ChannelListFragment extends ListFragment implements
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		mChannelManager.Search(query);
+		mChannelManager.search(query);
 		return true;
 	}
 }

@@ -173,7 +173,7 @@ class XMLRPCChannelManager {
 		task.execute(mClient, "channels.get_remote_results");
 	}
 
-	public void Search(String query) {
+	public void search(String query) {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();
 		getLocal(query);

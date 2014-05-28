@@ -18,15 +18,16 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * and enabled
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testUpButtonExists() throws UiObjectNotFoundException, RemoteException {
+	public void testUpButtonExists() throws UiObjectNotFoundException,
+			RemoteException {
 		startTSAP();
 		UiObject upButton = new UiObject(
 				new UiSelector().descriptionContains("navigation drawer"));
 		assertTrue("UpButton doesn't exist", upButton.exists());
 		assertTrue("UpBotton isn't enabled", upButton.isEnabled());
-		assertTrue("UpButton isn't clickable", upButton.isClickable());		
+		assertTrue("UpButton isn't clickable", upButton.isClickable());
 	}
 
 	/**
@@ -34,9 +35,10 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * clicked
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testOpenDrawer() throws UiObjectNotFoundException, RemoteException {
+	public void testOpenDrawer() throws UiObjectNotFoundException,
+			RemoteException {
 		openNavigationDrawer();
 
 		UiObject navDrawer = new UiObject(
@@ -51,9 +53,10 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * Tests whether the navigation drawer contains the correct number of items
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testNrOfItemsInDrawer() throws UiObjectNotFoundException, RemoteException {
+	public void testNrOfItemsInDrawer() throws UiObjectNotFoundException,
+			RemoteException {
 		openNavigationDrawer();
 
 		UiObject navDrawer = new UiObject(
@@ -68,9 +71,10 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * Tests whether the title in the action is TSAP when the drawer is opened
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testAppTitleOnOpenedDrawer() throws UiObjectNotFoundException, RemoteException {
+	public void testAppTitleOnOpenedDrawer() throws UiObjectNotFoundException,
+			RemoteException {
 		openNavigationDrawer();
 
 		UiObject titleView = new UiObject(new UiSelector().text("TSAP"));
@@ -84,9 +88,10 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * are corrects
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testHomeItemProperties() throws UiObjectNotFoundException, RemoteException {
+	public void testHomeItemProperties() throws UiObjectNotFoundException,
+			RemoteException {
 		openNavigationDrawer();
 		UiObject navDrawer = new UiObject(
 				new UiSelector().description("navigation_drawer"));
@@ -102,9 +107,10 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * properties are corrects
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testChannelsItemProperties() throws UiObjectNotFoundException, RemoteException {
+	public void testChannelsItemProperties() throws UiObjectNotFoundException,
+			RemoteException {
 		openNavigationDrawer();
 		UiObject navDrawer = new UiObject(
 				new UiSelector().description("navigation_drawer"));
@@ -121,51 +127,65 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * item (home item) is clicked
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testHomeItemClick() throws UiObjectNotFoundException, RemoteException {
+	public void testHomeItemClick() throws UiObjectNotFoundException,
+			RemoteException {
 		openNavigationDrawer();
 		UiObject navDrawer = new UiObject(
 				new UiSelector().description("navigation_drawer"));
 
-		UiObject homeItem = navDrawer.getChild(new UiSelector().text("Home"));		
+		UiObject homeItem = navDrawer.getChild(new UiSelector().text("Home"));
 		assertTrue("Navigation drawer doesn't exist", navDrawer.exists());
 		assertTrue("Home item click failed", homeItem.click());
-		
-		//check whether nav drawer is closed
-		assertFalse("Navigation drawer is still open after clicking home item", navDrawer.exists());
-		
-		//check if the app title is changed
-		UiObject upButton = new UiObject(new UiSelector().description("Navigate up"));
-		UiObject title = upButton.getChild(new UiSelector().className("android.widget.TextView"));
 
-		assertEquals("App title not correctly changed after clicking home item","Home", title.getText());
+		// check whether nav drawer is closed
+		assertFalse("Navigation drawer is still open after clicking home item",
+				navDrawer.exists());
+
+		// check if the app title is changed
+		UiObject upButton = new UiObject(
+				new UiSelector().descriptionContains("navigation drawer"));
+		UiObject title = upButton.getChild(new UiSelector()
+				.className("android.widget.TextView"));
+
+		assertEquals(
+				"App title not correctly changed after clicking home item",
+				"Home", title.getText());
 	}
-	
+
 	/**
 	 * Test whether the drawer opens the channels fragment when the second list
 	 * item (channels item) is clicked
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testChannelsItemClick() throws UiObjectNotFoundException, RemoteException {
+	public void testChannelsItemClick() throws UiObjectNotFoundException,
+			RemoteException {
 		openNavigationDrawer();
 		UiObject navDrawer = new UiObject(
 				new UiSelector().description("navigation_drawer"));
 
-		UiObject channelsItem = navDrawer.getChild(new UiSelector().text("Channels"));		
+		UiObject channelsItem = navDrawer.getChild(new UiSelector()
+				.text("Channels"));
 		assertTrue("Navigation drawer doesn't exist", navDrawer.exists());
 		assertTrue("Channels item click failed", channelsItem.click());
-		
-		//check whether nav drawer is closed
-		assertFalse("Navigation drawer is still open after clicking channels item", navDrawer.exists());
-		
-		//check if the app title is changed correctly
-		UiObject upButton = new UiObject(new UiSelector().description("Navigate up"));
-		UiObject title = upButton.getChild(new UiSelector().className("android.widget.TextView"));
 
-		assertEquals("App title not correctly changed after clicking channels item","Channels", title.getText());
+		// check whether nav drawer is closed
+		assertFalse(
+				"Navigation drawer is still open after clicking channels item",
+				navDrawer.exists());
+
+		// check if the app title is changed correctly
+		UiObject upButton = new UiObject(
+				new UiSelector().descriptionContains("navigation drawer"));
+		UiObject title = upButton.getChild(new UiSelector()
+				.className("android.widget.TextView"));
+
+		assertEquals(
+				"App title not correctly changed after clicking channels item",
+				"Channels", title.getText());
 	}
 
 	/**
@@ -173,9 +193,10 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	 * if it isn't opened
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	private void openNavigationDrawer() throws UiObjectNotFoundException, RemoteException {
+	private void openNavigationDrawer() throws UiObjectNotFoundException,
+			RemoteException {
 		startTSAP();
 
 		UiObject navDrawer = new UiObject(

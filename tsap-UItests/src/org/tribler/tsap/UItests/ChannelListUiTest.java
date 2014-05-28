@@ -52,7 +52,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testGridContainsItems() throws RemoteException,
+	public void testListContainsItems() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -67,7 +67,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testGridItemProperties() throws RemoteException,
+	public void testListItemProperties() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -303,6 +303,11 @@ public class ChannelListUiTest extends BasicUiTestCase {
 				searchView.getText().trim());
 		assertEquals("SearchView isn't an EditText", "android.widget.EditText",
 				searchView.getClassName());
+		
+		//navigate up to hide the searchbox again (otherwise other tests will fail)
+		UiObject upButton = new UiObject(
+				new UiSelector().description("Navigate up"));
+		upButton.click();
 	}
 	
 	/**

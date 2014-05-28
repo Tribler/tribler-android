@@ -368,6 +368,21 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 				description.getClassName());
 		assertFalse("Description is empty string", description.getText().equals(""));
 	}
+	
+	/**
+	 * Tests whether the video info screen doesn't contain the search option
+	 * 
+	 * @throws RemoteException
+	 * @throws UiObjectNotFoundException
+	 */
+	public void testVideoInfoSearchDoesNotExists() throws RemoteException,
+			UiObjectNotFoundException {
+		openVideoInfoScreen();
+
+		UiObject search = new UiObject(new UiSelector().description("Search"));
+
+		assertFalse("Search view exists", search.exists());
+	}
 
 	/**
 	 * Launches the app, opens the navigation drawer and click the home item to

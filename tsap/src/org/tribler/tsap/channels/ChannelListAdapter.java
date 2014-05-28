@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.ThreadPreconditions;
 
 import android.content.Context;
 import android.util.Log;
@@ -152,6 +153,7 @@ public class ChannelListAdapter extends BaseAdapter {
 	 * 	list of channels to add
 	 */
 	public void addNew(List<Channel> channelList) {
+		ThreadPreconditions.checkOnMainThread();
 		Log.v("ChannelListFragment", "Adding items");
 		for (int i = 0; i < channelList.size(); i++) {
 			if (!content.contains(channelList.get(i)))
@@ -186,6 +188,7 @@ public class ChannelListAdapter extends BaseAdapter {
 	 */
 	public void clear()
 	{
+		ThreadPreconditions.checkOnMainThread();
 		content.clear();
 		notifyDataSetChanged();
 	}

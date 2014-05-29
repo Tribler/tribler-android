@@ -82,7 +82,7 @@ class TorrentManager():
 
             self._dispersy = self._session.lm.dispersy
         else:
-            raise RuntimeError('ChannelManager already connected')
+            raise RuntimeError('TorrentManager already connected')
 
     def _xmlrpc_register(self, xmlrpc):
         xmlrpc.register_function(self.get_local, "torrents.get_local")
@@ -184,7 +184,7 @@ class TorrentManager():
         self._results.append(torrent)
         self._result_infohashes.append(torrent.infohash)
 
-        _logger.error("Channel added: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
+        _logger.error("Torrent added: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
         return True
 
 

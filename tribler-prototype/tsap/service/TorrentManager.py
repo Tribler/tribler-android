@@ -30,6 +30,9 @@ from Tribler.community.channel.community import ChannelCommunity, \
 
 
 class TorrentManager():
+    # Code to make this a singleton
+    __single = None
+
     connected = False
 
     _session = None
@@ -46,6 +49,9 @@ class TorrentManager():
     _result_infohashes = []
 
     def __init__(self, session, xmlrpc=None):
+        if TorrentManager.__single:
+            raise RuntimeError("TorrentManager is singleton")
+
         self.connected = False
 
         self._session = session
@@ -55,6 +61,16 @@ class TorrentManager():
 
         if xmlrpc:
             self._xmlrpc_register(xmlrpc)
+
+    def getInstance(*args, **kw):
+        if TorrentManager.__single is None:
+            TorrentManager.__single = TorrentManager(*args, **kw)
+        return TorrentManager.__single
+    getInstance = staticmethod(getInstance)
+
+    def delInstance(*args, **kw):
+        TorrentManager.__single = None
+    delInstance = staticmethod(delInstance)
 
     def _connect(self):
         if not self.connected:

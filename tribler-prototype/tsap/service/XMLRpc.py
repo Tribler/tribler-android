@@ -10,7 +10,7 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
 
 class XMLRPCServer:
     def __init__(self, iface="127.0.0.1", port=8000):
-        self._server = SimpleXMLRPCServer((iface, port), requestHandler=RequestHandler)
+        self._server = SimpleXMLRPCServer((iface, port), requestHandler=RequestHandler, allow_none=True)
         self._server.register_introspection_functions()
 
         self._iface = iface

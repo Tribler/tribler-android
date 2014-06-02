@@ -1,8 +1,12 @@
 import unittest
 import xmlrpclib
+import os
 from time import sleep
 
-XMLRPC_URL = "http://127.0.0.1:8000/tribler"
+if not "XMLRPC_URL" in os.environ:
+    XMLRPC_URL = "http://127.0.0.1:8000/tribler"
+else:
+    XMLRPC_URL = os.environ['XMLRPC_URL']
 
 REMOTE_SEARCH_TIMEOUT = 20  # seconds
 REMOTE_SEARCH_SLEEP = .5  # seconds
@@ -66,4 +70,5 @@ class TorrentsRemoteSearch(unittest.TestCase):
             #print slp,
 
 if __name__ == '__main__':
+    print "Using %s as test target." % XMLRPC_URL
     unittest.main()

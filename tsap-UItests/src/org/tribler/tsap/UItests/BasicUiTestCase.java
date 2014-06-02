@@ -75,8 +75,7 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 
 		// Create a UiSelector to find the TSAP app and simulate
 		// a user click to launch the app.
-		UiObject tsapApp = appViews.getChildByText(new UiSelector()
-				.className(android.widget.TextView.class.getName()), "TSAP");
+		UiObject tsapApp = appViews.getChild(new UiSelector().text("TSAP"));
 		tsapApp.clickAndWaitForNewWindow();
 		
 		// Set the rotation to normal (=portrait mode)

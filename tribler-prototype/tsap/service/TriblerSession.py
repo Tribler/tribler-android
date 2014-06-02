@@ -13,12 +13,7 @@ _logger = logging.getLogger(__name__)
 from Tribler.Core.Session import Session
 from Tribler.Core.SessionConfig import SessionStartupConfig
 
-# Tribler communities
-from Tribler.community.search.community import SearchCommunity
-from Tribler.community.allchannel.community import AllChannelCommunity
-#from Tribler.community.channel.community import ChannelCommunity
-#from Tribler.community.channel.preview import PreviewChannelCommunity
-#from Tribler.community.metadata.community import MetadataCommunity
+from Tribler.dispersy.util import call_on_reactor_thread
 
 
 class TriblerSession():
@@ -29,7 +24,6 @@ class TriblerSession():
     _searchkeywords = None
 
     _dispersy_init = False
-
 
     def __init__(self):
         if not 'ANDROID_HOST' in os.environ or not os.environ['ANDROID_HOST'] == "YES":
@@ -70,10 +64,9 @@ class TriblerSession():
         self._sconfig.set_torrent_checking(False)
         self._sconfig.set_multicast_local_peer_discovery(False)
         #self._sconfig.set_megacache(False)
-        #self._sconfig.set_dispersy(False)
-        #self._sconfig.set_swift_proc(False)
+        self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
-        self._sconfig.set_torrent_collecting(False)
+        #self._sconfig.set_torrent_collecting(False)
         #self._sconfig.set_libtorrent(False)
         self._sconfig.set_dht_torrent_collecting(False)
         self._sconfig.set_videoplayer(False)
@@ -92,22 +85,13 @@ class TriblerSession():
 
         _logger.info('libTribler session started!')
 
-        self.load_dispersy_communities()
-
-    def load_dispersy_communities(self, blocking=True):
         _logger.info("Set autoload_communities callback")
-        self._dispersy.callback.call(self.define_communities)
-
-        if not blocking:
-            return
-
-        while not self._dispersy_init:
-            _logger.error("@@@ Waiting for dispersy communities to initialize..")
-            time.sleep(.5)
+        self.define_communities()
 
         _logger.error("@@@ Dispersy communitites initialized!")
 
     # Dispersy init communitites callback function
+    @call_on_reactor_thread
     def define_communities(self):
         _logger.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
@@ -151,7 +135,6 @@ class TriblerSession():
         _logger.info("@@@@@@@@@@ tribler: communities are ready in %.2f seconds", 0) #diff)
 
         self._dispersy_init = True
-
 
     def stop_service(self):
         #self._thread.stop()

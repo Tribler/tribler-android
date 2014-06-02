@@ -25,8 +25,7 @@ from Tribler.community.allchannel.community import AllChannelCommunity
 
 from Tribler.Core.Search.SearchManager import split_into_keywords
 
-from Tribler.community.channel.community import ChannelCommunity, \
-    forceDispersyThread, forcePrioDispersyThread, warnDispersyThread
+from Tribler.dispersy.util import call_on_reactor_thread
 
 
 class TorrentManager():
@@ -96,7 +95,7 @@ class TorrentManager():
         # TODO: GET LOCAL TORRENTS
         return []
 
-    @forceDispersyThread
+    @call_on_reactor_thread
     def search_remote(self, keywords):
         try:
             self._set_keywords(keywords)
@@ -125,7 +124,7 @@ class TorrentManager():
         return nr_requests_made
 
 
-    @forceDispersyThread
+    @call_on_reactor_thread
     def _search_remote_callback(self, keywords, results, candidate):
 #        try:
         print "******************** TorrentSearchGridManager: gotRemoteHist: got %s unfiltered results for %s %s %s" % (len(results), keywords, candidate, time())

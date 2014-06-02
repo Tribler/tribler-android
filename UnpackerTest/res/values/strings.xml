@@ -4,5 +4,8 @@
     <string name="app_name">UnpackerTest</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    
+    <string name="private_version">1401701793.97</string>
+	<string name="public_version">1401701793.97</string>
 
 </resources>

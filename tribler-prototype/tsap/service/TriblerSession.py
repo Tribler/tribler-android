@@ -1,5 +1,47 @@
 __author__ = 'user'
 
+# TODO: FIND OUT WHICH OF THESE CAN BE REMOVED. IF ALL ARE REMOVED, DISPERSY HANGS ON STARTUP.
+import argparse
+import logging.config
+import os
+import sys
+import threading
+import time
+from threading import Thread, Event
+from traceback import print_exc
+from twisted.conch import stdio
+from twisted.internet import reactor
+from twisted.internet.stdio import StandardIO
+
+from twisted.internet.task import LoopingCall
+import twisted
+from twisted.protocols.basic import LineReceiver
+
+from Tribler.Core.RawServer.RawServer import RawServer
+from Tribler.community.anontunnel import exitstrategies
+from Tribler.community.anontunnel.Socks5.server import Socks5Server
+from Tribler.community.anontunnel.community import ProxyCommunity, \
+    ProxySettings
+from Tribler.community.anontunnel.endpoint import DispersyBypassEndpoint
+from Tribler.community.anontunnel.extendstrategies import TrustThyNeighbour, \
+    NeighbourSubset
+from Tribler.community.anontunnel.lengthstrategies import \
+    RandomCircuitLengthStrategy, ConstantCircuitLength
+from Tribler.community.anontunnel.selectionstrategies import \
+    RandomSelectionStrategy, LengthSelectionStrategy
+from Tribler.community.anontunnel.stats import StatsCrawler
+from Tribler.community.privatesemantic.crypto.elgamalcrypto import \
+    ElgamalCrypto
+from Tribler.dispersy.dispersy import Dispersy
+from Tribler.dispersy.util import call_on_reactor_thread
+
+# custom
+from Tribler.Core.Session import Session
+from Tribler.Core.SessionConfig import SessionStartupConfig
+from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
+from time import time, sleep
+
+
 import time
 import sys
 import os

@@ -43,8 +43,8 @@ public class PythonService extends Service  implements Runnable {
 
         Bundle extras = intent.getExtras();
         androidPrivate = extras.getString("androidPrivate");
-        // service code is located in service subdir
-        androidArgument = extras.getString("androidArgument") + "/service";
+        // service code is located in current directory (not in /service anymore!)
+        androidArgument = extras.getString("androidArgument");
         pythonHome = extras.getString("pythonHome");
         pythonPath = extras.getString("pythonPath");
         pythonServiceArgument = extras.getString("pythonServiceArgument");

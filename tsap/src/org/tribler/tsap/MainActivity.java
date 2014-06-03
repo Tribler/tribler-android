@@ -28,6 +28,7 @@ public class MainActivity extends Activity implements
 	private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
 	private ChannelListFragment channelFragment = new ChannelListFragment();
 
+
 	/**
 	 * Used to store the last screen title. For use in
 	 * {@link #restoreActionBar()}.

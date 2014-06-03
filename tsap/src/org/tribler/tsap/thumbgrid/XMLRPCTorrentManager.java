@@ -3,11 +3,11 @@ package org.tribler.tsap.thumbgrid;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Observable;
 
-import android.os.Handler;
 import android.util.Log;
-import de.timroes.axmlrpc.XMLRPCClient;
 
+import org.tribler.tsap.AbstractXMLRPCManager;
 import org.tribler.tsap.XMLRPCCallTask;
 
 /**
@@ -16,12 +16,9 @@ import org.tribler.tsap.XMLRPCCallTask;
  * @author Dirk Schut
  * @since 26-5-2014
  */
-public class XMLRPCTorrentManager {
-	private XMLRPCClient mClient = null;
+public class XMLRPCTorrentManager extends AbstractXMLRPCManager{
 	private ThumbAdapter mAdapter;
-	private Handler mDataPollingHandler = new Handler();
 	private int mLastFoundResultsCount = 0;
-	public final static long POLLING_PERIOD = 500;
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server and starts a
@@ -31,31 +28,14 @@ public class XMLRPCTorrentManager {
 	 *            The url of the XMLRPC server
 	 */
 	public XMLRPCTorrentManager(URL url, ThumbAdapter adapter) {
-		mClient = new XMLRPCClient(url);
+		super(url);
 		mAdapter = adapter;
-		setupDataPollingHandler();
-	}
-
-	/**
-	 * Starts a thread that will request the amount of found torrents every
-	 * POLLING_PERIOD milliseconds
-	 */
-	private void setupDataPollingHandler() {
-		Runnable poller = new Runnable() {
-			@Override
-			public void run() {
-				//Log.v("XMLRPCTorrentManager", "Poll");
-				getRemoteResultsCount();
-				mDataPollingHandler.postDelayed(this, POLLING_PERIOD);
-			}
-		};
-		mDataPollingHandler.postDelayed(poller, POLLING_PERIOD);
 	}
 
 	/**
 	 * Searches the local dispersy data for torrents fitting a certain query.
-	 * Once the results are found it will send them as an ArrayList<ThumbItem> to
-	 * all observers.
+	 * Once the results are found it will send them as an ArrayList<ThumbItem>
+	 * to all observers.
 	 * 
 	 * @param query
 	 *            The query that Tribler will look for in the names of the
@@ -80,16 +60,15 @@ public class XMLRPCTorrentManager {
 
 	/**
 	 * Searches the remote dispersy data for torrents fitting a certain query.
- 	 * The results can be retrieved by calling getRemoteResults(). The amount of found results can be retrieved
-	 * by calling getRemoteResultsCount().
+	 * The results can be retrieved by calling getRemoteResults(). The amount of
+	 * found results can be retrieved by calling getRemoteResultsCount().
 	 * 
 	 * @param query
 	 *            The query that Tribler will look for in the names of the
 	 *            channels
 	 */
 	private void searchRemote(final String query) {
-		Log.v("XMPLRCChannelManager", "Remote search for \"" + query
-				+ "\" launched.");
+		Log.v("XMPLRCChannelManager", "Remote search for \"" + query + "\" launched.");
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
@@ -117,8 +96,10 @@ public class XMLRPCTorrentManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Integer count = (Integer) result;
-				//Log.v("XMLRPCTorrentManager", "Torrents found = " + count);
+				Integer count = 0;
+				if (result != null)
+					count = (Integer) result;
+				// Log.v("XMLRPCTorrentManager", "Torrents found = " + count);
 				if (count > mLastFoundResultsCount) {
 					mLastFoundResultsCount = count;
 					getRemoteResults();
@@ -141,12 +122,13 @@ public class XMLRPCTorrentManager {
 				Log.v("XMLRPC", "Got " + arrayResult.length + " results");
 				for (int i = 0; i < arrayResult.length; i++) {
 					@SuppressWarnings("unchecked")
-					ThumbItem item = new ThumbItem(
-							(Map<String, Object>) arrayResult[i]);
+					ThumbItem item = new ThumbItem((Map<String, Object>) arrayResult[i]);
 					resultsList.add(item);
 				}
-				//Map<String, Object> firstResult = (Map<String, Object>)arrayResult[0];
-				//Log.v("XMPLRCChannelManager", "KeySet: "+firstResult.keySet());
+				// Map<String, Object> firstResult = (Map<String,
+				// Object>)arrayResult[0];
+				// Log.v("XMPLRCChannelManager",
+				// "KeySet: "+firstResult.keySet());
 				mAdapter.addNew(resultsList);
 			}
 		};
@@ -156,8 +138,13 @@ public class XMLRPCTorrentManager {
 	public void search(String query) {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();
-		//getLocal(query);
+		// getLocal(query);
 		searchRemote(query);
 		Log.i("XMPLRCChannelManager", "Search for \"" + query + "\" launched.");
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		getRemoteResultsCount();
 	}
 }

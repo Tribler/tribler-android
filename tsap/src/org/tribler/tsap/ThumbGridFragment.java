@@ -65,28 +65,43 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	 * @return The created view
 	 */
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		View v = inflater.inflate(R.layout.fragment_thumb_grid, container,
-				false);
+		View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
 		GridView gridView = (GridView) v.findViewById(R.id.ThumbsGrid);
 
-		ArrayList<ThumbItem> gridArray = TorrentManager.getInstance()
-				.getThumbItems();
-		mThumbAdapter = new ThumbAdapter(container.getContext(),
-				R.layout.thumb_grid_item, gridArray);
+		ArrayList<ThumbItem> gridArray = TorrentManager.getInstance().getThumbItems();
+		mThumbAdapter = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		try {
-			mTorrentManager = new XMLRPCTorrentManager(new URL(
-					"http://localhost:8000/tribler"), mThumbAdapter);
+			mTorrentManager = new XMLRPCTorrentManager(new URL("http://localhost:8000/tribler"), mThumbAdapter);
 		} catch (MalformedURLException e) {
-			Log.e("ChannelListFragment",
-					"URL was malformed.\n" + e.getStackTrace());
+			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}
 		return v;
+	}
+
+	/**
+	 * Starts/resumes polling for search results.
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+		mTorrentManager.startPolling();
+	}
+
+	/**
+	 * Removes the search menu item so that the app doesn't crash when selecting
+	 * the channel list fragment from the navigation drawer. And pauses the
+	 * polling for search results.
+	 */
+	@Override
+	public void onPause() {
+		menu.removeItem(R.id.action_search_thumbgrid);
+		super.onPause();
+		mTorrentManager.stopPolling();
 	}
 
 	/**
@@ -97,30 +112,18 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	private OnItemClickListener initiliazeOnItemClickListener() {
 		return new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				VideoInfoFragment vidFrag = new VideoInfoFragment();
 				Bundle args = new Bundle();
 				args.putInt("torrentID", (int) id);
 				vidFrag.setArguments(args);
 
-				FragmentTransaction transaction = getFragmentManager()
-						.beginTransaction();
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(R.id.container, vidFrag);
 				transaction.addToBackStack(null);
 				transaction.commit();
 			}
 		};
-	}
-
-	/**
-	 * Removes the search menu item so that the app doesn't crash when selecting
-	 * the channel list fragment from the navigation drawer.
-	 */
-	@Override
-	public void onPause() {
-		menu.removeItem(R.id.action_search_thumbgrid);
-		super.onPause();
 	}
 
 	/**
@@ -137,8 +140,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		this.menu = menu;
 		inflater.inflate(R.menu.thumbgrid_fragment, menu);
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
-		SearchView searchView = (SearchView) MenuItemCompat
-				.getActionView(searchMenuItem);
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
 		searchView.setQueryHint("Search videos");
 	}

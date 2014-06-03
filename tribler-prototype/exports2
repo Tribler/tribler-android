@@ -1,0 +1,4 @@
+export ANDROIDSDK="/home/dirk/Android/android-sdk-linux"
+export ANDROIDNDK="/home/dirk/Android/android-ndk-r9d"
+export ANDROIDNDKVER=r9d
+export ANDROIDAPI=14

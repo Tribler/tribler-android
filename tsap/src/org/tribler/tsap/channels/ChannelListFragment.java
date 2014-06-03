@@ -1,5 +1,6 @@
 package org.tribler.tsap.channels;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -15,18 +16,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.TextView;
 
 /**
  * Fragment that shows a list of available channels and handles its behavior
  * 
  * @author Dirk Schut
  */
-public class ChannelListFragment extends ListFragment implements
-		OnQueryTextListener{
+public class ChannelListFragment extends ListFragment implements OnQueryTextListener {
 	private XMLRPCChannelManager mChannelManager = null;
 
 	/**
@@ -40,18 +38,29 @@ public class ChannelListFragment extends ListFragment implements
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
-				R.layout.list_item);
+		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(), R.layout.list_item);
 
 		this.setListAdapter(adapter);
 
 		try {
-			mChannelManager = new XMLRPCChannelManager(new URL(
-					"http://localhost:8000/tribler"), (ChannelListAdapter)getListAdapter());
+			mChannelManager = new XMLRPCChannelManager(new URL("http://localhost:8000/tribler"), (ChannelListAdapter) getListAdapter());
 		} catch (MalformedURLException e) {
-			Log.e("ChannelListFragment",
-					"URL was malformed.\n" + e.getStackTrace());
+			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		mChannelManager.startPolling();
+	}
+	
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		mChannelManager.stopPolling();
 	}
 
 	/**
@@ -68,15 +77,9 @@ public class ChannelListFragment extends ListFragment implements
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// selected item
-		String product = ((TextView) ((RelativeLayout) v)
-				.findViewById(R.id.channel_name)).getText().toString();
-
-		// Launching new Activity on selecting single List Item
-		Intent i = new Intent(getActivity().getApplicationContext(),
-				ChannelActivity.class);
-		// sending data to new activity
-		i.putExtra("product", product);
+		// Launching new Activity on tapping a single List Item
+		Intent i = new Intent(getActivity().getApplicationContext(), ChannelActivity.class);
+		i.putExtra(ChannelActivity.INTENT_MESSAGE, (Serializable) ((ChannelListAdapter) getListAdapter()).getItem(position));
 		startActivity(i);
 	}
 
@@ -93,8 +96,7 @@ public class ChannelListFragment extends ListFragment implements
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.channel_fragment, menu);
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_channel);
-		SearchView searchView = (SearchView) MenuItemCompat
-				.getActionView(searchMenuItem);
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
 		searchView.setQueryHint("Search channels");
 	}

@@ -28,7 +28,8 @@
         </activity>
         <activity
             android:name="org.tribler.tsap.channels.ChannelActivity"
-            android:label="@string/title_activity_channel" >
+            android:label="@string/title_activity_channel"
+            android:configChanges="orientation|screenSize" >
         </activity>
         <activity
             android:name="org.videolan.vlc.gui.video.VideoPlayerActivity"

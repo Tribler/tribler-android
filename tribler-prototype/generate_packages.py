@@ -11,7 +11,7 @@ def get_packages(path):
 
     for root, dirs, files in os.walk(path):
         if '__init__.py' in files:
-            packages.append(root[len(path) + 1:].replace(os.sep, "."))
+            packages.append(str(root[len(path) + 1:].replace(os.sep, ".")))
 
     return path, packages
 

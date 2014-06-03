@@ -22,10 +22,8 @@ import android.util.Log;
 class AssetExtract {
 
     private AssetManager mAssetManager = null;
-    private Activity mActivity = null;
 
-    AssetExtract(Activity act) {
-        mActivity = act;
+    public AssetExtract(Activity act) {
         mAssetManager = act.getAssets();
     }
 

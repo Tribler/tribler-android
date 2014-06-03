@@ -97,10 +97,10 @@ public class PythonService extends Service  implements Runnable {
             System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingmath.so");
         } catch(UnsatisfiedLinkError e) {
         }
-
-        nativeInitJavaEnv();
+        
+        nativeInitJavaEnv();        
         nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
-                pythonServiceArgument);
+                pythonServiceArgument);        
     }
 
     // Native part (don't remove!)

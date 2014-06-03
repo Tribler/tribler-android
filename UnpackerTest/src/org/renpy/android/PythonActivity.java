@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import android.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -178,6 +177,8 @@ public class PythonActivity extends Activity implements Runnable {
         }
 
         start_service("PythonService", "Service running python code", "");
+        Log.d(TAG, "Service started");
+        startActivity(new Intent(this, org.unpackertest.MainActivity.class));
     }
 
     @Override

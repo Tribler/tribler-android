@@ -33,6 +33,11 @@
         </activity>
 
         <service android:name="org.renpy.android.PythonService" />
+
+        <activity
+            android:name="org.unpackertest.MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>

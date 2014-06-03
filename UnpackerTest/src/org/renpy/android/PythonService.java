@@ -20,18 +20,13 @@ public class PythonService extends Service  implements Runnable {
     private String androidArgument;
     private String pythonHome;
     private String pythonPath;
+    
     // Argument to pass to Python code,
     private String pythonServiceArgument;
-    public static Service mService = null;
 
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
     }
 
     @Override
@@ -103,13 +98,12 @@ public class PythonService extends Service  implements Runnable {
         } catch(UnsatisfiedLinkError e) {
         }
 
-        this.mService = this;
         nativeInitJavaEnv();
         nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
                 pythonServiceArgument);
     }
 
-    // Native part
+    // Native part (don't remove!)
     public static native void nativeStart(String androidPrivate, String androidArgument,
             String pythonHome, String pythonPath,
             String pythonServiceArgument);

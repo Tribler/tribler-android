@@ -22,8 +22,6 @@ import android.widget.Toast;
 public class PythonActivity extends Activity implements Runnable {
     private static String TAG = "Python";
 
-    // The SDLSurfaceView we contain.
-    public static SDLSurfaceView mView = null;
     public static PythonActivity mActivity = null;
     public static ApplicationInfo mInfo = null;
 
@@ -64,12 +62,6 @@ public class PythonActivity extends Activity implements Runnable {
         } else {
             mPath = getFilesDir();
         }
-        
-        // Start showing an SDLSurfaceView. (CANNOT BE REMOVED!!!)
-//        mView = new SDLSurfaceView(
-//                this,
-//                mPath.getAbsolutePath());
-//        setContentView(mView); //can't be removed either
     }
 
     /**
@@ -192,22 +184,12 @@ public class PythonActivity extends Activity implements Runnable {
         }
 
         start_service("PythonService", "Service running python code", "");
-//        //can't be removed
-//        runOnUiThread(new Runnable () {
-//            public void run() {
-//                mView.start();
-//            }
-//        });
     }
 
     @Override
     protected void onPause() {
         _isPaused = true;
         super.onPause();
-
-        if (mView != null) {
-            mView.onPause();
-        }
     }
 
     @Override
@@ -218,10 +200,6 @@ public class PythonActivity extends Activity implements Runnable {
         if (!mLaunchedThread) {
             mLaunchedThread = true;
             new Thread(this).start();
-        }
-
-        if (mView != null) {
-            mView.onResume();
         }
     }
 
@@ -240,9 +218,6 @@ public class PythonActivity extends Activity implements Runnable {
     }
 
     protected void onDestroy() {
-        if (mView != null) {
-            mView.onDestroy();
-        }
         Log.d(TAG,"Stopping service...");
 //        PythonActivity.stop_service();
         stopService(serviceIntent);
@@ -298,8 +273,6 @@ public class PythonActivity extends Activity implements Runnable {
     protected void onNewIntent(Intent intent) {
         if ( this.newIntentListeners == null )
             return;
-        if ( this.mView != null )
-            this.mView.onResume();
         synchronized ( this.newIntentListeners ) {
             Iterator<NewIntentListener> iterator = this.newIntentListeners.iterator();
             while ( iterator.hasNext() ) {
@@ -334,8 +307,6 @@ public class PythonActivity extends Activity implements Runnable {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if ( this.activityResultListeners == null )
             return;
-        if ( this.mView != null )
-            this.mView.onResume();
         synchronized ( this.activityResultListeners ) {
             Iterator<ActivityResultListener> iterator = this.activityResultListeners.iterator();
             while ( iterator.hasNext() )

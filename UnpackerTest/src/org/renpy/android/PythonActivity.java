@@ -45,7 +45,7 @@ public class PythonActivity extends Activity implements Runnable {
         if (getIntent() != null && getIntent().getAction() != null &&
                 getIntent().getAction().equals("org.renpy.LAUNCH")) {
             mPath = new File(getIntent().getData().getSchemeSpecificPart());
-        } else if (getString(org.minimalP4a.R.string.public_version) != null) {
+        } else if (getString(org.unpackertest.R.string.public_version) != null) {
             mPath = externalStorage;
         } else {
             mPath = getFilesDir();
@@ -92,9 +92,9 @@ public class PythonActivity extends Activity implements Runnable {
     public void unpackData(final String resource, File target) {
     	int resId=0;
     	if(resource == "public")
-    		resId = org.minimalP4a.R.string.public_version;
+    		resId = org.unpackertest.R.string.public_version;
     	else if (resource == "private")
-    		resId = org.minimalP4a.R.string.private_version;
+    		resId = org.unpackertest.R.string.private_version;
     	
         // The version of data in memory and on disk.
         String data_version = getString(resId);

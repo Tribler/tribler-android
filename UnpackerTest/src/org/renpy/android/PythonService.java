@@ -69,6 +69,7 @@ public class PythonService extends Service  implements Runnable {
 
     @Override
     public void onDestroy() {
+    	Log.d("python service", "Service destroyed");
         super.onDestroy();
         pythonThread = null;
         Process.killProcess(Process.myPid());

@@ -48,7 +48,8 @@
     </activity>
 
     
-
+	<service android:name="org.renpy.android.PythonService" />
+    
     
 
 	

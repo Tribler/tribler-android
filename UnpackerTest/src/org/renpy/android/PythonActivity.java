@@ -39,6 +39,8 @@ public class PythonActivity extends Activity implements Runnable {
     private File mPath = null;
 
     boolean _isPaused = false;
+    
+    Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +66,10 @@ public class PythonActivity extends Activity implements Runnable {
         }
         
         // Start showing an SDLSurfaceView. (CANNOT BE REMOVED!!!)
-        mView = new SDLSurfaceView(
-                this,
-                mPath.getAbsolutePath());
-        setContentView(mView); //can't be removed either
+//        mView = new SDLSurfaceView(
+//                this,
+//                mPath.getAbsolutePath());
+//        setContentView(mView); //can't be removed either
     }
 
     /**
@@ -189,12 +191,13 @@ public class PythonActivity extends Activity implements Runnable {
         } catch(UnsatisfiedLinkError e) {
         }
 
-        //can't be removed
-        runOnUiThread(new Runnable () {
-            public void run() {
-                mView.start();
-            }
-        });
+        start_service("PythonService", "Service running python code", "");
+//        //can't be removed
+//        runOnUiThread(new Runnable () {
+//            public void run() {
+//                mView.start();
+//            }
+//        });
     }
 
     @Override
@@ -240,15 +243,18 @@ public class PythonActivity extends Activity implements Runnable {
         if (mView != null) {
             mView.onDestroy();
         }
-
+        Log.d(TAG,"Stopping service...");
+//        PythonActivity.stop_service();
+        stopService(serviceIntent);
+        Log.d(TAG,"Service stopped...");
         //Log.i(TAG, "on destroy (exit1)");
         System.exit(0);
     }
 
-    public static void start_service(String serviceTitle, String serviceDescription,
+    public void start_service(String serviceTitle, String serviceDescription,
             String pythonServiceArgument) {
     	Log.d(TAG, "Starting python service...");
-        Intent serviceIntent = new Intent(PythonActivity.mActivity, PythonService.class);
+        serviceIntent = new Intent(PythonActivity.mActivity, PythonService.class);
         String argument = PythonActivity.mActivity.getFilesDir().getAbsolutePath();
         String filesDirectory = PythonActivity.mActivity.mPath.getAbsolutePath();
         serviceIntent.putExtra("androidPrivate", argument);

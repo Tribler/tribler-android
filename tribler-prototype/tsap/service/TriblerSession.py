@@ -9,13 +9,7 @@ import threading
 import time
 from threading import Thread, Event
 from traceback import print_exc
-from twisted.conch import stdio
-from twisted.internet import reactor
-from twisted.internet.stdio import StandardIO
-
-from twisted.internet.task import LoopingCall
 import twisted
-from twisted.protocols.basic import LineReceiver
 
 from Tribler.Core.RawServer.RawServer import RawServer
 from Tribler.community.anontunnel import exitstrategies

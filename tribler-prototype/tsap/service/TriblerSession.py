@@ -97,15 +97,15 @@ class TriblerSession():
 
         # Disable unneeded dependencies
         #self._sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
-        self._sconfig.set_torrent_checking(False)
+        #self._sconfig.set_torrent_checking(False)
         self._sconfig.set_multicast_local_peer_discovery(False)
         #self._sconfig.set_megacache(False)
         self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
-        #self._sconfig.set_torrent_collecting(False)
+        self._sconfig.set_torrent_collecting(False)
         #self._sconfig.set_libtorrent(False)
         self._sconfig.set_dht_torrent_collecting(False)
-        self._sconfig.set_videoplayer(False)
+        #self._sconfig.set_videoplayer(False)
 
         self._sconfig.set_dispersy_tunnel_over_swift(False)
         self._sconfig.set_torrent_collecting_max_torrents(5000)

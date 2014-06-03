@@ -19,6 +19,7 @@ arg = os.getenv('PYTHON_SERVICE_ARGUMENT')
 # Local files
 from TorrentManager import TorrentManager
 from ChannelManager import ChannelManager
+from DownloadManager import DownloadManager
 from TriblerSession import TriblerSession
 from XMLRpc import XMLRPCServer
 
@@ -45,7 +46,19 @@ if __name__ == '__main__':
     _logger.error("Loading TorrentManager")
     tm = TorrentManager(tribler.get_session(), xmlrpc)
 
-    #test_libtorrent(tribler.get_session())
+    _logger.error("Loading DownloadManager")
+    dm = DownloadManager(tribler.get_session(), xmlrpc)
+
+    #dl_ad = dm.add_torrent(os.path.join(os.getcwdu(), "..", "data", "ad.torrent"), os.path.join(os.getcwdu(), "downloaded_videos"))
+    #dm.add_torrent(os.path.join(os.getcwdu(), "..", "data", "pone.torrent"), os.path.join(os.getcwdu(), "downloaded_videos"))
+
+    #if os.environ['ANDROID_HOST'].startswith("ANDROID"):
+    #    dm.launch_vlc(dl_ad)
+
+    #while True:
+    #    for dl in dm.get_downloads():
+    #        print dm._getDownload(dl)
+    #    time.sleep(5)
 
     _logger.error("Now running XMLRPC on http://%s:%s/tribler" % (xmlrpc._iface, xmlrpc._port))
     xmlrpc.start_server()

@@ -48,7 +48,7 @@
             android:theme="@style/Theme.VLC.Fullscreen" >
         </activity>
 
-        <service android:name="org.renpy.android.PythonService" />
+        <service android:name="org.tribler.tsap.python.PythonService" />
     </application>
 
 </manifest>

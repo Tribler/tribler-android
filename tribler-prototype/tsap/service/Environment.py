@@ -3,6 +3,9 @@ __author__ = 'user'
 import os
 
 def init_environment():
+    if 'ANDROID_HOST' in os.environ:
+        return
+
     if 'ANDROID_PRIVATE' in os.environ:
         print "We are running on android/p4a"
 

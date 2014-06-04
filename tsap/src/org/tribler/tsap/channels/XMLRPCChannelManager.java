@@ -33,13 +33,11 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * Searches the local dispersy data for channels fitting a certain query.
-	 * Once the results are found it will send them as an ArrayList<Channel> to
-	 * all observers.
+	 * Searches the local dispersy data for channels fitting a certain query. Once the results are found it will send
+	 * them as an ArrayList<Channel> to all observers.
 	 * 
 	 * @param query
-	 *            The query that Tribler will look for in the names of the
-	 *            channels
+	 *            The query that Tribler will look for in the names of the channels
 	 */
 	private void getLocal(final String query) {
 		Log.v("XMPLRCChannelManager", "Local search for \"" + query + "\" launched.");
@@ -47,35 +45,33 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				Log.v("XMPLRCChannelManager", "Local search returned.");
-				Object[] arrayResult = (Object[]) result;
-				ArrayList<Channel> resultsList = new ArrayList<Channel>();
-				Log.v("XMLRPC", "Got " + arrayResult.length + "results");
-				for (int i = 0; i < arrayResult.length; i++) {
-					@SuppressWarnings("unchecked")
-					Channel c = new Channel((Map<String, Object>) arrayResult[i]);
-					resultsList.add(c);
+				if (result != null) {
+					Object[] arrayResult = (Object[]) result;
+					ArrayList<Channel> resultsList = new ArrayList<Channel>();
+					Log.v("XMLRPC", "Got " + arrayResult.length + "results");
+					for (int i = 0; i < arrayResult.length; i++) {
+						@SuppressWarnings("unchecked")
+						Channel c = new Channel((Map<String, Object>) arrayResult[i]);
+						resultsList.add(c);
+					}
+					mAdapter.addNew(resultsList);
+					// Map<String, Object> firstResult = (Map<String, Object>)
+					// arrayResult[0];
+					// Log.v("XMPLRCChannelManager", "KeySet: " +
+					// firstResult.keySet());
 				}
-				mAdapter.addNew(resultsList);
-				mAdapter.addNew(resultsList);
-				// Map<String, Object> firstResult = (Map<String, Object>)
-				// arrayResult[0];
-				// Log.v("XMPLRCChannelManager", "KeySet: " +
-				// firstResult.keySet());
 			}
 		};
 		task.execute(mClient, "channels.get_local", query);
 	}
 
 	/**
-	 * Searches the remote dispersy data for channels fitting a certain query.
-	 * If there are enough peers for a search it will send true to all
-	 * observers, else it will send false. The results can be retrieved by
-	 * calling getRemoteResults(). The amount of found results can be retrieved
-	 * by calling getRemoteResultsCount().
+	 * Searches the remote dispersy data for channels fitting a certain query. If there are enough peers for a search it
+	 * will send true to all observers, else it will send false. The results can be retrieved by calling
+	 * getRemoteResults(). The amount of found results can be retrieved by calling getRemoteResultsCount().
 	 * 
 	 * @param query
-	 *            The query that Tribler will look for in the names of the
-	 *            channels
+	 *            The query that Tribler will look for in the names of the channels
 	 */
 	private void searchRemote(final String query) {
 		Log.v("XMPLRCChannelManager", "Remote search for \"" + query + "\" launched.");
@@ -83,11 +79,13 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				Log.v("XMPLRCChannelManager", "Remote search returned.");
-				Boolean hasPeers = (Boolean) result;
-				if (hasPeers) {
-					Log.v("XMLRPC", "Looking for query " + query + " across peers.");
-				} else {
-					Log.v("XMLRPC", "Not enough peers found for query " + query + ".");
+				if (result != null) {
+					Boolean hasPeers = (Boolean) result;
+					if (hasPeers) {
+						Log.v("XMLRPC", "Looking for query " + query + " across peers.");
+					} else {
+						Log.v("XMLRPC", "Not enough peers found for query " + query + ".");
+					}
 				}
 			}
 		};
@@ -95,17 +93,18 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * It will send an Integer to all observers describing the amount of found
-	 * results.
+	 * It will send an Integer to all observers describing the amount of found results.
 	 */
-	public void getRemoteResultsCount() {
+	private void getRemoteResultsCount() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Integer count = (Integer) result;
-				if (count > mLastFoundResultsCount) {
-					mLastFoundResultsCount = count;
-					getRemoteResults();
+				if (result != null) {
+					Integer count = (Integer) result;
+					if (count > mLastFoundResultsCount) {
+						mLastFoundResultsCount = count;
+						getRemoteResults();
+					}
 				}
 			}
 		};
@@ -113,20 +112,22 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * It will send an ArrayList<Channel> all observers containing the found
-	 * channels.
+	 * It will send an ArrayList<Channel> all observers containing the found channels.
 	 */
-	public void getRemoteResults() {
+	private void getRemoteResults() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Object[] arrayResult = (Object[]) result;
-				ArrayList<Channel> resultsList = new ArrayList<Channel>();
-				Log.v("XMLRPC", "Got " + arrayResult.length + " results");
-				for (int i = 0; i < arrayResult.length; i++) {
-					@SuppressWarnings("unchecked")
-					Channel c = new Channel((Map<String, Object>) arrayResult[i]);
-					resultsList.add(c);
+				if (result != null) {
+					Object[] arrayResult = (Object[]) result;
+					ArrayList<Channel> resultsList = new ArrayList<Channel>();
+					Log.v("XMLRPC", "Got " + arrayResult.length + " results");
+					for (int i = 0; i < arrayResult.length; i++) {
+						@SuppressWarnings("unchecked")
+						Channel c = new Channel((Map<String, Object>) arrayResult[i]);
+						resultsList.add(c);
+					}
+					mAdapter.addNew(resultsList);
 				}
 			}
 		};
@@ -134,9 +135,8 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * Launches a search in both the local and the remote Dispersy databases. It
-	 * also removes the current values from the list. Once search results are
-	 * found, new values are added.
+	 * Launches a search in both the local and the remote Dispersy databases. It also removes the current values from
+	 * the list. Once search results are found, new values are added.
 	 * 
 	 * @param query
 	 *            the query to look for in the database
@@ -155,6 +155,6 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	@Override
 	public void update(Observable observable, Object data) {
 		getRemoteResultsCount();
-		//Log.i("ChannelPoll","Log");
+		// Log.i("ChannelPoll","Log");
 	}
 }

@@ -27,21 +27,23 @@ public abstract class AbstractXMLRPCManager implements Observer {
 	 */
 	public AbstractXMLRPCManager(URL url) {
 		mClient = new XMLRPCClient(url);
-		// logAvailableFunctions();
+		logAvailableFunctions();
 	}
 
 	/**
 	 * Retrieves all functions that are callable with XMLRPC and writes them to
 	 * the log
 	 */
-	public void logAvailableFunctions() {
+	private void logAvailableFunctions() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Object[] arrayResult = (Object[]) result;
-				Log.i("XMLRPC", "Listing available functions");
-				for (int i = 0; i < arrayResult.length; i++) {
-					Log.i("XMLRPC", "    " + (String) arrayResult[i]);
+				if (result != null) {
+					Object[] arrayResult = (Object[]) result;
+					Log.i("XMLRPC", "Listing available functions");
+					for (int i = 0; i < arrayResult.length; i++) {
+						Log.i("XMLRPC", "    " + (String) arrayResult[i]);
+					}
 				}
 			}
 		};

@@ -15,7 +15,7 @@ public class ChannelTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mChannel = new Channel("Test channel", false, 105, 4, "fff");
+		mChannel = new Channel("Test channel", false, 105, 4, "fff", "Description");
 	}
 
 	/**

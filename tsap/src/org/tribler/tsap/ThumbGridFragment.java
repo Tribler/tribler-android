@@ -78,32 +78,9 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		try {
 			mTorrentManager = new XMLRPCTorrentManager(new URL("http://localhost:8000/tribler"), mThumbAdapter);
 		} catch (MalformedURLException e) {
-			Log.e("ThumbGridFragment", "URL was malformed.\n" + e.getStackTrace());
+			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}
 		return v;
-	}
-
-	/**
-	 * Starts/resumes polling for search results.
-	 */
-	@Override
-	public void onResume() {
-		super.onResume();
-		mTorrentManager.startPolling();
-		Log.i("ThumbGridFragment","Started polling");
-	}
-
-	/**
-	 * Removes the search menu item so that the app doesn't crash when selecting
-	 * the channel list fragment from the navigation drawer. And pauses the
-	 * polling for search results.
-	 */
-	@Override
-	public void onPause() {
-		menu.removeItem(R.id.action_search_thumbgrid);
-		super.onPause();
-		mTorrentManager.stopPolling();
-		Log.i("ThumbGridFragment","Stopped polling");
 	}
 
 	/**
@@ -129,8 +106,19 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	}
 
 	/**
-	 * Adds thumb grid fragment specific options to the options menu and stores
-	 * the menu. In this case, the search action is added and enabled.
+	 * Removes the search menu item so that the app doesn't crash when selecting the channel list fragment from the
+	 * navigation drawer.
+	 */
+	@Override
+	public void onPause() {
+		if (menu != null)
+			menu.removeItem(R.id.action_search_thumbgrid);
+		super.onPause();
+	}
+
+	/**
+	 * Adds thumb grid fragment specific options to the options menu and stores the menu. In this case, the search
+	 * action is added and enabled.
 	 * 
 	 * @param menu
 	 *            The menu that will be created
@@ -182,13 +170,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	}
 
 	/**
-	 * Filters the items in the grid according to the query and show a dialog
-	 * showing the submitted query
+	 * Filters the items in the grid according to the query and show a dialog showing the submitted query
 	 * 
 	 * @param query
 	 *            The query that the user has typed in the search field
-	 * @return True iff the action belonging to submitting a query has been
-	 *         processed correctly
+	 * @return True iff the action belonging to submitting a query has been processed correctly
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {

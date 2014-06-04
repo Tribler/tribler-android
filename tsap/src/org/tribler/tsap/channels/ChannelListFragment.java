@@ -38,7 +38,7 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(), R.layout.list_item);
+		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(), R.layout.channel_list_item);
 
 		this.setListAdapter(adapter);
 

@@ -1,6 +1,7 @@
 package org.tribler.tsap;
 
 import org.tribler.tsap.channels.ChannelListFragment;
+import org.tribler.tsap.downloads.DownloadListFragment;
 import org.videolan.vlc.VLCApplication;
 
 import android.app.ActionBar;
@@ -26,7 +27,8 @@ public class MainActivity extends Activity implements
 	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
-	private ChannelListFragment channelFragment = new ChannelListFragment();
+	private ChannelListFragment mChannelFragment = new ChannelListFragment();
+	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
 
 
 	/**
@@ -79,8 +81,13 @@ public class MainActivity extends Activity implements
 			break;
 		case 1:
 			fragmentManager.beginTransaction()
-					.replace(R.id.container, channelFragment).commit();
+					.replace(R.id.container, mChannelFragment).commit();
 			mTitle = getString(R.string.title_section_channels);
+			break;
+		case 2:
+			fragmentManager.beginTransaction()
+					.replace(R.id.container, mDownloadFragment).commit();
+			mTitle = getString(R.string.title_section_downloads);
 			break;
 		}
 	}
@@ -142,7 +149,7 @@ public class MainActivity extends Activity implements
 	 * @return This Activity's ChannelListFragment instance
 	 */
 	public ChannelListFragment getChannelListFragment() {
-		return channelFragment;
+		return mChannelFragment;
 	}
 
 	/**
@@ -152,5 +159,14 @@ public class MainActivity extends Activity implements
 	 */
 	public ThumbGridFragment getThumbGridFragment() {
 		return mThumbGridFragment;
+	}
+	
+	/**
+	 * Returns the instance of the DownloadListFragment
+	 * 
+	 * @return This Activity's DownloadListFragment instance
+	 */
+	public DownloadListFragment getDownloadListFragment() {
+		return mDownloadFragment;
 	}
 }

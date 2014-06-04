@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip" 
+    android:descendantFocusability="blocksDescendants">
+
+    <CheckBox
+        android:id="@+id/download_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:maxLines="1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="6dip"/>
+    
+    <TextView
+        android:id="@+id/download_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toRightOf="@id/download_toggle"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:ellipsize="marquee"
+        android:text="Gave torrent"/>
+
+    <TextView
+        android:id="@+id/download_torrent_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/download_toggle"
+        android:layout_marginRight="6dip"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textSize="13sp"
+        android:text="Size: 1025MB"/>
+</RelativeLayout> 

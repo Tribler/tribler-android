@@ -1,4 +1,4 @@
-package org.tribler.tsap.python;
+package org.renpy.android;
 
 import android.app.Service;
 import android.os.IBinder;

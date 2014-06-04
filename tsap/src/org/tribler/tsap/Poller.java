@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.os.Handler;
+import android.util.Log;
 
 /**
  * Polling class that calls the update function of it's observer with a constant
@@ -25,6 +26,7 @@ public class Poller extends Observable implements Runnable {
 	 */
 	public Poller(Observer observer) {
 		mObserver = observer;
+		this.addObserver(observer);
 	}
 
 	/**

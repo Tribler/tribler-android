@@ -54,6 +54,7 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 	{
 		super.onResume();
 		mChannelManager.startPolling();
+		Log.i("ChannelListFragment","Started polling");
 	}
 	
 	@Override
@@ -61,6 +62,7 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 	{
 		super.onPause();
 		mChannelManager.stopPolling();
+		Log.i("ChannelListFragment","Stopped polling");
 	}
 
 	/**

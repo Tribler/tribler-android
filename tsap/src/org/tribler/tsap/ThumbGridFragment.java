@@ -78,7 +78,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		try {
 			mTorrentManager = new XMLRPCTorrentManager(new URL("http://localhost:8000/tribler"), mThumbAdapter);
 		} catch (MalformedURLException e) {
-			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
+			Log.e("ThumbGridFragment", "URL was malformed.\n" + e.getStackTrace());
 		}
 		return v;
 	}
@@ -90,6 +90,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	public void onResume() {
 		super.onResume();
 		mTorrentManager.startPolling();
+		Log.i("ThumbGridFragment","Started polling");
 	}
 
 	/**
@@ -102,6 +103,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		menu.removeItem(R.id.action_search_thumbgrid);
 		super.onPause();
 		mTorrentManager.stopPolling();
+		Log.i("ThumbGridFragment","Stopped polling");
 	}
 
 	/**

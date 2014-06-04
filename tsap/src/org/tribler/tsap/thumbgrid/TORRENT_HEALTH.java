@@ -5,7 +5,7 @@ import android.graphics.Color;
 /**
  * Enumerator of the possible healths of a torrent
  * 
- * @author Wendo Sabéé
+ * @author Wendo Sabée
  */
 public enum TORRENT_HEALTH {
 	UNKNOWN, RED, YELLOW, GREEN;

@@ -146,5 +146,6 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager{
 	@Override
 	public void update(Observable observable, Object data) {
 		getRemoteResultsCount();
+		//Log.i("TorrentPoll","Log");
 	}
 }

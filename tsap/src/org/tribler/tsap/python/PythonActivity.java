@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.R;
 
 import android.app.Activity;
@@ -182,7 +183,7 @@ public class PythonActivity extends Activity implements Runnable {
 
 		start_service("PythonService", "Service running python code", "");
 		Log.d(TAG, "Service started");
-		startActivity(new Intent(this, org.unpackertest.MainActivity.class));
+		startActivity(new Intent(this, MainActivity.class));
 	}
 
 	@Override

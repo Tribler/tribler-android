@@ -72,6 +72,9 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 
 		// Set the swiping mode to horizontal (the default is vertical)
 		appViews.setAsHorizontalList();
+		
+		// Scroll the apps list until TSAP appears
+		appViews.scrollTextIntoView("TSAP");
 
 		// Create a UiSelector to find the TSAP app and simulate
 		// a user click to launch the app.

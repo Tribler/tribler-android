@@ -30,7 +30,7 @@ class XMLRPCChannelManager {
 	 * @param url
 	 *            The url of the XMLRPC server
 	 */
-	XMLRPCChannelManager(URL url, ChannelListAdapter adapter) {
+	public XMLRPCChannelManager(URL url, ChannelListAdapter adapter) {
 		mClient = new XMLRPCClient(url);
 		logAvailableFunctions();
 		mAdapter = adapter;
@@ -60,10 +60,12 @@ class XMLRPCChannelManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Object[] arrayResult = (Object[]) result;
-				Log.i("XMLRPC", "Listing available functions");
-				for (int i = 0; i < arrayResult.length; i++) {
-					Log.i("XMLRPC", "    " + (String) arrayResult[i]);
+				if (result != null) {
+					Object[] arrayResult = (Object[]) result;
+					Log.i("XMLRPC", "Listing available functions");
+					for (int i = 0; i < arrayResult.length; i++) {
+						Log.i("XMLRPC", "    " + (String) arrayResult[i]);
+					}
 				}
 			}
 		};
@@ -86,16 +88,18 @@ class XMLRPCChannelManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				Log.v("XMPLRCChannelManager", "Local search returned.");
-				Object[] arrayResult = (Object[]) result;
-				ArrayList<Channel> resultsList = new ArrayList<Channel>();
-				Log.v("XMLRPC", "Got " + arrayResult.length + "results");
-				for (int i = 0; i < arrayResult.length; i++) {
-					@SuppressWarnings("unchecked")
-					Channel c = new Channel(
-							(Map<String, Object>) arrayResult[i]);
-					resultsList.add(c);
+				if (result != null) {
+					Object[] arrayResult = (Object[]) result;
+					ArrayList<Channel> resultsList = new ArrayList<Channel>();
+					Log.v("XMLRPC", "Got " + arrayResult.length + "results");
+					for (int i = 0; i < arrayResult.length; i++) {
+						@SuppressWarnings("unchecked")
+						Channel c = new Channel(
+								(Map<String, Object>) arrayResult[i]);
+						resultsList.add(c);
+					}
+					mAdapter.addNew(resultsList);
 				}
-				mAdapter.addNew(resultsList);
 			}
 		};
 		task.execute(mClient, "channels.get_local", query);
@@ -119,13 +123,15 @@ class XMLRPCChannelManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				Log.v("XMPLRCChannelManager", "Remote search returned.");
-				Boolean hasPeers = (Boolean) result;
-				if (hasPeers) {
-					Log.v("XMLRPC", "Looking for query " + query
-							+ " across peers.");
-				} else {
-					Log.v("XMLRPC", "Not enough peers found for query " + query
-							+ ".");
+				if (result != null) {
+					Boolean hasPeers = (Boolean) result;
+					if (hasPeers) {
+						Log.v("XMLRPC", "Looking for query " + query
+								+ " across peers.");
+					} else {
+						Log.v("XMLRPC", "Not enough peers found for query "
+								+ query + ".");
+					}
 				}
 			}
 		};
@@ -140,10 +146,12 @@ class XMLRPCChannelManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Integer count = (Integer) result;
-				if (count > mLastFoundResultsCount) {
-					mLastFoundResultsCount = count;
-					getRemoteResults();
+				if (result != null) {
+					Integer count = (Integer) result;
+					if (count > mLastFoundResultsCount) {
+						mLastFoundResultsCount = count;
+						getRemoteResults();
+					}
 				}
 			}
 		};
@@ -158,16 +166,18 @@ class XMLRPCChannelManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Object[] arrayResult = (Object[]) result;
-				ArrayList<Channel> resultsList = new ArrayList<Channel>();
-				Log.v("XMLRPC", "Got " + arrayResult.length + " results");
-				for (int i = 0; i < arrayResult.length; i++) {
-					@SuppressWarnings("unchecked")
-					Channel c = new Channel(
-							(Map<String, Object>) arrayResult[i]);
-					resultsList.add(c);
+				if (result != null) {
+					Object[] arrayResult = (Object[]) result;
+					ArrayList<Channel> resultsList = new ArrayList<Channel>();
+					Log.v("XMLRPC", "Got " + arrayResult.length + " results");
+					for (int i = 0; i < arrayResult.length; i++) {
+						@SuppressWarnings("unchecked")
+						Channel c = new Channel(
+								(Map<String, Object>) arrayResult[i]);
+						resultsList.add(c);
+					}
+					mAdapter.addNew(resultsList);
 				}
-				mAdapter.addNew(resultsList);
 			}
 		};
 		task.execute(mClient, "channels.get_remote_results");

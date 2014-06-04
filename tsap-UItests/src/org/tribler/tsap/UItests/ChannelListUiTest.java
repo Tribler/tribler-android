@@ -326,7 +326,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 				new UiSelector().description("navigation_drawer"));
 		if (!navDrawer.exists()) {
 			UiObject upButton = new UiObject(
-					new UiSelector().descriptionContains("navigation drawer"));
+					new UiSelector().description("Navigate up"));
 			upButton.click();
 		}
 

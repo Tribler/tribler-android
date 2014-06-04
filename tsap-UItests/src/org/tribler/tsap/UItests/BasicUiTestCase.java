@@ -62,7 +62,7 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 		UiObject appsTab = new UiObject(new UiSelector().text("Apps"));
 
 		// Simulate a click to enter the Apps tab.
-		appsTab.click();
+		appsTab.clickAndWaitForNewWindow();
 
 		// Next, in the apps tabs, we can simulate a user swiping until
 		// they come to the TSAP app icon. Since the container view

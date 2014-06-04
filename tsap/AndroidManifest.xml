@@ -7,24 +7,36 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="19" />
+
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="wakelock"
+            android:value="0" />
+
         <activity
-            android:name="org.tribler.tsap.MainActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation|screenSize" >
+            android:name="org.tribler.tsap.python.PythonActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="org.tribler.tsap.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="org.tribler.tsap.ChannelActivity"
@@ -35,6 +47,8 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.VLC.Fullscreen" >
         </activity>
+
+        <service android:name="org.renpy.android.PythonService" />
     </application>
 
 </manifest>

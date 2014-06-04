@@ -1,7 +1,5 @@
 package org.tribler.tsap.UItests;
 
-import org.junit.Ignore;
-
 import android.os.RemoteException;
 
 import com.android.uiautomator.core.UiCollection;
@@ -54,8 +52,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListContainsItems() throws RemoteException,
+	public void ignoreTestListContainsItems() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -70,8 +67,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemProperties() throws RemoteException,
+	public void ignoreTestListItemProperties() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -91,8 +87,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemCheckbox() throws RemoteException,
+	public void ignoreTestListItemCheckbox() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -115,8 +110,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemTitle() throws RemoteException,
+	public void ignoreTestListItemTitle() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -139,8 +133,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemTorrents() throws RemoteException,
+	public void ignoreTestListItemTorrents() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -166,8 +159,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemRatingFirstStar() throws RemoteException,
+	public void ignoreTestListItemRatingFirstStar() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -189,8 +181,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemRatingSecondStar() throws RemoteException,
+	public void ignoreTestListItemRatingSecondStar() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -212,8 +203,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemRatingThirdStar() throws RemoteException,
+	public void ignoreTestListItemRatingThirdStar() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -235,8 +225,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemRatingFourthStar() throws RemoteException,
+	public void ignoreTestListItemRatingFourthStar() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 
@@ -258,8 +247,7 @@ public class ChannelListUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	@Ignore("Can't be run before app is one .apk (as channel list is otherwise empty")
-	public void testListItemRatingFifthStar() throws RemoteException,
+	public void ignoreTestListItemRatingFifthStar() throws RemoteException,
 			UiObjectNotFoundException {
 		openChannelList();
 

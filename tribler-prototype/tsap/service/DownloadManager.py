@@ -115,14 +115,14 @@ class DownloadManager():
         assert os.environ['ANDROID_HOST'].startswith("ANDROID")
         from vlcutil import launchVLC
 
-        MINIMAL_DOWNLOAD_PROGRESS = 0.15
+        MINIMAL_DOWNLOAD_PROGRESS = 0.10
 
         vlcurl = "http://127.0.0.1:%s/%s/0" % (self._session.get_videoplayer_port(), binascii.hexlify(dl.tdef.get_infohash()))
 
         print ">>>>>>>>>>>>>>> Listening on %s" % vlcurl
 
         while dl.get_progress() < MINIMAL_DOWNLOAD_PROGRESS:
-            print "DL Progress %s < %s.." % (MINIMAL_DOWNLOAD_PROGRESS, dl.get_progress())
+            print "DL Progress %s > %s not met yet.." % (dl.get_progress(), MINIMAL_DOWNLOAD_PROGRESS)
             print self._getDownload(dl)
             time.sleep(5)
 

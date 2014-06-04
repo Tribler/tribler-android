@@ -119,7 +119,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	 */
 	@Override
 	public void onPause() {
-		menu.removeItem(R.id.action_search_thumbgrid);
+		if (menu != null)
+			menu.removeItem(R.id.action_search_thumbgrid);
 		super.onPause();
 	}
 

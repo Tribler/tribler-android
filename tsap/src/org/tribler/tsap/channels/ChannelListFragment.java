@@ -1,9 +1,15 @@
-package org.tribler.tsap;
+package org.tribler.tsap.channels;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.tribler.tsap.R;
 
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,15 +19,15 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
- * Fragment that shows a list of available channels and handles its behaviour
+ * Fragment that shows a list of available channels and handles its behavior
  * 
  * @author Dirk Schut
  */
 public class ChannelListFragment extends ListFragment implements
-		OnQueryTextListener {
+		OnQueryTextListener{
+	private XMLRPCChannelManager mChannelManager = null;
 
 	/**
 	 * Initializes the channel adapter
@@ -34,16 +40,18 @@ public class ChannelListFragment extends ListFragment implements
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		// storing string resources into Array
-		String[] channelNames = getResources().getStringArray(
-				R.array.channelNames);
-
 		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(),
 				R.layout.list_item);
-		for (int i = 0; i < channelNames.length; i++) {
-			adapter.add(new Channel(channelNames[i]));
-		}
+
 		this.setListAdapter(adapter);
+
+		try {
+			mChannelManager = new XMLRPCChannelManager(new URL(
+					"http://localhost:8000/tribler"), (ChannelListAdapter)getListAdapter());
+		} catch (MalformedURLException e) {
+			Log.e("ChannelListFragment",
+					"URL was malformed.\n" + e.getStackTrace());
+		}
 	}
 
 	/**
@@ -119,7 +127,7 @@ public class ChannelListFragment extends ListFragment implements
 		// Called when the action bar search text has changed. Update
 		// the search filter, and restart the loader to do a new query
 		// with this filter.
-		((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
+		// ((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
 		return true;
 	}
 
@@ -134,9 +142,7 @@ public class ChannelListFragment extends ListFragment implements
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		((ChannelListAdapter) getListAdapter()).getFilter().filter(query);
-		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
-		// Don't care about this.
+		mChannelManager.search(query);
 		return true;
 	}
 }

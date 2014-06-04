@@ -6,7 +6,7 @@ echo "Copy new Tribler code.."
 cp -r tribler/Tribler Tribler-0.1.0/
 
 echo "Remove pyc, pyo and file.ext~ files.."
-pushd Tribler-0.1.0/Tribler
+pushd Tribler-0.1.0
 find -name '*.pyc' -exec rm {} \;
 find -name '*.pyo' -exec rm {} \;
 find -name '*~' -exec rm {} \;

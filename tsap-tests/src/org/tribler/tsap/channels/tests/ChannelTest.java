@@ -1,7 +1,7 @@
-package org.tribler.tsap.tests;
+package org.tribler.tsap.channels.tests;
 
 import junit.framework.TestCase;
-import org.tribler.tsap.Channel;
+import org.tribler.tsap.channels.Channel;
 
 /**
  * Unit tests for the Channel class
@@ -15,7 +15,7 @@ public class ChannelTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mChannel = new Channel("Test channel", false, 105, 4);
+		mChannel = new Channel("Test channel", false, 105, 4, "fff");
 	}
 
 	/**
@@ -34,6 +34,7 @@ public class ChannelTest extends TestCase {
 		assertEquals("getTorrentAmount() incorrect", 105,
 				mChannel.getTorrentAmount());
 		assertEquals("getRating() incorrect", 4, mChannel.getRating());
+		assertEquals("getDispersyCid() incorrect", "fff", mChannel.getDispersyCid());
 	}
 
 	/**

@@ -1,7 +1,10 @@
 package org.tribler.tsap;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
+import org.tribler.tsap.thumbgrid.XMLRPCTorrentManager;
 import org.tribler.tsap.thumbgrid.ThumbAdapter;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.tribler.tsap.videoInfoScreen.TorrentManager;
@@ -10,6 +13,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +34,9 @@ import android.widget.Toast;
  */
 public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
+	private XMLRPCTorrentManager mTorrentManager = null;
+	private ThumbAdapter mThumbAdapter;
+	int mLastFoundResultAmount = 0;
 	// stores the menu handler to remove the search item in onPause()
 	private Menu menu;
 
@@ -43,6 +50,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+
 	}
 
 	/**
@@ -67,10 +75,17 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
 		ArrayList<ThumbItem> gridArray = TorrentManager.getInstance()
 				.getThumbItems();
-		ThumbAdapter customThumbs = new ThumbAdapter(container.getContext(),
+		mThumbAdapter = new ThumbAdapter(container.getContext(),
 				R.layout.thumb_grid_item, gridArray);
-		gridView.setAdapter(customThumbs);
+		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
+		try {
+			mTorrentManager = new XMLRPCTorrentManager(new URL(
+					"http://localhost:8000/tribler"), mThumbAdapter);
+		} catch (MalformedURLException e) {
+			Log.e("ChannelListFragment",
+					"URL was malformed.\n" + e.getStackTrace());
+		}
 		return v;
 	}
 
@@ -104,7 +119,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	 */
 	@Override
 	public void onPause() {
-		menu.removeItem(R.id.action_search_thumbgrid);
+		if (menu != null)
+			menu.removeItem(R.id.action_search_thumbgrid);
 		super.onPause();
 	}
 
@@ -156,9 +172,9 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		// Called when the action bar search text has changed. Update
 		// the search filter, and restart the loader to do a new query
 		// with this filter.
-		GridView gridView = (GridView) this.getView().findViewById(
-				R.id.ThumbsGrid);
-		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
+		// GridView gridView = (GridView)
+		// this.getView().findViewById(R.id.ThumbsGrid);
+		// ((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		return true;
 	}
 
@@ -173,12 +189,13 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		GridView gridView = (GridView) this.getView().findViewById(
-				R.id.ThumbsGrid);
-		((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
+		// GridView gridView = (GridView) this.getView().findViewById(
+		// R.id.ThumbsGrid);
+		// ((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+		mLastFoundResultAmount = 0;
+		mTorrentManager.search(query);
 		// Don't care about this.
 		return true;
 	}
-
 }

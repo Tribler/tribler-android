@@ -1,5 +1,6 @@
-package org.tribler.tsap;
+package org.tribler.tsap.channels;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -12,6 +13,7 @@ public class Channel {
 	private boolean following;
 	private int torrentAmount;
 	private int rating;
+	private String dispersyCid;
 
 	/**
 	 * Constructor: initialize the instance variables to the values of the
@@ -25,12 +27,16 @@ public class Channel {
 	 *            The number of torrents in this channel
 	 * @param rating
 	 *            The rating of this channel
+	 * @param dispersyCid
+	 *            Id internally used by Dispersy
 	 */
-	public Channel(String name, boolean following, int torrentAmount, int rating) {
+	public Channel(String name, boolean following, int torrentAmount,
+			int rating, String dispersyCid) {
 		this.name = name;
 		this.following = following;
 		this.torrentAmount = torrentAmount;
 		this.rating = rating;
+		this.dispersyCid = dispersyCid;
 	}
 
 	/**
@@ -46,6 +52,23 @@ public class Channel {
 		this.following = rand.nextBoolean();
 		this.torrentAmount = rand.nextInt(10000);
 		this.rating = rand.nextInt(6);
+		this.dispersyCid = "" + rand.nextInt() + rand.nextInt()
+				+ rand.nextInt() + rand.nextInt() + rand.nextInt();
+	}
+
+	/**
+	 * Constructor: creates a channel with data from dictionary from XMLRPC
+	 * 
+	 * @param XMLRPCdictionary
+	 *            The dictionary returned from aXMLRPC
+	 */
+	public Channel(Map<String, Object> XMLRPCdictionary) {
+		// TODO: load actual data
+		this.name = (String) XMLRPCdictionary.get("name");
+		this.following = false;
+		this.torrentAmount = (Integer) XMLRPCdictionary.get("nr_torrent");
+		this.rating = 0;
+		this.dispersyCid = (String) XMLRPCdictionary.get("dispersy_cid");
 	}
 
 	/**
@@ -91,5 +114,26 @@ public class Channel {
 	 */
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * Returns if two channels are equal by comparing their dispersyCid
+	 * 
+	 * @param other
+	 *            Another Object. If this object is not another channel, false
+	 *            is always returned.
+	 */
+	public boolean equals(Object other) {
+		if (other instanceof Channel)
+			return dispersyCid.equals(((Channel) other).dispersyCid);
+		else
+			return false;
+	}
+
+	/**
+	 * Returns the DispersyCid
+	 */
+	public String getDispersyCid() {
+		return dispersyCid;
 	}
 }

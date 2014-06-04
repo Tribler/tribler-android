@@ -62,7 +62,7 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 		UiObject appsTab = new UiObject(new UiSelector().text("Apps"));
 
 		// Simulate a click to enter the Apps tab.
-		appsTab.click();
+		appsTab.clickAndWaitForNewWindow();
 
 		// Next, in the apps tabs, we can simulate a user swiping until
 		// they come to the TSAP app icon. Since the container view
@@ -72,11 +72,13 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 
 		// Set the swiping mode to horizontal (the default is vertical)
 		appViews.setAsHorizontalList();
+		
+		// Scroll the apps list until TSAP appears
+		appViews.scrollTextIntoView("TSAP");
 
 		// Create a UiSelector to find the TSAP app and simulate
 		// a user click to launch the app.
-		UiObject tsapApp = appViews.getChildByText(new UiSelector()
-				.className(android.widget.TextView.class.getName()), "TSAP");
+		UiObject tsapApp = appViews.getChild(new UiSelector().text("TSAP"));
 		tsapApp.clickAndWaitForNewWindow();
 		
 		// Set the rotation to normal (=portrait mode)

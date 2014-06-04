@@ -43,7 +43,6 @@ public class ChannelListUiTest extends BasicUiTestCase {
 		UiObject list = new UiObject(
 				new UiSelector().className("android.widget.ListView"));
 		assertTrue("List isn't clickable", list.isClickable());
-		assertTrue("List isn't scrollable", list.isScrollable());
 	}
 
 	/**

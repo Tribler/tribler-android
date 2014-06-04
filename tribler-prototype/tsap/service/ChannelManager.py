@@ -25,8 +25,9 @@ from Tribler.community.allchannel.community import AllChannelCommunity
 
 from Tribler.Core.Search.SearchManager import split_into_keywords
 
-from Tribler.community.channel.community import ChannelCommunity, \
-    forceDispersyThread, forcePrioDispersyThread, warnDispersyThread
+from Tribler.community.channel.community import ChannelCommunity
+from Tribler.dispersy.util import call_on_reactor_thread
+
 
 class ChannelManager():
     # Code to make this a singleton

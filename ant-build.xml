@@ -82,7 +82,7 @@
     <property name="manifestmerger.enabled" value="false" />
 
     <!-- instrumentation options -->
-    <property name="emma.filter" value="-org.renpy.android.* -org.xeustechnologies.jtar.*" />
+    <property name="emma.filter" value="" />
 
     <!-- Verbosity -->
     <property name="verbose" value="false" />
@@ -759,7 +759,7 @@
                                instrpath="${out.absolute.dir}/classes"
                                outdir="${out.absolute.dir}/classes"
                                metadatafile="${emma.coverage.absolute.file}">
-                            <filter excludes="${emma.default.filter}" />
+                            <filter excludes="${emma.default.filter}, org.renpy.android.*, org.xeustechnologies.jtar.*" />
                             <filter value="${emma.filter}" />
                         </instr>
                     </emma>

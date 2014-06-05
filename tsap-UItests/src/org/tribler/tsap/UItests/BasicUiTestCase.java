@@ -1,7 +1,9 @@
 package org.tribler.tsap.UItests;
 
 import android.os.RemoteException;
+import android.widget.TextView;
 
+import com.android.uiautomator.core.UiCollection;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
@@ -74,11 +76,13 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 		appViews.setAsHorizontalList();
 		
 		// Scroll the apps list until TSAP appears
-		appViews.scrollTextIntoView("TSAP");
+//		appViews.scrollTextIntoView("TSAP");
 
 		// Create a UiSelector to find the TSAP app and simulate
 		// a user click to launch the app.
-		UiObject tsapApp = appViews.getChild(new UiSelector().text("TSAP"));
+		UiObject tsapApp = appViews.getChildByText(new UiSelector().className("android.widget.TextView"), "TSAP",true);
+//		UiObject tsapApp = appViews.getChild(new UiSelector().text("TSAP"));
+//		UiCollection apps = appViews.getChild(new UiSelector().className("android.widget.TextView"));
 		tsapApp.clickAndWaitForNewWindow();
 		
 		// Set the rotation to normal (=portrait mode)

@@ -48,6 +48,9 @@ local.properties
 .loadpath
 tests/.classpath
 
+# javadoc
+tsap/doc/*
+
 # Meld files
 *.orig
 
@@ -62,4 +65,3 @@ tests/.classpath
 *~
 lint-results.xml
 junitreports/
-

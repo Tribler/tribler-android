@@ -1,13 +1,12 @@
-package org.tribler.tsap;
+package org.tribler.tsap.thumbgrid;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.tribler.tsap.thumbgrid.XMLRPCTorrentManager;
-import org.tribler.tsap.thumbgrid.ThumbAdapter;
-import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.R;
 import org.tribler.tsap.videoInfoScreen.TorrentManager;
+import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;

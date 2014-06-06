@@ -183,6 +183,13 @@ class XMLRPCChannelManager {
 		task.execute(mClient, "channels.get_remote_results");
 	}
 
+	/**
+	 * Starts a search on both the local and the remote dispersy databases. Once
+	 * results are found they will be added to the ChannelListAdapter.
+	 * 
+	 * @param query
+	 *            The keywords to search for
+	 */
 	public void search(String query) {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();

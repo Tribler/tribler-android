@@ -21,7 +21,7 @@ import android.widget.TextView;
 public class ChannelListAdapter extends AbstractArrayListAdapter<Channel> {
 	protected int resource;
 	protected LayoutInflater inflater;
-	
+
 	/**
 	 * Constructor: initializes the instance variables
 	 * 

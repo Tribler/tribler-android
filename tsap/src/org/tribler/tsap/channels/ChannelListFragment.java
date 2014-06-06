@@ -26,7 +26,7 @@ import android.widget.TextView;
  * @author Dirk Schut
  */
 public class ChannelListFragment extends ListFragment implements
-		OnQueryTextListener{
+		OnQueryTextListener {
 	private XMLRPCChannelManager mChannelManager = null;
 
 	/**
@@ -47,7 +47,8 @@ public class ChannelListFragment extends ListFragment implements
 
 		try {
 			mChannelManager = new XMLRPCChannelManager(new URL(
-					"http://localhost:8000/tribler"), (ChannelListAdapter)getListAdapter());
+					"http://localhost:8000/tribler"),
+					(ChannelListAdapter) getListAdapter());
 		} catch (MalformedURLException e) {
 			Log.e("ChannelListFragment",
 					"URL was malformed.\n" + e.getStackTrace());

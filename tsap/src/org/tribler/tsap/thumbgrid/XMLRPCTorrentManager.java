@@ -14,7 +14,6 @@ import org.tribler.tsap.XMLRPCCallTask;
  * Class for receiving torrents over XMPRPC using the aXMLRPC library
  * 
  * @author Dirk Schut
- * @since 26-5-2014
  */
 public class XMLRPCTorrentManager {
 	private XMLRPCClient mClient = null;

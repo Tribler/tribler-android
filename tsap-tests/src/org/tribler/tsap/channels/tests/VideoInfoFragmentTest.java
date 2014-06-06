@@ -2,7 +2,7 @@ package org.tribler.tsap.channels.tests;
 
 import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.R;
-import org.tribler.tsap.VideoInfoFragment;
+import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;

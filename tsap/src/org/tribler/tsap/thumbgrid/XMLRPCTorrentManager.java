@@ -131,8 +131,7 @@ public class XMLRPCTorrentManager {
 	}
 
 	/**
-	 * It will send an ArrayList<Channel> all observers containing the found
-	 * torrents.
+	 * It will send an ArrayList to all observers containing the found torrents.
 	 */
 	private void getRemoteResults() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {

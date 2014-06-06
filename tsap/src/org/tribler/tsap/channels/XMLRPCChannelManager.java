@@ -74,8 +74,8 @@ class XMLRPCChannelManager {
 
 	/**
 	 * Searches the local dispersy data for channels fitting a certain query.
-	 * Once the results are found it will send them as an ArrayList<Channel> to
-	 * all observers.
+	 * Once the results are found it will send them as an ArrayList to all
+	 * observers.
 	 * 
 	 * @param query
 	 *            The query that Tribler will look for in the names of the
@@ -159,7 +159,7 @@ class XMLRPCChannelManager {
 	}
 
 	/**
-	 * It will send an ArrayList<Channel> all observers containing the found
+	 * It will send an ArrayList all observers containing the found
 	 * channels.
 	 */
 	private void getRemoteResults() {

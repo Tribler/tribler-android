@@ -45,7 +45,7 @@ public class ChannelListAdapter extends AbstractArrayListAdapter<Channel> {
 	 *            The context of this adapter
 	 * @param resource
 	 *            The resource id of the layout
-	 * @param content
+	 * @param initialContent
 	 *            The data to fill the list with
 	 */
 	public ChannelListAdapter(Context context, int resource,

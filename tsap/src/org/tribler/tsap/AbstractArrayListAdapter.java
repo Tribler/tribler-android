@@ -74,8 +74,8 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	/**
 	 * Returns the Id of the item at a certain position.
 	 * 
-	 * @param the
-	 *            position
+	 * @param position
+	 *            the position to retrieve the item from
 	 */
 	@Override
 	public long getItemId(int position) {

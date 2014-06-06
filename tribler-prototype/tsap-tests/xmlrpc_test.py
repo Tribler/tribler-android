@@ -49,9 +49,28 @@ class TorrentsRemoteSearch(unittest.TestCase):
         results = self.xmlrpc.torrents.get_remote_results()
 
         for result in results:
-            assert "sintel" in result['name'].lower()
+            assert "sintel" in result['name'].lower(), "'%s' does not contain 'sintel'" % result['name']
 
-    def testZ_Deadlock(self):
+    def testC_RemoteSearchVodo(self):
+        self.xmlrpc.torrents.search_remote("vodo")
+
+        result_count = 0
+        timeout = REMOTE_SEARCH_TIMEOUT
+        while (not result_count > 0) and (timeout > 0):
+            result_count = self.xmlrpc.torrents.get_remote_results_count()
+
+            sleep(REMOTE_SEARCH_SLEEP)
+            timeout -= REMOTE_SEARCH_SLEEP
+
+        assert result_count > 0
+        assert timeout >= 0
+
+        results = self.xmlrpc.torrents.get_remote_results()
+
+        for result in results:
+            assert "vodo" in result['name'].lower(), "'%s' does not contain 'vodo'" % result['name']
+
+    def testZ_Deadlock_fast(self):
         slp = 0.1
         lps = 100
         while slp < 3:
@@ -61,13 +80,13 @@ class TorrentsRemoteSearch(unittest.TestCase):
             while loops > 0:
                 for keyword in keywords:
                     self.xmlrpc.torrents.search_remote(keyword)
+                    sleep(slp)
 
-                sleep(slp)
                 loops -= 1
 
             slp = slp * 2
             lps = lps / 2
-            #print slp,
+            print slp,
 
 if __name__ == '__main__':
     print "Using %s as test target." % XMLRPC_URL

@@ -129,11 +129,9 @@ class TorrentManager():
 #        try:
         print "******************** TorrentSearchGridManager: gotRemoteHist: got %s unfiltered results for %s %s %s" % (len(results), keywords, candidate, time())
 
-        #for t in results:
-        #    print "************ %s" % str(t)
-
         # Ignore searches we don't want (anymore)
         if not self._keywords == keywords:
+            _logger.info("Ignored results for %s, we are looking for %s now" % (keywords, self._keywords))
             return
 
         try:
@@ -144,7 +142,6 @@ class TorrentManager():
                 category_id = self._misc_db.categoryName2Id(categories)
 
                 remoteHit = RemoteTorrent(-1, result[0], result[8], result[9], result[1], result[2], category_id, self._misc_db.torrentStatusName2Id(u'good'), result[6], result[7], set([candidate]))
-                print unicode(remoteHit.name)
 
                 # Guess matches
                 #keywordset = set(keywords)

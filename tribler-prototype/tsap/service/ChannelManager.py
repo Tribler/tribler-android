@@ -255,6 +255,7 @@ class ChannelManager():
 
             self._keywords = keywords
             self._results = []
+            self._result_cids = []
         finally:
             self._remote_lock.release()
 

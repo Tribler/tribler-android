@@ -207,6 +207,7 @@ class TorrentManager():
 
             self._keywords = keywords
             self._results = []
+            self._result_infohashes = []
         finally:
             self._remote_lock.release()
 

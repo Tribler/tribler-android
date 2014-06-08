@@ -1,59 +1,34 @@
-__author__ = 'user'
-
-# TODO: FIND OUT WHICH OF THESE CAN BE REMOVED. IF ALL ARE REMOVED, DISPERSY HANGS ON STARTUP.
-import argparse
-import logging.config
-import os
-import sys
-import threading
-import time
-from threading import Thread, Event
-from traceback import print_exc
-import twisted
-
-from Tribler.Core.RawServer.RawServer import RawServer
-from Tribler.community.anontunnel import exitstrategies
-from Tribler.community.anontunnel.Socks5.server import Socks5Server
-from Tribler.community.anontunnel.community import ProxyCommunity, \
-    ProxySettings
-from Tribler.community.anontunnel.endpoint import DispersyBypassEndpoint
-from Tribler.community.anontunnel.extendstrategies import TrustThyNeighbour, \
-    NeighbourSubset
-from Tribler.community.anontunnel.lengthstrategies import \
-    RandomCircuitLengthStrategy, ConstantCircuitLength
-from Tribler.community.anontunnel.selectionstrategies import \
-    RandomSelectionStrategy, LengthSelectionStrategy
-from Tribler.community.anontunnel.stats import StatsCrawler
-from Tribler.community.privatesemantic.crypto.elgamalcrypto import \
-    ElgamalCrypto
-from Tribler.dispersy.dispersy import Dispersy
-from Tribler.dispersy.util import call_on_reactor_thread
-
-# custom
-from Tribler.Core.Session import Session
-from Tribler.Core.SessionConfig import SessionStartupConfig
-from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
-from time import time, sleep
-
+# coding: utf-8
+# Written by Wendo Sabée
+# Run and manage the Tribler session
 
 import time
 import sys
 import os
 import shutil
 
+# Init logging
 import logging
+
 logging.basicConfig(level=logging.DEBUG)
 _logger = logging.getLogger(__name__)
 
-# Tribler Session
+# TODO: FIND OUT WHICH OF THESE CAN BE REMOVED. IF ALL ARE REMOVED, DISPERSY HANGS ON STARTUP.
+from threading import Thread, Event
+from traceback import print_exc
+import twisted
+
+# Tribler
 from Tribler.Core.Session import Session
 from Tribler.Core.SessionConfig import SessionStartupConfig
-
 from Tribler.dispersy.util import call_on_reactor_thread
+from Tribler.Core.osutils import is_android
+from Tribler.Core.RawServer.RawServer import RawServer
+from Tribler.dispersy.dispersy import Dispersy
+from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
 
 
 class TriblerSession():
-
     _sconfig = None
     _session = None
     _dispersy = None
@@ -80,9 +55,18 @@ class TriblerSession():
             os.chmod(swift_path_dest, 0777)
 
     def get_session(self):
+        """
+        Get the current Tribler session.
+        :return: Tribler session, or None if no session is started yet.
+        """
         return self._session
 
-    def start_service(self):
+    def start_session(self):
+        """
+        This function loads any previous configuration files from the TRIBLER_STATE_DIR environment variable and then
+        starts a Tribler session.
+        :return: Nothing.
+        """
         _logger.info("Set tribler_state_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
 
         # Load configuration file (if exists)
@@ -96,9 +80,8 @@ class TriblerSession():
             _logger.info("No previous configuration file found, creating one in %s" % os.environ['TRIBLER_STATE_DIR'])
 
         # Disable unneeded dependencies
-        #self._sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
-        #self._sconfig.set_torrent_checking(False)
-        self._sconfig.set_multicast_local_peer_discovery(False)
+        # self._sconfig.set_torrent_checking(False)
+        #self._sconfig.set_multicast_local_peer_discovery(False)
         #self._sconfig.set_megacache(False)
         self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
@@ -115,22 +98,19 @@ class TriblerSession():
         self._session = Session(self._sconfig)
         self._session.start()
 
-        #swift_process = self._session.get_swift_proc() and self._session.get_swift_process()
-
+        #self._swift = self._session.get_swift_proc() and self._session.get_swift_process()
         self._dispersy = self._session.lm.dispersy
 
-        _logger.info('libTribler session started!')
-
-        _logger.info("Set autoload_communities callback")
+        _logger.info("libTribler session started!")
         self.define_communities()
-
-        _logger.error("@@@ Dispersy communitites initialized!")
 
     # Dispersy init communitites callback function
     @call_on_reactor_thread
     def define_communities(self):
-        _logger.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-
+        """
+        Load the dispersy communities. This function must be run on the Twisted reactor thread.
+        :return: Nothing.
+        """
         integrate_with_tribler = True
         comm_args = {'integrate_with_tribler': integrate_with_tribler}
 
@@ -140,17 +120,17 @@ class TriblerSession():
         from Tribler.community.channel.preview import PreviewChannelCommunity
         from Tribler.community.metadata.community import MetadataCommunity
 
-        _logger.info("@@@@@@@@@@ tribler: Preparing communities...")
-        #now = timef()
+        _logger.info("Preparing to load dispersy communities...")
 
-        # must be called on the Dispersy thread
-        comm = self._dispersy.define_auto_load(SearchCommunity, self._session.dispersy_member, load=True, kargs=comm_args)
-        _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
-        comm = self._dispersy.define_auto_load(AllChannelCommunity, self._session.dispersy_member, load=True, kargs=comm_args)
-        _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
+        comm = self._dispersy.define_auto_load(SearchCommunity, self._session.dispersy_member, load=True,
+                                               kargs=comm_args)
+        _logger.debug("Currently loaded dispersy communities: %s" % comm)
+        comm = self._dispersy.define_auto_load(AllChannelCommunity, self._session.dispersy_member, load=True,
+                                               kargs=comm_args)
+        _logger.debug("Currently loaded dispersy communities: %s" % comm)
 
         # load metadata community
-        #comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs=comm_args)
+        # comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs=comm_args)
         #_logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
         # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing
@@ -162,17 +142,20 @@ class TriblerSession():
         #                               (swift_process,),
         #                               load=True)
 
-        comm = self._dispersy.define_auto_load(ChannelCommunity, self._session.dispersy_member, load=True, kargs=comm_args)
-        _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
+        comm = self._dispersy.define_auto_load(ChannelCommunity, self._session.dispersy_member, load=True,
+                                               kargs=comm_args)
+        _logger.debug("Currently loaded dispersy communities: %s" % comm)
         comm = self._dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
-        _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
-
-        #diff = timef() - now
-        _logger.info("@@@@@@@@@@ tribler: communities are ready in %.2f seconds", 0) #diff)
+        _logger.debug("Currently loaded dispersy communities: %s" % comm)
 
         self._dispersy_init = True
 
-    def stop_service(self):
-        #self._thread.stop()
+    def stop_session(self):
+        """
+        Unloads the Tribler session.
+        :return: Nothing.
+        """
+
+        # TODO: Actually stop the session
+        # self._thread.stop()
         _logger.info("Bye bye")
-        pass

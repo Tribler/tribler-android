@@ -1,10 +1,12 @@
-__author__ = 'user'
+# coding: utf-8
+# Written by Wendo Sabée
+# Manages local and remote channel searches
 
 import threading
 import binascii
 from time import time
 
-# Setup logger
+# Init logger
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -17,16 +19,8 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
 from RpcDBTuples import Channel, RemoteChannel, ChannelTorrent, RemoteChannelTorrent
 
 # Tribler communities
-from Tribler.community.search.community import SearchCommunity
 from Tribler.community.allchannel.community import AllChannelCommunity
-#from Tribler.community.channel.community import ChannelCommunity
-#from Tribler.community.channel.preview import PreviewChannelCommunity
-#from Tribler.community.metadata.community import MetadataCommunity
-
 from Tribler.Core.Search.SearchManager import split_into_keywords
-
-from Tribler.community.channel.community import ChannelCommunity
-from Tribler.dispersy.util import call_on_reactor_thread
 
 
 class ChannelManager():
@@ -49,6 +43,13 @@ class ChannelManager():
     _result_cids = []
 
     def __init__(self, session, xmlrpc=None):
+        """
+        Constructor for the ChannelManager that loads all db connections.
+        :param session: The Tribler session that the ChannelManager should apply to.
+        :param xmlrpc: The XML-RPC Manager that the ChannelManager should apply to. If specified, the ChannelManager
+        registers its public functions with the XMLRpcManager.
+        :return:
+        """
         if ChannelManager.__single:
             raise RuntimeError("ChannelManager is singleton")
         self.connected = False
@@ -72,6 +73,10 @@ class ChannelManager():
     delInstance = staticmethod(delInstance)
 
     def _connect(self):
+        """
+        Load database handles and Dispersy.
+        :return: Nothing.
+        """
         if not self.connected:
             self.connected = True
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)
@@ -84,6 +89,11 @@ class ChannelManager():
             raise RuntimeError('ChannelManager already connected')
 
     def _xmlrpc_register(self, xmlrpc):
+        """
+        Register the public functions in this manager with an XML-RPC Manager.
+        :param xmlrpc: The XML-RPC Manager it should register to.
+        :return: Nothing.
+        """
         xmlrpc.register_function(self.get_local, "channels.get_local")
         xmlrpc.register_function(self.search_remote, "channels.search_remote")
         xmlrpc.register_function(self.get_remote_results_count, "channels.get_remote_results_count")
@@ -91,6 +101,11 @@ class ChannelManager():
         xmlrpc.register_function(self.subscribe, "channels.subscribe")
 
     def get_local(self, filter):
+        """
+        Search the local channel database for channels by keyword.
+        :param filter: (Optional) keyword filter.
+        :return: List of channels in dictionary format.
+        """
         begintime = time()
 
         try:
@@ -107,9 +122,19 @@ class ChannelManager():
         return self._prepare_channels(channels)
 
     def _prepare_channels(self, chs):
+        """
+        Convert a list of Channel objects to a list of Channel dictionaries.
+        :param chs: List of Channel objects.
+        :return: List of Channel dictionaries.
+        """
         return [self._prepare_channel(ch) for ch in chs]
 
     def _prepare_channel(self, ch):
+        """
+        Convert a Channel object to a Channel dictionary.
+        :param ch: Channel object.
+        :return: Channel dictionary.
+        """
         assert isinstance(ch, Channel)
 
         return {'id': ch.id,
@@ -127,6 +152,11 @@ class ChannelManager():
                 }
 
     def search_remote(self, keywords):
+        """
+        Search for channels with our Dispersy peers.
+        :param keywords: Keyword to search for.
+        :return: Number of searches launched, or False on failure.
+        """
         try:
             self._set_keywords(keywords)
         except:
@@ -151,6 +181,12 @@ class ChannelManager():
         return nr_requests_made
 
     def _search_remote_callback(self, kws, answers):
+        """
+        Callback that is called by Dispersy on incoming search results.
+        :param kws: Keyword that these results belong to.
+        :param answers: List of results.
+        :return: Nothing.
+        """
         _logger.error("@@@@@@@@@ DISPERY CALLBACK!")
         _logger.error("@@@@@ CALL BACK DATA: %s\n%s" % (kws, answers))
 
@@ -162,15 +198,20 @@ class ChannelManager():
         try:
             self._remote_lock.acquire()
 
-            _, channels = self.getChannelsByCID(answers.keys())
+            _, channels = self.get_channels_by_cid(answers.keys())
             for channel in channels:
                 self._add_remote_result(channel)
         finally:
             self._remote_lock.release()
 
-
-
     def _add_remote_result(self, channel):
+        """
+        Add a result to the local result list, ignoring any duplicates.
+        WARNING: Only call when a lock is already acquired.
+        :param channel: Channel to add to the list.
+        :return: Boolean indicating success.
+        """
+        # TODO: RLocks instead of normal locks.
 
         if channel.dispersy_cid in self._result_cids:
             _logger.error("Channel duplicate: %s [%s]" % (channel.name, binascii.hexlify(channel.dispersy_cid)))
@@ -183,12 +224,18 @@ class ChannelManager():
         return True
 
     def get_remote_results(self):
+        """
+        Return any results that were found during the last remote search.
+        :return: List of Channel dictionaries.
+        """
         begintime = time()
 
         ret = self._prepare_channels(self._results)
-
         _logger.error("@@@ Found %s remote channels in %ss" % (len(ret), time() - begintime))
         return ret
+
+        """
+        TODO: Refactor this code to attach torrents to found channels
 
         try:
             self._remote_lock.acquire()
@@ -203,7 +250,7 @@ class ChannelManager():
                     channel_id, _, infohash, torrent_name, timestamp = remoteItem
 
                     if channel_id not in self._channel_results:
-                        channel = self.getChannel(channel_id)
+                        channel = self.get_channel(channel_id)
                     else:
                         channel = self._channel_results[channel_id]
 
@@ -234,16 +281,28 @@ class ChannelManager():
         ret = self._prepare_channels(self._channel_results)
         print ret
         return ret
+        """
 
     def get_remote_results_count(self):
+        """
+        Get the amount of current remote results.
+        :return: Integer indicating the number of results.
+        """
         return len(self._results)
 
     def subscribe(self):
+        """
+        Subcribe (of favourite) a channel, which means its contents (torrent files) will be cached locally.
+        :return: Boolean indicating success.
+        """
         return False
 
-
-
     def _set_keywords(self, keywords):
+        """
+        Set the keywords that a next search should use. This clears the previous keywords and results.
+        :param keywords: Keyword string that should be searched for.
+        :return: Boolean indicating success.
+        """
         keywords = split_into_keywords(unicode(keywords))
         keywords = [keyword for keyword in keywords if len(keyword) > 1]
 
@@ -261,11 +320,21 @@ class ChannelManager():
 
         return True
 
-    def getChannel(self, channel_id):
+    def get_channel(self, channel_id):
+        """
+        Get a channel by id.
+        :param channel_id: Channel id.
+        :return: A Channel object.
+        """
         channel = self._channelcast_db.getChannel(channel_id)
         return self._getChannel(channel)
 
-    def _getChannel(self, channel):
+    def _get_channel(self, channel):
+        """
+        get_channel helper function that converts a channel list to a Channel object
+        :param channel: channel properties list
+        :return: Channel object
+        """
         if channel:
             channel = self._createChannel(channel)
 
@@ -278,14 +347,29 @@ class ChannelManager():
 
         return channel
 
-    def getChannelsByCID(self, channel_cids):
+    def get_channels_by_cid(self, channel_cids):
+        """
+        Get a channel object by its CID.
+        :param channel_cids: Channel CID.
+        :return: Channel object.
+        """
         channels = self._channelcast_db.getChannelsByCID(channel_cids)
         return self._createChannels(channels)
 
     def _createChannel(self, hit):
+        """
+        Create a Channel object from a remote search hit.
+        :param hit: Remote search hit.
+        :return: Channel object.
+        """
         return Channel(*hit)
 
-    def _createChannels(self, hits, filterTorrents=True):
+    def _createChannels(self, hits):
+        """
+        Create a Channel objects from a list of remote search hits
+        :param hits: List of remote search hits.
+        :return: List of Channel objects.
+        """
         channels = []
         for hit in hits:
             channel = Channel(*hit)

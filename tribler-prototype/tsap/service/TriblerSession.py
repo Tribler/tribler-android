@@ -37,22 +37,45 @@ class TriblerSession():
     _dispersy_init = False
 
     def __init__(self):
-        if not 'ANDROID_HOST' in os.environ or not os.environ['ANDROID_HOST'] == "YES":
-            pass
+        """
+        Constructor that copies the libswift and ffmpeg binaries when on Android.
+        :return:
+        """
 
+        # Copy the swift and ffmpeg binaries
+        if is_android(strict=True):
+            binaries = ['swift', 'ffmpeg']
+
+            for binary in binaries:
+                _logger.info("Setting up the %s binary.." % binary)
+
+                if not self._copy_binary(binary):
+                    _logger.error("Unable to find or copy the %s binary!" % binary)
+
+    def _copy_binary(self, binary_name):
+        """
+        Copy a binary, such as swift, from the sdcard (which is mounted with noexec) to the ANDROID_PRIVATE folder which
+        does allow it. If the binary already exists, do nothing.
+        :param binary_name: The name of the binary that should be copied.
+        :return: Boolean indicating success.
+        """
         # We are on android, setup the swift binary!
         sdcard_path = os.path.abspath(os.path.join(os.getcwd(), '..'))
-        swift_path_source = os.path.join(sdcard_path, 'swift')
-        swift_path_dest = os.path.join(os.environ['ANDROID_PRIVATE'], 'swift')
+        binary_source = os.path.join(sdcard_path, binary_name)
+        binary_dest = os.path.join(os.environ['ANDROID_PRIVATE'], binary_name)
 
-        if not os.path.exists(swift_path_dest):
-            if not os.path.exists(swift_path_source):
-                _logger.error("Looked at %s and %s, but couldn't find a libswift binary!" % (swift_path_source, swift_path_dest))
-                exit()
+        if not os.path.exists(binary_dest):
+            if not os.path.exists(binary_source):
+                _logger.error(
+                    "Looked at %s and %s, but couldn't find a '%s' binary!" % (binary_source, binary_dest, binary_name))
+                return False
 
-            _logger.warn("Copy swift binary (%s -> %s)" % (swift_path_source, swift_path_dest))
-            shutil.copy2(swift_path_source, swift_path_dest)
-            os.chmod(swift_path_dest, 0777)
+            _logger.warn("Copy '%s' binary (%s -> %s)" % (binary_name, binary_source, binary_dest))
+            shutil.copy2(binary_source, binary_dest)
+            # TODO: Set a more conservative permission
+            os.chmod(binary_dest, 0777)
+
+        return True
 
     def get_session(self):
         """

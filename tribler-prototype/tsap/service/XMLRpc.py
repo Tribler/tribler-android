@@ -2,6 +2,8 @@
 # Written by Wendo Sabée
 # Initializes the XML-RPC Server
 
+import threading
+
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 
@@ -10,7 +12,7 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/tribler',)
 
 
-class XMLRPCServer:
+class XMLRPCServer(threading.Thread):
     def __init__(self, iface="127.0.0.1", port=8000):
         """
         Constructor for the XML-RPC Server.
@@ -18,6 +20,7 @@ class XMLRPCServer:
         :param port: Port that the server should listen on (default: 8000)
         :return:
         """
+        threading.Thread.__init__(self)
 
         self._server = SimpleXMLRPCServer((iface, port), requestHandler=RequestHandler, allow_none=True)
         self._server.register_introspection_functions()
@@ -37,6 +40,13 @@ class XMLRPCServer:
     def start_server(self):
         """
         Start the XML-RPC Server on the interface and port specified previously.
+        :return: Nothing.
+        """
+        self.start()
+
+    def run(self):
+        """
+        Function that is run to start the XML-RPC Server.
         :return: Nothing.
         """
         self._server.serve_forever()

@@ -185,8 +185,7 @@ class TorrentManager():
 
 
     def get_remote_results(self):
-        count = max(len(self._results), 10)
-        return self._prepare_torrents(self._results[0:count])
+        return self._prepare_torrents(self._results)
 
     def get_remote_results_count(self):
         return len(self._results)

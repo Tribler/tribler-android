@@ -16,7 +16,7 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
 # DB Tuples
-from RpcDBTuples import Channel, RemoteChannel, ChannelTorrent, RemoteChannelTorrent
+from Tribler.Main.Utility.GuiDBTuples import Channel, RemoteChannel, ChannelTorrent, RemoteChannelTorrent
 
 # Tribler communities
 from Tribler.community.allchannel.community import AllChannelCommunity

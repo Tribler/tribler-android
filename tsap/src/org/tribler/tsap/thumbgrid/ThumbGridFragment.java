@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.videoInfoScreen.TorrentManager;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.Fragment;
@@ -49,7 +48,6 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-
 	}
 
 	/**
@@ -70,8 +68,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
 		GridView gridView = (GridView) v.findViewById(R.id.ThumbsGrid);
 
-		ArrayList<ThumbItem> gridArray = TorrentManager.getInstance().getThumbItems();
-		mThumbAdapter = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item, gridArray);
+		mThumbAdapter = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item);
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		try {
@@ -93,7 +90,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				VideoInfoFragment vidFrag = new VideoInfoFragment();
 				Bundle args = new Bundle();
-				args.putInt("torrentID", (int) id);
+				args.putSerializable("thumbData", mThumbAdapter.getItem(position));
 				vidFrag.setArguments(args);
 
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();

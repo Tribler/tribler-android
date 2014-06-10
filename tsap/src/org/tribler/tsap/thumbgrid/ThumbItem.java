@@ -1,12 +1,15 @@
 package org.tribler.tsap.thumbgrid;
 
+import java.io.Serializable;
+
 /**
  * Class that holds the information of the items in the thumb grid
  * 
  * @author Wendo Sabée
  */
-public class ThumbItem {
+public class ThumbItem implements Serializable{
 
+	private static final long serialVersionUID = 1619276011406943212L;
 	private int thumbnailId;
 	private String title;
 	private TORRENT_HEALTH health;

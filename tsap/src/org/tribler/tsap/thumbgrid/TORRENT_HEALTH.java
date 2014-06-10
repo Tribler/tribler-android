@@ -1,5 +1,7 @@
 package org.tribler.tsap.thumbgrid;
 
+import java.io.Serializable;
+
 import android.graphics.Color;
 
 /**
@@ -7,7 +9,7 @@ import android.graphics.Color;
  * 
  * @author Wendo Sabée
  */
-public enum TORRENT_HEALTH {
+public enum TORRENT_HEALTH implements Serializable{
 	UNKNOWN, RED, YELLOW, GREEN;
 
 	/**

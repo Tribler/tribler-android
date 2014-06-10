@@ -34,7 +34,8 @@ public class ChannelTest extends TestCase {
 		assertEquals("getTorrentAmount() incorrect", 105,
 				mChannel.getTorrentAmount());
 		assertEquals("getRating() incorrect", 4, mChannel.getRating());
-		assertEquals("getDispersyCid() incorrect", "fff", mChannel.getDispersyCid());
+		assertEquals("getDispersyCid() incorrect", "fff",
+				mChannel.getDispersyCid());
 	}
 
 	/**

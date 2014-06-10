@@ -17,23 +17,6 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 public class BasicUiTestCase extends UiAutomatorTestCase {
 
 	/**
-	 * Test whether the startTSAP function starts the correct app (by checking
-	 * its package name)
-	 * 
-	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException
-	 */
-	public void testStartTSAPPackageName() throws UiObjectNotFoundException,
-			RemoteException {
-		startTSAP();
-
-		// Validate that the package name is the expected one
-		UiObject tsapValidation = new UiObject(
-				new UiSelector().packageName("org.tribler.tsap"));
-		assertTrue("Unable to find TSAP app", tsapValidation.exists());
-	}
-
-	/**
 	 * Makes sure the TSAP app is launched on the device and the MainActivity is
 	 * shown
 	 * 
@@ -46,5 +29,11 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 				new UiSelector().description("Navigate up"));
 		while (!upButton.exists()) {
 		}
+
+		// Validate that the package name is the expected one
+		UiObject tsapValidation = new UiObject(
+				new UiSelector().packageName("org.tribler.tsap"));
+		assertTrue("Unable to find TSAP app", tsapValidation.exists());
+
 	}
 }

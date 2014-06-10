@@ -289,6 +289,8 @@ class DownloadManager():
                            'speed_up': torrentimpl.get_current_speed('up'),
                            'speed_down': torrentimpl.get_current_speed('down'),
                            'eta': torrentimpl.network_calc_eta(),
+                           'status': torrentimpl.get_status(),
+                           # TODO: return state
                            })
 
         if vod:

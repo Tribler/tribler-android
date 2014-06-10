@@ -1,4 +1,6 @@
-__author__ = 'user'
+# coding: utf-8
+# Written by Wendo Sabée
+# Manages local downloads
 
 import threading
 import binascii
@@ -23,18 +25,11 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
 
 # DB Tuples
 from Tribler.Main.Utility.GuiDBTuples import Torrent, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
+from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 
-# Tribler communities
-from Tribler.community.search.community import SearchCommunity
-from Tribler.community.allchannel.community import AllChannelCommunity
-#from Tribler.community.channel.community import ChannelCommunity
-#from Tribler.community.channel.preview import PreviewChannelCommunity
-#from Tribler.community.metadata.community import MetadataCommunity
 
-from Tribler.Core.Search.SearchManager import split_into_keywords
-
-from Tribler.dispersy.util import call_on_reactor_thread
-
+# TODO: not hardcoded please
+DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
 
 class DownloadManager():
     # Code to make this a singleton
@@ -56,6 +51,13 @@ class DownloadManager():
     _result_infohashes = []
 
     def __init__(self, session, xmlrpc=None):
+        """
+        Constructor for the DownloadManager that loads all db connections.
+        :param session: The Tribler session that the DownloadManager should apply to.
+        :param xmlrpc: The XML-RPC Manager that the DownloadManager should apply to. If specified, the DownloadManager
+        registers its public functions with the XMLRpcManager.
+        :return:
+        """
         if DownloadManager.__single:
             raise RuntimeError("DownloadManager is singleton")
 
@@ -80,6 +82,10 @@ class DownloadManager():
     delInstance = staticmethod(delInstance)
 
     def _connect(self):
+        """
+        Load database handles and Dispersy.
+        :return: Nothing.
+        """
         if not self.connected:
             self.connected = True
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)
@@ -92,9 +98,118 @@ class DownloadManager():
             raise RuntimeError('TorrentManager already connected')
 
     def _xmlrpc_register(self, xmlrpc):
+        """
+        Register the public functions in this manager with an XML-RPC Manager.
+        :param xmlrpc: The XML-RPC Manager it should register to.
+        :return: Nothing.
+        """
+        xmlrpc.register_function(self.add_torrent, 'downloads.add')
+        xmlrpc.register_function(self.remove_torrent, 'downloads.remove')
+        xmlrpc.register_function(self.get_progress, 'downloads.get_progress_info')
+        xmlrpc.register_function(self.get_progress_all, 'downloads.get_all_progress_info')
+        xmlrpc.register_function(self.get_vod, 'downloads.get_vod_info')
+        xmlrpc.register_function(self.get_full, 'downloads.get_full_info')
+        xmlrpc.register_function(self.get_vod_uri, 'downloads.get_vod_uri')
+        xmlrpc.register_function(self.set_state, 'downloads.set_state')
+
+    def add_torrent(self, infohash, name):
+        """
+        Add a download to the download list by its infohash.
+        :param infohash: The infohash of the torrent.
+        :param name: The name of the torrent.
+        :return: The infohash of the torrent.
+        """
+        tdef = TorrentDefNoMetainfo(binascii.unhexlify(infohash), name)
+
+        defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
+        dscfg = defaultDLConfig.copy()
+
+        dscfg.set_dest_dir(DOWNLOAD_DIRECTORY)
+
+        dl = self._session.start_download(tdef, dscfg)
+
+        while not dl.handle:
+            time.sleep(1)
+            _logger.error("Waiting for libtorrent (%s)" % dl.tdef.get_name())
+
+        try:
+            return self._getDownload(dl)['infohash']
+        except:
+            return False
+
+    def remove_torrent(self, infohash):
+        """
+        Remove a download from the download list by its infohash.
+        :param infohash: The infohash of the torrent.
+        :return: Boolean indicating success.
+        """
         pass
 
-    def add_torrent(self, torrent_path, destination_path):
+    def get_progress(self, infohash):
+        """
+        Get the progress of a single torrent, by infohash.
+        :param infohash: Infohash of the torrent.
+        :return: Progress of a torrent or False on failure.
+        """
+        return self._get_download_info(infohash, {'progress': True})
+
+    def get_progress_all(self):
+        """
+        Get the progress of all current torrents.
+        :return: List of progress torrents.
+        """
+        downloads = []
+
+        for dl in self._session.get_downloads():
+            try:
+                downloads.append(self._getDownload(dl, progress=True))
+            except:
+                pass
+
+        return downloads
+
+    def get_full(self, infohash):
+        """
+        Get the full info of a single torrent, by infohash.
+        :param infohash: Infohash of the torrent.
+        :return: Full info of a torrent or False on failure.
+        """
+        return self._get_download_info(infohash, {'progress': True, 'files': True, 'network' True})
+
+    def get_vod(self, infohash):
+        """
+        Get the vod status of a single torrent, by infohash.
+        :param infohash: Infohash of the torrent.
+        :return: Vod status of a torrent or False on failure.
+        """
+        return self._get_download_info(infohash, {'vod': True})
+
+    def _get_download_info(self, infohash, args):
+        """
+        Get the info of a download by its infohash.
+        :param infohash: The infohash of the torrent.
+        :param args: Dictionary with arguments indicating which info to include.
+        :return: Dictionary with information about the download.
+        """
+        try:
+            download = self._session.get_download(binascii.unhexlify(infohash))
+            return self._getDownload(download, **args)
+        except:
+            return False
+
+    def get_vod_uri(self, infohash):
+        """
+        Returns the VOD uri for this torrent.
+        :param infohash: Infohash of the torrent.
+        :return: Uri that can be used to stream the torrent.
+        """
+        return "http://127.0.0.1:%s/%s/0" % (self._session.get_videoplayer_port(), infohash)
+
+    def set_state(self, infohash):
+        pass
+
+    """
+    def _add_torrent_file(self, torrent_path, destination_path):
         _logger.error("Downloading %s to %s" % (torrent_path, destination_path))
 
         tdef = TorrentDef.load(torrent_path)
@@ -129,14 +244,47 @@ class DownloadManager():
         launchVLC(vlcurl)
 
         return dl
+    """
 
-    def get_downloads(self):
-        return self._session.get_downloads()
+    def _getDownload(self, torrentimpl, vod=False, progress=False, files=False, network=False):
+        """
+        Convert a LibTorrentDownloadImpl object to a dictionary.
+        :param torrentimpl: A LibTorrentDownloadImpl object.
+        :param vod: Include info about vod.
+        :param progress: Include info about download progress.
+        :param files: Include info about files.
+        :param network: Include info about network.
+        :return: Dictionary with information about the download.
+        """
+        #progress = infoh, name, speed, eta, progress, size, seeders/leechers
+        #vod = vod_eta, vod_stats
+        #full = progress + {files, metadata (description, thumbnail), dest}, speed_max
 
-    def _getDownload(self, torrentimpl):
-        return {'name': torrentimpl.tdef.get_name(),
-                'progress': torrentimpl.get_progress(),
-                'length': torrentimpl.get_length(),
-                'speed_up': torrentimpl.get_current_speed('up'),
-                'speed_down': torrentimpl.get_current_speed('down'),
-                }
+        dlinfo = {'infohash': binascii.hexlify(torrentimpl.tdef.get_infohash())}
+
+        if progress:
+            dlinfo.update({'name': torrentimpl.tdef.get_name(),
+                           'progress': torrentimpl.get_progress(),
+                           'length': torrentimpl.get_length(),
+                           'speed_up': torrentimpl.get_current_speed('up'),
+                           'speed_down': torrentimpl.get_current_speed('down'),
+                           'eta': torrentimpl.network_calc_eta(),
+                           })
+
+        if vod:
+            dlinfo.update({'vod_eta': torrentimpl.network_calc_prebuf_eta(),
+                           'vod_stats': torrentimpl.network_get_vod_stats(),
+                           })
+
+        if files:
+            dlinfo.update({'destination': torrentimpl.get_content_dest(),
+                           'speed_up_max': torrentimpl.get_max_desired_speed('up'),
+                           'speed_down_max': torrentimpl.get_max_desired_speed('down'),
+                           'files': torrentimpl.get_dest_files(),
+                           'magnet_uri': torrentimpl.get_magnet_link(),
+                           })
+
+        if network:
+            dlinfo.update({'network': torrentimpl.network_create_statistics_reponse()})
+
+        return dlinfo

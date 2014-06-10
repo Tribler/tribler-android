@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pkill -f "python main.py"
+
 rm -r tmprunmain
 mkdir -p tmprunmain
 

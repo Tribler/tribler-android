@@ -153,34 +153,6 @@ public class PythonActivity extends Activity implements Runnable {
 		unpackData("private", getFilesDir());
 		unpackData("public", externalStorage);
 
-		System.loadLibrary("sdl");
-		System.loadLibrary("sdl_image");
-		System.loadLibrary("sdl_ttf");
-		System.loadLibrary("sdl_mixer");
-		System.loadLibrary("python2.7");
-		System.loadLibrary("application");
-		System.loadLibrary("sdl_main");
-
-		System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_io.so");
-		System.load(getFilesDir() + "/lib/python2.7/lib-dynload/unicodedata.so");
-
-		try {
-			System.loadLibrary("sqlite3");
-			System.load(getFilesDir()
-					+ "/lib/python2.7/lib-dynload/_sqlite3.so");
-		} catch (UnsatisfiedLinkError e) {
-		}
-
-		try {
-			System.load(getFilesDir()
-					+ "/lib/python2.7/lib-dynload/_imaging.so");
-			System.load(getFilesDir()
-					+ "/lib/python2.7/lib-dynload/_imagingft.so");
-			System.load(getFilesDir()
-					+ "/lib/python2.7/lib-dynload/_imagingmath.so");
-		} catch (UnsatisfiedLinkError e) {
-		}
-
 		start_service("PythonService", "Service running python code", "");
 		Log.d(TAG, "Service started");
 		startActivity(new Intent(this, MainActivity.class));

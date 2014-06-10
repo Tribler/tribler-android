@@ -74,7 +74,7 @@ public class PythonService extends Service  implements Runnable {
     @Override
     public void run(){
 
-        // libraries loading, the same way PythonActivity.run() do
+        // libraries loading
         System.loadLibrary("sdl");
         System.loadLibrary("sdl_image");
         System.loadLibrary("sdl_ttf");
@@ -89,13 +89,6 @@ public class PythonService extends Service  implements Runnable {
         try {
             System.loadLibrary("sqlite3");
             System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_sqlite3.so");
-        } catch(UnsatisfiedLinkError e) {
-        }
-
-        try {
-            System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imaging.so");
-            System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingft.so");
-            System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingmath.so");
         } catch(UnsatisfiedLinkError e) {
         }
         

@@ -1,6 +1,7 @@
 package org.renpy.android;
 
 import android.app.Service;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Bundle;
 import android.content.Intent;
@@ -98,9 +99,10 @@ public class PythonService extends Service  implements Runnable {
         } catch(UnsatisfiedLinkError e) {
         }
         
-        nativeInitJavaEnv();        
+        nativeInitJavaEnv();   
+        nativeSetEnv("ANDROID_SDK", Integer.toString(Build.VERSION.SDK_INT));
         nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
-                pythonServiceArgument);        
+                pythonServiceArgument);       
     }
 
     // Native part (don't remove!)
@@ -109,5 +111,7 @@ public class PythonService extends Service  implements Runnable {
             String pythonServiceArgument);
 
     public static native void nativeInitJavaEnv();
+    
+    public static native void nativeSetEnv(String name, String value);
 
 }

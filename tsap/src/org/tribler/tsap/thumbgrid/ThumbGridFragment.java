@@ -106,13 +106,23 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 
 	/**
 	 * Removes the search menu item so that the app doesn't crash when selecting the channel list fragment from the
-	 * navigation drawer.
+	 * navigation drawer. Also stops the polling loop.
 	 */
 	@Override
 	public void onPause() {
 		if (menu != null)
 			menu.removeItem(R.id.action_search_thumbgrid);
 		super.onPause();
+		mTorrentManager.stopPolling();
+	}
+	
+	/**
+	 * Starts the polling loop. 
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+		mTorrentManager.startPolling();
 	}
 
 	/**

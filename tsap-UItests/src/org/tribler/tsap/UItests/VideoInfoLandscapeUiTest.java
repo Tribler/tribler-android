@@ -15,10 +15,11 @@ public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
 	 * Launches the TSAP app on the device and sets the orientation to Right
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
 	@Override
-	protected void startTSAP() throws UiObjectNotFoundException, RemoteException {
+	protected void startTSAP() throws UiObjectNotFoundException,
+			RemoteException {
 		super.startTSAP();
 		getUiDevice().setOrientationRight();
 	}

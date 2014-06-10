@@ -1,4 +1,4 @@
-package org.tribler.tsap.channels.tests;
+package org.tribler.tsap.thumbgrid.tests;
 
 import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
@@ -7,14 +7,15 @@ import android.test.ActivityInstrumentationTestCase2;
 
 /**
  * Functional test cases for the thumb grid fragment
+ * 
  * @author Niels Spruit
  */
-public class ThumbGridFragmentTest extends ActivityInstrumentationTestCase2<MainActivity> {
-	
+public class ThumbGridFragmentTest extends
+		ActivityInstrumentationTestCase2<MainActivity> {
+
 	private ThumbGridFragment mThumbGridFrag;
-	
-	public ThumbGridFragmentTest()
-	{
+
+	public ThumbGridFragmentTest() {
 		super(MainActivity.class);
 	}
 
@@ -24,7 +25,7 @@ public class ThumbGridFragmentTest extends ActivityInstrumentationTestCase2<Main
 		MainActivity mMainActivity = getActivity();
 		mThumbGridFrag = mMainActivity.getThumbGridFragment();
 	}
-	
+
 	/**
 	 * Tests whether the test fixture is set up correctly
 	 */

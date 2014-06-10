@@ -122,8 +122,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * It will send an ArrayList all observers containing the found
-	 * channels.
+	 * It will send an ArrayList all observers containing the found channels.
 	 */
 	private void getRemoteResults() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {

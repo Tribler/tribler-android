@@ -1,9 +1,7 @@
 package org.tribler.tsap.UItests;
 
 import android.os.RemoteException;
-import android.widget.TextView;
 
-import com.android.uiautomator.core.UiCollection;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
@@ -24,9 +22,10 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 	 * its package name)
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testStartTSAPPackageName() throws UiObjectNotFoundException, RemoteException {
+	public void testStartTSAPPackageName() throws UiObjectNotFoundException,
+			RemoteException {
 		startTSAP();
 
 		// Validate that the package name is the expected one
@@ -39,9 +38,10 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 	 * Launches the TSAP app on the device
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	protected void startTSAP() throws UiObjectNotFoundException, RemoteException {		
+	protected void startTSAP() throws UiObjectNotFoundException,
+			RemoteException {
 		// Simulate a short press on the HOME button.
 		getUiDevice().pressHome();
 
@@ -74,17 +74,14 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 
 		// Set the swiping mode to horizontal (the default is vertical)
 		appViews.setAsHorizontalList();
-		
-		// Scroll the apps list until TSAP appears
-//		appViews.scrollTextIntoView("TSAP");
 
 		// Create a UiSelector to find the TSAP app and simulate
 		// a user click to launch the app.
-		UiObject tsapApp = appViews.getChildByText(new UiSelector().className("android.widget.TextView"), "TSAP",true);
-//		UiObject tsapApp = appViews.getChild(new UiSelector().text("TSAP"));
-//		UiCollection apps = appViews.getChild(new UiSelector().className("android.widget.TextView"));
+		UiObject tsapApp = appViews.getChildByText(
+				new UiSelector().className("android.widget.TextView"), "TSAP",
+				true);
 		tsapApp.clickAndWaitForNewWindow();
-		
+
 		// Set the rotation to normal (=portrait mode)
 		getUiDevice().setOrientationNatural();
 	}

@@ -109,7 +109,9 @@ class DownloadManager():
         xmlrpc.register_function(self.get_progress_all, 'downloads.get_all_progress_info')
         xmlrpc.register_function(self.get_vod, 'downloads.get_vod_info')
         xmlrpc.register_function(self.get_full, 'downloads.get_full_info')
-        xmlrpc.register_function(self.get_vod_uri, 'downloads.get_vod_uri')
+        xmlrpc.register_function(self.start_vod, 'downloads.start_vod')
+        xmlrpc.register_function(self.stop_vod, 'download.stop_vod')
+        xmlrpc.register_function(self.get_vod_uri, 'download.get_vod_uri')
         xmlrpc.register_function(self.set_state, 'downloads.set_state')
 
     def add_torrent(self, infohash, name):
@@ -197,6 +199,34 @@ class DownloadManager():
         except:
             return False
 
+    def start_vod(self, infohash):
+        """
+        Set a download to vod mode.
+        :param infohash: Infohash of the torrent.
+        :return: Vod uri on success, False otherwise.
+        """
+        try:
+            download = self._session.get_download(binascii.unhexlify(infohash))
+            download.set_vod_mode(True)
+        except:
+            return False
+
+        return self.get_vod_uri(infohash)
+
+    def stop_vod(self, infohash):
+        """
+        Set a download to normal download mode.
+        :param infohash: Infohash of the torrent.
+        :return: Boolean indicating success.
+        """
+        try:
+            download = self._session.get_download(binascii.unhexlify(infohash))
+            download.set_vod_mode(False)
+        except:
+            return False
+
+        return True
+
     def get_vod_uri(self, infohash):
         """
         Returns the VOD uri for this torrent.
@@ -272,8 +302,16 @@ class DownloadManager():
                            })
 
         if vod:
+            vod_stats = torrentimpl.network_get_vod_stats()
             dlinfo.update({'vod_eta': torrentimpl.network_calc_prebuf_eta(),
-                           'vod_stats': torrentimpl.network_get_vod_stats(),
+                           'vod_pieces': vod_stats['npieces'],
+                           'vod_played': vod_stats['playes'],
+                           'vod_firstpiece': vod_stats['firstpiece'],
+                           'vod_pos': vod_stats['pos'],
+                           'vod_late': vod_stats['late'],
+                           'vod_stall': vod_stats['stall'],
+                           'vod_dropped': vod_stats['dropped'],
+                           'vod_prebuf': vod_stats['prebuf'],
                            })
 
         if files:

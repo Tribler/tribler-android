@@ -1,6 +1,7 @@
 package org.tribler.tsap;
 
 import org.tribler.tsap.channels.ChannelListFragment;
+import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.videolan.vlc.VLCApplication;
 
 import android.app.ActionBar;

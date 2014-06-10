@@ -14,7 +14,6 @@ import org.tribler.tsap.XMLRPCCallTask;
  * Class for receiving torrents over XMPRPC using the aXMLRPC library
  * 
  * @author Dirk Schut
- * @since 26-5-2014
  */
 public class XMLRPCTorrentManager {
 	private XMLRPCClient mClient = null;
@@ -44,7 +43,7 @@ public class XMLRPCTorrentManager {
 		Runnable poller = new Runnable() {
 			@Override
 			public void run() {
-				//Log.v("XMLRPCTorrentManager", "Poll");
+				// Log.v("XMLRPCTorrentManager", "Poll");
 				getRemoteResultsCount();
 				mDataPollingHandler.postDelayed(this, POLLING_PERIOD);
 			}
@@ -53,9 +52,11 @@ public class XMLRPCTorrentManager {
 	}
 
 	/**
+	 * TODO: implement on server side (so code can be uncommented).
+	 * 
 	 * Searches the local dispersy data for torrents fitting a certain query.
-	 * Once the results are found it will send them as an ArrayList<ThumbItem> to
-	 * all observers.
+	 * Once the results are found it will send them as an ArrayList<ThumbItem>
+	 * to all observers.
 	 * 
 	 * @param query
 	 *            The query that Tribler will look for in the names of the
@@ -80,8 +81,8 @@ public class XMLRPCTorrentManager {
 
 	/**
 	 * Searches the remote dispersy data for torrents fitting a certain query.
- 	 * The results can be retrieved by calling getRemoteResults(). The amount of found results can be retrieved
-	 * by calling getRemoteResultsCount().
+	 * The results can be retrieved by calling getRemoteResults(). The amount of
+	 * found results can be retrieved by calling getRemoteResultsCount().
 	 * 
 	 * @param query
 	 *            The query that Tribler will look for in the names of the
@@ -117,11 +118,14 @@ public class XMLRPCTorrentManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Integer count = (Integer) result;
-				//Log.v("XMLRPCTorrentManager", "Torrents found = " + count);
-				if (count > mLastFoundResultsCount) {
-					mLastFoundResultsCount = count;
-					getRemoteResults();
+				if (result != null) {
+					Integer count = (Integer) result;
+					// Log.v("XMLRPCTorrentManager", "Torrents found = " +
+					// count);
+					if (count > mLastFoundResultsCount) {
+						mLastFoundResultsCount = count;
+						getRemoteResults();
+					}
 				}
 			}
 		};
@@ -129,25 +133,28 @@ public class XMLRPCTorrentManager {
 	}
 
 	/**
-	 * It will send an ArrayList<Channel> all observers containing the found
-	 * torrents.
+	 * It will send an ArrayList to all observers containing the found torrents.
 	 */
 	private void getRemoteResults() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Object[] arrayResult = (Object[]) result;
-				ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
-				Log.v("XMLRPC", "Got " + arrayResult.length + " results");
-				for (int i = 0; i < arrayResult.length; i++) {
-					@SuppressWarnings("unchecked")
-					ThumbItem item = new ThumbItem(
-							(Map<String, Object>) arrayResult[i]);
-					resultsList.add(item);
+				if (result != null) {
+					Object[] arrayResult = (Object[]) result;
+					ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
+					Log.v("XMLRPC", "Got " + arrayResult.length + " results");
+					for (int i = 0; i < arrayResult.length; i++) {
+						@SuppressWarnings("unchecked")
+						ThumbItem item = new ThumbItem(
+								(Map<String, Object>) arrayResult[i]);
+						resultsList.add(item);
+					}
+					// Map<String, Object> firstResult = (Map<String,
+					// Object>)arrayResult[0];
+					// Log.v("XMPLRCChannelManager",
+					// "KeySet: "+firstResult.keySet());
+					mAdapter.addNew(resultsList);
 				}
-				//Map<String, Object> firstResult = (Map<String, Object>)arrayResult[0];
-				//Log.v("XMPLRCChannelManager", "KeySet: "+firstResult.keySet());
-				mAdapter.addNew(resultsList);
 			}
 		};
 		task.execute(mClient, "torrents.get_remote_results");
@@ -156,7 +163,7 @@ public class XMLRPCTorrentManager {
 	public void search(String query) {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();
-		//getLocal(query);
+		// getLocal(query);
 		searchRemote(query);
 		Log.i("XMPLRCChannelManager", "Search for \"" + query + "\" launched.");
 	}

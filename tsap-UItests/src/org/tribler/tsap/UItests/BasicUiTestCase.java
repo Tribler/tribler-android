@@ -22,9 +22,10 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 	 * its package name)
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	public void testStartTSAPPackageName() throws UiObjectNotFoundException, RemoteException {
+	public void testStartTSAPPackageName() throws UiObjectNotFoundException,
+			RemoteException {
 		startTSAP();
 
 		// Validate that the package name is the expected one
@@ -37,9 +38,10 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 	 * Launches the TSAP app on the device
 	 * 
 	 * @throws UiObjectNotFoundException
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
-	protected void startTSAP() throws UiObjectNotFoundException, RemoteException {		
+	protected void startTSAP() throws UiObjectNotFoundException,
+			RemoteException {
 		// Simulate a short press on the HOME button.
 		getUiDevice().pressHome();
 
@@ -62,7 +64,7 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 		UiObject appsTab = new UiObject(new UiSelector().text("Apps"));
 
 		// Simulate a click to enter the Apps tab.
-		appsTab.click();
+		appsTab.clickAndWaitForNewWindow();
 
 		// Next, in the apps tabs, we can simulate a user swiping until
 		// they come to the TSAP app icon. Since the container view
@@ -75,9 +77,11 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 
 		// Create a UiSelector to find the TSAP app and simulate
 		// a user click to launch the app.
-		UiObject tsapApp = appViews.getChild(new UiSelector().text("TSAP"));
+		UiObject tsapApp = appViews.getChildByText(
+				new UiSelector().className("android.widget.TextView"), "TSAP",
+				true);
 		tsapApp.clickAndWaitForNewWindow();
-		
+
 		// Set the rotation to normal (=portrait mode)
 		getUiDevice().setOrientationNatural();
 	}

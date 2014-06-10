@@ -14,15 +14,15 @@ import org.tribler.tsap.videoInfoScreen.TorrentManager;
  * @author Niels Spruit
  */
 public class TorrentManagerTest extends TestCase {
-	
+
 	private TorrentManager mTorrentManager;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mTorrentManager = TorrentManager.getInstance();			
+		mTorrentManager = TorrentManager.getInstance();
 	}
-	
+
 	/**
 	 * Tests whether the test fixture is set up correctly
 	 */
@@ -46,24 +46,23 @@ public class TorrentManagerTest extends TestCase {
 		assertEquals("getNumberOfTorrents() incorrect", 10,
 				mTorrentManager.getNumberOfTorrents());
 	}
-	
+
 	/**
 	 * Test whether the torrent manager returns the correct torrent
 	 */
-	public void testGetTorrentById()
-	{
+	public void testGetTorrentById() {
 		Torrent tor = mTorrentManager.getTorrentById(0);
 		assertNotNull("tor is null", tor);
-		assertEquals("getTorrentById(0) incorrect","Sintel",tor.getName());
+		assertEquals("getTorrentById(0) incorrect", "Sintel", tor.getName());
 	}
-	
+
 	/**
 	 * Test whether the torrent manager returns null when a non-existing torrent
 	 * is requested
 	 */
-	public void testGetTorrentByIdNull()
-	{
-		Torrent tor = mTorrentManager.getTorrentById(mTorrentManager.getNumberOfTorrents());
+	public void testGetTorrentByIdNull() {
+		Torrent tor = mTorrentManager.getTorrentById(mTorrentManager
+				.getNumberOfTorrents());
 		assertNull("tor is not null", tor);
 	}
 
@@ -79,16 +78,17 @@ public class TorrentManagerTest extends TestCase {
 		assertTrue("containsTorrentWithID(2) incorrect",
 				mTorrentManager.containsTorrentWithID(2));
 		assertFalse("containsTorrentWithID(getNumberOfTorrents()) incorrect",
-				mTorrentManager.containsTorrentWithID(mTorrentManager.getNumberOfTorrents()));
+				mTorrentManager.containsTorrentWithID(mTorrentManager
+						.getNumberOfTorrents()));
 	}
-	
+
 	/**
 	 * Tests whether the TorrentManger.getThumbItem method functions correctly
 	 */
-	public void testGetThumbItems()
-	{
+	public void testGetThumbItems() {
 		ArrayList<ThumbItem> thumbs = mTorrentManager.getThumbItems();
 		assertNotNull("thumbs is null", thumbs);
-		assertEquals("size of thumbs incorrect", mTorrentManager.getNumberOfTorrents(), thumbs.size());
+		assertEquals("size of thumbs incorrect",
+				mTorrentManager.getNumberOfTorrents(), thumbs.size());
 	}
 }

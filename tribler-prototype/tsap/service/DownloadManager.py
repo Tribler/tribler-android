@@ -22,7 +22,7 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
 # DB Tuples
-from RpcDBTuples import Torrent, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
+from Tribler.Main.Utility.GuiDBTuples import Torrent, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
 
 # Tribler communities
 from Tribler.community.search.community import SearchCommunity

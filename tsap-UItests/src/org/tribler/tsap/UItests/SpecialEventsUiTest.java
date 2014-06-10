@@ -21,7 +21,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testPressBack() throws RemoteException,
+	public void ignoreTestPressBack() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressBack();
@@ -44,7 +44,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testPressHome() throws RemoteException,
+	public void ignoreTestPressHome() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressHome();

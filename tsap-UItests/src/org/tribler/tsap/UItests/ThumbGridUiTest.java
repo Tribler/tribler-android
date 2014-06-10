@@ -232,7 +232,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		if (!navDrawer.exists()) {
 			UiObject upButton = new UiObject(
 					new UiSelector().descriptionContains("navigation drawer"));
-			upButton.click();
+			upButton.clickAndWaitForNewWindow(1000);
 		}
 
 		UiObject homeItem = navDrawer.getChild(new UiSelector().text("Home"));

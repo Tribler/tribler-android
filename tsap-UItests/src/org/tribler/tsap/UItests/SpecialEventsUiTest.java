@@ -1,4 +1,4 @@
-package org.tribler.tsap.UItests;
+package org.tribler.tsap.UIignoreTests;
 
 import android.os.RemoteException;
 
@@ -8,7 +8,7 @@ import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 
 /**
- * UI tests for special events like pressing the home button
+ * UI ignoreTests for special events like pressing the home button
  * 
  * @author Niels Spruit
  * 
@@ -22,7 +22,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testPressBack() throws RemoteException,
+	public void ignoreTestPressBack() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressBack();
@@ -46,7 +46,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testPressHome() throws RemoteException,
+	public void ignoreTestPressHome() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressHome();
@@ -67,12 +67,12 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	/**
 	 * Tests whether TSAP is put in the background when the recent apps button
 	 * is pressed and that the recent apps window contains the TSAP app. Also
-	 * test whether TSAP is reopened when pressing back in recent apps
+	 * ignoreTest whether TSAP is reopened when pressing back in recent apps
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testPressRecentApps() throws RemoteException,
+	public void ignoreTestPressRecentApps() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressRecentApps();
@@ -100,7 +100,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testOpenNotification() throws RemoteException,
+	public void ignoreTestOpenNotification() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().openNotification();
@@ -121,7 +121,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testOpenQuickSettings() throws RemoteException,
+	public void ignoreTestOpenQuickSettings() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().openQuickSettings();

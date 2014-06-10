@@ -1,4 +1,4 @@
-package org.tribler.tsap.channels.tests;
+package org.tribler.tsap.videoInfoScreen.tests;
 
 import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.R;
@@ -10,17 +10,18 @@ import android.test.ActivityInstrumentationTestCase2;
 
 /**
  * Functional test cases for the video info fragment
+ * 
  * @author Niels Spruit
  */
-public class VideoInfoFragmentTest extends ActivityInstrumentationTestCase2<MainActivity> {
-	
+public class VideoInfoFragmentTest extends
+		ActivityInstrumentationTestCase2<MainActivity> {
+
 	private VideoInfoFragment mVideoInfoFrag;
-	
-	public VideoInfoFragmentTest()
-	{
+
+	public VideoInfoFragmentTest() {
 		super(MainActivity.class);
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -28,13 +29,14 @@ public class VideoInfoFragmentTest extends ActivityInstrumentationTestCase2<Main
 		Bundle args = new Bundle();
 		args.putInt("torrentID", 0);
 		mVideoInfoFrag.setArguments(args);
-		
-		FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-		transaction.replace(R.id.container,mVideoInfoFrag);
+
+		FragmentTransaction transaction = getActivity().getFragmentManager()
+				.beginTransaction();
+		transaction.replace(R.id.container, mVideoInfoFrag);
 		transaction.addToBackStack(null);
 		transaction.commit();
 	}
-	
+
 	/**
 	 * Tests whether the test fixture is set up correctly
 	 */

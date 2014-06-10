@@ -19,8 +19,6 @@ _logger = logging.getLogger(__name__)
 
 arg = os.getenv('PYTHON_SERVICE_ARGUMENT')
 
-from Tribler.Core.osutils import is_android
-
 # Local files
 from TorrentManager import TorrentManager
 from ChannelManager import ChannelManager
@@ -64,24 +62,9 @@ class TSAP():
         _logger.error("Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port))
         self.xmlrpc.start_server()
 
-    def test_sintel(self):
-        """
-        Test the torrent download functionality by downloading sintel and starting a VLC stream.
-        :return: Nothing.
-        """
-        dl_sintel = self.dm.add_torrent(os.path.join(os.getcwdu(), "..", "data", "sintel.torrent"), os.path.join(os.getcwdu(), "downloaded_videos"))
-
-        if is_android(strict=True):
-            self.dm.launch_vlc(dl_sintel)
-
-        while True:
-            for dl in self.dm.get_downloads():
-                print self.dm._getDownload(dl)
-            time.sleep(5)
-
 
 if __name__ == '__main__':
     tsap = TSAP()
     tsap.run()
 
-    #tsap.test_sintel()
+    #tsap.dm.add_torrent("e9776f4626e03405b005ad30b4b4a2906125bd62", "Sintel")

@@ -14,14 +14,14 @@ import org.tribler.tsap.XMLRPCCallTask;
  * Class for receiving torrents over XMPRPC using the aXMLRPC library
  * 
  * @author Dirk Schut
- * @since 26-5-2014
  */
 public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	private ThumbAdapter mAdapter;
 	private int mLastFoundResultsCount = 0;
 
 	/**
-	 * Constructor: Makes a connection with an XMLRPC server and starts a polling loop
+	 * Constructor: Makes a connection with an XMLRPC server and starts a
+	 * polling loop
 	 * 
 	 * @param url
 	 *            The url of the XMLRPC server
@@ -32,33 +32,43 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * Searches the local dispersy data for torrents fitting a certain query. Once the results are found it will send
-	 * them as an ArrayList<ThumbItem> to all observers.
+	 * Searches the local dispersy data for torrents fitting a certain query.
+	 * Once the results are found it will send them as an ArrayList<ThumbItem>
+	 * to all observers.
 	 * 
 	 * @param query
-	 *            The query that Tribler will look for in the names of the channels
+	 *            The query that Tribler will look for in the names of the
+	 *            channels
 	 */
 	/*
-	 * private void getLocal(final String query) { Log.v("XMPLRCChannelManager", "Local search for \"" + query +
-	 * "\" launched."); XMLRPCCallTask task = new XMLRPCCallTask() {
+	 * private void getLocal(final String query) { Log.v("XMPLRCChannelManager",
+	 * "Local search for \"" + query + "\" launched."); XMLRPCCallTask task =
+	 * new XMLRPCCallTask() {
 	 * 
-	 * @Override protected void onPostExecute(Object result) { Log.v("XMPLRCChannelManager", "Local search returned.");
-	 * Object[] arrayResult = (Object[]) result; ArrayList<Channel> resultsList = new ArrayList<Channel>();
-	 * Log.v("XMLRPC", "Got " + arrayResult.length + "results"); for (int i = 0; i < arrayResult.length; i++) {
+	 * @Override protected void onPostExecute(Object result) {
+	 * Log.v("XMPLRCChannelManager", "Local search returned."); Object[]
+	 * arrayResult = (Object[]) result; ArrayList<Channel> resultsList = new
+	 * ArrayList<Channel>(); Log.v("XMLRPC", "Got " + arrayResult.length +
+	 * "results"); for (int i = 0; i < arrayResult.length; i++) {
 	 * 
-	 * @SuppressWarnings("unchecked") Channel c = new Channel( (Map<String, Object>) arrayResult[i]);
-	 * resultsList.add(c); } mAdapter.addNew(resultsList); } }; task.execute(mClient, "channels.get_local", query); }
+	 * @SuppressWarnings("unchecked") Channel c = new Channel( (Map<String,
+	 * Object>) arrayResult[i]); resultsList.add(c); }
+	 * mAdapter.addNew(resultsList); } }; task.execute(mClient,
+	 * "channels.get_local", query); }
 	 */
 
 	/**
-	 * Searches the remote dispersy data for torrents fitting a certain query. The results can be retrieved by calling
-	 * getRemoteResults(). The amount of found results can be retrieved by calling getRemoteResultsCount().
+	 * Searches the remote dispersy data for torrents fitting a certain query.
+	 * The results can be retrieved by calling getRemoteResults(). The amount of
+	 * found results can be retrieved by calling getRemoteResultsCount().
 	 * 
 	 * @param query
-	 *            The query that Tribler will look for in the names of the channels
+	 *            The query that Tribler will look for in the names of the
+	 *            channels
 	 */
 	private void searchRemote(final String query) {
-		Log.v("XMPLRCChannelManager", "Remote search for \"" + query + "\" launched.");
+		Log.v("XMPLRCChannelManager", "Remote search for \"" + query
+				+ "\" launched.");
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
@@ -68,8 +78,10 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 				// fixed. Right now the function allways returns None, while it
 				// should return a Boolean just like XMLRPCChannelManager
 				/*
-				 * Boolean hasPeers = (Boolean) result; if (hasPeers) { Log.v("XMLRPC", "Looking for query " + query +
-				 * " across peers."); } else { Log.v("XMLRPC", "Not enough peers found for query " + query + "."); }
+				 * Boolean hasPeers = (Boolean) result; if (hasPeers) {
+				 * Log.v("XMLRPC", "Looking for query " + query +
+				 * " across peers."); } else { Log.v("XMLRPC",
+				 * "Not enough peers found for query " + query + "."); }
 				 */
 			}
 		};
@@ -77,7 +89,8 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * It will send an Integer to all observers describing the amount of found results.
+	 * It will send an Integer to all observers describing the amount of found
+	 * results.
 	 */
 	private void getRemoteResultsCount() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
@@ -98,7 +111,7 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * It will send an ArrayList<Channel> all observers containing the found torrents.
+	 * It will send an ArrayList to all observers containing the found torrents.
 	 */
 	private void getRemoteResults() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
@@ -110,10 +123,12 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 					Log.v("XMLRPC", "Got " + arrayResult.length + " results");
 					for (int i = 0; i < arrayResult.length; i++) {
 						@SuppressWarnings("unchecked")
-						ThumbItem item = new ThumbItem((Map<String, Object>) arrayResult[i]);
+						ThumbItem item = new ThumbItem(
+								(Map<String, Object>) arrayResult[i]);
 						resultsList.add(item);
 					}
-					// Map<String, Object> firstResult = (Map<String,Object>)arrayResult[0];
+					// Map<String, Object> firstResult = (Map<String,
+					// Object>)arrayResult[0];
 					// Log.v("XMPLRCChannelManager",
 					// "KeySet: "+firstResult.keySet());
 					mAdapter.addNew(resultsList);

@@ -46,6 +46,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		mThumbWidth = (int) (100 * s);
 		mThumbHeight = (int) (150 * s);
 	}
+
 	/**
 	 * Constructor: initializes the instance variables
 	 * 

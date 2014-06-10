@@ -16,8 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.TextView;
 
 /**
  * Fragment that shows a list of available channels and handles its behavior
@@ -43,7 +45,8 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 		this.setListAdapter(adapter);
 
 		try {
-			mChannelManager = new XMLRPCChannelManager(new URL("http://localhost:8000/tribler"), (ChannelListAdapter) getListAdapter());
+			mChannelManager = new XMLRPCChannelManager(new URL(
+					"http://localhost:8000/tribler"), (ChannelListAdapter)getListAdapter());
 		} catch (MalformedURLException e) {
 			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}

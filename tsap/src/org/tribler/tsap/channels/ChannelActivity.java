@@ -3,7 +3,7 @@ package org.tribler.tsap.channels;
 import org.tribler.tsap.R;
 import org.tribler.tsap.SimpleTabListener;
 import org.tribler.tsap.channels.ChannelDescriptionFragment;
-import org.tribler.tsap.ThumbGridFragment;
+import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;

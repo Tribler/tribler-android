@@ -1,7 +1,6 @@
-package org.tribler.tsap;
+package org.tribler.tsap.videoInfoScreen;
 
-import org.tribler.tsap.videoInfoScreen.Torrent;
-import org.tribler.tsap.videoInfoScreen.TorrentManager;
+import org.tribler.tsap.R;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Fragment;

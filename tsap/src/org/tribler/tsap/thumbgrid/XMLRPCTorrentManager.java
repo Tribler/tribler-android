@@ -52,6 +52,8 @@ public class XMLRPCTorrentManager {
 	}
 
 	/**
+	 * TODO: implement on server side (so code can be uncommented).
+	 * 
 	 * Searches the local dispersy data for torrents fitting a certain query.
 	 * Once the results are found it will send them as an ArrayList<ThumbItem>
 	 * to all observers.

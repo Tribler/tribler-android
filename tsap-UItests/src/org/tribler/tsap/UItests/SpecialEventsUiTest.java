@@ -1,4 +1,4 @@
-package org.tribler.tsap.UIignoreTests;
+package org.tribler.tsap.UItests;
 
 import android.os.RemoteException;
 

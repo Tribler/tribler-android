@@ -1,4 +1,6 @@
-__author__ = 'user'
+# coding: utf-8
+# Written by Wendo Sabée
+# Global settings for all tests
 
 import os
 

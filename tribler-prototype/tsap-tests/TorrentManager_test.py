@@ -4,19 +4,32 @@ import os
 import pytest
 from time import sleep
 
+# Import configuration
 from TestConfig import *
 
 
 class TorrentsRemoteSearch(unittest.TestCase):
 
     def setUp(self):
+        """
+        Load XML-RPC connection.
+        :return: Nothing.
+        """
         self.xmlrpc = xmlrpclib.ServerProxy(XMLRPC_URL, allow_none=True)
 
     def tearDown(self):
+        """
+        Destroy XML-RPC connection.
+        :return: Nothing.
+        """
         self.xmlrpc = None
 
     @pytest.mark.timeout(10)
     def testA_Methods(self):
+        """
+        Tests if the torrents.* methods exist
+        :return: Nothing.
+        """
         methods = self.xmlrpc.system.listMethods()
 
         assert len(methods) > 0
@@ -25,6 +38,10 @@ class TorrentsRemoteSearch(unittest.TestCase):
         assert 'torrents.search_remote' in methods
 
     def testB_RemoteSearchSintel(self):
+        """
+        Search for 'Sintel' and check results.
+        :return: Nothing.
+        """
         # Clear previous results
         self.xmlrpc.torrents.search_remote("vodo")
         sleep(1)
@@ -48,6 +65,10 @@ class TorrentsRemoteSearch(unittest.TestCase):
             assert "sintel" in result['name'].lower(), "'%s' does not contain 'sintel'" % result['name']
 
     def testC_RemoteSearchVodo(self):
+        """
+        Search for 'Vodo' and check results.
+        :return: Nothing.
+        """
         self.xmlrpc.torrents.search_remote("vodo")
 
         result_count = 0
@@ -67,6 +88,13 @@ class TorrentsRemoteSearch(unittest.TestCase):
             assert "vodo" in result['name'].lower(), "'%s' does not contain 'vodo'" % result['name']
 
     def XtestY_Deadlock_slow(self):
+        """
+        Do a big amount of searches with a large interval between them.
+        :return: Nothing.
+        """
+        if not REMOTE_DEADLOCK_TESTS:
+            return
+
         slp = 10
         lps = 10
 
@@ -84,6 +112,10 @@ class TorrentsRemoteSearch(unittest.TestCase):
                 loops -= 1
 
     def testZ_Deadlock_fast(self):
+        """
+        Do a big amount of searches with a small interval between them.
+        :return: Nothing.
+        """
         if not REMOTE_DEADLOCK_TESTS:
             return
 

@@ -8,6 +8,7 @@ import java.util.Observable;
 import android.util.Log;
 
 import org.tribler.tsap.AbstractXMLRPCManager;
+import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPCCallTask;
 
 /**
@@ -111,6 +112,15 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		};
 		task.execute(mClient, "torrents.get_remote_results_count");
 	}
+	
+	private ThumbItem convertMapToThumbItem(Map<String, Object> map)
+	{
+		return new ThumbItem((String) map.get("name"),
+				R.drawable.dracula,
+				TORRENT_HEALTH.YELLOW,
+				1000,
+				(String)map.get("infohash"));
+	}
 
 	/**
 	 * It will send an ArrayList to all observers containing the found torrents.
@@ -125,14 +135,14 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 					Log.v("XMLRPC", "Got " + arrayResult.length + " results");
 					for (int i = 0; i < arrayResult.length; i++) {
 						@SuppressWarnings("unchecked")
-						ThumbItem item = new ThumbItem(
+						ThumbItem item = convertMapToThumbItem(
 								(Map<String, Object>) arrayResult[i]);
 						resultsList.add(item);
 					}
-					// Map<String, Object> firstResult = (Map<String,
-					// Object>)arrayResult[0];
-					// Log.v("XMPLRCChannelManager",
-					// "KeySet: "+firstResult.keySet());
+					Map<String, Object> firstResult = (Map<String,
+					 Object>)arrayResult[0];
+					Log.v("XMPLRCChannelManager",
+					"KeySet: "+firstResult.keySet());
 					mAdapter.addNew(resultsList);
 				}
 			}

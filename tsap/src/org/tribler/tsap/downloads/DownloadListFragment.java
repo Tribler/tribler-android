@@ -31,11 +31,6 @@ public class DownloadListFragment extends ListFragment {
 		setHasOptionsMenu(true);
 
 		DownloadListAdapter adapter = new DownloadListAdapter(getActivity(), R.layout.download_list_item);
-		ArrayList<Download> junkData = new ArrayList<Download>();
-		junkData.add(new Download("Sintel", 1602));
-		junkData.add(new Download("Tears of Steel", 1503));
-		junkData.add(new Download("Big Buck Bunny", 1404));
-		adapter.addNew(junkData);
 
 		this.setListAdapter(adapter);
 

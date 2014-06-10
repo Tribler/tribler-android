@@ -132,6 +132,6 @@ public class TorrentManager {
 	private ThumbItem toThumbItem(Torrent torrent) {
 		int fz = (int) Math.round(torrent.getFilesize());
 		return new ThumbItem(torrent.getName(), torrent.getThumbnailID(),
-				torrent.getHealth(), fz);
+				torrent.getHealth(), fz, "a");
 	}
 }

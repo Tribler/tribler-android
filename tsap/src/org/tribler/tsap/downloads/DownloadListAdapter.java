@@ -1,5 +1,7 @@
 package org.tribler.tsap.downloads;
 
+import java.util.ArrayList;
+
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
 
@@ -47,4 +49,8 @@ class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		return view;
 	}
 	
+	public void replaceAll(ArrayList<Download> newList) {
+		content = newList;
+		notifyDataSetChanged();
+	}
 }

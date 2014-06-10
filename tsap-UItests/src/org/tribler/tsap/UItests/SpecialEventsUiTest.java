@@ -4,6 +4,7 @@ import android.os.RemoteException;
 
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 
 /**
@@ -21,7 +22,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void ignoreTestPressBack() throws RemoteException,
+	public void testPressBack() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressBack();
@@ -35,6 +36,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 				new UiSelector().packageName("com.android.launcher"));
 		assertTrue("Launcher doesn't exist after pressing back",
 				launcher.exists());
+		restartTSAP();
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void ignoreTestPressHome() throws RemoteException,
+	public void testPressHome() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 		getUiDevice().pressHome();
@@ -58,7 +60,9 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 				new UiSelector().packageName("com.android.launcher"));
 		assertTrue("Launcher doesn't exist after pressing home",
 				launcher.exists());
+		restartTSAP();
 	}
+
 
 	/**
 	 * Tests whether TSAP is put in the background when the recent apps button
@@ -129,5 +133,54 @@ public class SpecialEventsUiTest extends BasicUiTestCase {
 
 		// close quick settings (so TSAP should be in foreground)
 		getUiDevice().pressBack();
+	}
+	
+	/**
+	 * Launches the TSAP app on the device 
+	 * 
+	 * @throws UiObjectNotFoundException
+	 * @throws RemoteException 
+	 */
+	private void restartTSAP() throws UiObjectNotFoundException, RemoteException {		
+		// Simulate a short press on the HOME button.
+		getUiDevice().pressHome();
+
+		// We’re now in the home screen. Next, we want to simulate
+		// a user bringing up the All Apps screen.
+		// If you use the uiautomatorviewer tool to capture a snapshot
+		// of the Home screen, notice that the All Apps button’s
+		// content-description property has the value “Apps”. We can
+		// use this property to create a UiSelector to find the button.
+		UiObject allAppsButton = new UiObject(
+				new UiSelector().description("Apps"));
+
+		// Simulate a click to bring up the All Apps screen.
+		allAppsButton.clickAndWaitForNewWindow();
+
+		// In the All Apps screen, the TSAP app is located in
+		// the Apps tab. To simulate the user bringing up the Apps tab,
+		// we create a UiSelector to find a tab with the text
+		// label “Apps”.
+		UiObject appsTab = new UiObject(new UiSelector().text("Apps"));
+
+		// Simulate a click to enter the Apps tab.
+		appsTab.clickAndWaitForNewWindow();
+
+		// Next, in the apps tabs, we can simulate a user swiping until
+		// they come to the TSAP app icon. Since the container view
+		// is scrollable, we can use a UiScrollable object.
+		UiScrollable appViews = new UiScrollable(
+				new UiSelector().scrollable(true));
+
+		// Set the swiping mode to horizontal (the default is vertical)
+		appViews.setAsHorizontalList();
+
+		// Create a UiSelector to find the TSAP app and simulate
+		// a user click to launch the app.
+		UiObject tsapApp = appViews.getChildByText(new UiSelector().className("android.widget.TextView"), "TSAP",true);
+		tsapApp.clickAndWaitForNewWindow();
+		
+		// Set the rotation to normal (=portrait mode)
+		getUiDevice().setOrientationNatural();
 	}
 }

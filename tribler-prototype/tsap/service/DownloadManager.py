@@ -114,6 +114,9 @@ class DownloadManager():
         xmlrpc.register_function(self.get_vod_uri, 'download.get_vod_uri')
         xmlrpc.register_function(self.set_state, 'downloads.set_state')
 
+        #test
+        xmlrpc.register_function(self.launch_vlc, "downloads.launch_vlc")
+
     def add_torrent(self, infohash, name):
         """
         Add a download to the download list by its infohash.
@@ -255,26 +258,13 @@ class DownloadManager():
             _logger.error("Waiting for libtorrent (%s)" % dl.tdef.get_name())
 
         return dl
+    """
 
-    def launch_vlc(self, dl):
+    def launch_vlc(self, infohash):
         assert os.environ['ANDROID_HOST'].startswith("ANDROID")
         from vlcutil import launchVLC
 
-        MINIMAL_DOWNLOAD_PROGRESS = 0.10
-
-        vlcurl = "http://127.0.0.1:%s/%s/0" % (self._session.get_videoplayer_port(), binascii.hexlify(dl.tdef.get_infohash()))
-
-        print ">>>>>>>>>>>>>>> Listening on %s" % vlcurl
-
-        while dl.get_progress() < MINIMAL_DOWNLOAD_PROGRESS:
-            print "DL Progress %s > %s not met yet.." % (dl.get_progress(), MINIMAL_DOWNLOAD_PROGRESS)
-            print self._getDownload(dl)
-            time.sleep(5)
-
-        launchVLC(vlcurl)
-
-        return dl
-    """
+        launchVLC(self.get_vod_uri(infohash))
 
     def _getDownload(self, torrentimpl, vod=False, progress=False, files=False, network=False):
         """

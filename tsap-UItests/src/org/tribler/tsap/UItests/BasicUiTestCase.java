@@ -18,7 +18,7 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 
 	/**
 	 * Makes sure the TSAP app is launched on the device and the MainActivity is
-	 * shown
+	 * shown (in portrait mode)
 	 * 
 	 * @throws UiObjectNotFoundException
 	 * @throws RemoteException
@@ -34,6 +34,8 @@ public class BasicUiTestCase extends UiAutomatorTestCase {
 		UiObject tsapValidation = new UiObject(
 				new UiSelector().packageName("org.tribler.tsap"));
 		assertTrue("Unable to find TSAP app", tsapValidation.exists());
-
+		
+		// Set the rotation to normal (=portrait mode)
+		getUiDevice().setOrientationNatural();
 	}
 }

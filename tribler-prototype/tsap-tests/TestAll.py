@@ -5,20 +5,18 @@
 import unittest
 import os
 
-def import_all_tests():
-    """
-    Import all tests from *_test.py files
-    :return: Nothing
-    """
+if __name__ == '__main__':
+    # Import all *_test.py files
     for file in os.listdir(os.getcwd()):
         if file.endswith('_test.py'):
             try:
                 modulename = file[:len(file) - 3]
                 exec("from %s import *" % modulename)
                 print "Imported tests from %s" % modulename
-            except:
+            except Exception, e:
+                print "Skipped %s (%s)" % (modulename, e)
                 pass
 
-if __name__ == '__main__':
-    import_all_tests()
-    unittest.main()
+    print '\nRunning tests:'
+
+    unittest.main(verbosity=2)

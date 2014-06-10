@@ -88,14 +88,12 @@ class ChannelsRemoteSearch(unittest.TestCase):
         for result in results:
             assert "vodo" in result['name'].lower(), "'%s' does not contain 'vodo'" % result['name']
 
+    @unittest.skipIf(not REMOTE_DEADLOCK_TESTS, "REMOTE_DEADLOCK_TESTS is False")
     def XtestY_Deadlock_slow(self):
         """
         Do a big amount of searches with a small interval between them.
         :return: Nothing.
         """
-        if not REMOTE_DEADLOCK_TESTS:
-            return
-
         slp = 10
         lps = 10
 
@@ -112,13 +110,12 @@ class ChannelsRemoteSearch(unittest.TestCase):
                 print "%s/%s.." % (loops, lps)
                 loops -= 1
 
+    @unittest.skipIf(not REMOTE_DEADLOCK_TESTS, "REMOTE_DEADLOCK_TESTS is False")
     def testZ_Deadlock_fast(self):
         """
         Do a big amount of searches with a small interval between them.
         :return: Nothing.
         """
-        if not REMOTE_DEADLOCK_TESTS:
-            return
 
         slp = 0.1
         lps = 100

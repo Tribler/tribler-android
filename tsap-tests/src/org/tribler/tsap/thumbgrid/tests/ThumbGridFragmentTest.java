@@ -1,4 +1,4 @@
-package org.tribler.tsap.channels.tests;
+package org.tribler.tsap.thumbgrid.tests;
 
 import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;

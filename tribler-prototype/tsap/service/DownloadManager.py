@@ -174,7 +174,7 @@ class DownloadManager():
         :param infohash: Infohash of the torrent.
         :return: Full info of a torrent or False on failure.
         """
-        return self._get_download_info(infohash, {'progress': True, 'files': True, 'network' True})
+        return self._get_download_info(infohash, {'progress': True, 'files': True, 'network': True})
 
     def get_vod(self, infohash):
         """

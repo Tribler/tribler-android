@@ -7,15 +7,15 @@ import android.test.ActivityInstrumentationTestCase2;
 
 /**
  * Functional test cases for the Channel list fragment
+ * 
  * @author Niels Spruit
  */
 public class ChannelListFragmentTest extends
 		ActivityInstrumentationTestCase2<MainActivity> {
-	
+
 	private ChannelListFragment mChannelListFrag;
-	
-	public ChannelListFragmentTest()
-	{
+
+	public ChannelListFragmentTest() {
 		super(MainActivity.class);
 	}
 
@@ -26,7 +26,7 @@ public class ChannelListFragmentTest extends
 		mMainActivity.onNavigationDrawerItemSelected(1);
 		mChannelListFrag = mMainActivity.getChannelListFragment();
 	}
-	
+
 	/**
 	 * Tests whether the test fixture is set up correctly
 	 */

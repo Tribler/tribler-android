@@ -102,6 +102,8 @@ cd "${PY4APATH}/dist/${DIRNAME}/"
 rm "${CURRENTFOLDERPATH}/tsap/swift"
 
 # Copy the .so files to the libs folder in tsap
+find "${PY4APATH}/dist/${DIRNAME}/libs/armeabi" -type f -name '*.so' -exec cp {} "${CURRENTFOLDERPATH}/../tsap/libs/armeabi-v7a" \;
+
 # Copy the assets MP3s to the assets folder in tsap
 # Change the version strings to the correct values
 

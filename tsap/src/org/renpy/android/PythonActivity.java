@@ -153,7 +153,7 @@ public class PythonActivity extends Activity implements Runnable {
 		unpackData("private", getFilesDir());
 		unpackData("public", externalStorage);
 
-		start_service("PythonService", "Service running python code", "");
+		start_service("Tribler", "Service running Tribler", "");
 		Log.d(TAG, "Service started");
 		startActivity(new Intent(this, MainActivity.class));
 	}

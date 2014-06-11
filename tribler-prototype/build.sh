@@ -110,6 +110,12 @@ find "${PY4APATH}/dist/${DIRNAME}/assets" -type f -name '*.mp3' -exec cp {} "${C
 # Change the version strings to the correct values
 private_version=$(grep -oP '(?<=<string name="private_version">)\d*.\d*(?=</string>)' "${PY4APATH}/dist/${DIRNAME}/res/values/strings.xml")
 
+public_version=$(grep -oP '(?<=<string name="public_version">)\d*.\d*(?=</string>)' "${PY4APATH}/dist/${DIRNAME}/res/values/strings.xml")
+
+mv "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+perl -pe "s/<string name=\"private_version\">\d*.\d*/<string name=\"private_version\">$private_version/" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml"
+rm "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+
 # Copy the .apk files to our own app folder
 #find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
 

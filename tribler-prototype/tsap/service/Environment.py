@@ -1,18 +1,25 @@
-__author__ = 'user'
+# coding: utf-8
+# Written by Wendo Sabée
+# Sets the appropriate environment variables
 
 import os
 
+
 def init_environment():
+    """
+    Sets the appropriate environment variables such as the EGG Cache.
+    :return: Nothing.
+    """
+
+    if 'ANDROID_HOST' in os.environ:
+        return
+
     if 'ANDROID_PRIVATE' in os.environ:
         print "We are running on android/p4a"
 
         split_path = os.path.split(os.environ['ANDROID_PRIVATE'])
-        print split_path
-        print os.environ['ANDROID_PRIVATE']
         if split_path[1].lower() == 'service':
             os.environ['ANDROID_PRIVATE'] = split_path[0]
-        #    os.chdir(split_path[0])
-        print os.environ['ANDROID_PRIVATE']
 
         # Set P4A egg cache
         os.environ["PYTHON_EGG_CACHE"] = "/data/data/org.tsap.tribler.full/cache"

@@ -214,6 +214,10 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 				searchView.getText().trim());
 		assertEquals("SearchView isn't an EditText", "android.widget.EditText",
 				searchView.getClassName());
+		
+		//press back twice to return to home
+		getUiDevice().pressBack();
+		getUiDevice().pressBack();
 	}
 
 	/**
@@ -232,7 +236,7 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 		if (!navDrawer.exists()) {
 			UiObject upButton = new UiObject(
 					new UiSelector().descriptionContains("navigation drawer"));
-			upButton.click();
+			upButton.clickAndWaitForNewWindow(1000);
 		}
 
 		UiObject homeItem = navDrawer.getChild(new UiSelector().text("Home"));

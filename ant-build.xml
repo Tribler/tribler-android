@@ -1278,6 +1278,9 @@
                         <arg value="-e" />
                            <arg value="coverageFile" />
                            <arg value="${emma.dump.file}" />
+			<arg value="-e" />
+                           <arg value="reportDir" />
+                           <arg value="/sdcard/org.tribler.tsap/reports" />
                     </extra-instrument-args>
                 </run-tests-helper>
 

@@ -116,6 +116,10 @@ mv "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml" "${CURRENTFOLDERPATH}/.
 perl -pe "s/<string name=\"private_version\">\d*.\d*/<string name=\"private_version\">$private_version/" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml"
 rm "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
 
+mv "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+perl -pe "s/<string name=\"public_version\">\d*.\d*/<string name=\"public_version\">$public_version/" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml"
+rm "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+
 # Copy the .apk files to our own app folder
 #find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
 

@@ -80,6 +80,11 @@ fi
 # Remove the created directory 
 rm -rf "${PY4APATH}/dist/${DIRNAME}"
 
+# Adapt sdl_main.c to export the correct JNI function (PythonService_nativeSetEnv)
+mv ./src/jni/sdl_main/sdl_main.c ./src/jni/sdl_main/sdl_main.c.bak
+sed s/SDLSurfaceView_nativeSetEnv/PythonService_nativeSetEnv/ ./src/jni/sdl_main/sdl_main.c.bak > ./src/jni/sdl_main/sdl_main.c
+rm ./src/jni/sdl_main/sdl_main.c.bak
+
 # Build a distribute folder with all the packages now that kivy has been set
 pushd $PY4APATH
 #./distribute.sh -m "openssl pycrypto m2crypto sqlite3 pyasn1 dispersy netifaces Tribler" -d $DIRNAME

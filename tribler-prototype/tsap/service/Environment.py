@@ -22,13 +22,13 @@ def init_environment():
             os.environ['ANDROID_PRIVATE'] = split_path[0]
 
         # Set P4A egg cache
-        os.environ["PYTHON_EGG_CACHE"] = "/data/data/org.tsap.tribler.full/cache"
+        os.environ["PYTHON_EGG_CACHE"] = os.path.join(os.path.split(os.environ['ANDROID_PRIVATE'])[0], 'cache')
 
         # Set tribler data dir
         os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.environ['ANDROID_PRIVATE'], '.Tribler')
 
         # Running on Android
-        os.environ['ANDROID_HOST'] = "ANDROID-99"  # TODO: SET SDK VERSION INSTEAD
+        os.environ['ANDROID_HOST'] = "ANDROID-%s" % (os.environ['ANDROID_SDK'] if 'ANDROID_SDK' in os.environ else '99')
     else:
         print "We are running on a pc"
 

@@ -106,6 +106,7 @@ rm "${CURRENTFOLDERPATH}/tsap/swift"
 find "${PY4APATH}/dist/${DIRNAME}/libs/armeabi" -type f -name '*.so' -exec cp {} "${CURRENTFOLDERPATH}/../tsap/libs/armeabi-v7a" \;
 
 # Copy the assets MP3s to the assets folder in tsap
+mkdir -p "${CURRENTFOLDERPATH}/../tsap/assets"
 find "${PY4APATH}/dist/${DIRNAME}/assets" -type f -name '*.mp3' -exec cp {} "${CURRENTFOLDERPATH}/../tsap/assets" \;
 
 # Change the version strings to the correct values

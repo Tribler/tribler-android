@@ -1,11 +1,14 @@
 package org.renpy.android;
 
+import org.tribler.tsap.MainActivity;
+
 import android.app.Service;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.Context;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -24,6 +27,10 @@ public class PythonService extends Service  implements Runnable {
     
     // Argument to pass to Python code,
     private String pythonServiceArgument;
+    
+    private Notification notification;
+    private String serviceTitle;
+    private static PythonService pyService;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -37,6 +44,7 @@ public class PythonService extends Service  implements Runnable {
             return START_NOT_STICKY;
         }
 
+        pyService = this;
         Bundle extras = intent.getExtras();
         androidPrivate = extras.getString("androidPrivate");
         // service code is located in current directory (not in /service anymore!)
@@ -44,23 +52,33 @@ public class PythonService extends Service  implements Runnable {
         pythonHome = extras.getString("pythonHome");
         pythonPath = extras.getString("pythonPath");
         pythonServiceArgument = extras.getString("pythonServiceArgument");
-        String serviceTitle = extras.getString("serviceTitle");
+        serviceTitle = extras.getString("serviceTitle");
         String serviceDescription = extras.getString("serviceDescription");
 
         pythonThread = new Thread(this);
         pythonThread.start();
 
-        Context context = getApplicationContext();
-        Notification notification = new Notification(context.getApplicationInfo().icon,
-                serviceTitle,
-                System.currentTimeMillis());
-        Intent contextIntent = new Intent(context, PythonActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, contextIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setLatestEventInfo(context, serviceTitle, serviceDescription, pIntent);
-        startForeground(1, notification);
+        updateNotification(serviceDescription);
 
         return START_NOT_STICKY;
+    }
+    
+    private void updateNotification(CharSequence text)
+    {
+    	Context context = getApplicationContext();
+        notification = new Notification(context.getApplicationInfo().icon,
+                serviceTitle,
+                System.currentTimeMillis());
+        Intent contextIntent = new Intent(context, MainActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, contextIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        notification.setLatestEventInfo(context, serviceTitle, text, pIntent);
+        startForeground(1, notification);
+    }
+    
+    public static void updateNotificationText(CharSequence newText)
+    {
+    	pyService.updateNotification(newText);
     }
 
     @Override

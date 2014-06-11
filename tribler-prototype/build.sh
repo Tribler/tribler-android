@@ -23,7 +23,7 @@ while getopts ":p:" opt; do
 done
 
 if [ "X$PY4APATH" == "X" ]; then
-	echo -e "${yellow}༼ ▀̿̿Ĺ̯̿̿▀̿ ̿ ༽_•︻̷̿┻̿═━一༼ຈل͜ຈ༽ give the path of python-for-android using the -p flag or the donger dies${NC}"
+	echo -e "${yellow} Please give the path of python-for-android using the -p flag${NC}"
 	exit 1
 fi
 

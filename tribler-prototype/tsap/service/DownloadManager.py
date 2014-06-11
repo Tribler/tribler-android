@@ -124,18 +124,22 @@ class DownloadManager():
         :param name: The name of the torrent.
         :return: The infohash of the torrent.
         """
-        tdef = TorrentDefNoMetainfo(binascii.unhexlify(infohash), name)
+        try:
+            tdef = TorrentDefNoMetainfo(binascii.unhexlify(infohash), name)
 
-        defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
-        dscfg = defaultDLConfig.copy()
+            defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
+            dscfg = defaultDLConfig.copy()
 
-        dscfg.set_dest_dir(DOWNLOAD_DIRECTORY)
+            dscfg.set_dest_dir(DOWNLOAD_DIRECTORY)
 
-        dl = self._session.start_download(tdef, dscfg)
+            dl = self._session.start_download(tdef, dscfg)
 
-        while not dl.handle:
-            time.sleep(1)
-            _logger.error("Waiting for libtorrent (%s)" % dl.tdef.get_name())
+            while not dl.handle:
+                time.sleep(1)
+                _logger.error("Waiting for libtorrent (%s)" % dl.tdef.get_name())
+        except:
+            _logger.error("Error adding torrent (infohash=%s,name=%s)" % (infohash, name))
+            return False
 
         try:
             return self._getDownload(dl)['infohash']

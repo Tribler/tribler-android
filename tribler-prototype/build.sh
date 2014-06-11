@@ -108,8 +108,9 @@ find "${PY4APATH}/dist/${DIRNAME}/libs/armeabi" -type f -name '*.so' -exec cp {}
 find "${PY4APATH}/dist/${DIRNAME}/assets" -type f -name '*.mp3' -exec cp {} "${CURRENTFOLDERPATH}/../tsap/assets" \;
 
 # Change the version strings to the correct values
+private_version=$(grep -oP '(?<=<string name="private_version">)\d*.\d*(?=</string>)' "${PY4APATH}/dist/${DIRNAME}/res/values/strings.xml")
 
 # Copy the .apk files to our own app folder
 #find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
 
-#echo -e "${green}All done!${NC} Everything seems to be in order (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ "
+echo -e "${green}All done!${NC} Everything seems to be in order (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ "

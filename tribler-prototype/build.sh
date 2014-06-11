@@ -101,7 +101,11 @@ cd "${PY4APATH}/dist/${DIRNAME}/"
 # FIXME: rm precompiled swift binary
 rm "${CURRENTFOLDERPATH}/tsap/swift"
 
-# Copy the .apk files to our own app folder
-find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
+# Copy the .so files to the libs folder in tsap
+# Copy the assets MP3s to the assets folder in tsap
+# Change the version strings to the correct values
 
-echo -e "${green}All done!${NC} Everything seems to be in order (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ "
+# Copy the .apk files to our own app folder
+#find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
+
+#echo -e "${green}All done!${NC} Everything seems to be in order (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ "

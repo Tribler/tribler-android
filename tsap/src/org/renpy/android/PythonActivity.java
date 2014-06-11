@@ -14,6 +14,7 @@ import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class PythonActivity extends Activity implements Runnable {
@@ -150,12 +151,29 @@ public class PythonActivity extends Activity implements Runnable {
 	}
 
 	public void run() {
+		setProgressText("Extracting assets...");
 		unpackData("private", getFilesDir());
 		unpackData("public", externalStorage);
 
+		setProgressText("Starting Tribler service...");
 		start_service("Tribler", "Service running Tribler", "");
 		Log.d(TAG, "Service started");
+		
+		setProgressText("Starting the main activity...");
 		startActivity(new Intent(this, MainActivity.class));
+	}
+	
+	private void setProgressText(final String message)
+	{
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				TextView progressText = (TextView) findViewById(R.id.python_progress_text);
+				progressText.setText(message);				
+			}
+		});
+		
 	}
 
 	@Override

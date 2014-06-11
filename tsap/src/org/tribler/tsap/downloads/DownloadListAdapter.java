@@ -9,9 +9,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
+public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 	protected int resource;
 	protected LayoutInflater inflater;
 	
@@ -44,8 +45,13 @@ class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 
 		((TextView) view.findViewById(R.id.download_name)).setText(download
 				.getName());
-		((TextView) view.findViewById(R.id.download_torrent_size))
-				.setText("Size: " + download.getSize());
+		((TextView) view.findViewById(R.id.download_status))
+				.setText("Status: " + download.getStatus());
+		((TextView) view.findViewById(R.id.download_speed_down))
+		.setText("Down: " + download.getDownloadSpeed()/1024 +"Kb");
+		((TextView) view.findViewById(R.id.download_speed_up))
+		.setText("Up: " + download.getUploadSpeed()/1024 +"Kb");
+		((ProgressBar) view.findViewById(R.id.download_progress_bar)).setProgress((int)(download.getProgress()*100));
 		return view;
 	}
 	

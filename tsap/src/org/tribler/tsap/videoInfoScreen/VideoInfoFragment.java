@@ -1,6 +1,7 @@
 package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
@@ -112,6 +113,17 @@ public class VideoInfoFragment extends Fragment {
 			}
 		};
 		viewButton.setOnClickListener(mViewButtonOnClickListener);
+		
+		Button downloadButton = (Button) view
+				.findViewById(R.id.video_info_download_video);
+		mViewButtonOnClickListener = new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				XMLRPCDownloadManager.getInstance().downloadTorrent(thumbData.getInfoHash(), thumbData.getTitle());
+			}
+		};
+		downloadButton.setOnClickListener(mViewButtonOnClickListener);
 	}
 
 	/**

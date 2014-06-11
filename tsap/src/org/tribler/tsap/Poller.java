@@ -14,7 +14,7 @@ import android.os.Handler;
 public class Poller extends Observable implements Runnable {
 	Observer mObserver;
 	private Handler mPollingHandler = new Handler();
-	public final static long POLLING_PERIOD = 500;
+	public final static long POLLING_PERIOD = 2000;
 	boolean shouldRun = false;
 
 	/**

@@ -1,13 +1,16 @@
 package org.tribler.tsap.downloads;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.channels.ChannelActivity;
 import org.tribler.tsap.channels.ChannelListAdapter;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,7 +20,6 @@ import android.view.View;
 import android.widget.ListView;
 
 public class DownloadListFragment extends ListFragment {
-	private XMLRPCDownloadManager mDownloadManager = null;
 
 	/**
 	 * Initializes the channel adapter
@@ -30,22 +32,15 @@ public class DownloadListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		DownloadListAdapter adapter = new DownloadListAdapter(getActivity(), R.layout.download_list_item);
+		this.setListAdapter(XMLRPCDownloadManager.getInstance().getAdapter());
 
-		this.setListAdapter(adapter);
-
-		try {
-			mDownloadManager = new XMLRPCDownloadManager(new URL("http://localhost:8000/tribler"), (DownloadListAdapter) getListAdapter());
-		} catch (MalformedURLException e) {
-			Log.e("DownloadListFragment", "URL was malformed.\n" + e.getStackTrace());
-		}
 	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		mDownloadManager.startPolling();
+		XMLRPCDownloadManager.getInstance().startPolling();
 		Log.i("DownloadListFragment","Started polling");
 	}
 	
@@ -53,7 +48,7 @@ public class DownloadListFragment extends ListFragment {
 	public void onPause()
 	{
 		super.onPause();
-		mDownloadManager.stopPolling();
+		XMLRPCDownloadManager.getInstance().stopPolling();
 		Log.i("DownloadListFragment","Stopped polling");
 	}
 
@@ -71,10 +66,8 @@ public class DownloadListFragment extends ListFragment {
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// Launching new Activity on tapping a single List Item
-		//Intent i = new Intent(getActivity().getApplicationContext(), ChannelActivity.class);
-		//i.putExtra(ChannelActivity.INTENT_MESSAGE, (Serializable) ((ChannelListAdapter) getListAdapter()).getItem(position));
-		//startActivity(i);
+		Log.v("DownloadListFragment", "Clicked download item");
+		XMLRPCDownloadManager.getInstance().startVOD(XMLRPCDownloadManager.getInstance().getAdapter().getItem(position).getInfoHash());
 	}
 
 	/**

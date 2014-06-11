@@ -17,6 +17,11 @@ import de.timroes.axmlrpc.XMLRPCClient;
 public abstract class AbstractXMLRPCManager implements Observer {
 	protected XMLRPCClient mClient;
 	private Poller mPoller = new Poller(this);
+	
+	protected AbstractXMLRPCManager()
+	{
+		mClient = null;
+	}
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server and starts a
@@ -27,14 +32,13 @@ public abstract class AbstractXMLRPCManager implements Observer {
 	 */
 	public AbstractXMLRPCManager(URL url) {
 		mClient = new XMLRPCClient(url);
-		logAvailableFunctions();
 	}
 
 	/**
 	 * Retrieves all functions that are callable with XMLRPC and writes them to
 	 * the log
 	 */
-	private void logAvailableFunctions() {
+	protected void logAvailableFunctions() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {

@@ -1,8 +1,13 @@
 package org.tribler.tsap;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.tribler.tsap.channels.ChannelListFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
+import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.tribler.tsap.downloads.DownloadListFragment;
+import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.videolan.vlc.VLCApplication;
 
 import android.app.ActionBar;
@@ -10,6 +15,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -59,6 +65,15 @@ public class MainActivity extends Activity implements
 
 		// Send the current context to VLC
 		VLCApplication.setContext(getApplicationContext());
+		try {
+			URL url = new URL("http://localhost:8000/tribler");
+			DownloadListAdapter adapter = new DownloadListAdapter(this, R.layout.download_list_item);
+			XMLRPCDownloadManager.getInstance().setUp(adapter, url, this);
+		} catch (MalformedURLException e) {
+			Log.e("DownloadListFragment", "URL was malformed:\n");
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**

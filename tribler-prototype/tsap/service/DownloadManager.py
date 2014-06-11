@@ -110,8 +110,8 @@ class DownloadManager():
         xmlrpc.register_function(self.get_vod, 'downloads.get_vod_info')
         xmlrpc.register_function(self.get_full, 'downloads.get_full_info')
         xmlrpc.register_function(self.start_vod, 'downloads.start_vod')
-        xmlrpc.register_function(self.stop_vod, 'download.stop_vod')
-        xmlrpc.register_function(self.get_vod_uri, 'download.get_vod_uri')
+        xmlrpc.register_function(self.stop_vod, 'downloads.stop_vod')
+        xmlrpc.register_function(self.get_vod_uri, 'downloads.get_vod_uri')
         xmlrpc.register_function(self.set_state, 'downloads.set_state')
 
         #test

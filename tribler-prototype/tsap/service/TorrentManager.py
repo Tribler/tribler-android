@@ -321,8 +321,8 @@ class TorrentManager():
             self.magnetstatus = None
         """
 
-        return {'infohash': binascii.hexlify(tr.infohash).upper() if tr.infohash else False,
-                'swift_hash': binascii.hexlify(tr.swift_hash).upper() if tr.swift_hash else False,
+        return {'infohash': binascii.hexlify(tr.infohash) if tr.infohash else False,
+                'swift_hash': binascii.hexlify(tr.swift_hash) if tr.swift_hash else False,
                 'swift_torrent_hash': binascii.hexlify(
                     tr.swift_torrent_hash).upper() if tr.swift_torrent_hash else False,
                 'torrent_file_name': tr.torrent_file_name or False,

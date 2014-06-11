@@ -12,7 +12,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from Tribler.Core.TorrentDef import TorrentDef
-from Tribler.Core.simpledefs import DLSTATUS_DOWNLOADING, DLSTATUS_SEEDING
+from Tribler.Core.simpledefs import DOWNLOAD, UPLOAD
 from Tribler.Main.globals import DefaultDownloadStartupConfig
 
 from Tribler.Core.Video.VideoPlayer import VideoPlayer
@@ -21,7 +21,7 @@ from Tribler.Core.Video.VideoPlayer import VideoPlayer
 # Tribler defs
 from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES, \
     NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
-    DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
+    DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, dlstatus_strings
 
 # DB Tuples
 from Tribler.Main.Utility.GuiDBTuples import Torrent, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
@@ -286,10 +286,11 @@ class DownloadManager():
             dlinfo.update({'name': torrentimpl.tdef.get_name(),
                            'progress': torrentimpl.get_progress(),
                            'length': torrentimpl.get_length(),
-                           'speed_up': torrentimpl.get_current_speed('up'),
-                           'speed_down': torrentimpl.get_current_speed('down'),
+                           'speed_up': torrentimpl.get_current_speed(UPLOAD),
+                           'speed_down': torrentimpl.get_current_speed(DOWNLOAD),
                            'eta': torrentimpl.network_calc_eta(),
                            'status': torrentimpl.get_status(),
+                           'status_string': dlstatus_strings[torrentimpl.get_status()],
                            # TODO: return state
                            })
 
@@ -308,8 +309,8 @@ class DownloadManager():
 
         if files:
             dlinfo.update({'destination': torrentimpl.get_content_dest(),
-                           'speed_up_max': torrentimpl.get_max_desired_speed('up'),
-                           'speed_down_max': torrentimpl.get_max_desired_speed('down'),
+                           'speed_up_max': torrentimpl.get_max_desired_speed(UPLOAD),
+                           'speed_down_max': torrentimpl.get_max_desired_speed(DOWNLOAD),
                            'files': torrentimpl.get_dest_files(),
                            'magnet_uri': torrentimpl.get_magnet_link(),
                            })

@@ -22,7 +22,7 @@ def init_environment():
             os.environ['ANDROID_PRIVATE'] = split_path[0]
 
         # Set P4A egg cache
-        os.environ["PYTHON_EGG_CACHE"] = "/data/data/org.tsap.tribler.full/cache"
+        os.environ["PYTHON_EGG_CACHE"] = "/data/data/org.tribler.tsap/cache"
 
         # Set tribler data dir
         os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.environ['ANDROID_PRIVATE'], '.Tribler')

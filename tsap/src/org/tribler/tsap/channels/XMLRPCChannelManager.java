@@ -28,7 +28,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	 *            The url of the XMLRPC server
 	 */
 	XMLRPCChannelManager(URL url, ChannelListAdapter adapter) {
-		super(url);
+		super(url, 500);
 		mAdapter = adapter;
 	}
 
@@ -115,10 +115,14 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 						mLastFoundResultsCount = count;
 						getRemoteResults();
 					}
+					else {
+						startPolling();						
+					}
 				}
 			}
 		};
 		task.execute(mClient, "channels.get_remote_results_count");
+		stopPolling();
 	}
 
 	/**
@@ -139,6 +143,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 						resultsList.add(c);
 					}
 					mAdapter.addNew(resultsList);
+					startPolling();
 				}
 			}
 		};
@@ -166,6 +171,6 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	@Override
 	public void update(Observable observable, Object data) {
 		getRemoteResultsCount();
-		// Log.i("ChannelPoll","Log");
+		//Log.i("ChannelPoll","Poll");
 	}
 }

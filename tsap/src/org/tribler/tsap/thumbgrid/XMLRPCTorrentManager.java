@@ -28,7 +28,7 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	 *            The url of the XMLRPC server
 	 */
 	public XMLRPCTorrentManager(URL url, ThumbAdapter adapter) {
-		super(url);
+		super(url, 500);
 		mAdapter = adapter;
 	}
 
@@ -107,9 +107,13 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 						mLastFoundResultsCount = count;
 						getRemoteResults();
 					}
+					else {
+						startPolling();
+					}
 				}
 			}
 		};
+		stopPolling();
 		task.execute(mClient, "torrents.get_remote_results_count");
 	}
 	
@@ -144,6 +148,7 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 					Log.v("XMPLRCChannelManager",
 					"KeySet: "+firstResult.keySet());
 					mAdapter.addNew(resultsList);
+					startPolling();
 				}
 			}
 		};
@@ -161,6 +166,6 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	@Override
 	public void update(Observable observable, Object data) {
 		getRemoteResultsCount();
-		// Log.i("TorrentPoll","Log");
+		//Log.i("TorrentPoll","Poll");
 	}
 }

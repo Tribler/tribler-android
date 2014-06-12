@@ -72,7 +72,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		try {
-			mTorrentManager = new XMLRPCTorrentManager(new URL("http://localhost:8000/tribler"), mThumbAdapter);
+			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter);
 		} catch (MalformedURLException e) {
 			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}

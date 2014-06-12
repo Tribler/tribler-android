@@ -46,7 +46,7 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 
 		try {
 			mChannelManager = new XMLRPCChannelManager(new URL(
-					"http://localhost:8000/tribler"), (ChannelListAdapter)getListAdapter());
+					"http://127.0.0.1:8000/tribler"), (ChannelListAdapter)getListAdapter());
 		} catch (MalformedURLException e) {
 			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}

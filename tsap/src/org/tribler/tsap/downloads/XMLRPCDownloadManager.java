@@ -28,6 +28,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	 * private constructor exists only so the class is only accessible through getInstance
 	 */
 	private XMLRPCDownloadManager() {
+		super(2000);
 	}
 	
 	public static XMLRPCDownloadManager getInstance()
@@ -91,8 +92,10 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 					mAdapter.replaceAll(resultsList);
 				}
 				Log.v("DownloadManager", "fetch returned");
+				startPolling();
 			}
 		};
+		stopPolling();
 		task.execute(mClient, "downloads.get_all_progress_info");
 	}
 
@@ -106,8 +109,24 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Toast.makeText(mContext, "Download started!", Toast.LENGTH_SHORT).show();
-				Log.i("XMLRPCDownloadManager", "Download added!");
+				if(result == null)	
+				{
+					Log.e("XMLRPCDownloadManager", "Error in retrieving result from XMLRPC after adding download");
+				}
+				else
+				{
+					boolean succes = (Boolean)result;
+					if(succes)
+					{
+						Toast.makeText(mContext, "Download started!", Toast.LENGTH_SHORT).show();
+						Log.i("XMLRPCDownloadManager", "Download started!");
+					}
+					else
+					{
+						Toast.makeText(mContext, "Could not start downloading.", Toast.LENGTH_LONG).show();
+						Log.e("XMLRPCDownloadManager", "Tribler could not add the download.");
+					}
+				}
 			}
 		};
 		task.execute(mClient, "downloads.add", infoHash, name);

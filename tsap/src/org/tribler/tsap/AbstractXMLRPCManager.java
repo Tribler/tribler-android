@@ -16,11 +16,12 @@ import de.timroes.axmlrpc.XMLRPCClient;
  */
 public abstract class AbstractXMLRPCManager implements Observer {
 	protected XMLRPCClient mClient;
-	private Poller mPoller = new Poller(this, 2000);
+	private Poller mPoller;
 	
-	protected AbstractXMLRPCManager()
+	protected AbstractXMLRPCManager(int pollingInterval)
 	{
 		mClient = null;
+		mPoller = new Poller(this, pollingInterval);
 	}
 
 	/**
@@ -30,8 +31,9 @@ public abstract class AbstractXMLRPCManager implements Observer {
 	 * @param url
 	 *            The url of the XMLRPC server
 	 */
-	public AbstractXMLRPCManager(URL url) {
+	public AbstractXMLRPCManager(URL url, int pollingInterval) {
 		mClient = new XMLRPCClient(url);
+		mPoller = new Poller(this, pollingInterval);
 	}
 
 	/**

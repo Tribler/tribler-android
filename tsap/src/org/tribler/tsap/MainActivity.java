@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements
 		// Send the current context to VLC
 		VLCApplication.setContext(getApplicationContext());
 		try {
-			URL url = new URL("http://localhost:8000/tribler");
+			URL url = new URL("http://127.0.0.1:8000/tribler");
 			DownloadListAdapter adapter = new DownloadListAdapter(this, R.layout.download_list_item);
 			XMLRPCDownloadManager.getInstance().setUp(adapter, url, this);
 		} catch (MalformedURLException e) {

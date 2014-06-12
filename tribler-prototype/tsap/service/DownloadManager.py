@@ -153,13 +153,22 @@ class DownloadManager():
 
         return True
 
-    def remove_torrent(self, infohash):
+    def remove_torrent(self, infohash, removecontent):
         """
         Remove a download from the download list by its infohash.
         :param infohash: The infohash of the torrent.
         :return: Boolean indicating success.
         """
-        pass
+        try:
+            for dl in self._session.get_downloads():
+                if binascii.hexlify(dl.tdef.get_infohash()) == infohash:
+                    self._session.remove_download(dl, removecontent)
+                    return True
+
+            return False
+        except Exception, e:
+            _logger.error("Couldn't remove torrent %s (%s)" % (infohash, e.args))
+            return False
 
     def get_progress(self, infohash):
         """

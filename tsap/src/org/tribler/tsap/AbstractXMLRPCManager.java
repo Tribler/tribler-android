@@ -16,7 +16,7 @@ import de.timroes.axmlrpc.XMLRPCClient;
  */
 public abstract class AbstractXMLRPCManager implements Observer {
 	protected XMLRPCClient mClient;
-	private Poller mPoller = new Poller(this);
+	private Poller mPoller = new Poller(this, 2000);
 	
 	protected AbstractXMLRPCManager()
 	{

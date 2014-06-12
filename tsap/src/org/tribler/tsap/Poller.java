@@ -2,6 +2,8 @@ package org.tribler.tsap;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.os.Handler;
 
@@ -14,8 +16,9 @@ import android.os.Handler;
 public class Poller extends Observable implements Runnable {
 	Observer mObserver;
 	private Handler mPollingHandler = new Handler();
-	public final static long POLLING_PERIOD = 2000;
-	boolean shouldRun = false;
+	public int pollingPeriod;
+	boolean shouldRun = false, hasBlocked = true;
+	Lock lock = new ReentrantLock();
 
 	/**
 	 * Constructor: sets up the observer
@@ -23,9 +26,10 @@ public class Poller extends Observable implements Runnable {
 	 * @param observer
 	 *            The observer that will be updated every interval
 	 */
-	public Poller(Observer observer) {
+	public Poller(Observer observer, int pollingPeriod) {
 		mObserver = observer;
 		this.addObserver(observer);
+		this.pollingPeriod = pollingPeriod;
 	}
 
 	/**
@@ -35,27 +39,42 @@ public class Poller extends Observable implements Runnable {
 	 */
 	@Override
 	public void run() {
-		setChanged();
-		notifyObservers();
+		lock.lock();
 		if (shouldRun)
-			mPollingHandler.postDelayed(this, POLLING_PERIOD);
+		{
+			setChanged();
+			notifyObservers();
+			mPollingHandler.postDelayed(this, pollingPeriod);
+		}
+		else
+		{
+			hasBlocked = true;
+		}
+		lock.unlock();
 	}
 
 	/**
-	 * Pauses the polling. After calling this function one more poll request
-	 * will be received.
+	 * Pauses the polling.
 	 */
 	public void pause() {
+		lock.lock();
 		shouldRun = false;
+		hasBlocked = false;
+		lock.unlock();
 	}
 
 	/**
 	 * Starts the polling. If the Poller is already polling, nothing changes.
 	 */
 	public void start() {
+		lock.lock();
 		if (!shouldRun) {
 			shouldRun = true;
-			run();
+			if(hasBlocked)
+			{
+				mPollingHandler.postDelayed(this, pollingPeriod);
+			}
 		}
+		lock.unlock();
 	}
 }

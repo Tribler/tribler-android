@@ -77,9 +77,10 @@ fi
 #./distribute.sh -m "kivy" -d $DIRNAME
 #popd
 
-# Remove the created directory and the build/libs folder
+# Remove the created directory, the build/libs folder and the build/python folder
 rm -rf "${PY4APATH}/dist/${DIRNAME}"
 rm -rf "${PY4APATH}/build/libs"
+rm -rf "${PY4APATH}/build/python"
 
 # Adapt sdl_main.c to export the correct JNI function (PythonService_nativeSetEnv)
 mv "${PY4APATH}/src/jni/sdl_main/sdl_main.c" "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak"

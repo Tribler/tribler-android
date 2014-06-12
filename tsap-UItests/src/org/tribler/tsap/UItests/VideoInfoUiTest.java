@@ -394,7 +394,7 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	public void testVideoInfoPlayButtonClick() throws RemoteException,
+	public void ignoreTestVideoInfoPlayButtonClick() throws RemoteException,
 			UiObjectNotFoundException {
 		openVideoInfoScreen();
 
@@ -420,7 +420,7 @@ public class VideoInfoUiTest extends BasicUiTestCase {
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
 	 */
-	private void openVideoInfoScreen() throws RemoteException,
+	protected void openVideoInfoScreen() throws RemoteException,
 			UiObjectNotFoundException {
 		startTSAP();
 

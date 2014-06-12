@@ -27,9 +27,9 @@ public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
 	/**
 	 * This test is actually the same as the one in {@link VideoInfoUiTest}, but
 	 * in landscape mode it won't work somehow. It seems the teardown method is
-	 * not called correctly, which in turn seems to be a bug in the test
-	 * runner. Therefore this overriden method is simply empty to ignore this
-	 * particular test in landscape mode.
+	 * not called correctly, which in turn seems to be a bug in the test runner.
+	 * Therefore this overriden method simply opens the video info screen in
+	 * landscape mode.
 	 * 
 	 * @throws RemoteException
 	 * @throws UiObjectNotFoundException
@@ -37,5 +37,6 @@ public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
 	@Override
 	public void testVideoInfoPlayButtonClick() throws RemoteException,
 			UiObjectNotFoundException {
+		openVideoInfoScreen();
 	}
 }

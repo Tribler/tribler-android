@@ -122,7 +122,7 @@ class DownloadManager():
         Add a download to the download list by its infohash.
         :param infohash: The infohash of the torrent.
         :param name: The name of the torrent.
-        :return: The infohash of the torrent.
+        :return: Boolean indicating success.
         """
         try:
             tdef = TorrentDefNoMetainfo(binascii.unhexlify(infohash), name)
@@ -142,7 +142,7 @@ class DownloadManager():
             return False
 
         try:
-            return self._getDownload(dl)['infohash']
+            return True
         except:
             return False
 

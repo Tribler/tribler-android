@@ -23,20 +23,4 @@ public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
 		super.startTSAP();
 		getUiDevice().setOrientationRight();
 	}
-
-	/**
-	 * This test is actually the same as the one in {@link VideoInfoUiTest}, but
-	 * in landscape mode it won't work somehow. It seems the teardown method is
-	 * not called correctly, which in turn seems to be a bug in the test runner.
-	 * Therefore this overriden method simply opens the video info screen in
-	 * landscape mode.
-	 * 
-	 * @throws RemoteException
-	 * @throws UiObjectNotFoundException
-	 */
-	@Override
-	public void testVideoInfoPlayButtonClick() throws RemoteException,
-			UiObjectNotFoundException {
-		openVideoInfoScreen();
-	}
 }

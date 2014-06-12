@@ -7,7 +7,7 @@
 	<exec executable="${adb}" failonerror="true">
 		<arg line="${adb.device.arg}"/>
 		<arg value="pull" />
-		<arg value="/sdcard/org.tribler.tsap/reports/junit-report.xml" />
+		<arg value="/sdcard/reports/junit-report.xml" />
 		<arg value="junitreports/junit-report.xml" />
 	</exec>
 </target>
@@ -22,7 +22,7 @@
             <arg value="-w"/>
             <arg value="-e"/>
             <arg value="reportDir"/>
-            <arg value="/sdcard/org.tribler.tsap/reports"/>
+            <arg value="/sdcard/reports"/>
  	    <arg value="${project.app.package}/${test.runner}"/>
         </exec>
 </target>

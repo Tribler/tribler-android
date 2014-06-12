@@ -124,9 +124,19 @@ class DownloadManager():
         :param name: The name of the torrent.
         :return: Boolean indicating success.
         """
-        try:
-            tdef = TorrentDefNoMetainfo(binascii.unhexlify(infohash), name)
+        bin_infohash = binascii.unhexlify(infohash)
 
+        tdef = None
+        try:
+            tor = self._get_torrent_from_infohash(bin_infohash)
+            if not tor is None and not tor.torrent_file_name is None:
+                tdef = TorrentDef.load(tor.torrent_file_name)
+                _logger.info("[%s] Loaded torrent file from %s" % (infohash, tor.torrent_file_name))
+        except:
+            tdef = TorrentDefNoMetainfo(bin_infohash, name)
+            _logger.info("[%s] Adding torrent by magnet link" % infohash)
+
+        try:
             defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
             dscfg = defaultDLConfig.copy()
 
@@ -137,14 +147,11 @@ class DownloadManager():
             while not dl.handle:
                 time.sleep(1)
                 _logger.error("Waiting for libtorrent (%s)" % dl.tdef.get_name())
-        except:
-            _logger.error("Error adding torrent (infohash=%s,name=%s)" % (infohash, name))
+        except Exception, e:
+            _logger.error("Error adding torrent (infohash=%s,name=%s) (%s)" % (infohash, name, e.args))
             return False
 
-        try:
-            return True
-        except:
-            return False
+        return True
 
     def remove_torrent(self, infohash):
         """
@@ -244,6 +251,21 @@ class DownloadManager():
 
     def set_state(self, infohash):
         pass
+
+    def _get_torrent_from_infohash(self, infohash):
+        dict = self._torrent_db.getTorrent(infohash, keys=['C.torrent_id', 'infohash', 'swift_hash', 'swift_torrent_hash', 'name', 'torrent_file_name', 'length', 'category_id', 'status_id', 'num_seeders', 'num_leechers'])
+        if dict:
+            t = Torrent(dict['C.torrent_id'], dict['infohash'], dict['swift_hash'], dict['swift_torrent_hash'], dict['name'], dict['torrent_file_name'], dict['length'], dict['category_id'], dict['status_id'], dict['num_seeders'], dict['num_leechers'], None)
+            t.misc_db = self._misc_db
+            t.torrent_db = self._torrent_db
+            t.channelcast_db = self._channelcast_db
+            # TODO: ENABLE metadata_db WHEN METADATA COMMUNITY IS ENABLED
+            t.metadata_db = None  #self._metadata_db
+
+            # prefetching channel, metadata
+            _ = t.channel
+            _ = t.metadata
+            return t
 
     """
     def _add_torrent_file(self, torrent_path, destination_path):

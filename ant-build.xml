@@ -1268,7 +1268,7 @@
         </if>
 
         <property name="emma.dump.file"
-                value="/sdcard/${tested.project.app.package}/coverage.ec" />
+                value="/sdcard/reports/coverage.ec" />
 
         <if condition="${emma.enabled}">
             <then>
@@ -1280,7 +1280,7 @@
                            <arg value="${emma.dump.file}" />
 			<arg value="-e" />
                            <arg value="reportDir" />
-                           <arg value="/sdcard/org.tribler.tsap/reports" />
+                           <arg value="/sdcard/reports" />
                     </extra-instrument-args>
                 </run-tests-helper>
 

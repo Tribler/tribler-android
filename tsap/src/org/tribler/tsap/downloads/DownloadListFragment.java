@@ -33,14 +33,17 @@ public class DownloadListFragment extends ListFragment {
 		setHasOptionsMenu(true);
 
 		this.setListAdapter(XMLRPCDownloadManager.getInstance().getAdapter());
-
+		Download dummy = new Download("Very cool download", "infowiet", 3, 23423.44, 1223.21, 0.37);
+		ArrayList<Download> list = new ArrayList<Download>();
+		list.add(dummy);
+		XMLRPCDownloadManager.getInstance().getAdapter().addNew(list);
 	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		XMLRPCDownloadManager.getInstance().startPolling();
+		//XMLRPCDownloadManager.getInstance().startPolling();
 		Log.i("DownloadListFragment","Started polling");
 	}
 	
@@ -48,12 +51,12 @@ public class DownloadListFragment extends ListFragment {
 	public void onPause()
 	{
 		super.onPause();
-		XMLRPCDownloadManager.getInstance().stopPolling();
+		//XMLRPCDownloadManager.getInstance().stopPolling();
 		Log.i("DownloadListFragment","Stopped polling");
 	}
 
 	/**
-	 * Launches a new ChannelActivity with the data of the clicked channel
+	 * Launches a new DownloadActivity with the data of the clicked channel
 	 * 
 	 * @param l
 	 *            The ListView belonging to this fragment
@@ -66,10 +69,11 @@ public class DownloadListFragment extends ListFragment {
 	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v("DownloadListFragment", "Clicked download item");
-		XMLRPCDownloadManager.getInstance().startVOD(XMLRPCDownloadManager.getInstance().getAdapter().getItem(position).getInfoHash());
+		// Launching new Activity on tapping a single List Item
+		Intent i = new Intent(getActivity().getApplicationContext(), DownloadActivity.class);
+		i.putExtra(DownloadActivity.INTENT_MESSAGE, (Serializable) ((DownloadListAdapter) getListAdapter()).getItem(position));
+		startActivity(i);
 	}
-
 	/**
 	 * Adds channel fragment specific options to the options menu. In this case,
 	 * the search action is added and enabled.

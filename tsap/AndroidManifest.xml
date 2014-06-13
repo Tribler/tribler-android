@@ -44,6 +44,10 @@
             android:configChanges="orientation|screenSize" >
         </activity>
         <activity
+            android:name="org.tribler.tsap.downloads.DownloadActivity"
+            android:configChanges="orientation|screenSize" >
+        </activity>
+        <activity
             android:name="org.videolan.vlc.gui.video.VideoPlayerActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.VLC.Fullscreen" >

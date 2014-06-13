@@ -6,6 +6,7 @@
     <string name="title_section_channels">Channels</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="loadingText">Loading...</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_channel">Channel</string>
@@ -49,7 +50,7 @@
     <string name="hardware_acceleration_error_title">HW acceleration error</string>
     <string name="hardware_acceleration_error_message">An error occurred with hardware acceleration. Would you like to disable it and try again?</string>
     <string name="navigation_drawer">navigation_drawer</string>
-    <string name="private_version">1401791820.13</string>
-    <string name="public_version">1401791820.13</string>
+    <string name="private_version">1402578163.74</string>
+    <string name="public_version">1402578163.74</string>
 
 </resources>

@@ -1,14 +1,17 @@
 package org.renpy.android;
 
-import android.app.Service;
-import android.os.IBinder;
-import android.os.Bundle;
-import android.content.Intent;
-import android.content.Context;
-import android.util.Log;
+import org.tribler.tsap.MainActivity;
+
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Process;
+import android.util.Log;
 
 public class PythonService extends Service  implements Runnable {
 
@@ -23,6 +26,10 @@ public class PythonService extends Service  implements Runnable {
     
     // Argument to pass to Python code,
     private String pythonServiceArgument;
+    
+    private Notification notification;
+    private String serviceTitle;
+    private static PythonService pyService;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -36,6 +43,7 @@ public class PythonService extends Service  implements Runnable {
             return START_NOT_STICKY;
         }
 
+        pyService = this;
         Bundle extras = intent.getExtras();
         androidPrivate = extras.getString("androidPrivate");
         // service code is located in current directory (not in /service anymore!)
@@ -43,23 +51,33 @@ public class PythonService extends Service  implements Runnable {
         pythonHome = extras.getString("pythonHome");
         pythonPath = extras.getString("pythonPath");
         pythonServiceArgument = extras.getString("pythonServiceArgument");
-        String serviceTitle = extras.getString("serviceTitle");
+        serviceTitle = extras.getString("serviceTitle");
         String serviceDescription = extras.getString("serviceDescription");
 
         pythonThread = new Thread(this);
         pythonThread.start();
 
-        Context context = getApplicationContext();
-        Notification notification = new Notification(context.getApplicationInfo().icon,
-                serviceTitle,
-                System.currentTimeMillis());
-        Intent contextIntent = new Intent(context, PythonActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, contextIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setLatestEventInfo(context, serviceTitle, serviceDescription, pIntent);
-        startForeground(1, notification);
+        updateNotification(serviceDescription);
 
         return START_NOT_STICKY;
+    }
+    
+    private void updateNotification(CharSequence text)
+    {
+    	Context context = getApplicationContext();
+        notification = new Notification(context.getApplicationInfo().icon,
+                serviceTitle,
+                System.currentTimeMillis());
+        Intent contextIntent = new Intent(context, MainActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, contextIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        notification.setLatestEventInfo(context, serviceTitle, text, pIntent);
+        startForeground(1, notification);
+    }
+    
+    public static void updateNotificationText(CharSequence newText)
+    {
+    	pyService.updateNotification(newText);
     }
 
     @Override
@@ -73,7 +91,7 @@ public class PythonService extends Service  implements Runnable {
     @Override
     public void run(){
 
-        // libraries loading, the same way PythonActivity.run() do
+        // libraries loading
         System.loadLibrary("sdl");
         System.loadLibrary("sdl_image");
         System.loadLibrary("sdl_ttf");
@@ -90,17 +108,11 @@ public class PythonService extends Service  implements Runnable {
             System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_sqlite3.so");
         } catch(UnsatisfiedLinkError e) {
         }
-
-        try {
-            System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imaging.so");
-            System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingft.so");
-            System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingmath.so");
-        } catch(UnsatisfiedLinkError e) {
-        }
         
-        nativeInitJavaEnv();        
+        nativeInitJavaEnv();   
+        nativeSetEnv("ANDROID_SDK", Integer.toString(Build.VERSION.SDK_INT));
         nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
-                pythonServiceArgument);        
+                pythonServiceArgument);       
     }
 
     // Native part (don't remove!)
@@ -109,5 +121,7 @@ public class PythonService extends Service  implements Runnable {
             String pythonServiceArgument);
 
     public static native void nativeInitJavaEnv();
+    
+    public static native void nativeSetEnv(String name, String value);
 
 }

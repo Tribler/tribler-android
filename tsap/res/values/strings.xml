@@ -52,5 +52,15 @@
     <string name="navigation_drawer">navigation_drawer</string>
     <string name="private_version">1401791820.13</string>
     <string name="public_version">1401791820.13</string>
+    
+    <!-- Strings from downloadActivity -->
+    <string name="download_info_type_title">Type:</string>
+    <string name="download_info_upload_date_title">Uploaded on:</string>
+    <string name="download_info_filesize_title">Size:</string>
+    <string name="download_info_down_speed_title">Speed down:</string>
+    <string name="download_info_up_speed_title">Speed up:</string>
+    <string name="download_info_stream_button">Stream video</string>
+    <string name="download_info_delete_button">delete torrent</string>
+    
 
 </resources>

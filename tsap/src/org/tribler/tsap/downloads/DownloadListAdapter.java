@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
+import org.tribler.tsap.Utility;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -46,11 +47,11 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		((TextView) view.findViewById(R.id.download_name)).setText(download
 				.getName());
 		((TextView) view.findViewById(R.id.download_status))
-				.setText("Status: " + download.getStatus());
+				.setText("Status: " + Utility.convertDownloadStateIntToMessage(download.getStatus()));
 		((TextView) view.findViewById(R.id.download_speed_down))
-		.setText("Down: " + download.getDownloadSpeed()/1024 +"Kb");
+		.setText("Down: " + Utility.convertBytesPerSecToString(download.getDownloadSpeed()));
 		((TextView) view.findViewById(R.id.download_speed_up))
-		.setText("Up: " + download.getUploadSpeed()/1024 +"Kb");
+		.setText("Up: " + Utility.convertBytesPerSecToString(download.getUploadSpeed()));
 		((ProgressBar) view.findViewById(R.id.download_progress_bar)).setProgress((int)(download.getProgress()*100));
 		return view;
 	}

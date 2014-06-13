@@ -70,6 +70,8 @@ public class MainActivity extends Activity implements
 			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(startMain);
 		}
+		else
+			super.onBackPressed();
 	}
 
 	/**

@@ -7,6 +7,7 @@ import org.videolan.vlc.VLCApplication;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -56,6 +57,19 @@ public class MainActivity extends Activity implements
 
 		// Send the current context to VLC
 		VLCApplication.setContext(getApplicationContext());
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public void onBackPressed() {
+		if (mThumbGridFragment.isVisible() || channelFragment.isVisible()) {
+			Intent startMain = new Intent(Intent.ACTION_MAIN);
+			startMain.addCategory(Intent.CATEGORY_HOME);
+			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(startMain);
+		}
 	}
 
 	/**

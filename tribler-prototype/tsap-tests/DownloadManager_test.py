@@ -58,14 +58,14 @@ class DownloadByInfohash(unittest.TestCase):
         self.clean_torrents()
 
         all_dls = self.xmlrpc.downloads.get_all_progress_info()
-        assert len(all_dls) == 0, all_dls
+        assert len(all_dls) == 0, "Found downloads while there shouldn't be any:\n%s" % all_dls
 
         assert self.xmlrpc.downloads.add(SINTEL_TEST_INFOHASH, 'Sintel')
         sleep(1)
 
         all_dls = self.xmlrpc.downloads.get_all_progress_info()
-        assert len(all_dls) == 1
-        assert all_dls[0]['infohash'] == SINTEL_TEST_INFOHASH
+        assert len(all_dls) == 1, "Found more or less than one download:\n%s" % all_dls
+        assert all_dls[0]['infohash'] == SINTEL_TEST_INFOHASH, "Infohash does not match (%s != %s)" % (all_dls[0]['infohash'], SINTEL_TEST_INFOHASH)
 
         timeout = DHT_DOWNLOAD_TORRENT_TIMEOUT
         while all_dls[0]['status_string'] == 'DLSTATUS_METADATA' and (timeout > 0):
@@ -74,15 +74,15 @@ class DownloadByInfohash(unittest.TestCase):
             sleep(DHT_DOWNLOAD_TORRENT_SLEEP)
             timeout -= DHT_DOWNLOAD_TORRENT_SLEEP
 
-        assert timeout >= 0
-        assert not all_dls[0]['status_string'] == 'DLSTATUS_METADATA', all_dls[0]['status_string']
+        assert timeout >= 0, "Waited longer than %ss for status change" % DHT_DOWNLOAD_TORRENT_TIMEOUT
+        assert not all_dls[0]['status_string'] == 'DLSTATUS_METADATA', "Download status is wrong: %s" % all_dls[0]['status_string']
         sleep(1)
 
         assert self.xmlrpc.downloads.remove(SINTEL_TEST_INFOHASH, True)
         sleep(1)
 
         all_dls = self.xmlrpc.downloads.get_all_progress_info()
-        assert len(all_dls) == 0
+        assert len(all_dls) == 0, "Found downloads while there shouldn't be any:\n%s" % all_dls
 
     @unittest.skipIf(not DOWNLOAD_TORRENT_TESTS, "DOWNLOAD_TORRENT_TESTS is False")
     def testD_DownloadSintel(self):

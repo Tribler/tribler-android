@@ -6,7 +6,7 @@ CURRENTFOLDERPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 APPLOGO="${CURRENTFOLDERPATH}/images/tribler_applogo.png"
 APPSPLASH="${CURRENTFOLDERPATH}/images/splash.jpg"
 DIRNAME="TSAP"
-PY4APATH=
+PY4APATH="${CURRENTFOLDERPATH}/python-for-android"
 
 # Chat colors
 red="\x1B[0;31m"

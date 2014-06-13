@@ -61,8 +61,12 @@ class TorrentsRemoteSearch(unittest.TestCase):
 
         results = self.xmlrpc.torrents.get_remote_results()
 
+        hitrate = 0.0
         for result in results:
-            assert "sintel" in result['name'].lower(), "'%s' does not contain 'sintel'" % result['name']
+            hitrate += 1 if "sintel" in result['name'].lower() else 0
+
+        missrate = ((len(results) - hitrate) / len(results))
+        assert  missrate <= REMOTE_SEARCH_TOLERANCE, "Missrate is %s%%" % (missrate * 100)
 
     def testC_RemoteSearchVodo(self):
         """
@@ -84,8 +88,12 @@ class TorrentsRemoteSearch(unittest.TestCase):
 
         results = self.xmlrpc.torrents.get_remote_results()
 
+        hitrate = 0.0
         for result in results:
-            assert "vodo" in result['name'].lower(), "'%s' does not contain 'vodo'" % result['name']
+            hitrate += 1 if "vodo" in result['name'].lower() else 0
+
+        missrate = ((len(results) - hitrate) / len(results))
+        assert missrate <= REMOTE_SEARCH_TOLERANCE, "Missrate is %s%%" % (missrate * 100)
 
     @unittest.skipIf(not REMOTE_DEADLOCK_TESTS, "REMOTE_DEADLOCK_TESTS is False")
     def XtestY_Deadlock_slow(self):

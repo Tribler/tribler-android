@@ -103,15 +103,15 @@ class TriblerSession():
             _logger.info("No previous configuration file found, creating one in %s" % os.environ['TRIBLER_STATE_DIR'])
 
         # Disable unneeded dependencies
-        # self._sconfig.set_torrent_checking(False)
-        #self._sconfig.set_multicast_local_peer_discovery(False)
+        self._sconfig.set_torrent_checking(False)
+        self._sconfig.set_multicast_local_peer_discovery(False)
         #self._sconfig.set_megacache(False)
         self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
         self._sconfig.set_torrent_collecting(False)
         #self._sconfig.set_libtorrent(False)
         self._sconfig.set_dht_torrent_collecting(False)
-        #self._sconfig.set_videoplayer(False)
+        self._sconfig.set_videoplayer(False)
 
         self._sconfig.set_dispersy_tunnel_over_swift(False)
         self._sconfig.set_torrent_collecting_max_torrents(5000)
@@ -122,7 +122,7 @@ class TriblerSession():
         self._session.start()
 
         #self._swift = self._session.get_swift_proc() and self._session.get_swift_process()
-        self._dispersy = self._session.lm.dispersy
+        self._dispersy = self._session.get_dispersy_instance()
 
         _logger.info("libTribler session started!")
         self.define_communities()
@@ -181,4 +181,5 @@ class TriblerSession():
 
         # TODO: Actually stop the session
         # self._thread.stop()
+        self._session.shutdown()
         _logger.info("Bye bye")

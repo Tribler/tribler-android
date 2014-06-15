@@ -37,6 +37,10 @@ class TSAP():
     def __init__(self):
         pass
 
+    def stop(self):
+        self.tribler.stop_session()
+        xmlrpc = None
+
     def run(self):
         """
         This sets up a Tribler session, loads the managers and the XML-RPC server.

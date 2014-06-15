@@ -123,7 +123,10 @@ class TorrentManager():
         except:
             return False
 
-        return self._search_remote_on_reactor()
+        self._search_remote_on_reactor()
+
+        # TODO: Return an actual value
+        return -1
 
     @call_on_reactor_thread
     def _search_remote_on_reactor(self):

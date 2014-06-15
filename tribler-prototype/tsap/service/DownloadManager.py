@@ -30,6 +30,7 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 
 # TODO: not hardcoded please
 DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
+DOWNLOAD_UPDATE_DELAY = 5.0
 
 class DownloadManager():
     # Code to make this a singleton
@@ -37,6 +38,7 @@ class DownloadManager():
 
     connected = False
 
+    _dllock = threading.Lock()
     _session = None
     _dispersy = None
     _remote_lock = None
@@ -46,9 +48,7 @@ class DownloadManager():
     _channelcast_db = None
     _votecast_db = None
 
-    _keywords = []
-    _results = []
-    _result_infohashes = []
+    _downloads = {}
 
     def __init__(self, session, xmlrpc=None):
         """
@@ -107,8 +107,8 @@ class DownloadManager():
         xmlrpc.register_function(self.remove_torrent, 'downloads.remove')
         xmlrpc.register_function(self.get_progress, 'downloads.get_progress_info')
         xmlrpc.register_function(self.get_progress_all, 'downloads.get_all_progress_info')
-        xmlrpc.register_function(self.get_vod, 'downloads.get_vod_info')
-        xmlrpc.register_function(self.get_full, 'downloads.get_full_info')
+        #xmlrpc.register_function(self.get_vod, 'downloads.get_vod_info')
+        #xmlrpc.register_function(self.get_full, 'downloads.get_full_info')
         xmlrpc.register_function(self.start_vod, 'downloads.start_vod')
         xmlrpc.register_function(self.stop_vod, 'downloads.stop_vod')
         xmlrpc.register_function(self.get_vod_uri, 'downloads.get_vod_uri')
@@ -124,34 +124,49 @@ class DownloadManager():
         :param name: The name of the torrent.
         :return: Boolean indicating success.
         """
-        bin_infohash = binascii.unhexlify(infohash)
 
-        tdef = None
-        try:
-            tor = self._get_torrent_from_infohash(bin_infohash)
-            if not tor is None and not tor.torrent_file_name is None:
-                tdef = TorrentDef.load(tor.torrent_file_name)
-                _logger.info("[%s] Loaded torrent file from %s" % (infohash, tor.torrent_file_name))
-        except:
-            tdef = TorrentDefNoMetainfo(bin_infohash, name)
-            _logger.info("[%s] Adding torrent by magnet link" % infohash)
+        def add_torrent_callback():
+            try:
+                bin_infohash = binascii.unhexlify(infohash)
 
-        try:
-            defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
-            dscfg = defaultDLConfig.copy()
+                tdef = TorrentDefNoMetainfo(bin_infohash, name)
+                _logger.info("[%s] Adding torrent by magnet link" % infohash)
 
-            dscfg.set_dest_dir(DOWNLOAD_DIRECTORY)
+                defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
+                dscfg = defaultDLConfig.copy()
 
-            dl = self._session.start_download(tdef, dscfg)
+                dscfg.set_dest_dir(DOWNLOAD_DIRECTORY)
 
-            while not dl.handle:
-                time.sleep(1)
-                _logger.error("Waiting for libtorrent (%s)" % dl.tdef.get_name())
-        except Exception, e:
-            _logger.error("Error adding torrent (infohash=%s,name=%s) (%s)" % (infohash, name, e.args))
-            return False
+                dl = self._session.start_download(tdef, dscfg)
+                dl.set_state_callback(self._update_dl_state, delay=1)
 
+            except Exception, e:
+                _logger.error("Error adding torrent (infohash=%s,name=%s) (%s)" % (infohash, name, e.args))
+                return False
+
+            return True
+
+        self._session.lm.rawserver.add_task(add_torrent_callback, delay=1)
         return True
+
+    def _update_dl_state(self, ds):
+
+        self._dllock.acquire()
+        try:
+            _logger.info("Got download status callback (%s: %s; %s)" % (type(ds).__name__, ds.get_status(), ds.get_progress()))
+
+            dldict = self._getDownloadState(ds, progress=True)
+            if dldict:
+                if dldict['infohash'] in self._downloads.keys():
+                    self._downloads[dldict['infohash']].update(dldict)
+                else:
+                    self._downloads[dldict['infohash']] = dldict
+            else:
+                _logger.warn("Error updating download state")
+
+        finally:
+            self._dllock.release()
+            return DOWNLOAD_UPDATE_DELAY, False
 
     def remove_torrent(self, infohash, removecontent):
         """
@@ -159,16 +174,23 @@ class DownloadManager():
         :param infohash: The infohash of the torrent.
         :return: Boolean indicating success.
         """
-        try:
-            for dl in self._session.get_downloads():
-                if binascii.hexlify(dl.tdef.get_infohash()) == infohash:
-                    self._session.remove_download(dl, removecontent)
-                    return True
+        def remove_torrent_callback():
+            try:
+                _logger.info("Removing torrent with infohash %s" % infohash)
+                dl = self._session.get_download(binascii.unhexlify(infohash))
+                self._session.remove_download(dl, removecontent)
 
-            return False
-        except Exception, e:
-            _logger.error("Couldn't remove torrent %s (%s)" % (infohash, e.args))
-            return False
+                if infohash in self._downloads.keys():
+                    self._downloads.pop(infohash, None)
+
+                return True
+
+            except Exception, e:
+                _logger.error("Couldn't remove torrent with infohash %s (%s)" % (infohash, e.args))
+                return False
+
+        self._session.lm.rawserver.add_task(remove_torrent_callback, delay=1)
+        return True
 
     def get_progress(self, infohash):
         """
@@ -176,22 +198,19 @@ class DownloadManager():
         :param infohash: Infohash of the torrent.
         :return: Progress of a torrent or False on failure.
         """
-        return self._get_download_info(infohash, {'progress': True})
+        with self._dllock:
+            if infohash in self._downloads.keys():
+                return self._downloads[infohash]
+            else:
+                return False
 
     def get_progress_all(self):
         """
         Get the progress of all current torrents.
         :return: List of progress torrents.
         """
-        downloads = []
-
-        for dl in self._session.get_downloads():
-            try:
-                downloads.append(self._getDownload(dl, progress=True))
-            except:
-                pass
-
-        return downloads
+        with self._dllock:
+            return self._downloads.values()
 
     def get_full(self, infohash):
         """
@@ -315,42 +334,79 @@ class DownloadManager():
         #vod = vod_eta, vod_stats
         #full = progress + {files, metadata (description, thumbnail), dest}, speed_max
 
-        dlinfo = {'infohash': binascii.hexlify(torrentimpl.tdef.get_infohash())}
+        try:
+            dlinfo = {'infohash': binascii.hexlify(torrentimpl.get_def().get_infohash())}
 
-        if progress:
-            dlinfo.update({'name': torrentimpl.tdef.get_name(),
-                           'progress': torrentimpl.get_progress(),
-                           'length': torrentimpl.get_length(),
-                           'speed_up': torrentimpl.get_current_speed(UPLOAD),
-                           'speed_down': torrentimpl.get_current_speed(DOWNLOAD),
-                           'eta': torrentimpl.network_calc_eta(),
-                           'status': torrentimpl.get_status(),
-                           'status_string': dlstatus_strings[torrentimpl.get_status()],
-                           # TODO: return state
-                           })
+            if progress:
+                dlinfo.update({'name': torrentimpl.tdef.get_name(),
+                               'progress': torrentimpl.get_progress(),
+                               'length': torrentimpl.get_length(),
+                               'speed_up': torrentimpl.get_current_speed(UPLOAD),
+                               'speed_down': torrentimpl.get_current_speed(DOWNLOAD),
+                               'eta': torrentimpl.network_calc_eta(),
+                               'status': torrentimpl.get_status(),
+                               'status_string': dlstatus_strings[torrentimpl.get_status()],
+                               # TODO: return state
+                               })
 
-        if vod:
-            vod_stats = torrentimpl.network_get_vod_stats()
-            dlinfo.update({'vod_eta': torrentimpl.network_calc_prebuf_eta(),
-                           'vod_pieces': vod_stats['npieces'],
-                           'vod_played': vod_stats['playes'],
-                           'vod_firstpiece': vod_stats['firstpiece'],
-                           'vod_pos': vod_stats['pos'],
-                           'vod_late': vod_stats['late'],
-                           'vod_stall': vod_stats['stall'],
-                           'vod_dropped': vod_stats['dropped'],
-                           'vod_prebuf': vod_stats['prebuf'],
-                           })
+            if vod:
+                vod_stats = torrentimpl.network_get_vod_stats()
+                dlinfo.update({'vod_eta': torrentimpl.network_calc_prebuf_eta(),
+                               'vod_pieces': vod_stats['npieces'],
+                               'vod_played': vod_stats['playes'],
+                               'vod_firstpiece': vod_stats['firstpiece'],
+                               'vod_pos': vod_stats['pos'],
+                               'vod_late': vod_stats['late'],
+                               'vod_stall': vod_stats['stall'],
+                               'vod_dropped': vod_stats['dropped'],
+                               'vod_prebuf': vod_stats['prebuf'],
+                               })
 
-        if files:
-            dlinfo.update({'destination': torrentimpl.get_content_dest(),
-                           'speed_up_max': torrentimpl.get_max_desired_speed(UPLOAD),
-                           'speed_down_max': torrentimpl.get_max_desired_speed(DOWNLOAD),
-                           'files': torrentimpl.get_dest_files(),
-                           'magnet_uri': torrentimpl.get_magnet_link(),
-                           })
+            if files:
+                dlinfo.update({'destination': torrentimpl.get_content_dest(),
+                               'speed_up_max': torrentimpl.get_max_desired_speed(UPLOAD),
+                               'speed_down_max': torrentimpl.get_max_desired_speed(DOWNLOAD),
+                               'files': torrentimpl.get_dest_files(),
+                               'magnet_uri': torrentimpl.get_magnet_link(),
+                               })
 
-        if network:
-            dlinfo.update({'network': torrentimpl.network_create_statistics_reponse()})
+            if network:
+                dlinfo.update({'network': torrentimpl.network_create_statistics_reponse()})
 
-        return dlinfo
+            return dlinfo
+        except Exception, e:
+            print "Error getting TorrentDownloadImpl: %s" % e.args
+            return {}
+
+    def _getDownloadState(self, dstate, vod=False, progress=False, files=False, network=False):
+        """
+        Convert a LibTorrentDownloadImpl object to a dictionary.
+        :param dstate: A LibTorrentDownloadImpl object.
+        :param vod: Include info about vod.
+        :param progress: Include info about download progress.
+        :param files: Include info about files.
+        :param network: Include info about network.
+        :return: Dictionary with information about the download.
+        """
+        #progress = infoh, name, speed, eta, progress, size, seeders/leechers
+        #vod = vod_eta, vod_stats
+        #full = progress + {files, metadata (description, thumbnail), dest}, speed_max
+
+        try:
+            dlinfo = {'infohash': binascii.hexlify(dstate.get_download().get_def().get_infohash())}
+
+            if progress:
+                dlinfo.update({'name': dstate.get_download().get_def().get_name(),
+                               'progress': dstate.get_progress(),
+                               'length': dstate.get_length(),
+                               'speed_up': dstate.get_current_speed(UPLOAD),
+                               'speed_down': dstate.get_current_speed(DOWNLOAD),
+                               'eta': dstate.get_eta(),
+                               'status': dstate.get_status(),
+                               'status_string': dlstatus_strings[dstate.get_status()],
+                               })
+
+            return dlinfo
+        except Exception, e:
+            print "Error getting downloadstate: %s" % e.args
+            return {}

@@ -61,7 +61,18 @@ tsap/doc/*
 *.pyo
 *.pyc
 
+# P4A static libraries
+libsdl_image.so
+libsdl.so
+libsdl_ttf.so
+libsdl_main.so
+libsdl_mixer.so
+libapplication.so
+libsqlite3.so
+libpython2.7.so
+
 # Other
 *~
 lint-results.xml
 junitreports/
+*.mp3

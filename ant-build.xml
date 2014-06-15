@@ -1268,7 +1268,7 @@
         </if>
 
         <property name="emma.dump.file"
-                value="/sdcard/${tested.project.app.package}/coverage.ec" />
+                value="/sdcard/reports/coverage.ec" />
 
         <if condition="${emma.enabled}">
             <then>
@@ -1278,6 +1278,9 @@
                         <arg value="-e" />
                            <arg value="coverageFile" />
                            <arg value="${emma.dump.file}" />
+			<arg value="-e" />
+                           <arg value="reportDir" />
+                           <arg value="/sdcard/reports" />
                     </extra-instrument-args>
                 </run-tests-helper>
 

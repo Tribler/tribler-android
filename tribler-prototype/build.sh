@@ -6,7 +6,7 @@ CURRENTFOLDERPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 APPLOGO="${CURRENTFOLDERPATH}/images/tribler_applogo.png"
 APPSPLASH="${CURRENTFOLDERPATH}/images/splash.jpg"
 DIRNAME="TSAP"
-PY4APATH=
+PY4APATH="${CURRENTFOLDERPATH}/python-for-android"
 
 # Chat colors
 red="\x1B[0;31m"
@@ -23,7 +23,7 @@ while getopts ":p:" opt; do
 done
 
 if [ "X$PY4APATH" == "X" ]; then
-	echo -e "${yellow}༼ ▀̿̿Ĺ̯̿̿▀̿ ̿ ༽_•︻̷̿┻̿═━一༼ຈل͜ຈ༽ give the path of python-for-android using the -p flag or the donger dies${NC}"
+	echo -e "${yellow} Please give the path of python-for-android using the -p flag${NC}"
 	exit 1
 fi
 
@@ -77,8 +77,15 @@ fi
 #./distribute.sh -m "kivy" -d $DIRNAME
 #popd
 
-# Remove the created directory 
+# Remove the created directory, the build/libs folder and the build/python folder
 rm -rf "${PY4APATH}/dist/${DIRNAME}"
+rm -rf "${PY4APATH}/build/libs"
+rm -rf "${PY4APATH}/build/python"
+
+# Adapt sdl_main.c to export the correct JNI function (PythonService_nativeSetEnv)
+mv "${PY4APATH}/src/jni/sdl_main/sdl_main.c" "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak"
+sed s/SDLSurfaceView_nativeSetEnv/PythonService_nativeSetEnv/ "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak" > "${PY4APATH}/src/jni/sdl_main/sdl_main.c"
+rm "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak"
 
 # Build a distribute folder with all the packages now that kivy has been set
 pushd $PY4APATH
@@ -91,12 +98,32 @@ cp "${CURRENTFOLDERPATH}/swift.arm" "${CURRENTFOLDERPATH}/tsap/swift"
 
 # Build apk
 cd "${PY4APATH}/dist/${DIRNAME}/"
-./build.py --package org.tsap.tribler.full --name "a-TSAP Tribler" --version 0.9 --dir "${CURRENTFOLDERPATH}/tsap" debug --permission ACCESS_NETWORK_STATE --permission ACCESS_WIFI_STATE --permission INTERNET --icon $APPLOGO --presplash $APPSPLASH
+./build.py --package org.tsap.tribler.full --name "a-TSAP Tribler" --version 0.9 --dir "${CURRENTFOLDERPATH}/tsap/service" debug --permission ACCESS_NETWORK_STATE --permission ACCESS_WIFI_STATE --permission INTERNET --icon $APPLOGO --presplash $APPSPLASH
 
 # FIXME: rm precompiled swift binary
 rm "${CURRENTFOLDERPATH}/tsap/swift"
 
+# Copy the .so files to the libs folder in tsap
+find "${PY4APATH}/dist/${DIRNAME}/libs/armeabi" -type f -name '*.so' -exec cp {} "${CURRENTFOLDERPATH}/../tsap/libs/armeabi-v7a" \;
+
+# Copy the assets MP3s to the assets folder in tsap
+mkdir -p "${CURRENTFOLDERPATH}/../tsap/assets"
+find "${PY4APATH}/dist/${DIRNAME}/assets" -type f -name '*.mp3' -exec cp {} "${CURRENTFOLDERPATH}/../tsap/assets" \;
+
+# Change the version strings to the correct values
+private_version=$(grep -oP '(?<=<string name="private_version">)\d*.\d*(?=</string>)' "${PY4APATH}/dist/${DIRNAME}/res/values/strings.xml")
+
+public_version=$(grep -oP '(?<=<string name="public_version">)\d*.\d*(?=</string>)' "${PY4APATH}/dist/${DIRNAME}/res/values/strings.xml")
+
+mv "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+perl -pe "s/<string name=\"private_version\">\d*.\d*/<string name=\"private_version\">$private_version/" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml"
+rm "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+
+mv "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+perl -pe "s/<string name=\"public_version\">\d*.\d*/<string name=\"public_version\">$public_version/" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml"
+rm "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+
 # Copy the .apk files to our own app folder
-find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
+#find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
 
 echo -e "${green}All done!${NC} Everything seems to be in order (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ "

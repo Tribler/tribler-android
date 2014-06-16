@@ -8,6 +8,7 @@ import java.util.Observable;
 import android.util.Log;
 
 import org.tribler.tsap.AbstractXMLRPCManager;
+import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPCCallTask;
 
@@ -19,6 +20,7 @@ import org.tribler.tsap.XMLRPCCallTask;
 public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	private ThumbAdapter mAdapter;
 	private int mLastFoundResultsCount = 0;
+	private ISearchListener mSearchListener;
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server and starts a
@@ -27,9 +29,10 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	 * @param url
 	 *            The url of the XMLRPC server
 	 */
-	public XMLRPCTorrentManager(URL url, ThumbAdapter adapter) {
+	public XMLRPCTorrentManager(URL url, ThumbAdapter adapter, ISearchListener searchListener) {
 		super(url, 500);
 		mAdapter = adapter;
+		mSearchListener = searchListener;
 	}
 
 	/**
@@ -56,6 +59,7 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	 * 
 	 * @SuppressWarnings("unchecked") Channel c = new Channel( (Map<String,
 	 * Object>) arrayResult[i]); resultsList.add(c); }
+	 * mSearchListener.onSearchResults();
 	 * mAdapter.addNew(resultsList); } }; task.execute(mClient,
 	 * "channels.get_local", query); }
 	 */
@@ -143,10 +147,11 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 								(Map<String, Object>) arrayResult[i]);
 						resultsList.add(item);
 					}
-					Map<String, Object> firstResult = (Map<String,
+					/*Map<String, Object> firstResult = (Map<String,
 					 Object>)arrayResult[0];
 					Log.v("XMPLRCChannelManager",
-					"KeySet: "+firstResult.keySet());
+					"KeySet: "+firstResult.keySet());*/
+					mSearchListener.onSearchResults();
 					mAdapter.addNew(resultsList);
 					startPolling();
 				}
@@ -155,12 +160,13 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		task.execute(mClient, "torrents.get_remote_results");
 	}
 
-	public void search(String query) {
+	public void search(String keywords) {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();
-		// getLocal(query);
-		searchRemote(query);
-		Log.i("XMPLRCChannelManager", "Search for \"" + query + "\" launched.");
+		mSearchListener.onSearchSubmit(keywords);
+		// getLocal(keywords);
+		searchRemote(keywords);
+		Log.i("XMPLRCChannelManager", "Search for \"" + keywords + "\" launched.");
 	}
 
 	@Override

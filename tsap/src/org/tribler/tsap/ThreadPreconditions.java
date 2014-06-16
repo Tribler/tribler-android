@@ -3,7 +3,7 @@ package org.tribler.tsap;
 import android.os.Looper;
 
 /**
- * An class for checking if a function is called from the main thread. This
+ * A class for checking if a function is called from the main thread. This
  * class is originally from:
  * http://www.piwai.info/android-adapter-good-practices/
  * 

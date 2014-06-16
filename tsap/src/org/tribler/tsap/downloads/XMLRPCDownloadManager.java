@@ -58,11 +58,21 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	 */
 	private Download convertMapToDownload(Map<String, Object> map)
 	{
+		double downloadSpeed;
+		if(map.get("speed_down") instanceof Double)
+			downloadSpeed = (Double)map.get("speed_down");
+		else
+			downloadSpeed = (Integer)map.get("speed_down");
+		double uploadSpeed;
+		if(map.get("speed_down") instanceof Double)
+			uploadSpeed = (Double)map.get("speed_up");
+		else
+			uploadSpeed = (Integer)map.get("speed_up");
 		return new Download((String)map.get("name"),
 				(String)map.get("infohash"),
 				(Integer)map.get("status"),
-				(Double)map.get("speed_down"),
-				(Double)map.get("speed_up"),
+				downloadSpeed,
+				uploadSpeed,
 				(Double)map.get("progress"));
 	}
 	
@@ -157,6 +167,6 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 				}
 			}
 		};
-		task.execute(mClient, "downloads.start_vod", infoHash);
+		task.execute(mClient, "downloads.get_vod_uri", infoHash);
 	}
 }

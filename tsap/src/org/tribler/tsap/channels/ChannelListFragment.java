@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.R;
 
 import android.app.ListFragment;
@@ -11,33 +12,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Fragment that shows a list of available channels and handles its behavior
  * 
  * @author Dirk Schut
  */
-public class ChannelListFragment extends ListFragment implements OnQueryTextListener {
+public class ChannelListFragment extends ListFragment implements OnQueryTextListener, ISearchListener {
 	private XMLRPCChannelManager mChannelManager = null;
+	private View mView;
 
-	/**
-	 * Initializes the channel adapter
-	 * 
-	 * @param savedInstanceState
-	 *            The state of the saved instance
-	 */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		mView = inflater.inflate(R.layout.fragment_channel_list, container,
+				false);
 		setHasOptionsMenu(true);
 
 		ChannelListAdapter adapter = new ChannelListAdapter(getActivity(), R.layout.channel_list_item);
@@ -46,12 +47,16 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 
 		try {
 			mChannelManager = new XMLRPCChannelManager(new URL(
-					"http://127.0.0.1:8000/tribler"), (ChannelListAdapter)getListAdapter());
+					"http://127.0.0.1:8000/tribler"), (ChannelListAdapter)getListAdapter(), this);
 		} catch (MalformedURLException e) {
 			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}
+		return mView;
 	}
-	
+
+	/**
+	 * Called when this view is visible again: Starts polling for results.
+	 */
 	@Override
 	public void onResume()
 	{
@@ -60,6 +65,9 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 		Log.i("ChannelListFragment","Started polling");
 	}
 	
+	/**
+	 * Called when the view is no longer visible: Stops polling for results.
+	 */
 	@Override
 	public void onPause()
 	{
@@ -151,5 +159,28 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 	public boolean onQueryTextSubmit(String query) {
 		mChannelManager.search(query);
 		return true;
+	}
+
+	/**
+	 * Called when a search is submitted: Shows a progress bar with some text.
+	 */
+	@Override
+	public void onSearchSubmit(String keywords) {
+		View progressBar = mView.findViewById(R.id.channel_list_progress_bar);
+		progressBar.setVisibility(View.VISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.channel_list_text_view);
+		message.setVisibility(View.VISIBLE);
+		message.setText("Searching...");
+	}
+
+	/**
+	 * Called when a search returns results: Removes the progressbar.
+	 */
+	@Override
+	public void onSearchResults() {
+		View progressBar = mView.findViewById(R.id.channel_list_progress_bar);
+		progressBar.setVisibility(View.GONE);
+		View message = mView.findViewById(R.id.channel_list_text_view);
+		message.setVisibility(View.GONE);
 	}
 }

@@ -31,7 +31,8 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 # TODO: not hardcoded please
 DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
 DOWNLOAD_UPDATE_DELAY = 2.0
-DOWNLOAD_CHECKPOINT_INTERVAL = 15
+DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
+
 
 class DownloadManager():
     # Code to make this a singleton
@@ -50,7 +51,6 @@ class DownloadManager():
     _votecast_db = None
 
     _downloads = {}
-    _last_checkpoint = 0
 
     def __init__(self, session, xmlrpc=None):
         """
@@ -97,9 +97,28 @@ class DownloadManager():
 
             self._dispersy = self._session.lm.dispersy
 
+            # Load previous downloads
             self._session.load_checkpoint()
+            for dl in self._session.get_downloads():
+                dl.set_state_callback(self._update_dl_state, delay=1)
+
+            # Schedule download checkpoints
+            threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
+
         else:
             raise RuntimeError('TorrentManager already connected')
+
+    def _run_session_checkpoint(self):
+        """
+        Periodically run function that checkpoints the current downloads. This is done so that after a crash, no full
+        hash recheck is needed.
+        :return: Nothing.
+        """
+        _logger.info("Running session checkpoint..")
+        self._session.checkpoint()
+
+        # Schedule next checkpoint
+        threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
 
     def _xmlrpc_register(self, xmlrpc):
         """
@@ -169,9 +188,6 @@ class DownloadManager():
                     self._downloads[dldict['infohash']] = dldict
             else:
                 _logger.warn("Error updating download state")
-
-            if (time.time() - self._last_checkpoint) > DOWNLOAD_CHECKPOINT_INTERVAL:
-                self._session.checkpoint()
 
         finally:
             self._dllock.release()

@@ -3,14 +3,17 @@
 # Initializes the XML-RPC Server
 
 import threading
+import SocketServer
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 
 
 class RequestHandler(SimpleXMLRPCRequestHandler):
-    rpc_paths = ('/tribler',)
+    rpc_paths = ()
 
+class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer):
+    pass
 
 class XMLRPCServer(threading.Thread):
     def __init__(self, iface="127.0.0.1", port=8000):
@@ -22,7 +25,7 @@ class XMLRPCServer(threading.Thread):
         """
         threading.Thread.__init__(self)
 
-        self._server = SimpleXMLRPCServer((iface, port), requestHandler=RequestHandler, allow_none=True)
+        self._server = SimpleThreadedXMLRPCServer((iface, port), requestHandler=RequestHandler, allow_none=True)
         self._server.register_introspection_functions()
 
         self._iface = iface

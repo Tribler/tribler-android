@@ -112,7 +112,6 @@ class TorrentManager():
         # TODO: GET LOCAL TORRENTS
         return []
 
-    @call_on_reactor_thread
     def search_remote(self, keywords):
         """
         Search for torrent files with our Dispersy peers.
@@ -123,6 +122,19 @@ class TorrentManager():
             self._set_keywords(keywords)
         except:
             return False
+
+        self._search_remote_on_reactor()
+
+        # TODO: Return an actual value
+        return -1
+
+    @call_on_reactor_thread
+    def _search_remote_on_reactor(self):
+        """
+        Do an actual remote search among our Dispersy peers, on the twisted reactor thread. It uses the previously set
+        keywords.
+        :return: Number of searched launched, or False on failure.
+        """
 
         nr_requests_made = 0
 
@@ -321,8 +333,8 @@ class TorrentManager():
             self.magnetstatus = None
         """
 
-        return {'infohash': binascii.hexlify(tr.infohash).upper() if tr.infohash else False,
-                'swift_hash': binascii.hexlify(tr.swift_hash).upper() if tr.swift_hash else False,
+        return {'infohash': binascii.hexlify(tr.infohash) if tr.infohash else False,
+                'swift_hash': binascii.hexlify(tr.swift_hash) if tr.swift_hash else False,
                 'swift_torrent_hash': binascii.hexlify(
                     tr.swift_torrent_hash).upper() if tr.swift_torrent_hash else False,
                 'torrent_file_name': tr.torrent_file_name or False,

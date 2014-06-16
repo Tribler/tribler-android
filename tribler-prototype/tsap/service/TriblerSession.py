@@ -111,7 +111,7 @@ class TriblerSession():
         self._sconfig.set_torrent_collecting(False)
         #self._sconfig.set_libtorrent(False)
         self._sconfig.set_dht_torrent_collecting(False)
-        self._sconfig.set_videoplayer(False)
+        #self._sconfig.set_videoplayer(False)
 
         self._sconfig.set_dispersy_tunnel_over_swift(False)
         self._sconfig.set_torrent_collecting_max_torrents(5000)

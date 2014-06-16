@@ -33,17 +33,13 @@ public class DownloadListFragment extends ListFragment {
 		setHasOptionsMenu(true);
 
 		this.setListAdapter(XMLRPCDownloadManager.getInstance().getAdapter());
-		Download dummy = new Download("Very cool download", "infowiet", 3, 23423.44, 1223.21, 0.37);
-		ArrayList<Download> list = new ArrayList<Download>();
-		list.add(dummy);
-		XMLRPCDownloadManager.getInstance().getAdapter().addNew(list);
 	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		//XMLRPCDownloadManager.getInstance().startPolling();
+		XMLRPCDownloadManager.getInstance().startPolling();
 		Log.i("DownloadListFragment","Started polling");
 	}
 	
@@ -51,7 +47,7 @@ public class DownloadListFragment extends ListFragment {
 	public void onPause()
 	{
 		super.onPause();
-		//XMLRPCDownloadManager.getInstance().stopPolling();
+		XMLRPCDownloadManager.getInstance().stopPolling();
 		Log.i("DownloadListFragment","Stopped polling");
 	}
 

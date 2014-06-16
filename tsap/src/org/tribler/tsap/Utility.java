@@ -1,11 +1,23 @@
 package org.tribler.tsap;
 
+/**
+ * Class with static functions that are used across multiple classes, like conversion functions.
+ * @author Dirk Schut
+ *
+ */
 public class Utility {
 
+	/**
+	 * Converts an amount of bytes into a nicely formatted String. It adds the correct prefix like KB or GB and limits the precision to one number behind the point. 
+	 * @param size
+	 * 			The amount of bytes. 
+	 * @return
+	 * 			A string in the format NNN.NXB
+	 */
 	public static String convertBytesToString(double size) {
-		String prefixes[] = {"B", "KB", "MB", "GB", "TB"};
+		String prefixes[] = {"B", "kB", "MB", "GB", "TB", "PB"};
 		int prefix = 0;
-		while(size > 1000 && prefix < 4)
+		while(size > 1000 && prefix < prefixes.length-1)
 		{
 			size /= 1000;
 			prefix ++;
@@ -21,10 +33,24 @@ public class Utility {
 		}
 	}
 	
+	/**
+	 * Does the same as convertBytesToString, but adds /s to indicate it's bytes per second
+	 * @param speed
+	 * 			the amount of bytes per second
+	 * @return
+	 * 			A string in the format NNN.NXB/s
+	 */
 	public static String convertBytesPerSecToString(double speed) {
 		return convertBytesToString(speed) + "/s";
 	}
 	
+	/**
+	 * Converts the Tribler state code of a download into a readable message.
+	 * @param state
+	 * 			Tribler state code
+	 * @return
+	 * 			The message corresponding to the code
+	 */
 	public static String convertDownloadStateIntToMessage(int state)
 	{
 		switch(state)

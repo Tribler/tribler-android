@@ -7,6 +7,7 @@ import java.util.Observable;
 
 import android.util.Log;
 
+import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.XMLRPCCallTask;
 import org.tribler.tsap.AbstractXMLRPCManager;
 
@@ -20,6 +21,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 
 	private ChannelListAdapter mAdapter;
 	private int mLastFoundResultsCount = 0;
+	private ISearchListener mSearchListener;
 
 	/**
 	 * Constructor: Sets up the AbstractXMLRPCManager and the adapter
@@ -27,9 +29,10 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	 * @param url
 	 *            The url of the XMLRPC server
 	 */
-	XMLRPCChannelManager(URL url, ChannelListAdapter adapter) {
+	XMLRPCChannelManager(URL url, ChannelListAdapter adapter, ISearchListener searchListener) {
 		super(url, 500);
 		mAdapter = adapter;
+		mSearchListener = searchListener;
 	}
 
 	/**
@@ -57,6 +60,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 								(Map<String, Object>) arrayResult[i]);
 						resultsList.add(c);
 					}
+					mSearchListener.onSearchResults();
 					mAdapter.addNew(resultsList);
 					// Map<String, Object> firstResult = (Map<String, Object>)
 					// arrayResult[0];
@@ -142,6 +146,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 								(Map<String, Object>) arrayResult[i]);
 						resultsList.add(c);
 					}
+					mSearchListener.onSearchResults();
 					mAdapter.addNew(resultsList);
 					startPolling();
 				}
@@ -154,15 +159,16 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 	 * Starts a search on both the local and the remote dispersy databases. Once
 	 * results are found they will be added to the ChannelListAdapter.
 	 * 
-	 * @param query
+	 * @param keywords
 	 *            The keywords to search for
 	 */
-	public void search(String query) {
+	public void search(String keywords) {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();
-		getLocal(query);
-		searchRemote(query);
-		Log.v("XMPLRCChannelManager", "Search for \"" + query + "\" launched.");
+		mSearchListener.onSearchSubmit(keywords);
+		getLocal(keywords);
+		searchRemote(keywords);
+		Log.v("XMPLRCChannelManager", "Search for \"" + keywords + "\" launched.");
 	}
 
 	/**

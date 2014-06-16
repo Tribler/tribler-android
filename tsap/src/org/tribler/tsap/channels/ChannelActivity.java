@@ -63,7 +63,7 @@ public class ChannelActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.channel_activity);
+		setContentView(R.layout.activity_channel);
 		
 		Intent intent = getIntent();
 		mChannel = (Channel)intent.getSerializableExtra(INTENT_MESSAGE);

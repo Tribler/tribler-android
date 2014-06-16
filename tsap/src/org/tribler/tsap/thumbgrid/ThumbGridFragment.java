@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
@@ -30,11 +32,12 @@ import android.widget.Toast;
  * 
  * @author Wendo Sabée
  */
-public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
+public class ThumbGridFragment extends Fragment implements OnQueryTextListener, ISearchListener {
 
 	private XMLRPCTorrentManager mTorrentManager = null;
 	private ThumbAdapter mThumbAdapter;
 	int mLastFoundResultAmount = 0;
+	View mView;
 	// stores the menu handler to remove the search item in onPause()
 	private Menu menu;
 
@@ -65,18 +68,18 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		View v = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
-		GridView gridView = (GridView) v.findViewById(R.id.ThumbsGrid);
+		mView = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
+		GridView gridView = (GridView) mView.findViewById(R.id.ThumbsGrid);
 
 		mThumbAdapter = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item);
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		try {
-			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter);
+			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter, this);
 		} catch (MalformedURLException e) {
 			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
 		}
-		return v;
+		return mView;
 	}
 
 	/**
@@ -192,5 +195,22 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener {
 		mTorrentManager.search(query);
 		// Don't care about this.
 		return true;
+	}
+	
+	@Override
+	public void onSearchSubmit(String keywords) {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.VISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setVisibility(View.VISIBLE);
+		message.setText("Searching...");
+	}
+
+	@Override
+	public void onSearchResults() {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.GONE);
+		View message = mView.findViewById(R.id.thumbgrid_text_view);
+		message.setVisibility(View.GONE);
 	}
 }

@@ -114,6 +114,11 @@ public class PythonService extends Service  implements Runnable {
         nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
                 pythonServiceArgument);       
     }
+    
+    public static void stop()
+    {
+    	pyService.stopSelf();
+    }
 
     // Native part (don't remove!)
     public static native void nativeStart(String androidPrivate, String androidArgument,

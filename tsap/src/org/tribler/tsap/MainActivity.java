@@ -1,5 +1,7 @@
 package org.tribler.tsap;
 
+import org.renpy.android.PythonActivity;
+import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.videolan.vlc.VLCApplication;
@@ -61,9 +63,9 @@ public class MainActivity extends Activity implements
 
 	/**
 	 * When the user presses back when the thumb grid or the channel list is
-	 * visible, the home screen activity is launched and this activity is
-	 * finished. If none of these screens are visible, the default behaviour is
-	 * used.
+	 * visible, the home screen activity is launched and this activity and the
+	 * service is finished. If none of these screens are visible, the default
+	 * behaviour is used.
 	 */
 	@Override
 	public void onBackPressed() {
@@ -72,6 +74,7 @@ public class MainActivity extends Activity implements
 			startMain.addCategory(Intent.CATEGORY_HOME);
 			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(startMain);
+			PythonService.stop();
 			finish();
 		} else
 			super.onBackPressed();

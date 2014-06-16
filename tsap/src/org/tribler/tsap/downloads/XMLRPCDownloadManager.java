@@ -17,11 +17,15 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Singleton class for adding and accessing downloads. 
+ * @author Dirk Schut
+ */
 public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	
 	private static DownloadListAdapter mAdapter = null;
 	private static URL mUrl = null;
-	private static XMLRPCDownloadManager instance = null;
+	private static XMLRPCDownloadManager mInstance = null;
 	private static Context mContext;
 	
 	/**
@@ -31,21 +35,35 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		super(2000);
 	}
 	
+	/**
+	 * Returns the singleton instance of the class
+	 * @return
+	 */
 	public static XMLRPCDownloadManager getInstance()
 	{
-		if(instance == null)
+		if(mInstance == null)
 		{
-			instance = new XMLRPCDownloadManager();
+			mInstance = new XMLRPCDownloadManager();
 		}
-		return instance;
+		return mInstance;
 	}
 	
-	public void setUp(DownloadListAdapter adapter, URL url, Context context)
+	/**
+	 * Sets up the class with initial values. This function should be called before using any other function from this class.
+	 * @param adapter
+	 * 			The adapter for storing the downloads in.
+	 * @param url
+	 * 			Url of the Tribler XML-RPC server to connect with.
+	 * @param context
+	 * 			Context for creating toasts and intents.
+	 */
+	public static void setUp(DownloadListAdapter adapter, URL url, Context context)
 	{
+		getInstance();
 		mAdapter = adapter;
-		this.mClient = new XMLRPCClient(url);
-		this.logAvailableFunctions();
-		this.mContext = context;
+		mContext = context;
+		mInstance.mClient = new XMLRPCClient(url);
+		mInstance.logAvailableFunctions();
 	}
 	
 	public DownloadListAdapter getAdapter()
@@ -108,11 +126,18 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		stopPolling();
 		task.execute(mClient, "downloads.get_all_progress_info");
 	}
-
+	
 	@Override
 	public void update(Observable observable, Object data) {
 		getAllProgressInfo();
 	}
+	/**
+	 * Starts downloading a torrent.
+	 * @param infoHash
+	 *			Infohash of the torrent that has to be downloaded.
+	 * @param name
+	 * 			Name to be displayed in the downloadslist as long as no metadata has been found.
+	 */
 	public void downloadTorrent(String infoHash, String name)
 	{
 		Log.i("XMLRPCDownloadManager", "Adding download with infohash: " + infoHash + " and name: " + name);

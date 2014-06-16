@@ -58,7 +58,8 @@ public class ChannelActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * Called on creation: Adds tabs and fills them with information.
+	 * Calls setupActionBar and setupTabs
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -35,6 +35,9 @@ public class DownloadListFragment extends ListFragment {
 		this.setListAdapter(XMLRPCDownloadManager.getInstance().getAdapter());
 	}
 	
+	/**
+	 * Starts polling
+	 */
 	@Override
 	public void onResume()
 	{
@@ -43,6 +46,9 @@ public class DownloadListFragment extends ListFragment {
 		Log.i("DownloadListFragment","Started polling");
 	}
 	
+	/**
+	 * Pauses polling
+	 */
 	@Override
 	public void onPause()
 	{

@@ -123,6 +123,9 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 						startPolling();						
 					}
 				}
+				else {
+					startPolling();	
+				}
 			}
 		};
 		task.execute(mClient, "channels.get_remote_results_count");
@@ -148,8 +151,8 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 					}
 					mSearchListener.onSearchResults();
 					mAdapter.addNew(resultsList);
-					startPolling();
 				}
+				startPolling();
 			}
 		};
 		task.execute(mClient, "channels.get_remote_results");

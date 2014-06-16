@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 	protected int resource;
 	protected LayoutInflater inflater;
-	
+
 	/**
 	 * Constructor: initializes the instance variables
 	 * 
@@ -32,6 +32,10 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	/**
+	 * Returns the view of a list item at a certain position. It re-uses the
+	 * view from convertView if possible.
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
@@ -39,23 +43,34 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 
 		if (convertView == null) {
 			view = inflater.inflate(resource, parent, false);
-		}
-		else {
+		} else {
 			view = convertView;
 		}
 
 		((TextView) view.findViewById(R.id.download_name)).setText(download
 				.getName());
 		((TextView) view.findViewById(R.id.download_status))
-				.setText("Status: " + Utility.convertDownloadStateIntToMessage(download.getStatus()));
+				.setText("Status: "
+						+ Utility.convertDownloadStateIntToMessage(download
+								.getStatus()));
 		((TextView) view.findViewById(R.id.download_speed_down))
-		.setText("Down: " + Utility.convertBytesPerSecToString(download.getDownloadSpeed()));
+				.setText("Down: "
+						+ Utility.convertBytesPerSecToString(download
+								.getDownloadSpeed()));
 		((TextView) view.findViewById(R.id.download_speed_up))
-		.setText("Up: " + Utility.convertBytesPerSecToString(download.getUploadSpeed()));
-		((ProgressBar) view.findViewById(R.id.download_progress_bar)).setProgress((int)(download.getProgress()*100));
+				.setText("Up: "
+						+ Utility.convertBytesPerSecToString(download
+								.getUploadSpeed()));
+		((ProgressBar) view.findViewById(R.id.download_progress_bar))
+				.setProgress((int) (download.getProgress() * 100));
 		return view;
 	}
 	
+	/**
+	 * Replace the current list of downloads with a new one with more current information.
+	 * @param newList
+	 * 			The new list of downloads
+	 */
 	public void replaceAll(ArrayList<Download> newList) {
 		content = newList;
 		notifyDataSetChanged();

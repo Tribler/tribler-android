@@ -115,6 +115,9 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 						startPolling();
 					}
 				}
+				else {
+					startPolling();
+				}
 			}
 		};
 		stopPolling();
@@ -153,8 +156,8 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 					"KeySet: "+firstResult.keySet());*/
 					mSearchListener.onSearchResults();
 					mAdapter.addNew(resultsList);
-					startPolling();
 				}
+				startPolling();
 			}
 		};
 		task.execute(mClient, "torrents.get_remote_results");

@@ -1,6 +1,9 @@
 [submodule "tribler-prototype/tribler"]
 	path = tribler-prototype/tribler
-	url = git@github.com:wtud/tribler.git
+	url = https://github.com/tribler/tribler.git
 [submodule "tribler-prototype/pidcat"]
 	path = tribler-prototype/pidcat
-	url = git@github.com:wtud/pidcat.git
+	url = https://github.com/wtud/pidcat.git
+[submodule "tribler-prototype/python-for-android"]
+	path = tribler-prototype/python-for-android
+	url = https://github.com/wtud/python-for-android.git

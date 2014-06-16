@@ -3,6 +3,8 @@ package org.tribler.tsap;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.renpy.android.PythonActivity;
+import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.tribler.tsap.downloads.DownloadListAdapter;
@@ -13,6 +15,7 @@ import org.videolan.vlc.VLCApplication;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -65,7 +68,7 @@ public class MainActivity extends Activity implements
 
 		// Send the current context to VLC
 		VLCApplication.setContext(getApplicationContext());
-		try {
+try {
 			URL url = new URL("http://127.0.0.1:8000/tribler");
 			DownloadListAdapter adapter = new DownloadListAdapter(this, R.layout.download_list_item);
 			XMLRPCDownloadManager.getInstance().setUp(adapter, url, this);
@@ -73,7 +76,25 @@ public class MainActivity extends Activity implements
 			Log.e("DownloadListFragment", "URL was malformed:\n");
 			e.printStackTrace();
 		}
-		
+	}
+
+	/**
+	 * When the user presses back when the thumb grid or the channel list is
+	 * visible, the home screen activity is launched and this activity and the
+	 * service is finished. If none of these screens are visible, the default
+	 * behaviour is used.
+	 */
+	@Override
+	public void onBackPressed() {
+		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()) {
+			Intent startMain = new Intent(Intent.ACTION_MAIN);
+			startMain.addCategory(Intent.CATEGORY_HOME);
+			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(startMain);
+			PythonService.stop();
+			finish();
+		} else
+			super.onBackPressed();
 	}
 
 	/**

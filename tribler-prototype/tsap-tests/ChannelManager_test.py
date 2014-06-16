@@ -62,8 +62,12 @@ class ChannelsRemoteSearch(unittest.TestCase):
 
         results = self.xmlrpc.channels.get_remote_results()
 
+        hitrate = 0.0
         for result in results:
-            assert "eztv" in result['name'].lower(), "'%s' does not contain 'eztv'" % result['name']
+            hitrate += 1 if "eztv" in result['name'].lower() else 0
+
+        missrate = ((len(results) - hitrate) / len(results))
+        assert missrate <= REMOTE_SEARCH_TOLERANCE, "Missrate is %s%%" % (missrate * 100)
 
     def testC_RemoteSearchVodo(self):
         """
@@ -85,8 +89,12 @@ class ChannelsRemoteSearch(unittest.TestCase):
 
         results = self.xmlrpc.channels.get_remote_results()
 
+        hitrate = 0.0
         for result in results:
-            assert "vodo" in result['name'].lower(), "'%s' does not contain 'vodo'" % result['name']
+            hitrate += 1 if "vodo" in result['name'].lower() else 0
+
+        missrate = ((len(results) - hitrate) / len(results))
+        assert missrate <= REMOTE_SEARCH_TOLERANCE, "Missrate is %s%%" % (missrate * 100)
 
     @unittest.skipIf(not REMOTE_DEADLOCK_TESTS, "REMOTE_DEADLOCK_TESTS is False")
     def XtestY_Deadlock_slow(self):

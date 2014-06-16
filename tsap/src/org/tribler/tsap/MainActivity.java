@@ -1,5 +1,7 @@
 package org.tribler.tsap;
 
+import org.renpy.android.PythonActivity;
+import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.videolan.vlc.VLCApplication;
@@ -7,6 +9,7 @@ import org.videolan.vlc.VLCApplication;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -56,6 +59,25 @@ public class MainActivity extends Activity implements
 
 		// Send the current context to VLC
 		VLCApplication.setContext(getApplicationContext());
+	}
+
+	/**
+	 * When the user presses back when the thumb grid or the channel list is
+	 * visible, the home screen activity is launched and this activity and the
+	 * service is finished. If none of these screens are visible, the default
+	 * behaviour is used.
+	 */
+	@Override
+	public void onBackPressed() {
+		if (mThumbGridFragment.isVisible() || channelFragment.isVisible()) {
+			Intent startMain = new Intent(Intent.ACTION_MAIN);
+			startMain.addCategory(Intent.CATEGORY_HOME);
+			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(startMain);
+			PythonService.stop();
+			finish();
+		} else
+			super.onBackPressed();
 	}
 
 	/**

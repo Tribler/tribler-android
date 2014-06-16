@@ -50,7 +50,7 @@
     <string name="hardware_acceleration_error_title">HW acceleration error</string>
     <string name="hardware_acceleration_error_message">An error occurred with hardware acceleration. Would you like to disable it and try again?</string>
     <string name="navigation_drawer">navigation_drawer</string>
-    <string name="private_version">1402578163.74</string>
-    <string name="public_version">1402578163.74</string>
+    <string name="private_version">1402652881.27</string>
+    <string name="public_version">1402652881.27</string>
 
 </resources>

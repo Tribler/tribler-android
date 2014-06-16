@@ -6,6 +6,7 @@ import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -71,12 +72,7 @@ public class DownloadActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				String URL = "http://inventos.ru/video/sintel/sintel-q3.mp4";
-				Uri link = Uri.parse(URL);
-				Intent intent = new Intent(Intent.ACTION_VIEW, link,
-						getApplicationContext(),
-						VideoPlayerActivity.class);
-				startActivity(intent);
+				XMLRPCDownloadManager.getInstance().startVOD(mDownload.getInfoHash());
 			}
 		};
 		streamButton.setOnClickListener(streamButtonOnClickListener);

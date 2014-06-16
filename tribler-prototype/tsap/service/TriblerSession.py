@@ -148,9 +148,9 @@ class TriblerSession():
         comm = self._dispersy.define_auto_load(SearchCommunity, self._session.dispersy_member, load=True,
                                                kargs=comm_args)
         _logger.debug("Currently loaded dispersy communities: %s" % comm)
-        comm = self._dispersy.define_auto_load(AllChannelCommunity, self._session.dispersy_member, load=True,
-                                               kargs=comm_args)
-        _logger.debug("Currently loaded dispersy communities: %s" % comm)
+        #comm = self._dispersy.define_auto_load(AllChannelCommunity, self._session.dispersy_member, load=True,
+        #                                       kargs=comm_args)
+        #_logger.debug("Currently loaded dispersy communities: %s" % comm)
 
         # load metadata community
         # comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs=comm_args)
@@ -165,11 +165,11 @@ class TriblerSession():
         #                               (swift_process,),
         #                               load=True)
 
-        comm = self._dispersy.define_auto_load(ChannelCommunity, self._session.dispersy_member, load=True,
-                                               kargs=comm_args)
-        _logger.debug("Currently loaded dispersy communities: %s" % comm)
-        comm = self._dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
-        _logger.debug("Currently loaded dispersy communities: %s" % comm)
+        #comm = self._dispersy.define_auto_load(ChannelCommunity, self._session.dispersy_member, load=True,
+        #                                       kargs=comm_args)
+        #_logger.debug("Currently loaded dispersy communities: %s" % comm)
+        #comm = self._dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
+        #_logger.debug("Currently loaded dispersy communities: %s" % comm)
 
         self._dispersy_init = True
 

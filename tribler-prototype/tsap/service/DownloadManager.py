@@ -30,7 +30,8 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 
 # TODO: not hardcoded please
 DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
-DOWNLOAD_UPDATE_DELAY = 5.0
+DOWNLOAD_UPDATE_DELAY = 2.0
+DOWNLOAD_CHECKPOINT_INTERVAL = 15
 
 class DownloadManager():
     # Code to make this a singleton
@@ -49,6 +50,7 @@ class DownloadManager():
     _votecast_db = None
 
     _downloads = {}
+    _last_checkpoint = 0
 
     def __init__(self, session, xmlrpc=None):
         """
@@ -94,6 +96,8 @@ class DownloadManager():
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
 
             self._dispersy = self._session.lm.dispersy
+
+            self._session.load_checkpoint()
         else:
             raise RuntimeError('TorrentManager already connected')
 
@@ -140,6 +144,8 @@ class DownloadManager():
                 dl = self._session.start_download(tdef, dscfg)
                 dl.set_state_callback(self._update_dl_state, delay=1)
 
+                self._session.checkpoint()
+
             except Exception, e:
                 _logger.error("Error adding torrent (infohash=%s,name=%s) (%s)" % (infohash, name, e.args))
                 return False
@@ -164,6 +170,9 @@ class DownloadManager():
             else:
                 _logger.warn("Error updating download state")
 
+            if (time.time() - self._last_checkpoint) > DOWNLOAD_CHECKPOINT_INTERVAL:
+                self._session.checkpoint()
+
         finally:
             self._dllock.release()
             return DOWNLOAD_UPDATE_DELAY, False
@@ -182,6 +191,8 @@ class DownloadManager():
 
                 if infohash in self._downloads.keys():
                     self._downloads.pop(infohash, None)
+
+                self._session.checkpoint()
 
                 return True
 

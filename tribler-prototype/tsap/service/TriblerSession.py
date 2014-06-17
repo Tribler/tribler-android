@@ -28,8 +28,7 @@ from Tribler.dispersy.dispersy import Dispersy
 from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
 
 from Tribler.Main.globals import DefaultDownloadStartupConfig, get_default_dscfg_filename
-
-DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
+from Tribler.Core.simpledefs import STATEDIR_DLPSTATE_DIR, STATEDIR_TORRENTCOLL_DIR, STATEDIR_SWIFTRESEED_DIR
 
 
 class TriblerSession():
@@ -114,7 +113,10 @@ class TriblerSession():
             defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
 
         if not defaultDLConfig.get_dest_dir():
-            defaultDLConfig.set_dest_dir(DOWNLOAD_DIRECTORY)
+            defaultDLConfig.set_dest_dir(os.environ['TRIBLER_DOWNLOAD_DIR'])
+            self._sconfig.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], STATEDIR_TORRENTCOLL_DIR))
+            self._sconfig.set_swift_meta_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], STATEDIR_SWIFTRESEED_DIR))
+
         if not os.path.isdir(defaultDLConfig.get_dest_dir()):
             try:
                 _logger.info("Creating download directory: %s" % defaultDLConfig.get_dest_dir())

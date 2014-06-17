@@ -90,14 +90,15 @@ public class VideoInfoFragment extends Fragment {
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
 		loadBitmap(thumbData.getThumbnailId(), thumb);
-		setViewButtonListener();
+		setPlayButtonListener();
+		setDownloadButtonListener();
 	}
 
 	/**
 	 * Sets the listener of the 'Play video' button to a listener that starts
 	 * VLC when the button is pressed
 	 */
-	private void setViewButtonListener() {
+	private void setPlayButtonListener() {
 		Button viewButton = (Button) view
 				.findViewById(R.id.video_info_stream_video);
 		mViewButtonOnClickListener = new View.OnClickListener() {
@@ -112,8 +113,14 @@ public class VideoInfoFragment extends Fragment {
 				startActivity(intent);
 			}
 		};
-		viewButton.setOnClickListener(mViewButtonOnClickListener);
-		
+		viewButton.setOnClickListener(mViewButtonOnClickListener);		
+	}
+
+	/**
+	 * Sets the listener of the 'Download video' button to a listener that starts
+	 * downloading the selected torrent when the button is pressed
+	 */
+	private void setDownloadButtonListener() {
 		Button downloadButton = (Button) view
 				.findViewById(R.id.video_info_download_video);
 		mViewButtonOnClickListener = new View.OnClickListener() {

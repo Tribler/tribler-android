@@ -76,3 +76,5 @@ libpython2.7.so
 lint-results.xml
 junitreports/
 *.mp3
+tribler-prototype/exports
+

@@ -16,12 +16,14 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
 # DB Tuples
-from Tribler.Main.Utility.GuiDBTuples import Torrent, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
+from Tribler.Main.Utility.GuiDBTuples import Torrent, Channel, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
 
 # Tribler communities
 from Tribler.community.search.community import SearchCommunity
 from Tribler.Core.Search.SearchManager import split_into_keywords
 from Tribler.dispersy.util import call_on_reactor_thread
+from Tribler.Core.CacheDB.sqlitecachedb import bin2str, str2bin, forceAndReturnDBThread, forceDBThread
+
 
 
 class TorrentManager():
@@ -109,8 +111,56 @@ class TorrentManager():
         :param filter: (Optional) keyword filter.
         :return: List of torrents in dictionary format.
         """
-        # TODO: GET LOCAL TORRENTS
-        return []
+        keywords = split_into_keywords(unicode(filter))
+        keywords = [keyword for keyword in keywords if len(keyword) > 1]
+
+        TORRENT_REQ_COLUMNS = ['T.torrent_id', 'infohash', 'swift_hash', 'swift_torrent_hash', 'T.name', 'torrent_file_name', 'length', 'category_id', 'status_id', 'num_seeders', 'num_leechers', 'C.id', 'T.dispersy_id', 'C.name', 'T.name', 'C.description', 'C.time_stamp', 'C.inserted']
+        TUMBNAILTORRENT_REQ_COLUMNS = ['torrent_id', 'Torrent.infohash', 'swift_hash', 'swift_torrent_hash', 'name', 'torrent_file_name', 'length', 'category_id', 'status_id', 'num_seeders', 'num_leechers']
+
+        @forceAndReturnDBThread
+        def local_search(keywords):
+            begintime = time()
+
+            results = self._torrent_db.searchNames(keywords, doSort=False, keys=TORRENT_REQ_COLUMNS)
+            print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            print results
+
+            begintuples = time()
+
+            if len(results) > 0:
+                def create_channel(a):
+                    return Channel(*a)
+
+                channels = {}
+                for a in results:
+                    channel_details = a[-10:]
+                    if channel_details[0] and channel_details[0] not in channels:
+                        channels[channel_details[0]] = create_channel(channel_details)
+
+                def create_torrent(a):
+                    #channel = channels.get(a[-10], False)
+                    #if channel and (channel.isFavorite() or channel.isMyChannel()):
+                    #    t = ChannelTorrent(*a[:-12] + [channel, None])
+                    #else:
+                    t = Torrent(*a[:11] + [False])
+
+                    t.misc_db = self._misc_db
+                    t.torrent_db = self._torrent_db
+                    t.channelcast_db = self._channelcast_db
+                    #t.metadata_db = self._metadata_db
+                    t.assignRelevance(a[-11])
+                    return t
+
+                results = map(create_torrent, results)
+            print ">>>>>>> LOCAL RESULTS: %s" % results
+
+            _logger.debug('TorrentSearchGridManager: _doSearchLocalDatabase took: %s of which tuple creation took %s', time() - begintime, time() - begintuples)
+            return results
+
+        results = self._prepare_torrents(local_search(keywords))
+        print ">>>>>>> LOCAL RESDICT: %s" % results
+
+        return results
 
     def search_remote(self, keywords):
         """
@@ -302,7 +352,7 @@ class TorrentManager():
         :param trs: Torrent object.
         :return: Torrent dictionary.
         """
-        assert isinstance(tr, RemoteTorrent)
+        assert isinstance(tr, RemoteTorrent) or isinstance(tr, Torrent) or isinstance(tr, ChannelTorrent)
 
         """
             self.infohash = infohash

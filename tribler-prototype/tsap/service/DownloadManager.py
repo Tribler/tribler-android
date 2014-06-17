@@ -30,7 +30,9 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 
 # TODO: not hardcoded please
 DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
-DOWNLOAD_UPDATE_DELAY = 5.0
+DOWNLOAD_UPDATE_DELAY = 2.0
+DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
+
 
 class DownloadManager():
     # Code to make this a singleton
@@ -94,8 +96,29 @@ class DownloadManager():
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
 
             self._dispersy = self._session.lm.dispersy
+
+            # Load previous downloads
+            self._session.load_checkpoint()
+            for dl in self._session.get_downloads():
+                dl.set_state_callback(self._update_dl_state, delay=1)
+
+            # Schedule download checkpoints
+            threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
+
         else:
             raise RuntimeError('TorrentManager already connected')
+
+    def _run_session_checkpoint(self):
+        """
+        Periodically run function that checkpoints the current downloads. This is done so that after a crash, no full
+        hash recheck is needed.
+        :return: Nothing.
+        """
+        _logger.info("Running session checkpoint..")
+        self._session.checkpoint()
+
+        # Schedule next checkpoint
+        threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
 
     def _xmlrpc_register(self, xmlrpc):
         """
@@ -140,6 +163,8 @@ class DownloadManager():
                 dl = self._session.start_download(tdef, dscfg)
                 dl.set_state_callback(self._update_dl_state, delay=1)
 
+                self._session.checkpoint()
+
             except Exception, e:
                 _logger.error("Error adding torrent (infohash=%s,name=%s) (%s)" % (infohash, name, e.args))
                 return False
@@ -182,6 +207,8 @@ class DownloadManager():
 
                 if infohash in self._downloads.keys():
                     self._downloads.pop(infohash, None)
+
+                self._session.checkpoint()
 
                 return True
 

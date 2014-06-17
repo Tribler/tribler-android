@@ -16,6 +16,7 @@ public class Download implements Serializable {
 	private double uploadSpeed;
 	private double downloadSpeed;
 	private double progress;
+	private int vodETA;
 
 	/**
 	 * empty constructor for serialization
@@ -31,14 +32,16 @@ public class Download implements Serializable {
 	 * @param downloadSpeed
 	 * @param uploadSpeed
 	 * @param progress
+	 * @param vodETA
 	 */
-	Download(String name, String infoHash, int status, double downloadSpeed, double uploadSpeed, double progress) {
+	Download(String name, String infoHash, int status, double downloadSpeed, double uploadSpeed, double progress, int vodETA) {
 		this.name = name;
 		this.infoHash = infoHash;
 		this.status = status;
 		this.downloadSpeed = downloadSpeed;
 		this.uploadSpeed = uploadSpeed;
 		this.progress = progress;
+		this.vodETA = vodETA;
 	}
 
 	public String getName() {
@@ -63,5 +66,10 @@ public class Download implements Serializable {
 	
 	public double getProgress() {
 		return progress;
+	}
+	
+	public int getVOD_ETA()
+	{
+		return vodETA;
 	}
 }

@@ -110,6 +110,8 @@ public class VideoInfoFragment extends Fragment {
 				
 				//disable the play button
 				viewButton.setEnabled(false);
+				
+				//retrieve vod_eta
 			}
 		};
 		viewButton.setOnClickListener(mViewButtonOnClickListener);		

@@ -27,6 +27,11 @@ def init_environment():
         # Set tribler data dir
         os.environ['TRIBLER_STATE_DIR'] = os.path.join(os.environ['ANDROID_PRIVATE'], '.Tribler')
 
+        if 'ANDROID_DOWNLOAD_DIRECTORY' in os.environ:
+            os.environ['TRIBLER_DOWNLOAD_DIR'] = os.path.join(os.environ['ANDROID_DOWNLOAD_DIRECTORY'], 'Tribler')
+        else:
+            os.environ['TRIBLER_DOWNLOAD_DIR'] = os.path.join(os.getcwdu(), 'Downloads')
+
         # Running on Android
         os.environ['ANDROID_HOST'] = "ANDROID-%s" % (os.environ['ANDROID_SDK'] if 'ANDROID_SDK' in os.environ else '99')
     else:
@@ -34,6 +39,7 @@ def init_environment():
 
         # Set tribler data dir
         os.environ['TRIBLER_STATE_DIR'] = os.path.abspath(os.path.join(os.getcwd(), '../.Tribler-data'))
+        os.environ['TRIBLER_DOWNLOAD_DIR'] = os.path.join(os.environ['TRIBLER_STATE_DIR'], 'Downloads')
         print os.environ['TRIBLER_STATE_DIR']
 
         # Test Android code

@@ -29,7 +29,6 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 
 
 # TODO: not hardcoded please
-DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
 DOWNLOAD_UPDATE_DELAY = 2.0
 DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
 
@@ -158,7 +157,7 @@ class DownloadManager():
                 defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
                 dscfg = defaultDLConfig.copy()
 
-                dscfg.set_dest_dir(DOWNLOAD_DIRECTORY)
+                #dscfg.set_dest_dir(self._session.)
 
                 dl = self._session.start_download(tdef, dscfg)
                 dl.set_state_callback(self._update_dl_state, delay=1)

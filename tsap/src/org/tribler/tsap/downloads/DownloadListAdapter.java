@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
+import org.tribler.tsap.ThreadPreconditions;
 import org.tribler.tsap.Utility;
 
 import android.content.Context;
@@ -72,6 +73,7 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 	 * 			The new list of downloads
 	 */
 	public void replaceAll(ArrayList<Download> newList) {
+		ThreadPreconditions.checkOnMainThread();
 		content = newList;
 		notifyDataSetChanged();
 	}

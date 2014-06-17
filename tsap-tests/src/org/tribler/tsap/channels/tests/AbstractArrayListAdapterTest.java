@@ -2,9 +2,8 @@ package org.tribler.tsap.channels.tests;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.tribler.tsap.AbstractArrayListAdapter;
-
+import android.annotation.SuppressLint;
 import android.test.InstrumentationTestCase;
 import android.test.UiThreadTest;
 import android.view.View;
@@ -83,7 +82,7 @@ public class AbstractArrayListAdapterTest extends InstrumentationTestCase{
 		assertEquals("Count incorrect after clearing", 0, initAdapter.getCount());
 	}
 	
-	@UiThreadTest
+	@SuppressLint("UseValueOf") @UiThreadTest
 	public void testAddNew()
 	{
 		Integer one = new Integer(1), two = new Integer(2), three = new Integer(3),

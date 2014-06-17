@@ -99,18 +99,17 @@ public class VideoInfoFragment extends Fragment {
 	 * VLC when the button is pressed
 	 */
 	private void setPlayButtonListener() {
-		Button viewButton = (Button) view
+		final Button viewButton = (Button) view
 				.findViewById(R.id.video_info_stream_video);
 		mViewButtonOnClickListener = new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				String URL = "http://inventos.ru/video/sintel/sintel-q3.mp4";
-				Uri link = Uri.parse(URL);// Uri.fromFile(f);
-				Intent intent = new Intent(Intent.ACTION_VIEW, link,
-						getActivity().getApplicationContext(),
-						VideoPlayerActivity.class);
-				startActivity(intent);
+				// start downloading the torrent
+				XMLRPCDownloadManager.getInstance().downloadTorrent(thumbData.getInfoHash(), thumbData.getTitle());
+				
+				//disable the play button
+				viewButton.setEnabled(false);
 			}
 		};
 		viewButton.setOnClickListener(mViewButtonOnClickListener);		

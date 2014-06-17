@@ -1,6 +1,8 @@
 package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.downloads.XMLRPCDownloadManager;
+import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Fragment;
@@ -25,11 +27,10 @@ import com.squareup.picasso.Picasso;
  */
 public class VideoInfoFragment extends Fragment {
 
-	private int torrentID = 0;
+	private ThumbItem thumbData;
 	private View view;
 	private Context context;
 	private View.OnClickListener mViewButtonOnClickListener;
-	private TorrentManager mTorrentManager;
 
 	/**
 	 * Initializes the video info fragment's layout according to the selected
@@ -50,9 +51,8 @@ public class VideoInfoFragment extends Fragment {
 		view = inflater.inflate(R.layout.fragment_video_info, container, false);
 		context = container.getContext();
 		if (getArguments() != null)
-			torrentID = getArguments().getInt("torrentID", 0);
+			thumbData = (ThumbItem)getArguments().getSerializable("thumbData");
 
-		mTorrentManager = TorrentManager.getInstance();
 		setValues();
 		return view;
 	}
@@ -61,36 +61,35 @@ public class VideoInfoFragment extends Fragment {
 	 * Changes the values of the views according to the torrent metadata
 	 */
 	private void setValues() {
-		Torrent selectedTorrent = getCurrentTorrent();
 		TextView title = (TextView) view.findViewById(R.id.video_info_title);
-		title.setText(selectedTorrent.getName());
+		title.setText(thumbData.getTitle());
 
 		TextView type = (TextView) view.findViewById(R.id.video_details_type);
-		type.setText(selectedTorrent.getType());
+		type.setText("Video");
 
 		TextView date = (TextView) view
 				.findViewById(R.id.video_details_upload_date);
-		date.setText(selectedTorrent.getUploadDate());
+		date.setText("5-11-1998");
 
 		TextView size = (TextView) view
 				.findViewById(R.id.video_details_filesize);
-		size.setText(Double.toString(selectedTorrent.getFilesize()));
+		size.setText(String.valueOf(thumbData.getSize()));
 
 		TextView seeders = (TextView) view
 				.findViewById(R.id.video_details_seeders);
-		seeders.setText(Integer.toString(selectedTorrent.getSeeders()));
+		seeders.setText(String.valueOf(1));
 
 		TextView leechers = (TextView) view
 				.findViewById(R.id.video_details_leechers);
-		leechers.setText(Integer.toString(selectedTorrent.getLeechers()));
+		leechers.setText(String.valueOf(2));
 
 		TextView descr = (TextView) view
 				.findViewById(R.id.video_info_description);
-		descr.setText(selectedTorrent.getDescription());
+		descr.setText("Blabla bla");
 
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
-		loadBitmap(selectedTorrent.getThumbnailID(), thumb);
+		loadBitmap(thumbData.getThumbnailId(), thumb);
 		setViewButtonListener();
 	}
 
@@ -114,18 +113,17 @@ public class VideoInfoFragment extends Fragment {
 			}
 		};
 		viewButton.setOnClickListener(mViewButtonOnClickListener);
-	}
+		
+		Button downloadButton = (Button) view
+				.findViewById(R.id.video_info_download_video);
+		mViewButtonOnClickListener = new View.OnClickListener() {
 
-	/**
-	 * Returns the selected torrent
-	 * 
-	 * @return The torrent with id=torrentID iff torrent with id=torrentID
-	 *         exists, otherwise torrent with id=0 is returned
-	 */
-	private Torrent getCurrentTorrent() {
-		if (mTorrentManager.containsTorrentWithID(torrentID))
-			return mTorrentManager.getTorrentById(torrentID);
-		return mTorrentManager.getTorrentById(0);
+			@Override
+			public void onClick(View v) {
+				XMLRPCDownloadManager.getInstance().downloadTorrent(thumbData.getInfoHash(), thumbData.getTitle());
+			}
+		};
+		downloadButton.setOnClickListener(mViewButtonOnClickListener);
 	}
 
 	/**

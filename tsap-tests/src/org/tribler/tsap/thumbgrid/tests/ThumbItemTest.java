@@ -20,7 +20,7 @@ public class ThumbItemTest extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		mThumbItem = new ThumbItem("Sintel 2010", R.drawable.sintel,
-				TORRENT_HEALTH.GREEN, 500);
+				TORRENT_HEALTH.GREEN, 500, "bla");
 	}
 
 	/**
@@ -96,5 +96,12 @@ public class ThumbItemTest extends AndroidTestCase {
 				mThumbItem.getHealth());
 		assertEquals("setHealth() incorrect color", Color.RED,
 				mThumbItem.getHealthColor());
+	}
+	
+	/**
+	 * Tests wheter the infoHash getter works
+	 */
+	public void testGetInfoHash() {
+		assertEquals("getInfoHash incorrect", "bla", mThumbItem.getInfoHash());
 	}
 }

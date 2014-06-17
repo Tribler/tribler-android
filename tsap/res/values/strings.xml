@@ -4,6 +4,7 @@
     <string name="app_name">TSAP</string>
     <string name="title_section_home">Home</string>
     <string name="title_section_channels">Channels</string>
+    <string name="title_section_downloads">Downloads</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="loadingText">Loading...</string>
@@ -50,7 +51,16 @@
     <string name="hardware_acceleration_error_title">HW acceleration error</string>
     <string name="hardware_acceleration_error_message">An error occurred with hardware acceleration. Would you like to disable it and try again?</string>
     <string name="navigation_drawer">navigation_drawer</string>
-    <string name="private_version">1402652881.27</string>
-    <string name="public_version">1402652881.27</string>
+    <string name="private_version">1402991099.68</string>
+    <string name="public_version">1402991099.68</string>
+
+    <!-- Strings from downloadActivity -->
+    <string name="download_info_type_title">Type:</string>
+    <string name="download_info_upload_date_title">Uploaded on:</string>
+    <string name="download_info_filesize_title">Size:</string>
+    <string name="download_info_down_speed_title">Speed down:</string>
+    <string name="download_info_up_speed_title">Speed up:</string>
+    <string name="download_info_stream_button">Stream video</string>
+    <string name="download_info_delete_button">delete torrent</string>
 
 </resources>

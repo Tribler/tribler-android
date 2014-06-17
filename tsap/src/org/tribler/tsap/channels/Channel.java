@@ -1,5 +1,6 @@
 package org.tribler.tsap.channels;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Random;
 
@@ -8,12 +9,15 @@ import java.util.Random;
  * 
  * @author Dirk Schut
  */
-public class Channel {
+public class Channel implements Serializable{
+
+	private static final long serialVersionUID = 5416423759070850715L;
 	private String name;
 	private boolean following;
 	private int torrentAmount;
 	private int rating;
 	private String dispersyCid;
+	private String description;
 
 	/**
 	 * Constructor: initialize the instance variables to the values of the
@@ -29,14 +33,17 @@ public class Channel {
 	 *            The rating of this channel
 	 * @param dispersyCid
 	 *            Id internally used by Dispersy
+	 * @param description
+	 * 			  Description of the Channel
 	 */
 	public Channel(String name, boolean following, int torrentAmount,
-			int rating, String dispersyCid) {
+			int rating, String dispersyCid, String description) {
 		this.name = name;
 		this.following = following;
 		this.torrentAmount = torrentAmount;
 		this.rating = rating;
 		this.dispersyCid = dispersyCid;
+		this.description = description;
 	}
 
 	/**
@@ -54,6 +61,7 @@ public class Channel {
 		this.rating = rand.nextInt(6);
 		this.dispersyCid = "" + rand.nextInt() + rand.nextInt()
 				+ rand.nextInt() + rand.nextInt() + rand.nextInt();
+		this.description = "Random crap:" + rand.nextInt();
 	}
 
 	/**
@@ -69,6 +77,14 @@ public class Channel {
 		this.torrentAmount = (Integer) XMLRPCdictionary.get("nr_torrent");
 		this.rating = 0;
 		this.dispersyCid = (String) XMLRPCdictionary.get("dispersy_cid");
+		this.description = (String) XMLRPCdictionary.get("description");
+	}
+	
+	/**
+	 * No argument constructor used for serialization
+	 */
+	public Channel()
+	{
 	}
 
 	/**
@@ -135,5 +151,12 @@ public class Channel {
 	 */
 	public String getDispersyCid() {
 		return dispersyCid;
+	}
+	
+	/**
+	 * Returns the description
+	 */
+	public String getDescription() {
+		return description;
 	}
 }

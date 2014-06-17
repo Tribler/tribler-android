@@ -1,9 +1,15 @@
 package org.tribler.tsap;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.renpy.android.PythonActivity;
 import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
+import org.tribler.tsap.downloads.DownloadListAdapter;
+import org.tribler.tsap.downloads.DownloadListFragment;
+import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.videolan.vlc.VLCApplication;
 
 import android.app.ActionBar;
@@ -12,6 +18,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,7 +37,9 @@ public class MainActivity extends Activity implements
 	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
-	private ChannelListFragment channelFragment = new ChannelListFragment();
+	private ChannelListFragment mChannelFragment = new ChannelListFragment();
+	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
+
 
 	/**
 	 * Used to store the last screen title. For use in
@@ -59,6 +68,14 @@ public class MainActivity extends Activity implements
 
 		// Send the current context to VLC
 		VLCApplication.setContext(getApplicationContext());
+try {
+			URL url = new URL("http://127.0.0.1:8000/tribler");
+			DownloadListAdapter adapter = new DownloadListAdapter(this, R.layout.download_list_item);
+			XMLRPCDownloadManager.getInstance().setUp(adapter, url, this);
+		} catch (MalformedURLException e) {
+			Log.e("DownloadListFragment", "URL was malformed:\n");
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -69,7 +86,7 @@ public class MainActivity extends Activity implements
 	 */
 	@Override
 	public void onBackPressed() {
-		if (mThumbGridFragment.isVisible() || channelFragment.isVisible()) {
+		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()) {
 			Intent startMain = new Intent(Intent.ACTION_MAIN);
 			startMain.addCategory(Intent.CATEGORY_HOME);
 			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -101,8 +118,13 @@ public class MainActivity extends Activity implements
 			break;
 		case 1:
 			fragmentManager.beginTransaction()
-					.replace(R.id.container, channelFragment).commit();
+					.replace(R.id.container, mChannelFragment).commit();
 			mTitle = getString(R.string.title_section_channels);
+			break;
+		case 2:
+			fragmentManager.beginTransaction()
+					.replace(R.id.container, mDownloadFragment).commit();
+			mTitle = getString(R.string.title_section_downloads);
 			break;
 		}
 	}
@@ -164,7 +186,7 @@ public class MainActivity extends Activity implements
 	 * @return This Activity's ChannelListFragment instance
 	 */
 	public ChannelListFragment getChannelListFragment() {
-		return channelFragment;
+		return mChannelFragment;
 	}
 
 	/**
@@ -174,5 +196,14 @@ public class MainActivity extends Activity implements
 	 */
 	public ThumbGridFragment getThumbGridFragment() {
 		return mThumbGridFragment;
+	}
+	
+	/**
+	 * Returns the instance of the DownloadListFragment
+	 * 
+	 * @return This Activity's DownloadListFragment instance
+	 */
+	public DownloadListFragment getDownloadListFragment() {
+		return mDownloadFragment;
 	}
 }

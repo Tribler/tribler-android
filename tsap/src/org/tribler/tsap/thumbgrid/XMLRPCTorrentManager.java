@@ -3,11 +3,13 @@ package org.tribler.tsap.thumbgrid;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Observable;
 
-import android.os.Handler;
 import android.util.Log;
-import de.timroes.axmlrpc.XMLRPCClient;
 
+import org.tribler.tsap.AbstractXMLRPCManager;
+import org.tribler.tsap.ISearchListener;
+import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPCCallTask;
 
 /**
@@ -15,12 +17,10 @@ import org.tribler.tsap.XMLRPCCallTask;
  * 
  * @author Dirk Schut
  */
-public class XMLRPCTorrentManager {
-	private XMLRPCClient mClient = null;
+public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	private ThumbAdapter mAdapter;
-	private Handler mDataPollingHandler = new Handler();
 	private int mLastFoundResultsCount = 0;
-	public final static long POLLING_PERIOD = 500;
+	private ISearchListener mSearchListener;
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server and starts a
@@ -29,26 +29,10 @@ public class XMLRPCTorrentManager {
 	 * @param url
 	 *            The url of the XMLRPC server
 	 */
-	public XMLRPCTorrentManager(URL url, ThumbAdapter adapter) {
-		mClient = new XMLRPCClient(url);
+	public XMLRPCTorrentManager(URL url, ThumbAdapter adapter, ISearchListener searchListener) {
+		super(url, 500);
 		mAdapter = adapter;
-		setupDataPollingHandler();
-	}
-
-	/**
-	 * Starts a thread that will request the amount of found torrents every
-	 * POLLING_PERIOD milliseconds
-	 */
-	private void setupDataPollingHandler() {
-		Runnable poller = new Runnable() {
-			@Override
-			public void run() {
-				// Log.v("XMLRPCTorrentManager", "Poll");
-				getRemoteResultsCount();
-				mDataPollingHandler.postDelayed(this, POLLING_PERIOD);
-			}
-		};
-		mDataPollingHandler.postDelayed(poller, POLLING_PERIOD);
+		mSearchListener = searchListener;
 	}
 
 	/**
@@ -75,6 +59,7 @@ public class XMLRPCTorrentManager {
 	 * 
 	 * @SuppressWarnings("unchecked") Channel c = new Channel( (Map<String,
 	 * Object>) arrayResult[i]); resultsList.add(c); }
+	 * mSearchListener.onSearchResults();
 	 * mAdapter.addNew(resultsList); } }; task.execute(mClient,
 	 * "channels.get_local", query); }
 	 */
@@ -84,12 +69,12 @@ public class XMLRPCTorrentManager {
 	 * The results can be retrieved by calling getRemoteResults(). The amount of
 	 * found results can be retrieved by calling getRemoteResultsCount().
 	 * 
-	 * @param query
-	 *            The query that Tribler will look for in the names of the
+	 * @param keywords
+	 *            The keywords that Tribler will look for in the names of the
 	 *            channels
 	 */
-	private void searchRemote(final String query) {
-		Log.v("XMPLRCChannelManager", "Remote search for \"" + query
+	private void searchRemote(final String keywords) {
+		Log.v("XMPLRCChannelManager", "Remote search for \"" + keywords
 				+ "\" launched.");
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
@@ -107,7 +92,7 @@ public class XMLRPCTorrentManager {
 				 */
 			}
 		};
-		task.execute(mClient, "torrents.search_remote", query);
+		task.execute(mClient, "torrents.search_remote", keywords);
 	}
 
 	/**
@@ -126,10 +111,26 @@ public class XMLRPCTorrentManager {
 						mLastFoundResultsCount = count;
 						getRemoteResults();
 					}
+					else {
+						startPolling();
+					}
+				}
+				else {
+					startPolling();
 				}
 			}
 		};
+		stopPolling();
 		task.execute(mClient, "torrents.get_remote_results_count");
+	}
+	
+	private ThumbItem convertMapToThumbItem(Map<String, Object> map)
+	{
+		return new ThumbItem((String) map.get("name"),
+				R.drawable.dracula,
+				TORRENT_HEALTH.YELLOW,
+				1000,
+				(String)map.get("infohash"));
 	}
 
 	/**
@@ -145,26 +146,35 @@ public class XMLRPCTorrentManager {
 					Log.v("XMLRPC", "Got " + arrayResult.length + " results");
 					for (int i = 0; i < arrayResult.length; i++) {
 						@SuppressWarnings("unchecked")
-						ThumbItem item = new ThumbItem(
+						ThumbItem item = convertMapToThumbItem(
 								(Map<String, Object>) arrayResult[i]);
 						resultsList.add(item);
 					}
-					// Map<String, Object> firstResult = (Map<String,
-					// Object>)arrayResult[0];
-					// Log.v("XMPLRCChannelManager",
-					// "KeySet: "+firstResult.keySet());
+					/*Map<String, Object> firstResult = (Map<String,
+					 Object>)arrayResult[0];
+					Log.v("XMPLRCChannelManager",
+					"KeySet: "+firstResult.keySet());*/
+					mSearchListener.onSearchResults();
 					mAdapter.addNew(resultsList);
 				}
+				startPolling();
 			}
 		};
 		task.execute(mClient, "torrents.get_remote_results");
 	}
 
-	public void search(String query) {
+	public void search(String keywords) {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();
-		// getLocal(query);
-		searchRemote(query);
-		Log.i("XMPLRCChannelManager", "Search for \"" + query + "\" launched.");
+		mSearchListener.onSearchSubmit(keywords);
+		// getLocal(keywords);
+		searchRemote(keywords);
+		Log.i("XMPLRCChannelManager", "Search for \"" + keywords + "\" launched.");
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		getRemoteResultsCount();
+		//Log.i("TorrentPoll","Poll");
 	}
 }

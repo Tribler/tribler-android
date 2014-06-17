@@ -1,20 +1,20 @@
 package org.tribler.tsap.thumbgrid;
 
-import java.util.Map;
-
-import org.tribler.tsap.R;
+import java.io.Serializable;
 
 /**
  * Class that holds the information of the items in the thumb grid
  * 
  * @author Wendo Sabée
  */
-public class ThumbItem {
+public class ThumbItem implements Serializable{
 
+	private static final long serialVersionUID = 1619276011406943212L;
 	private int thumbnailId;
 	private String title;
 	private TORRENT_HEALTH health;
 	private int size;
+	private String infoHash;
 
 	/**
 	 * Constructor: initializes the instance variables
@@ -29,18 +29,12 @@ public class ThumbItem {
 	 *            The size of the torrent
 	 */
 	public ThumbItem(String title, int thumbnailId, TORRENT_HEALTH health,
-			int size) {
+			int size, String infoHash) {
 		this.thumbnailId = thumbnailId;
 		this.title = title;
 		this.health = health;
 		this.size = size;
-	}
-
-	public ThumbItem(Map<String, Object> map) {
-		this.thumbnailId = R.drawable.dracula;
-		this.title = (String) map.get("name");
-		this.health = TORRENT_HEALTH.YELLOW;
-		this.size = 1000;
+		this.infoHash = infoHash;
 	}
 
 	/**
@@ -126,6 +120,10 @@ public class ThumbItem {
 	 */
 	public int getHealthColor() {
 		return TORRENT_HEALTH.toColor(this.health);
+	}
+	
+	public String getInfoHash() {
+		return infoHash;
 	}
 
 	/**

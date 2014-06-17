@@ -35,5 +35,7 @@
     <color name="grey1">#393939</color>
     <color name="grey2">#d0d0d0</color>
     -->
+    
+    <color name="tribler_orange">#FF3300</color>
 
 </resources>

@@ -1,13 +1,15 @@
 package org.tribler.tsap.thumbgrid;
 
+import java.io.Serializable;
+
 import android.graphics.Color;
 
 /**
  * Enumerator of the possible healths of a torrent
  * 
- * @author Wendo Sabéé
+ * @author Wendo Sabée
  */
-public enum TORRENT_HEALTH {
+public enum TORRENT_HEALTH implements Serializable{
 	UNKNOWN, RED, YELLOW, GREEN;
 
 	/**

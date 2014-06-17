@@ -21,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/thumbgrid_progress_bar"
         android:textSize="20sp"
-        android:text="Fill in keywords to start searching." />
+        android:text="Type in keywords to start searching." />
     
     <GridView 
 		android:id="@+id/ThumbsGrid"

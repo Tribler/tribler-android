@@ -40,6 +40,7 @@ public class MainActivity extends Activity implements
 	private ChannelListFragment mChannelFragment = new ChannelListFragment();
 	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
 
+
 	/**
 	 * Used to store the last screen title. For use in
 	 * {@link #restoreActionBar()}.
@@ -198,7 +199,7 @@ public class MainActivity extends Activity implements
 	public ThumbGridFragment getThumbGridFragment() {
 		return mThumbGridFragment;
 	}
-
+	
 	/**
 	 * Returns the instance of the DownloadListFragment
 	 * 

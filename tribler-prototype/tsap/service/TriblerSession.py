@@ -27,6 +27,10 @@ from Tribler.Core.RawServer.RawServer import RawServer
 from Tribler.dispersy.dispersy import Dispersy
 from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
 
+from Tribler.Main.globals import DefaultDownloadStartupConfig, get_default_dscfg_filename
+
+DOWNLOAD_DIRECTORY = os.path.join(os.getcwdu(), 'Downloads')
+
 
 class TriblerSession():
     _sconfig = None
@@ -101,6 +105,22 @@ class TriblerSession():
             self._sconfig = SessionStartupConfig()
             self._sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
             _logger.info("No previous configuration file found, creating one in %s" % os.environ['TRIBLER_STATE_DIR'])
+
+        dlcfgfilename = get_default_dscfg_filename(self._sconfig.get_state_dir())
+        _logger.debug("main: Download config %s", dlcfgfilename)
+        try:
+            defaultDLConfig = DefaultDownloadStartupConfig.load(dlcfgfilename)
+        except:
+            defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
+
+        if not defaultDLConfig.get_dest_dir():
+            defaultDLConfig.set_dest_dir(DOWNLOAD_DIRECTORY)
+        if not os.path.isdir(defaultDLConfig.get_dest_dir()):
+            try:
+                _logger.info("Creating download directory: %s" % defaultDLConfig.get_dest_dir())
+                os.makedirs(defaultDLConfig.get_dest_dir())
+            except:
+                _logger.error("Couldn't create download directory! (%s)" % defaultDLConfig.get_dest_dir())
 
         # Disable unneeded dependencies
         self._sconfig.set_torrent_checking(False)

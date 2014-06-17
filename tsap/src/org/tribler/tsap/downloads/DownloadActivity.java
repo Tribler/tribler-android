@@ -2,22 +2,16 @@ package org.tribler.tsap.downloads;
 
 import org.tribler.tsap.R;
 import org.tribler.tsap.Utility;
-import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DownloadActivity extends Activity {
 	private ActionBar mActionBar;

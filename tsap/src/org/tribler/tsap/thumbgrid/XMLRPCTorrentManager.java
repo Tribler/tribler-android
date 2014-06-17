@@ -69,12 +69,12 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	 * The results can be retrieved by calling getRemoteResults(). The amount of
 	 * found results can be retrieved by calling getRemoteResultsCount().
 	 * 
-	 * @param query
-	 *            The query that Tribler will look for in the names of the
+	 * @param keywords
+	 *            The keywords that Tribler will look for in the names of the
 	 *            channels
 	 */
-	private void searchRemote(final String query) {
-		Log.v("XMPLRCChannelManager", "Remote search for \"" + query
+	private void searchRemote(final String keywords) {
+		Log.v("XMPLRCChannelManager", "Remote search for \"" + keywords
 				+ "\" launched.");
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
@@ -92,7 +92,7 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 				 */
 			}
 		};
-		task.execute(mClient, "torrents.search_remote", query);
+		task.execute(mClient, "torrents.search_remote", keywords);
 	}
 
 	/**

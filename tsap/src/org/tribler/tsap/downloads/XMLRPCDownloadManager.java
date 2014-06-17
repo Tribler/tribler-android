@@ -166,6 +166,11 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		};
 		task.execute(mClient, "downloads.add", infoHash, name);
 	}
+	/**
+	 * Starts streaming a torrent with the VLC videoPlayerActivity class.
+	 * @param infoHash
+	 * 			infohash of the torrent that has to be 
+	 */
 	public void startVOD(String infoHash)
 	{
 		Log.i("XMLRPCDownloadManager", "Making a VODlink with infohash: " + infoHash);

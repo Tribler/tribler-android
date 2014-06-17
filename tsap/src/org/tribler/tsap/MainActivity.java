@@ -40,7 +40,6 @@ public class MainActivity extends Activity implements
 	private ChannelListFragment mChannelFragment = new ChannelListFragment();
 	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
 
-
 	/**
 	 * Used to store the last screen title. For use in
 	 * {@link #restoreActionBar()}.
@@ -68,9 +67,10 @@ public class MainActivity extends Activity implements
 
 		// Send the current context to VLC
 		VLCApplication.setContext(getApplicationContext());
-try {
+		try {
 			URL url = new URL("http://127.0.0.1:8000/tribler");
-			DownloadListAdapter adapter = new DownloadListAdapter(this, R.layout.download_list_item);
+			DownloadListAdapter adapter = new DownloadListAdapter(this,
+					R.layout.download_list_item);
 			XMLRPCDownloadManager.getInstance().setUp(adapter, url, this);
 		} catch (MalformedURLException e) {
 			Log.e("DownloadListFragment", "URL was malformed:\n");
@@ -86,7 +86,8 @@ try {
 	 */
 	@Override
 	public void onBackPressed() {
-		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()) {
+		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()
+				|| mDownloadFragment.isVisible()) {
 			Intent startMain = new Intent(Intent.ACTION_MAIN);
 			startMain.addCategory(Intent.CATEGORY_HOME);
 			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -197,7 +198,7 @@ try {
 	public ThumbGridFragment getThumbGridFragment() {
 		return mThumbGridFragment;
 	}
-	
+
 	/**
 	 * Returns the instance of the DownloadListFragment
 	 * 

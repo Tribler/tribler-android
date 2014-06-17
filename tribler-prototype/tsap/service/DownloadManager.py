@@ -427,13 +427,19 @@ class DownloadManager():
                                'length': dstate.get_length(),
                                'speed_up': dstate.get_current_speed(UPLOAD),
                                'speed_down': dstate.get_current_speed(DOWNLOAD),
+                               'availability': dstate.get_availability(),
                                'eta': dstate.get_eta(),
                                'status': dstate.get_status(),
                                'status_string': dlstatus_strings[dstate.get_status()],
                                })
             if vod:
-                dlinfo.update({'vod_eta': dstate.network_calc_prebuf_eta()})
-
+                dlinfo.update({'vod_eta': dstate.get_vod_playable_after(),
+                               'vod_prebuffer_progress': dstate.get_vod_prebuffering_progress(),
+                               'vod_consec_prebuffer_progress': dstate.get_vod_prebuffering_progress_consec(),
+                               'vod': dstate.is_vod(),
+                               'vod_playable': dstate.get_vod_playable(),
+                               })
+                
             return dlinfo
         except Exception, e:
             print "Error getting downloadstate: %s" % e.args

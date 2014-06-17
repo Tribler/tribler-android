@@ -9,8 +9,9 @@ source /home/user/Documents/Projects/bep/setenv_x86.sh &&
 ./build.sh && #-p `pwd`/../../p4a-at3 &&
 pushd ../tsap &&
 ant clean debug &&
-adb uninstall org.tribler.tsap &&
-adb install bin/MainActivity-debug.apk &&
+adb uninstall org.tribler.tsap
+adb push bin/MainActivity-debug.apk /sdcard/
+adb shell pm install -l /sdcard/MainActivity-debug.apk
 popd
 ./adb_killswift.sh &&
 adb logcat -c &&

@@ -56,19 +56,19 @@ public class Utility {
 	public static String convertDownloadStateIntToMessage(int state) {
 		switch (state) {
 		case 1:
-			return "Allocating disk space.";
+			return "Allocating disk space";
 		case 2:
-			return "Waiting on the hash check.";
+			return "Waiting on the hash check";
 		case 3:
-			return "Downloading.";
+			return "Downloading";
 		case 4:
-			return "Seeding.";
+			return "Seeding";
 		case 5:
-			return "Stopped.";
+			return "Stopped";
 		case 6:
-			return "Stopped because of an error.";
+			return "Stopped because of an error";
 		case 7:
-			return "Acquiring metadata.";
+			return "Acquiring metadata";
 		default:
 			return "Invalid state";
 

@@ -2,6 +2,8 @@ package org.tribler.tsap.videoInfoScreen.tests;
 
 import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.R;
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
+import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.FragmentTransaction;
@@ -27,7 +29,8 @@ public class VideoInfoFragmentTest extends
 		super.setUp();
 		mVideoInfoFrag = new VideoInfoFragment();
 		Bundle args = new Bundle();
-		args.putInt("torrentID", 0);
+		ThumbItem item = new ThumbItem("Test torrent", R.drawable.dracula, TORRENT_HEALTH.UNKNOWN, 555, "infoHash");
+		args.putSerializable("thumbData", item);
 		mVideoInfoFrag.setArguments(args);
 
 		FragmentTransaction transaction = getActivity().getFragmentManager()

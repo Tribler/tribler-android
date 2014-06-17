@@ -1,14 +1,12 @@
 package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
-import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,6 +110,11 @@ public class VideoInfoFragment extends Fragment {
 				viewButton.setEnabled(false);
 				
 				//retrieve vod_eta
+				while(XMLRPCDownloadManager.getInstance().getAdapter().getDownload(thumbData.getInfoHash())==null)
+				{
+					
+				}
+				int vod_eta = XMLRPCDownloadManager.getInstance().getAdapter().getDownload(thumbData.getInfoHash()).getVOD_ETA();
 			}
 		};
 		viewButton.setOnClickListener(mViewButtonOnClickListener);		

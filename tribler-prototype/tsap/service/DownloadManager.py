@@ -179,7 +179,7 @@ class DownloadManager():
         try:
             _logger.info("Got download status callback (%s: %s; %s)" % (type(ds).__name__, ds.get_status(), ds.get_progress()))
 
-            dldict = self._getDownloadState(ds, progress=True)
+            dldict = self._getDownloadState(ds, progress=True, vod=True)
             if dldict:
                 if dldict['infohash'] in self._downloads.keys():
                     self._downloads[dldict['infohash']].update(dldict)
@@ -431,6 +431,8 @@ class DownloadManager():
                                'status': dstate.get_status(),
                                'status_string': dlstatus_strings[dstate.get_status()],
                                })
+            if vod:
+                dlinfo.update({'vod_eta': dstate.network_calc_prebuf_eta()})
 
             return dlinfo
         except Exception, e:

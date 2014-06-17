@@ -120,11 +120,6 @@ public class MainActivity extends Activity implements
 			break;
 		case 1:
 			fragmentManager.beginTransaction()
-					.replace(R.id.container, mChannelFragment).commit();
-			mTitle = getString(R.string.title_section_channels);
-			break;
-		case 2:
-			fragmentManager.beginTransaction()
 					.replace(R.id.container, mDownloadFragment).commit();
 			mTitle = getString(R.string.title_section_downloads);
 			break;

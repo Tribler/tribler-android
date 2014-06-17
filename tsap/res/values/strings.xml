@@ -61,6 +61,7 @@
     <string name="download_info_down_speed_title">Speed down:</string>
     <string name="download_info_up_speed_title">Speed up:</string>
     <string name="download_info_stream_button">Stream video</string>
-    <string name="download_info_delete_button">Delete torrent</string>
+    <string name="download_info_delete_torrent_button">Delete torrent</string>
+    <string name="download_info_delete_files_button">Delete torrent + files</string>
 
 </resources>

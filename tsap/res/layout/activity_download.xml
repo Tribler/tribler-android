@@ -134,18 +134,25 @@
             android:text="@string/video_info_stream_button" />
 
         <Button
-            android:id="@+id/download_info_delete_button"
+            android:id="@+id/download_info_delete_torrent_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/download_info_stream_button"
             android:contentDescription="@string/video_info_download_button"
-            android:text="@string/download_info_delete_button" />
+            android:text="@string/download_info_delete_torrent_button" />
+        <Button
+            android:id="@+id/download_info_delete_files_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/download_info_delete_torrent_button"
+            android:contentDescription="@string/video_info_download_button"
+            android:text="@string/download_info_delete_files_button" />
 
         <TextView
             android:id="@+id/video_info_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/download_info_delete_button"
+            android:layout_below="@id/download_info_delete_files_button"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:contentDescription="@string/video_info_descr_descr"

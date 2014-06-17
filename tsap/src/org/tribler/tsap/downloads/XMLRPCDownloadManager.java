@@ -105,7 +105,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 			protected void onPostExecute(Object result) {
 				if (result != null) {
 					Object[] arrayResult = (Object[]) result;
-					Log.v("DownloadManager", arrayResult.length + " results");
+					Log.v("DownloadManager", arrayResult.length + " result(s)");
 					ArrayList<Download> resultsList = new ArrayList<Download>();
 					for (int i = 0; i < arrayResult.length; i++) {
 						if (arrayResult[i] == null)

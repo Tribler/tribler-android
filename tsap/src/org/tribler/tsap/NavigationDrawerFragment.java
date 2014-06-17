@@ -129,9 +129,8 @@ public class NavigationDrawerFragment extends Fragment {
 						selectItem(position);
 					}
 				});
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar()
-				.getThemedContext(),
-				android.R.layout.simple_list_item_activated_1,
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(),
+				R.layout.navigation_drawer_item,
 				android.R.id.text1, new String[] {
 						getString(R.string.title_section_home),
 						getString(R.string.title_section_channels),

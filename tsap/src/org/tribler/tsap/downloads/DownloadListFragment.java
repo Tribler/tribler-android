@@ -1,13 +1,8 @@
 package org.tribler.tsap.downloads;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.channels.ChannelActivity;
-import org.tribler.tsap.channels.ChannelListAdapter;
 
 import android.app.ListFragment;
 import android.content.Intent;

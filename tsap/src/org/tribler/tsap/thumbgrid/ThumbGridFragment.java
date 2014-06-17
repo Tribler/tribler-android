@@ -2,7 +2,6 @@ package org.tribler.tsap.thumbgrid;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.R;

@@ -24,7 +24,6 @@ import android.widget.Toast;
 public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	
 	private static DownloadListAdapter mAdapter = null;
-	private static URL mUrl = null;
 	private static XMLRPCDownloadManager mInstance = null;
 	private static Context mContext;
 	

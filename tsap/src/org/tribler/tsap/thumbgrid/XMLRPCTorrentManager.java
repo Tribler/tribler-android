@@ -127,7 +127,7 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	private ThumbItem convertMapToThumbItem(Map<String, Object> map)
 	{
 		return new ThumbItem((String) map.get("name"),
-				R.drawable.dracula,
+				R.drawable.default_thumb,
 				TORRENT_HEALTH.YELLOW,
 				1000,
 				(String)map.get("infohash"));

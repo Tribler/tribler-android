@@ -24,7 +24,7 @@ from TorrentManager import TorrentManager
 from ChannelManager import ChannelManager
 from DownloadManager import DownloadManager
 from TriblerSession import TriblerSession
-from XMLRpc import XMLRPCServer
+from XMLRpc_twisted import XMLRPCServer
 
 
 class TSAP():
@@ -70,5 +70,8 @@ class TSAP():
 if __name__ == '__main__':
     tsap = TSAP()
     tsap.run()
+
+    while True:
+        time.sleep(1)
 
     #tsap.dm.add_torrent("e9776f4626e03405b005ad30b4b4a2906125bd62", "Sintel")

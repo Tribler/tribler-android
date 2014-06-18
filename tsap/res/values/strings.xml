@@ -66,5 +66,22 @@
     <string name="download_info_up_speed_title">Speed up:</string>
     <string name="download_info_stream_button">Stream video</string>
     <string name="download_info_delete_torrent_button">Remove download</string>
-
+    
+    <!-- Strings for settings -->
+	<string name="pref_supportedTorrentTypes">Supported torrent types</string>
+	<string name="pref_chooseSupportedTorrentTypes">Select supported types</string>
+	<string name="pref_supported_types_default">Video</string>
+	<string name="pref_supportedTorrentTypes_summary">Defines which types of torrents will be listed and can be downloaded. Can be only Video or All (including Document, Picture, etc.)</string>
+	
+	<string name="pref_familyFilter">Family filter</string>
+	<string name="pref_familyFilter_summary">Enable or disable Tribler\'s family filter</string>
+	
+	<string name="pref_maxDownloadRate">Maximum download rate</string>
+	<string name="pref_maxDownloadRate_summary">Set the maximum download rate for Tribler</string>
+	<string name="pref_maxDownloadRate_dialog_message">Set the maximum download rate in kB/s. For an unlimited rate this value should be set to 0.</string>
+	
+	<string name="pref_maxUploadRate">Maximum upload rate</string>
+	<string name="pref_maxUploadRate_summary">Set the maximum upload rate for Tribler</string>
+	<string name="pref_maxUploadRate_dialog_message">Set the upload download rate in kB/s. For an unlimited rate this value should be set to 0.</string>
+	
 </resources>

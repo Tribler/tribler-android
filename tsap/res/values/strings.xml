@@ -62,5 +62,11 @@
     <string name="download_info_up_speed_title">Speed up:</string>
     <string name="download_info_stream_button">Stream video</string>
     <string name="download_info_delete_button">Delete torrent</string>
-
+    
+    <!-- Strings for settings -->
+	<string name="pref_supportedTorrentTypes">Supported torrent types</string>
+	<string name="pref_chooseSupportedTorrentTypes">Select supported types</string>
+	<string name="pref_supported_types_default">Video</string>
+	<string name="pref_supportedTorrentTypes_summary">Defines which types of torrents will be listed and can be downloaded. Can be only Video or All (including Document, Picture, etc.)</string>
+	
 </resources>

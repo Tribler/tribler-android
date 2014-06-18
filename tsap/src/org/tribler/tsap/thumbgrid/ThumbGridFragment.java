@@ -35,10 +35,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 
 	private XMLRPCTorrentManager mTorrentManager = null;
 	private ThumbAdapter mThumbAdapter;
-	int mLastFoundResultAmount = 0;
-	View mView;
+	private int mLastFoundResultAmount = 0;
+	private View mView;
 	// stores the menu handler to remove the search item in onPause()
 	private Menu menu;
+	private boolean mJustOpened = true; 
 
 	/**
 	 * Defines that this fragment has an own option menu
@@ -50,6 +51,12 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mThumbAdapter = new ThumbAdapter(getActivity(), R.layout.thumb_grid_item);
+		try {
+			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter, this);
+		} catch (MalformedURLException e) {
+			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
+		}
 	}
 
 	/**
@@ -69,14 +76,18 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 
 		mView = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
 		GridView gridView = (GridView) mView.findViewById(R.id.ThumbsGrid);
-
-		mThumbAdapter = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item);
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
-		try {
-			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter, this);
-		} catch (MalformedURLException e) {
-			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
+		
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		if(mJustOpened)
+		{
+			message.setText(R.string.thumb_grid_loading_tribler);
+			mJustOpened = false;
+		}
+		else
+		{
+			message.setText(R.string.thumb_grid_loading_results);
 		}
 		return mView;
 	}
@@ -201,7 +212,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
 		progressBar.setVisibility(View.VISIBLE);
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText("Searching...");
+		message.setText(R.string.thumb_grid_search_submitted);
 		message.setVisibility(View.VISIBLE);
 	}
 
@@ -218,7 +229,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
 		progressBar.setVisibility(View.INVISIBLE);
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText("Type in keywords to start searching.");
+		message.setText(R.string.thumb_grid_server_started);
 		message.setVisibility(View.VISIBLE);
 		
 	}
@@ -228,7 +239,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
 		progressBar.setVisibility(View.INVISIBLE);
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText("Could not connect to Tribler.");
+		message.setText(R.string.thumb_grid_connection_failed);
 		message.setVisibility(View.VISIBLE);
 	}
 }

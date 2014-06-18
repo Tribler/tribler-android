@@ -91,14 +91,15 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				if (!(result instanceof XMLRPCException)) {
+					Integer count = (Integer) result;
 					if (!connected)
 					{
-						mSearchListener.onServerStarted();
+						if (count <= mLastFoundResultsCount)
+						{
+							mSearchListener.onServerStarted();
+						}
 						connected = true;
 					}
-					Integer count = (Integer) result;
-					// Log.v("XMLRPCTorrentManager", "Torrents found = " +
-					// count);
 					if (count > mLastFoundResultsCount) {
 						mLastFoundResultsCount = count;
 						getRemoteResults();

@@ -20,7 +20,7 @@ public class Download implements Serializable {
 	/**
 	 * empty constructor for serialization
 	 */
-	Download() {
+	public Download() {
 	}
 	
 	/**
@@ -32,7 +32,7 @@ public class Download implements Serializable {
 	 * @param uploadSpeed
 	 * @param progress
 	 */
-	Download(String name, String infoHash, int status, double downloadSpeed, double uploadSpeed, double progress) {
+	public Download(String name, String infoHash, int status, double downloadSpeed, double uploadSpeed, double progress) {
 		this.name = name;
 		this.infoHash = infoHash;
 		this.status = status;

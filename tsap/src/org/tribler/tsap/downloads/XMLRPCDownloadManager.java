@@ -198,4 +198,15 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		};
 		task.execute(mClient, "downloads.get_vod_uri", infoHash);
 	}
+	public void deleteTorrent(String infoHash, boolean deleteFiles, final DownloadActivity activity)
+	{
+		Log.i("XMLRPCDownloadManager", "Removing torrent with infohash: " + infoHash);
+		XMLRPCCallTask task = new XMLRPCCallTask() {
+			@Override
+			protected void onPostExecute(Object result) {
+				activity.onBackPressed();
+			}
+		};
+		task.execute(mClient, "downloads.remove", infoHash, deleteFiles);
+	}
 }

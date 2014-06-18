@@ -23,5 +23,13 @@
         android:key="pref_maxDownloadRate"
         android:summary="@string/pref_maxDownloadRate_summary"
         android:title="@string/pref_maxDownloadRate"/>
+    
+    <EditTextPreference 
+        android:defaultValue="0"
+        android:dialogMessage="@string/pref_maxUploadRate_dialog_message"
+        android:inputType="number"
+        android:key="pref_maxUploadRate"
+        android:summary="@string/pref_maxUploadRate_summary"
+        android:title="@string/pref_maxUploadRate"/>
 
 </PreferenceScreen>

@@ -3,7 +3,6 @@ package org.tribler.tsap;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.renpy.android.PythonActivity;
 import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
@@ -72,7 +71,7 @@ public class MainActivity extends Activity implements
 			URL url = new URL("http://127.0.0.1:8000/tribler");
 			DownloadListAdapter adapter = new DownloadListAdapter(this,
 					R.layout.download_list_item);
-			XMLRPCDownloadManager.getInstance().setUp(adapter, url, this);
+			XMLRPCDownloadManager.setUp(adapter, url, this);
 		} catch (MalformedURLException e) {
 			Log.e("DownloadListFragment", "URL was malformed:\n");
 			e.printStackTrace();

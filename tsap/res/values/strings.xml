@@ -51,8 +51,8 @@
     <string name="hardware_acceleration_error_title">HW acceleration error</string>
     <string name="hardware_acceleration_error_message">An error occurred with hardware acceleration. Would you like to disable it and try again?</string>
     <string name="navigation_drawer">navigation_drawer</string>
-    <string name="private_version">1402999727.68</string>
-    <string name="public_version">1402999727.68</string>
+    <string name="private_version">1403080154.08</string>
+    <string name="public_version">1403080154.08</string>
 
     <!-- Strings from downloadActivity -->
     <string name="download_info_type_title">Type:</string>
@@ -61,6 +61,7 @@
     <string name="download_info_down_speed_title">Speed down:</string>
     <string name="download_info_up_speed_title">Speed up:</string>
     <string name="download_info_stream_button">Stream video</string>
-    <string name="download_info_delete_button">Delete torrent</string>
+    <string name="download_info_delete_torrent_button">Delete torrent</string>
+    <string name="download_info_delete_files_button">Delete torrent + files</string>
 
 </resources>

@@ -77,4 +77,5 @@ lint-results.xml
 junitreports/
 *.mp3
 tribler-prototype/exports
+asset_versions.xml
 

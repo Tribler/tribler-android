@@ -105,7 +105,7 @@ public class DownloadActivity extends Activity {
 		fillLayout();
 		setStreamButtonListener();
 		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button, false);
-		setTorrentRemoveButtonListener(R.id.download_info_delete_files_button, false);
+		setTorrentRemoveButtonListener(R.id.download_info_delete_files_button, true);
 	}
 
 	/**

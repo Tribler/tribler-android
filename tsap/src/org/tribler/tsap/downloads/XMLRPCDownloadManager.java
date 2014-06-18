@@ -27,6 +27,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	private static DownloadListAdapter mAdapter = null;
 	private static XMLRPCDownloadManager mInstance = null;
 	private static Context mContext;
+	private Download currProgressDownload;
 
 	/**
 	 * private constructor exists only so the class is only accessible through
@@ -204,7 +205,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	}
 
 	/**
-	 * Retrieves the list of downloads.
+	 * Retrieves the progress of the torrent specified by the infohash
 	 */
 	@SuppressWarnings("unchecked")
 	public void getProgressInfo(String infoHash) {
@@ -215,21 +216,22 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 				if (result != null) {
 					if (!(result instanceof Boolean)) {
 						Map<String, Object> map = (Map<String, Object>) result;
-						Download res = null;
 						if (map == null)
 							Log.e("DownloadManager", "Map is null");
 						else {
 							Log.v("DownloadManager", "Map != null");
-							res = convertMapToDownload(map);
+							currProgressDownload = convertMapToDownload(map);
 						}
 					}
-					//
 				}
 				Log.v("DownloadManager", "fetch returned");
-//				startPolling();
 			}
 		};
-//		stopPolling();
 		task.execute(mClient, "downloads.get_progress_info", infoHash);
+	}
+	
+	public Download getCurrentDownload()
+	{
+		return currProgressDownload;
 	}
 }

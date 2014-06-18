@@ -72,4 +72,8 @@
 	<string name="pref_familyFilter">Family filter</string>
 	<string name="pref_familyFilter_summary">Enable or disable Tribler\'s family filter</string>
 	
+	<string name="pref_maxDownloadRate">Maximum download rate</string>
+	<string name="pref_maxDownloadRate_summary">Set the maximum download rate for Tribler</string>
+	<string name="pref_maxDownloadRate_dialog_message">Set the maximum download rate in kB/s. For an unlimited rate this value should be set to 0.</string>
+	
 </resources>

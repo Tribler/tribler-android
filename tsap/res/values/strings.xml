@@ -34,6 +34,8 @@
     <string name="please_wait">Please wait…</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
     <string name="locked">Locked</string>
     <string name="unlocked">Unlocked</string>
     <string name="surface_best_fit">Best fit</string>
@@ -53,7 +55,9 @@
     <string name="navigation_drawer">navigation_drawer</string>
     <string name="private_version">1403080154.08</string>
     <string name="public_version">1403080154.08</string>
-
+    <string name="remove_download_dialog_title">Remove download</string>
+    <string name="remove_download_dialog_message">Do you also want to remove any files associated with this download?</string>
+    
     <!-- Strings from downloadActivity -->
     <string name="download_info_type_title">Type:</string>
     <string name="download_info_upload_date_title">Uploaded on:</string>
@@ -61,7 +65,6 @@
     <string name="download_info_down_speed_title">Speed down:</string>
     <string name="download_info_up_speed_title">Speed up:</string>
     <string name="download_info_stream_button">Stream video</string>
-    <string name="download_info_delete_torrent_button">Delete torrent</string>
-    <string name="download_info_delete_files_button">Delete torrent + files</string>
+    <string name="download_info_delete_torrent_button">Remove download</string>
 
 </resources>

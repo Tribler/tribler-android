@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_familyFilter"
+        android:summary="@string/pref_familyFilter_summary"
+        android:title="@string/pref_familyFilter" />
+
     <ListPreference
-        android:key="pref_supportedTorrentTypes"
-        android:title="@string/pref_supportedTorrentTypes"
+        android:defaultValue="@string/pref_supported_types_default"
         android:dialogTitle="@string/pref_chooseSupportedTorrentTypes"
         android:entries="@array/pref_supported_types"
         android:entryValues="@array/pref_supported_types"
-        android:defaultValue="@string/pref_supported_types_default" 
-        android:summary="@string/pref_supportedTorrentTypes_summary"/>
-    
+        android:key="pref_supportedTorrentTypes"
+        android:summary="@string/pref_supportedTorrentTypes_summary"
+        android:title="@string/pref_supportedTorrentTypes" />
 
 </PreferenceScreen>

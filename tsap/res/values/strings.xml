@@ -69,4 +69,7 @@
 	<string name="pref_supported_types_default">Video</string>
 	<string name="pref_supportedTorrentTypes_summary">Defines which types of torrents will be listed and can be downloaded. Can be only Video or All (including Document, Picture, etc.)</string>
 	
+	<string name="pref_familyFilter">Family filter</string>
+	<string name="pref_familyFilter_summary">Enable or disable Tribler\'s family filter</string>
+	
 </resources>

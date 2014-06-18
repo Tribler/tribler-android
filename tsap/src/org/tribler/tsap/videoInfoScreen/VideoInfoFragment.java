@@ -1,5 +1,6 @@
 package org.tribler.tsap.videoInfoScreen;
 
+import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
@@ -100,27 +101,7 @@ public class VideoInfoFragment extends Fragment {
 	private void setPlayButtonListener() {
 		final Button viewButton = (Button) view
 				.findViewById(R.id.video_info_stream_video);
-		mViewButtonOnClickListener = new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// start downloading the torrent
-				XMLRPCDownloadManager.getInstance().downloadTorrent(thumbData.getInfoHash(), thumbData.getTitle());
-				
-				//disable the play button
-				viewButton.setEnabled(false);
-				
-				DownloadListAdapter dla = XMLRPCDownloadManager.getInstance().getAdapter();
-				
-				//retrieve vod_eta
-//				while(XMLRPCDownloadManager.getInstance().getAdapter().getDownload(thumbData.getInfoHash())==null)
-//				{
-//					
-//				}
-//				int vod_eta = XMLRPCDownloadManager.getInstance().getAdapter().getDownload(thumbData.getInfoHash()).getVOD_ETA();
-//				Log.d("VidFrag", "VOD_ETA is: "+vod_eta);
-			}
-		};
+		mViewButtonOnClickListener = new PlayButtonListener(thumbData);
 		viewButton.setOnClickListener(mViewButtonOnClickListener);		
 	}
 

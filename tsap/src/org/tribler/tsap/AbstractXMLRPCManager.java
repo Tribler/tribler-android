@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import android.util.Log;
 import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
 
 /**
  * Abstract class for connecting to an XMLRPC server through aXMLRPC. It
@@ -44,7 +45,7 @@ public abstract class AbstractXMLRPCManager implements Observer {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Object[] arrayResult = (Object[]) result;
 					Log.i("XMLRPC", "Listing available functions");
 					for (int i = 0; i < arrayResult.length; i++) {

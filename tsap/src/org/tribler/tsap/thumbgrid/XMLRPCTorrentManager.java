@@ -12,6 +12,8 @@ import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPCCallTask;
 
+import de.timroes.axmlrpc.XMLRPCException;
+
 /**
  * Class for receiving torrents over XMPRPC using the aXMLRPC library
  * 
@@ -20,6 +22,7 @@ import org.tribler.tsap.XMLRPCCallTask;
 public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	private ThumbAdapter mAdapter;
 	private int mLastFoundResultsCount = 0;
+	private boolean connected = false;
 	private ISearchListener mSearchListener;
 
 	/**
@@ -34,35 +37,15 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		mAdapter = adapter;
 		mSearchListener = searchListener;
 	}
-
-	/**
-	 * TODO: implement on server side (so code can be uncommented).
-	 * 
-	 * Searches the local dispersy data for torrents fitting a certain query.
-	 * Once the results are found it will send them as an ArrayList<ThumbItem>
-	 * to all observers.
-	 * 
-	 * @param query
-	 *            The query that Tribler will look for in the names of the
-	 *            channels
-	 */
-	/*
-	 * private void getLocal(final String query) { Log.v("XMPLRCChannelManager",
-	 * "Local search for \"" + query + "\" launched."); XMLRPCCallTask task =
-	 * new XMLRPCCallTask() {
-	 * 
-	 * @Override protected void onPostExecute(Object result) {
-	 * Log.v("XMPLRCChannelManager", "Local search returned."); Object[]
-	 * arrayResult = (Object[]) result; ArrayList<Channel> resultsList = new
-	 * ArrayList<Channel>(); Log.v("XMLRPC", "Got " + arrayResult.length +
-	 * "results"); for (int i = 0; i < arrayResult.length; i++) {
-	 * 
-	 * @SuppressWarnings("unchecked") Channel c = new Channel( (Map<String,
-	 * Object>) arrayResult[i]); resultsList.add(c); }
-	 * mSearchListener.onSearchResults();
-	 * mAdapter.addNew(resultsList); } }; task.execute(mClient,
-	 * "channels.get_local", query); }
-	 */
+	
+	private void handleLostConnection(XMLRPCException exception) {
+		if (connected)
+		{
+			mSearchListener.onConnectionFailed(exception);
+			connected = false;
+			exception.printStackTrace();
+		}
+	}
 
 	/**
 	 * Searches the remote dispersy data for torrents fitting a certain query.
@@ -79,17 +62,21 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				Log.v("XMPLRCChannelManager", "Remote search returned.");
-				// TODO: do something with the output of this function call. To
-				// be able to do this first a bug in the Tribler core has to be
-				// fixed. Right now the function allways returns None, while it
-				// should return a Boolean just like XMLRPCChannelManager
-				/*
-				 * Boolean hasPeers = (Boolean) result; if (hasPeers) {
-				 * Log.v("XMLRPC", "Looking for query " + query +
-				 * " across peers."); } else { Log.v("XMLRPC",
-				 * "Not enough peers found for query " + query + "."); }
-				 */
+				if (!(result instanceof XMLRPCException)) {
+					Log.v("XMPLRCTorrentManager", "Remote search returned.");
+					// TODO: do something with the output of this function call. To
+					// be able to do this first a bug in the Tribler core has to be
+					// fixed. Right now the function allways returns None, while it
+					// should return a Boolean just like XMLRPCChannelManager
+					/*
+					 * Boolean hasPeers = (Boolean) result; if (hasPeers) {
+					 * Log.v("XMLRPC", "Looking for query " + query +
+					 * " across peers."); } else { Log.v("XMLRPC",
+					 * "Not enough peers found for query " + query + "."); }
+					 */
+				} else {
+					handleLostConnection((XMLRPCException)result);
+				}
 			}
 		};
 		task.execute(mClient, "torrents.search_remote", keywords);
@@ -103,7 +90,12 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
+					if (!connected)
+					{
+						mSearchListener.onServerStarted();
+						connected = true;
+					}
 					Integer count = (Integer) result;
 					// Log.v("XMLRPCTorrentManager", "Torrents found = " +
 					// count);
@@ -117,6 +109,10 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 				}
 				else {
 					startPolling();
+					if(connected)
+					{
+						handleLostConnection((XMLRPCException)result);
+					}
 				}
 			}
 		};
@@ -140,10 +136,10 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Object[] arrayResult = (Object[]) result;
 					ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
-					Log.v("XMLRPC", "Got " + arrayResult.length + " results");
+					Log.v("XMPLRCTorrentManager", "Got " + arrayResult.length + " results");
 					for (int i = 0; i < arrayResult.length; i++) {
 						@SuppressWarnings("unchecked")
 						ThumbItem item = convertMapToThumbItem(
@@ -156,6 +152,8 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 					"KeySet: "+firstResult.keySet());*/
 					mSearchListener.onSearchResults();
 					mAdapter.addNew(resultsList);
+				} else {
+					handleLostConnection((XMLRPCException)result);
 				}
 				startPolling();
 			}
@@ -167,9 +165,8 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		mLastFoundResultsCount = 0;
 		mAdapter.clear();
 		mSearchListener.onSearchSubmit(keywords);
-		// getLocal(keywords);
 		searchRemote(keywords);
-		Log.i("XMPLRCChannelManager", "Search for \"" + keywords + "\" launched.");
+		Log.i("XMPLRCTorrentManager", "Search for \"" + keywords + "\" launched.");
 	}
 
 	@Override

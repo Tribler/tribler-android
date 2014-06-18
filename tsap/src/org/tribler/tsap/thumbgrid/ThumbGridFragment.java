@@ -201,8 +201,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
 		progressBar.setVisibility(View.VISIBLE);
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setVisibility(View.VISIBLE);
 		message.setText("Searching...");
+		message.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -211,5 +211,24 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		progressBar.setVisibility(View.GONE);
 		View message = mView.findViewById(R.id.thumbgrid_text_view);
 		message.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onServerStarted() {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.INVISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText("Type in keywords to start searching.");
+		message.setVisibility(View.VISIBLE);
+		
+	}
+
+	@Override
+	public void onConnectionFailed(Exception exception) {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.INVISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText("Could not connect to Tribler.");
+		message.setVisibility(View.VISIBLE);
 	}
 }

@@ -11,6 +11,7 @@ import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -102,7 +103,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Object[] arrayResult = (Object[]) result;
 					Log.v("DownloadManager", arrayResult.length + " result(s)");
 					ArrayList<Download> resultsList = new ArrayList<Download>();
@@ -143,7 +144,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if(result == null)	
+				if(!(result instanceof XMLRPCException))	
 				{
 					Log.e("XMLRPCDownloadManager", "Error in retrieving result from XMLRPC after adding download");
 				}
@@ -176,7 +177,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null)
+				if (!(result instanceof XMLRPCException))
 				{
 					if (result instanceof Boolean)
 					{
@@ -198,13 +199,12 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		};
 		task.execute(mClient, "downloads.get_vod_uri", infoHash);
 	}
-	public void deleteTorrent(String infoHash, boolean deleteFiles, final DownloadActivity activity)
+	public void deleteTorrent(String infoHash, boolean deleteFiles)
 	{
 		Log.i("XMLRPCDownloadManager", "Removing torrent with infohash: " + infoHash);
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				activity.onBackPressed();
 			}
 		};
 		task.execute(mClient, "downloads.remove", infoHash, deleteFiles);

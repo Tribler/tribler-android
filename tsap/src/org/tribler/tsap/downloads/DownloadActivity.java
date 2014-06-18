@@ -86,7 +86,8 @@ public class DownloadActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				XMLRPCDownloadManager.getInstance().deleteTorrent(
-						mDownload.getInfoHash(), deleteFiles, a);
+						mDownload.getInfoHash(), deleteFiles);
+				a.onBackPressed();
 			}
 		};
 		removeButton.setOnClickListener(removeButtonOnClickListener);

@@ -1,7 +1,6 @@
 package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 

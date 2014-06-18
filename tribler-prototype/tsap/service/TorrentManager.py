@@ -23,6 +23,7 @@ from Tribler.community.search.community import SearchCommunity
 from Tribler.Core.Search.SearchManager import split_into_keywords
 from Tribler.dispersy.util import call_on_reactor_thread
 from Tribler.Core.CacheDB.sqlitecachedb import bin2str, str2bin, forceAndReturnDBThread, forceDBThread
+from Tribler.Category.Category import Category
 
 
 
@@ -87,6 +88,12 @@ class TorrentManager():
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
+
+            self._category = Category.getInstance()
+            self._xxx_category = -1
+            for key, id in self._misc_db._category_name2id_dict.iteritems():
+                if key.lower() == "xxx":
+                    self._xxx_category = id
 
             self._dispersy = self._session.lm.dispersy
         else:
@@ -256,9 +263,11 @@ class TorrentManager():
                 remoteHit.torrent_db = self._torrent_db
                 remoteHit.channelcast_db = self._channelcast_db
 
-                # Add to result list.
-                self._add_remote_result(remoteHit)
-
+                if remoteHit.category_id == self._xxx_category and self._category.family_filter_enabled():
+                    _logger.info("Ignore XXX torrent: %s" % remoteHit.name)
+                else:
+                    # Add to result list.
+                    self._add_remote_result(remoteHit)
         finally:
             self._remote_lock.release()
 

@@ -20,10 +20,11 @@ _logger = logging.getLogger(__name__)
 arg = os.getenv('PYTHON_SERVICE_ARGUMENT')
 
 # Local files
-from TorrentManager import TorrentManager
-from ChannelManager import ChannelManager
-from DownloadManager import DownloadManager
 from TriblerSession import TriblerSession
+from SettingsManager import SettingsManager
+from ChannelManager import ChannelManager
+from TorrentManager import TorrentManager
+from DownloadManager import DownloadManager
 from XMLRpc_twisted import XMLRPCServer
 
 
@@ -54,6 +55,9 @@ class TSAP():
         _logger.error("Loading XMLRPCServer")
         self.xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8000)
 
+        _logger.error("Loading ConfigurationManager")
+        self.sm = SettingsManager(self.tribler.get_session(), self.xmlrpc)
+
         _logger.error("Loading ChannelManager")
         self.cm = ChannelManager(self.tribler.get_session(), self.xmlrpc)
 
@@ -71,6 +75,7 @@ if __name__ == '__main__':
     tsap = TSAP()
     tsap.run()
 
+    # Needed when using the twisted XMLRPC server
     while True:
         time.sleep(1)
 

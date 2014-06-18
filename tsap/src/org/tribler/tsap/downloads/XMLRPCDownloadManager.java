@@ -28,6 +28,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	private static XMLRPCDownloadManager mInstance = null;
 	private static Context mContext;
 	private Download currProgressDownload;
+	private Uri videoLink;
 
 	/**
 	 * private constructor exists only so the class is only accessible through
@@ -185,23 +186,19 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 				if (result != null) {
 					if (result instanceof Boolean) {
 						Log.e("XMLRPCDownloadManager",
-								"Making a VODlink failed. result:"
+								"Starting in VOD mode failed. result:"
 										+ (Boolean) result);
 					} else {
 						String VODString = (String) result;
 						Toast.makeText(mContext, "VODlink =" + VODString,
 								Toast.LENGTH_LONG).show();
 						Log.i("XMLRPCDownloadManager", "VODlink created!");
-						Uri link = Uri.parse(VODString);
-						Intent intent = new Intent(Intent.ACTION_VIEW, link,
-								mContext.getApplicationContext(),
-								VideoPlayerActivity.class);
-						mContext.startActivity(intent);
+						videoLink = Uri.parse(VODString);
 					}
 				}
 			}
 		};
-		task.execute(mClient, "downloads.get_vod_uri", infoHash);
+		task.execute(mClient, "downloads.start_vod", infoHash);
 	}
 
 	/**
@@ -219,7 +216,6 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 						if (map == null)
 							Log.e("DownloadManager", "Map is null");
 						else {
-							Log.v("DownloadManager", "Map != null");
 							currProgressDownload = convertMapToDownload(map);
 						}
 					}
@@ -233,5 +229,10 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	public Download getCurrentDownload()
 	{
 		return currProgressDownload;
+	}
+	
+	public Uri getVideoUri()
+	{
+		return videoLink;
 	}
 }

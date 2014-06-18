@@ -101,7 +101,7 @@ public class VideoInfoFragment extends Fragment {
 	private void setPlayButtonListener() {
 		final Button viewButton = (Button) view
 				.findViewById(R.id.video_info_stream_video);
-		mViewButtonOnClickListener = new PlayButtonListener(thumbData);
+		mViewButtonOnClickListener = new PlayButtonListener(thumbData, getFragmentManager());
 		viewButton.setOnClickListener(mViewButtonOnClickListener);		
 	}
 

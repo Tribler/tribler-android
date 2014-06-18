@@ -7,6 +7,7 @@ import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 
+import android.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,11 +17,13 @@ public class PlayButtonListener implements OnClickListener, Observer {
 	
 	private ThumbItem thumbData;
 	private Poller mPoller;
+	private FragmentManager mFragManager;
 	
-	public PlayButtonListener(ThumbItem thumbData)
+	public PlayButtonListener(ThumbItem thumbData, FragmentManager fragManager)
 	{
 		this.thumbData=thumbData;
 		this.mPoller = new Poller(this, 1000);
+		this.mFragManager = fragManager;
 	}
 
 	@Override
@@ -34,6 +37,7 @@ public class PlayButtonListener implements OnClickListener, Observer {
 		
 		//start waiting for VOD
 		mPoller.start();
+		new VODDialogFragment().show(mFragManager, "wait_vod");
 	}
 
 	@Override

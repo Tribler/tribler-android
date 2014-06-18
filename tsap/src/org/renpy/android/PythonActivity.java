@@ -37,7 +37,7 @@ public class PythonActivity extends Activity implements Runnable {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		externalStorage = new File(Environment.getExternalStorageDirectory(),
-				getPackageName());
+				"." + getPackageName());
 
 		// Figure out the directory where the game is. If the game was
 		// given to us via an intent, then we use the scheme-specific

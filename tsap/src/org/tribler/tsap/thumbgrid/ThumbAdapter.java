@@ -148,7 +148,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	
 	private File getImageLocation(final String infoHash) {
 		File baseDirectory = Settings.getThumbFolder();
-		if(!baseDirectory.isDirectory())
+		if(baseDirectory == null || !baseDirectory.isDirectory())
 		{
 			Log.e("ThumbAdapter", "The base folder is not a folder.");
 			return null;

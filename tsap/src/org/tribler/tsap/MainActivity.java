@@ -87,7 +87,7 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onBackPressed() {
 		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()
-				|| mDownloadFragment.isVisible()) {
+				|| mDownloadFragment.isVisible() || mSettingsFragment.isVisible()) {
 			Intent startMain = new Intent(Intent.ACTION_MAIN);
 			startMain.addCategory(Intent.CATEGORY_HOME);
 			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

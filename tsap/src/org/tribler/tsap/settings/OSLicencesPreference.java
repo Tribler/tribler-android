@@ -12,6 +12,7 @@ public class OSLicencesPreference extends DialogPreference {
 		super(context, attrs);
 
 		setDialogLayoutResource(R.layout.os_licences_dialog);
+		setDialogTitle(R.string.pref_os_licences);
 		setPositiveButtonText(android.R.string.ok);
 		setNegativeButtonText(android.R.string.cancel);
 

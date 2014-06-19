@@ -19,13 +19,23 @@ public class Utility {
 	 * @return A string in the format NNN.NXB
 	 */
 	public static String convertBytesToString(double size) {
-		String prefixes[] = { " B", " kB", " MB", " GB", " TB", " PB" };
+		String prefixes[] = { "B", "kB", "MB", "GB", "TB", "PB" };
 		int prefix = 0;
+		String minus;
+		if(size < 0)
+		{
+			size = -size;
+			minus = "-";
+		}
+		else
+		{
+			minus = "";
+		}
 		while (size > 1000 && prefix < prefixes.length - 1) {
 			size /= 1000;
 			prefix++;
 		}
-		String intString = String.valueOf((int) size);
+		String intString = minus + String.valueOf((int) size);
 		if (prefix == 0 || size == (int) size) {
 			return intString + prefixes[prefix];
 		} else {

@@ -35,10 +35,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 
 	private XMLRPCTorrentManager mTorrentManager = null;
 	private ThumbAdapter mThumbAdapter;
-	private int mLastFoundResultAmount = 0;
 	private View mView;
-	// stores the menu handler to remove the search item in onPause()
-	private Menu menu;
 	private boolean mJustOpened = true; 
 
 	/**
@@ -120,8 +117,6 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	 */
 	@Override
 	public void onPause() {
-		if (menu != null)
-			menu.removeItem(R.id.action_search_thumbgrid);
 		super.onPause();
 		mTorrentManager.stopPolling();
 	}
@@ -146,7 +141,6 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		this.menu = menu;
 		inflater.inflate(R.menu.thumbgrid_fragment, menu);
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
@@ -172,19 +166,13 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	}
 
 	/**
-	 * Filters the items in the grid according to the query
+	 * Called when the action bar search text has changed, currently does nothing.
 	 * 
 	 * @param query
 	 *            The query that the user has typed in the search field
 	 * @return True iff the text change has been processed correctly
 	 */
 	public boolean onQueryTextChange(String query) {
-		// Called when the action bar search text has changed. Update
-		// the search filter, and restart the loader to do a new query
-		// with this filter.
-		// GridView gridView = (GridView)
-		// this.getView().findViewById(R.id.ThumbsGrid);
-		// ((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		return true;
 	}
 
@@ -197,11 +185,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		// GridView gridView = (GridView) this.getView().findViewById(
-		// R.id.ThumbsGrid);
-		// ((ThumbAdapter) gridView.getAdapter()).getFilter().filter(query);
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
-		mLastFoundResultAmount = 0;
 		mTorrentManager.search(query);
 		// Don't care about this.
 		return true;

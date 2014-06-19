@@ -144,7 +144,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if(!(result instanceof XMLRPCException))	
+				if(result instanceof XMLRPCException)	
 				{
 					Log.e("XMLRPCDownloadManager", "Error in retrieving result from XMLRPC after adding download");
 				}

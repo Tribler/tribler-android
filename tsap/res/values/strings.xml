@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">TSAP</string>
+    <string name="app_name">Tribler Play</string>
     <string name="title_section_home">Home</string>
     <string name="title_section_channels">Channels</string>
     <string name="title_section_downloads">Downloads</string>
@@ -34,6 +34,8 @@
     <string name="please_wait">Please wait…</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
     <string name="locked">Locked</string>
     <string name="unlocked">Unlocked</string>
     <string name="surface_best_fit">Best fit</string>
@@ -51,9 +53,9 @@
     <string name="hardware_acceleration_error_title">HW acceleration error</string>
     <string name="hardware_acceleration_error_message">An error occurred with hardware acceleration. Would you like to disable it and try again?</string>
     <string name="navigation_drawer">navigation_drawer</string>
-    <string name="private_version">1403102002.43</string>
-    <string name="public_version">1403102002.43</string>
-
+	<string name="remove_download_dialog_title">Remove download</string>
+    <string name="remove_download_dialog_message">Do you also want to remove any files associated with this download?</string>
+    
     <!-- Strings from downloadActivity -->
     <string name="download_info_type_title">Type:</string>
     <string name="download_info_upload_date_title">Uploaded on:</string>
@@ -61,14 +63,30 @@
     <string name="download_info_down_speed_title">Speed down:</string>
     <string name="download_info_up_speed_title">Speed up:</string>
     <string name="download_info_stream_button">Stream video</string>
-    <string name="download_info_delete_torrent_button">Delete torrent</string>
-    <string name="download_info_delete_files_button">Delete torrent + files</string>
-    
+	<string name="download_info_delete_torrent_button">Remove download</string>
+	
     <!-- Status Strings from ThumbGridFragment -->
     <string name="thumb_grid_loading_tribler">Loading Tribler...</string>
     <string name="thumb_grid_loading_results">Loading results...</string>
     <string name="thumb_grid_search_submitted">"Searching..."</string>
     <string name="thumb_grid_server_started">"Type in keywords to start searching."</string>
-    <string name="thumb_grid_connection_failed">"Could not connect to Tribler."</string>
+    <string name="thumb_grid_connection_failed">"Could not connect to Tribler."</string>    
+    
+    <!-- Strings for settings -->
+	<string name="pref_supportedTorrentTypes">Supported torrent types</string>
+	<string name="pref_chooseSupportedTorrentTypes">Select supported types</string>
+	<string name="pref_supported_types_default">Video</string>
+	<string name="pref_supportedTorrentTypes_summary">Defines which types of torrents will be listed and can be downloaded. Can be only Video or All (including Document, Picture, etc.)</string>
+	
+	<string name="pref_familyFilter">Family filter</string>
+	<string name="pref_familyFilter_summary">Enable or disable Tribler\'s family filter</string>
+	
+	<string name="pref_maxDownloadRate">Maximum download rate</string>
+	<string name="pref_maxDownloadRate_summary">Set the maximum download rate for Tribler</string>
+	<string name="pref_maxDownloadRate_dialog_message">Set the maximum download rate in kB/s. For an unlimited rate this value should be set to 0.</string>
+	
+	<string name="pref_maxUploadRate">Maximum upload rate</string>
+	<string name="pref_maxUploadRate_summary">Set the maximum upload rate for Tribler</string>
+	<string name="pref_maxUploadRate_dialog_message">Set the upload download rate in kB/s. For an unlimited rate this value should be set to 0.</string>
 
 </resources>

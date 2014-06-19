@@ -115,13 +115,13 @@ private_version=$(grep -oP '(?<=<string name="private_version">)\d*.\d*(?=</stri
 
 public_version=$(grep -oP '(?<=<string name="public_version">)\d*.\d*(?=</string>)' "${PY4APATH}/dist/${DIRNAME}/res/values/strings.xml")
 
-mv "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
-perl -pe "s/<string name=\"private_version\">\d*.\d*/<string name=\"private_version\">$private_version/" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml"
-rm "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+mv "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
+perl -pe "s/<string name=\"private_version\">\d*.\d*<\/string>/<string name=\"private_version\">$private_version<\/string>/" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml"
+rm "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
 
-mv "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
-perl -pe "s/<string name=\"public_version\">\d*.\d*/<string name=\"public_version\">$public_version/" "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml"
-rm "${CURRENTFOLDERPATH}/../tsap/res/values/strings.xml.bak"
+mv "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
+perl -pe "s/<string name=\"public_version\">\d*.\d*<\/string>/<string name=\"public_version\">$public_version<\/string>/" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml"
+rm "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
 
 # Copy the .apk files to our own app folder
 #find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;

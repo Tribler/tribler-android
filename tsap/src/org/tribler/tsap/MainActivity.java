@@ -39,7 +39,6 @@ public class MainActivity extends Activity implements
 	private ChannelListFragment mChannelFragment = new ChannelListFragment();
 	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
 
-
 	/**
 	 * Used to store the last screen title. For use in
 	 * {@link #restoreActionBar()}.
@@ -171,6 +170,8 @@ public class MainActivity extends Activity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			getFragmentManager().beginTransaction()
+					.replace(R.id.container, new SettingsFragment()).addToBackStack(null).commit();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -193,7 +194,7 @@ public class MainActivity extends Activity implements
 	public ThumbGridFragment getThumbGridFragment() {
 		return mThumbGridFragment;
 	}
-	
+
 	/**
 	 * Returns the instance of the DownloadListFragment
 	 * 

@@ -5,6 +5,8 @@ import org.tribler.tsap.Utility;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -77,17 +79,43 @@ public class DownloadActivity extends Activity {
 		streamButton.setOnClickListener(streamButtonOnClickListener);
 	}
 
-	private void setTorrentRemoveButtonListener(int resource,
-			final boolean deleteFiles) {
+	private void setTorrentRemoveButtonListener(int resource) {
 		Button removeButton = (Button) mView.findViewById(resource);
 		final DownloadActivity a = this;
-		View.OnClickListener removeButtonOnClickListener = new View.OnClickListener() {
 
+		View.OnClickListener removeButtonOnClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				XMLRPCDownloadManager.getInstance().deleteTorrent(
-						mDownload.getInfoHash(), deleteFiles);
-				a.onBackPressed();
+				// Show dialog
+				AlertDialog.Builder alertRemove = new AlertDialog.Builder(v.getContext());
+				alertRemove
+				    .setTitle(R.string.remove_download_dialog_title)
+				    .setMessage(R.string.remove_download_dialog_message)
+				     // Android.R.string.yes == Ok - https://code.google.com/p/android/issues/detail?id=3713
+				    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) { 
+							XMLRPCDownloadManager.getInstance().deleteTorrent(
+									mDownload.getInfoHash(), true);
+							a.onBackPressed();
+				        }
+				     })
+				     // Android.R.string.no == Cancel - https://code.google.com/p/android/issues/detail?id=3713
+				    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) { 
+							XMLRPCDownloadManager.getInstance().deleteTorrent(
+									mDownload.getInfoHash(), false);
+							a.onBackPressed();
+				        }
+				     })
+				    //.setIcon(android.R.drawable.ic_dialog_alert)
+				    .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// .. nothing
+							a.onBackPressed();
+						}
+					})
+				    .show();
 			}
 		};
 		removeButton.setOnClickListener(removeButtonOnClickListener);
@@ -105,8 +133,7 @@ public class DownloadActivity extends Activity {
 		setupActionBar(mDownload.getName());
 		fillLayout();
 		setStreamButtonListener();
-		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button, false);
-		setTorrentRemoveButtonListener(R.id.download_info_delete_files_button, true);
+		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button);
 	}
 
 	/**

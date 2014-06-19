@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_familyFilter"
+        android:summary="@string/pref_familyFilter_summary"
+        android:title="@string/pref_familyFilter" />
+
+    <ListPreference
+        android:defaultValue="@string/pref_supported_types_default"
+        android:dialogTitle="@string/pref_chooseSupportedTorrentTypes"
+        android:entries="@array/pref_supported_types"
+        android:entryValues="@array/pref_supported_types"
+        android:key="pref_supportedTorrentTypes"
+        android:summary="@string/pref_supportedTorrentTypes_summary"
+        android:title="@string/pref_supportedTorrentTypes" />
+    
+    <EditTextPreference 
+        android:defaultValue="0"
+        android:dialogMessage="@string/pref_maxDownloadRate_dialog_message"
+        android:inputType="number"
+        android:key="pref_maxDownloadRate"
+        android:summary="@string/pref_maxDownloadRate_summary"
+        android:title="@string/pref_maxDownloadRate"/>
+    
+    <EditTextPreference 
+        android:defaultValue="0"
+        android:dialogMessage="@string/pref_maxUploadRate_dialog_message"
+        android:inputType="number"
+        android:key="pref_maxUploadRate"
+        android:summary="@string/pref_maxUploadRate_summary"
+        android:title="@string/pref_maxUploadRate"/>
+
+</PreferenceScreen>

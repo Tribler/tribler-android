@@ -73,6 +73,7 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 
 	/**
 	 * Returns the Id of the item at a certain position.
+	 * Just like in ArrayAdapter this function just returns the position.
 	 * 
 	 * @param position
 	 *            the position to retrieve the item from

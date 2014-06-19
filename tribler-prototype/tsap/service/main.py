@@ -58,8 +58,9 @@ class TSAP():
         _logger.error("Loading ConfigurationManager")
         self.sm = SettingsManager(self.tribler.get_session(), self.xmlrpc)
 
-        _logger.error("Loading ChannelManager")
-        self.cm = ChannelManager(self.tribler.get_session(), self.xmlrpc)
+        # Disable ChannelManager
+        #_logger.error("Loading ChannelManager")
+        #self.cm = ChannelManager(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Loading TorrentManager")
         self.tm = TorrentManager(self.tribler.get_session(), self.xmlrpc)

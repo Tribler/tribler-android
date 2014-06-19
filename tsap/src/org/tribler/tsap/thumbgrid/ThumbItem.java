@@ -1,5 +1,6 @@
 package org.tribler.tsap.thumbgrid;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class ThumbItem implements Serializable{
 	private TORRENT_HEALTH health;
 	private int size;
 	private String infoHash;
+	private File thumbImageFile;
 
 	/**
 	 * Constructor: initializes the instance variables
@@ -103,6 +105,11 @@ public class ThumbItem implements Serializable{
 	public void setHealth(TORRENT_HEALTH health) {
 		this.health = health;
 	}
+	
+	public void setThumbImageFile(File file)
+	{
+		thumbImageFile = file;
+	}
 
 	/**
 	 * Returns the health of the torrent
@@ -124,6 +131,10 @@ public class ThumbItem implements Serializable{
 	
 	public String getInfoHash() {
 		return infoHash;
+	}
+	
+	public File getThumbImageFile() {
+		return thumbImageFile;
 	}
 
 	/**

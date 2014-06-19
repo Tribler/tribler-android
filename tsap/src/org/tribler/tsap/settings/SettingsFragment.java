@@ -1,4 +1,6 @@
-package org.tribler.tsap;
+package org.tribler.tsap.settings;
+
+import org.tribler.tsap.R;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

@@ -41,7 +41,7 @@ public abstract class AbstractXMLRPCManager implements Observer {
 	 * Retrieves all functions that are callable with XMLRPC and writes them to
 	 * the log
 	 */
-	protected void logAvailableFunctions() {
+	public void logAvailableFunctions() {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {

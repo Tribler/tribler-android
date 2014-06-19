@@ -77,4 +77,16 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		content = newList;
 		notifyDataSetChanged();
 	}
+	
+	public Download getDownload(String infoHash)
+	{
+		Download currItem;
+		for(int i=0; i<getCount();i++)
+		{
+			currItem = getItem(i);
+			if(currItem.getInfoHash() == infoHash)
+				return currItem;
+		}
+		return null;
+	}
 }

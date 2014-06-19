@@ -5,12 +5,13 @@ import java.net.URL;
 
 import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
-import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.tribler.tsap.downloads.DownloadListFragment;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
+import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.videolan.vlc.VLCApplication;
 
+import org.tribler.tsap.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;

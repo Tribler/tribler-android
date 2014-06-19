@@ -11,7 +11,6 @@ import org.tribler.tsap.thumbgrid.ThumbItem;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -50,9 +49,9 @@ public class ThumbAdapterTest extends ActivityInstrumentationTestCase2<MainActiv
 	
 	@UiThreadTest
 	public void testGetView() {
-		checkView(adapter.getView(0, null, null), "a", "1B", 3);
-		checkView(adapter.getView(1, null, null), "b", "12B", 2);
-		checkView(adapter.getView(2, null, null), "c", "123B", 1);
-		checkView(adapter.getView(3, null, null), "d", "1.2kB", 0);
+		checkView(adapter.getView(0, null, null), "a", "1 B", 3);
+		checkView(adapter.getView(1, null, null), "b", "12 B", 2);
+		checkView(adapter.getView(2, null, null), "c", "123 B", 1);
+		checkView(adapter.getView(3, null, null), "d", "1.2 kB", 0);
 	}
 }

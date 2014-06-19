@@ -15,10 +15,10 @@ import android.widget.TextView;
 
 public class DownloadListAdapterTest extends ActivityInstrumentationTestCase2<MainActivity> {
 	DownloadListAdapter adapter;
-	Download a = new Download("a", "hash1", 1, 1234.5, 5.4321, 0.2);
-	Download b = new Download("b", "hash2", 2, 123.45, 54.321, 0.3);
-	Download c = new Download("c", "hash3", 3, 12.345, 543.21, 0.4);
-	Download d = new Download("d", "hash4", 4, 1.2345, 5432.1, 0.5);
+	Download a = new Download("a", "hash1", 1, 1234.5, 5.4321, 0.2,0,false);
+	Download b = new Download("b", "hash2", 2, 123.45, 54.321, 0.3,0,false);
+	Download c = new Download("c", "hash3", 3, 12.345, 543.21, 0.4,0,false);
+	Download d = new Download("d", "hash4", 4, 1.2345, 5432.1, 0.5,0,false);
 	
 	public DownloadListAdapterTest()
 	{
@@ -96,9 +96,9 @@ public class DownloadListAdapterTest extends ActivityInstrumentationTestCase2<Ma
 		list.add(c);
 		list.add(d);
 		adapter.replaceAll(list);
-		checkView(adapter.getView(0, null, null), "a", "Status: Allocating disk space", "Down: 1.2kB/s", "Up: 5B/s", 20);
-		checkView(adapter.getView(1, null, null), "b", "Status: Waiting on the hash check", "Down: 123B/s", "Up: 54B/s", 30);
-		checkView(adapter.getView(2, null, null), "c", "Status: Downloading", "Down: 12B/s", "Up: 543B/s", 40);
-		checkView(adapter.getView(3, null, null), "d", "Status: Seeding", "Down: 1B/s", "Up: 5.4kB/s", 50);
+		checkView(adapter.getView(0, null, null), "a", "Status: Allocating disk space", "Down: 1.2 kB/s", "Up: 5 B/s", 20);
+		checkView(adapter.getView(1, null, null), "b", "Status: Waiting on the hash check", "Down: 123 B/s", "Up: 54 B/s", 30);
+		checkView(adapter.getView(2, null, null), "c", "Status: Downloading", "Down: 12 B/s", "Up: 543 B/s", 40);
+		checkView(adapter.getView(3, null, null), "d", "Status: Seeding", "Down: 1 B/s", "Up: 5.4 kB/s", 50);
 	}
 }

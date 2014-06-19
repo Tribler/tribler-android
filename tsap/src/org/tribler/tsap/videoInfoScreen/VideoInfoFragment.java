@@ -1,14 +1,12 @@
 package org.tribler.tsap.videoInfoScreen;
 
+import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
-import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,30 +88,26 @@ public class VideoInfoFragment extends Fragment {
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
 		loadBitmap(thumbData.getThumbnailId(), thumb);
-		setViewButtonListener();
+		setPlayButtonListener();
+		setDownloadButtonListener();
 	}
 
 	/**
 	 * Sets the listener of the 'Play video' button to a listener that starts
 	 * VLC when the button is pressed
 	 */
-	private void setViewButtonListener() {
-		Button viewButton = (Button) view
+	private void setPlayButtonListener() {
+		final Button viewButton = (Button) view
 				.findViewById(R.id.video_info_stream_video);
-		mViewButtonOnClickListener = new View.OnClickListener() {
+		mViewButtonOnClickListener = new PlayButtonListener(thumbData, getFragmentManager(), getActivity());
+		viewButton.setOnClickListener(mViewButtonOnClickListener);		
+	}
 
-			@Override
-			public void onClick(View v) {
-				String URL = "http://inventos.ru/video/sintel/sintel-q3.mp4";
-				Uri link = Uri.parse(URL);// Uri.fromFile(f);
-				Intent intent = new Intent(Intent.ACTION_VIEW, link,
-						getActivity().getApplicationContext(),
-						VideoPlayerActivity.class);
-				startActivity(intent);
-			}
-		};
-		viewButton.setOnClickListener(mViewButtonOnClickListener);
-		
+	/**
+	 * Sets the listener of the 'Download video' button to a listener that starts
+	 * downloading the selected torrent when the button is pressed
+	 */
+	private void setDownloadButtonListener() {
 		Button downloadButton = (Button) view
 				.findViewById(R.id.video_info_download_video);
 		mViewButtonOnClickListener = new View.OnClickListener() {

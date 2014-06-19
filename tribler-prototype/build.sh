@@ -115,7 +115,7 @@ private_version=$(grep -oP '(?<=<string name="private_version">)\d*.\d*(?=</stri
 
 public_version=$(grep -oP '(?<=<string name="public_version">)\d*.\d*(?=</string>)' "${PY4APATH}/dist/${DIRNAME}/res/values/strings.xml")
 
-echo "<?xml version="1.0" encoding="utf-8"?>
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <resources>
 
     <string name=\"private_version\">$private_version</string>

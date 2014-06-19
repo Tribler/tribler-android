@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
+import org.tribler.tsap.settings.SettingsFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.tribler.tsap.downloads.DownloadListFragment;

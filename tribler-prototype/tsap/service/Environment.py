@@ -17,6 +17,7 @@ def init_environment():
     if 'ANDROID_PRIVATE' in os.environ:
         print "We are running on android/p4a"
 
+        # Whenever we are running in a standard python for android service, strip '/service' from ANDROID_PRIVATE
         split_path = os.path.split(os.environ['ANDROID_PRIVATE'])
         if split_path[1].lower() == 'service':
             os.environ['ANDROID_PRIVATE'] = split_path[0]

@@ -16,7 +16,7 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
 # DB Tuples
-from Tribler.Main.Utility.GuiDBTuples import Torrent, Channel, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
+from Tribler.Main.Utility.GuiDBTuples import Torrent, Channel, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent, MetadataModification
 
 # Tribler communities
 from Tribler.community.search.community import SearchCommunity
@@ -41,6 +41,7 @@ class TorrentManager():
     _torrent_db = None
     _channelcast_db = None
     _votecast_db = None
+    _metadata_db = None
 
     _keywords = []
     _results = []
@@ -86,6 +87,7 @@ class TorrentManager():
             self.connected = True
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
+            self._metadata_db = self._session.open_dbhandler(NTFY_METADATA)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
 
@@ -354,6 +356,21 @@ class TorrentManager():
                 pass
 
         return torrents
+
+    def get_torrent_metadata(self, torrent):
+        message_list = self._metadata_db.getMetadataMessageList(
+            torrent.infohash, torrent.swift_hash,
+            columns=("message_id",))
+        if not message_list:
+            return []
+
+        metadata_mod_list = []
+        for message_id, in message_list:
+            data_list = self._metadata_db.getMetadataData(message_id)
+            for key, value in data_list:
+                metadata_mod_list.append(MetadataModification(torrent, message_id, key, value))
+
+        return metadata_mod_list
 
     def _prepare_torrent(self, tr):
         """

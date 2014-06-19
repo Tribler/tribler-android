@@ -1,16 +1,20 @@
 package org.tribler.tsap.thumbgrid;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
 import org.tribler.tsap.Utility;
+import org.tribler.tsap.settings.Settings;
 
 import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff.Mode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,45 +87,87 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = convertView;
-		ThumbHolder holder = null;
-
-		if (row == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-			row = inflater.inflate(layoutResourceId, parent, false);
-
-			holder = new ThumbHolder();
-			holder.txtTitle = (TextView) row.findViewById(R.id.ThumbTitle);
-			holder.imageItem = (ImageView) row.findViewById(R.id.ThumbImage);
-			holder.pbHealth = (ProgressBar) row.findViewById(R.id.ThumbHealth);
-			holder.txtSize = (TextView) row.findViewById(R.id.ThumbSize);
-			row.setTag(holder);
-		} else {
-			holder = (ThumbHolder) row.getTag();
-		}
-
-		initializeHolderView(position, holder);
-
-		return row;
-	}
-
-	/**
-	 * Sets the ThumbHolder views to the correct values (the values of the thumb
-	 * item)
-	 * 
-	 * @param position
-	 *            The postion of the thumb item
-	 * @param holder
-	 *            The holder of which the view need to updated
-	 */
-	private void initializeHolderView(int position, ThumbHolder holder) {
 		ThumbItem item = this.getItem(position);
-		holder.txtTitle.setText(item.getTitle());
-		holder.pbHealth.setProgress(item.getHealth().ordinal());
-		holder.pbHealth.getProgressDrawable().setColorFilter(
-				item.getHealthColor(), Mode.SRC_IN);
-		holder.txtSize.setText(Utility.convertBytesToString(item.getSize()));
-		loadBitmap(item.getThumbnailId(), holder.imageItem);
+
+		if (convertView == null) {
+			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			convertView = inflater.inflate(layoutResourceId, parent, false);
+		}
+		
+		TextView title = (TextView) convertView.findViewById(R.id.ThumbTitle);
+		title.setText(item.getTitle());
+		
+		ImageView image = (ImageView) convertView.findViewById(R.id.ThumbImage);
+		if(item.getThumbImageFile() != null) {
+			loadBitmap(item.getThumbImageFile(), image);
+		} else {
+			File file = getImageLocation(item.getInfoHash());
+			if(file != null) {
+				loadBitmap(file, image);
+				item.setThumbImageFile(file);
+			}
+			else {
+				loadBitmap(R.drawable.default_thumb, image);
+			}
+		}
+		
+		ProgressBar health = (ProgressBar) convertView.findViewById(R.id.ThumbHealth);
+		health.setProgress(item.getHealth().ordinal());
+		health.getProgressDrawable().setColorFilter(item.getHealthColor(), Mode.SRC_IN);
+		
+		TextView size = (TextView) convertView.findViewById(R.id.ThumbSize);
+		size.setText(Utility.convertBytesToString(item.getSize()));
+
+		return convertView;
+	}
+	
+	private File findDirectory(File directory, String name) {
+		File thumbdirectory = new File(directory, "thumbs-" + name);
+		if(thumbdirectory.exists()) {
+			return thumbdirectory;
+		} else {
+			Log.e("ThumbAdapter", "Could not find thumb folder for this infohash.");
+			return null;
+		}
+	}
+	private File findImage(File directory) {
+		File[] foundImages = directory.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String name) {
+				return name.endsWith(".png") || name.endsWith(".gif") || name.endsWith(".jpg") || name.endsWith(".jpeg");
+			}
+		});
+		if(foundImages.length > 0) {
+			Log.e("", foundImages[0].getPath());
+			return foundImages[0];
+		} else {
+			Log.e("ThumbAdapter", "No images found: " + foundImages.length);
+			return null;
+		}
+	}
+	
+	private File getImageLocation(final String infoHash) {
+		File baseDirectory = Settings.getThumbFolder();
+		if(!baseDirectory.isDirectory())
+		{
+			Log.e("ThumbAdapter", "The base folder is not a folder.");
+			return null;
+		}
+		File thumbsDirectory = findDirectory(baseDirectory, infoHash);
+		if(thumbsDirectory == null || !thumbsDirectory.isDirectory())
+		{
+			Log.e("ThumbAdapter", "The thumbs folder is not a folder.");
+			return null;
+		}
+		File thumbnailDirectory = thumbsDirectory.listFiles()[0];
+		File[] files = thumbsDirectory.listFiles();
+		Log.e("ThumbAdapter", files.toString());
+		if(thumbnailDirectory == null || !thumbnailDirectory.isDirectory())
+		{
+			Log.e("ThumbAdapter", "The thumb folder is not a folder.");
+			return null;
+		}
+		return findImage(thumbnailDirectory);
 	}
 
 	/**
@@ -136,17 +182,9 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		Picasso.with(context).load(resId).placeholder(R.drawable.default_thumb)
 				.resize(mThumbWidth, mThumbHeight).into(imageView);
 	}
-
-	/**
-	 * Class that holds the views of a ThumbItem
-	 * 
-	 * @author Wendo Sabée
-	 */
-	private static class ThumbHolder {
-		TextView txtTitle;
-		ImageView imageItem;
-		ProgressBar pbHealth;
-		TextView txtSize;
+	
+	private void loadBitmap(File file, ImageView imageView) {
+		Picasso.with(context).load(file).placeholder(R.drawable.default_thumb)
+				.resize(mThumbWidth, mThumbHeight).into(imageView);
 	}
-
 }

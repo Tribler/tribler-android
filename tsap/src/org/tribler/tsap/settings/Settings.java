@@ -1,5 +1,6 @@
 package org.tribler.tsap.settings;
 
+import java.io.File;
 import java.net.URL;
 
 public class Settings {
@@ -8,13 +9,13 @@ public class Settings {
 	};
 
 	private static boolean mFamilyFilterOn;
-	private static String mThumbFolder = null;
+	private static File mThumbFolder = null;
 	private static XMLRPCSettingsManager mSettingsManager;
 
-	public static String getTumbFolder() {
+	public static File getThumbFolder() {
 		return mThumbFolder;
 	}
-	public static void XMLRPCSetThumbFolder(String thumbFolder) {
+	public static void XMLRPCSetThumbFolder(File thumbFolder) {
 		mThumbFolder = thumbFolder;
 	}
 

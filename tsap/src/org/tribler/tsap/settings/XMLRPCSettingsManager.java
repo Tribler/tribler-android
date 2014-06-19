@@ -1,5 +1,6 @@
 package org.tribler.tsap.settings;
 
+import java.io.File;
 import java.net.URL;
 
 import org.tribler.tsap.XMLRPCCallTask;
@@ -37,13 +38,13 @@ public class XMLRPCSettingsManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				if (!(result instanceof XMLRPCException)) {
-					Settings.XMLRPCSetThumbFolder((String)result);
+					Settings.XMLRPCSetThumbFolder(new File((String)result));
 				}
 				else {
 					Log.e("XMLRPCSettingsManager", "Could not get the thumb folder.");
 				}
 			}
 		};
-		task.execute(mClient, "settings.get_thumb_folder");
+		task.execute(mClient, "settings.get_thumbs_directory");
 	}
 }

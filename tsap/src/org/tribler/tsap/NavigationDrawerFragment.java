@@ -133,7 +133,8 @@ public class NavigationDrawerFragment extends Fragment {
 				R.layout.navigation_drawer_item,
 				android.R.id.text1, new String[] {
 						getString(R.string.title_section_home),
-						getString(R.string.title_section_downloads)}));
+						getString(R.string.title_section_downloads),
+						getString(R.string.title_section_settings)}));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
 	}
@@ -322,20 +323,6 @@ public class NavigationDrawerFragment extends Fragment {
 	}
 
 	/**
-	 * If the drawer is open, show the global app actions in the action bar. See
-	 * also {@link #showGlobalContextActionBar()}, which controls the top-left
-	 * area of the action bar.
-	 */
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (mDrawerLayout != null && isDrawerOpen()) {
-			inflater.inflate(R.menu.drawer_fragment, menu);
-			showGlobalContextActionBar();
-		}
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	/**
 	 * Defines the behaviour of selecting a menu item
 	 * 
 	 * @param item
@@ -360,6 +347,19 @@ public class NavigationDrawerFragment extends Fragment {
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setTitle(R.string.app_name);
+	}
+	
+	/**
+	 * If the drawer is open, show the global app actions in the action bar. See
+	 * also {@link #showGlobalContextActionBar()}, which controls the top-left
+	 * area of the action bar.
+	 */
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (mDrawerLayout != null && isDrawerOpen()) {
+			showGlobalContextActionBar();
+		}
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	/**

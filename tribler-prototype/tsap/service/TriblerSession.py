@@ -63,7 +63,7 @@ class TriblerSession():
         :return: Boolean indicating success.
         """
         # We are on android, setup the swift binary!
-        sdcard_path = os.path.abspath(os.path.join(os.getcwd(), '..'))
+        sdcard_path = os.getcwd()
         binary_source = os.path.join(sdcard_path, binary_name)
         binary_dest = os.path.join(os.environ['ANDROID_PRIVATE'], binary_name)
 
@@ -114,8 +114,8 @@ class TriblerSession():
 
         if not defaultDLConfig.get_dest_dir():
             defaultDLConfig.set_dest_dir(os.environ['TRIBLER_DOWNLOAD_DIR'])
-            self._sconfig.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], STATEDIR_TORRENTCOLL_DIR))
-            self._sconfig.set_swift_meta_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], STATEDIR_SWIFTRESEED_DIR))
+            self._sconfig.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_TORRENTCOLL_DIR))
+            self._sconfig.set_swift_meta_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_SWIFTRESEED_DIR))
 
         if not os.path.isdir(defaultDLConfig.get_dest_dir()):
             try:
@@ -128,9 +128,9 @@ class TriblerSession():
         self._sconfig.set_torrent_checking(False)
         self._sconfig.set_multicast_local_peer_discovery(False)
         #self._sconfig.set_megacache(False)
-        self._sconfig.set_swift_proc(False)
+        #self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
-        self._sconfig.set_torrent_collecting(False)
+        #self._sconfig.set_torrent_collecting(False)
         #self._sconfig.set_libtorrent(False)
         self._sconfig.set_dht_torrent_collecting(False)
         #self._sconfig.set_videoplayer(False)
@@ -143,7 +143,7 @@ class TriblerSession():
         self._session = Session(self._sconfig)
         self._session.start()
 
-        #self._swift = self._session.get_swift_proc() and self._session.get_swift_process()
+        self._swift = self._session.get_swift_proc() and self._session.get_swift_process()
         self._dispersy = self._session.get_dispersy_instance()
 
         _logger.info("libTribler session started!")
@@ -175,8 +175,9 @@ class TriblerSession():
         #_logger.debug("Currently loaded dispersy communities: %s" % comm)
 
         # load metadata community
-        # comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs=comm_args)
-        #_logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
+        comm = self._dispersy.define_auto_load(MetadataCommunity, self._session.dispersy_member, load=True,
+                                               kargs=comm_args)
+        _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
         # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing
         # 6.1 clients.  We will disable the BarterCommunity for version 6.2, giving people some time to upgrade

@@ -9,6 +9,7 @@ source /home/user/Documents/Projects/bep/setenv_x86.sh &&
 ./build.sh && #-p `pwd`/../../p4a-at3 &&
 pushd ../tsap &&
 ant clean debug &&
+git checkout -- res/values/asset_versions.xml
 adb uninstall org.tribler.tsap
 adb push bin/MainActivity-debug.apk /sdcard/
 adb shell pm install -l /sdcard/MainActivity-debug.apk

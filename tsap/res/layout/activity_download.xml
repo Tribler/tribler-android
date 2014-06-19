@@ -10,21 +10,12 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp" >
-        
-        <ProgressBar
-        android:id="@+id/download_info_progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        />
 
         <LinearLayout
             android:id="@+id/download_info_detail_titles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/download_info_progress_bar"
             android:orientation="vertical"
             android:paddingRight="10dp" >
 
@@ -68,12 +59,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:id="@+id/download_info_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/download_info_progress_bar"
             android:layout_toRightOf="@id/download_info_detail_titles"
             android:orientation="vertical"
             android:paddingRight="10dp" >
@@ -119,33 +109,41 @@
             android:layout_width="100dp"
             android:layout_height="150dp"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/download_info_progress_bar"
             android:layout_toRightOf="@id/download_info_details"
             android:contentDescription="@string/video_info_thumbnail_descr"
             android:src="@drawable/default_thumb" />
 
+        <ProgressBar
+	        android:id="@+id/download_info_progress_bar"
+	        style="?android:attr/progressBarStyleHorizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+            android:layout_below="@id/download_info_thumbnail"
+	        android:paddingBottom="5dp"
+        />
+        
         <Button
             android:id="@+id/download_info_stream_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/download_info_thumbnail"
+            android:layout_below="@id/download_info_progress_bar"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/video_info_stream_button"
             android:text="@string/video_info_stream_button" />
 
         <Button
-            android:id="@+id/download_info_delete_button"
+            android:id="@+id/download_info_delete_torrent_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/download_info_stream_button"
             android:contentDescription="@string/video_info_download_button"
-            android:text="@string/download_info_delete_button" />
+            android:text="@string/download_info_delete_torrent_button" />
 
         <TextView
             android:id="@+id/video_info_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/download_info_delete_button"
+            android:layout_below="@id/download_info_delete_torrent_button"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:contentDescription="@string/video_info_descr_descr"

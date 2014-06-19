@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
+import org.tribler.tsap.Utility;
 
 import com.squareup.picasso.Picasso;
 
@@ -119,7 +120,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		holder.pbHealth.setProgress(item.getHealth().ordinal());
 		holder.pbHealth.getProgressDrawable().setColorFilter(
 				item.getHealthColor(), Mode.SRC_IN);
-		holder.txtSize.setText(item.getSize() + " MiB");
+		holder.txtSize.setText(Utility.convertBytesToString(item.getSize()));
 		loadBitmap(item.getThumbnailId(), holder.imageItem);
 	}
 
@@ -131,9 +132,9 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 * @param mImageView
 	 *            The ImageView in which the thumbnail should be loaded
 	 */
-	private void loadBitmap(int resId, ImageView mImageView) {
+	private void loadBitmap(int resId, ImageView imageView) {
 		Picasso.with(context).load(resId).placeholder(R.drawable.default_thumb)
-				.resize(mThumbWidth, mThumbHeight).into(mImageView);
+				.resize(mThumbWidth, mThumbHeight).into(imageView);
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class Download implements Serializable {
 	/**
 	 * empty constructor for serialization
 	 */
-	Download() {
+	public Download() {
 	}
 
 	/**
@@ -77,9 +77,8 @@ public class Download implements Serializable {
 	public double getVOD_ETA() {
 		return vodETA;
 	}
-	
-	public boolean isVODPlayable()
-	{
+
+	public boolean isVODPlayable() {
 		return vodPlayable;
 	}
 }

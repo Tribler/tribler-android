@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_supported_types">
+        <item>Video</item>
+        <item>All</item>
+    </string-array>
+
+</resources>

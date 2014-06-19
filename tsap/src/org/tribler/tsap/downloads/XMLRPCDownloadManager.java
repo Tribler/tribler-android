@@ -11,6 +11,7 @@ import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -103,7 +104,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Object[] arrayResult = (Object[]) result;
 					Log.v("DownloadManager", arrayResult.length + " result(s)");
 					ArrayList<Download> resultsList = new ArrayList<Download>();
@@ -149,14 +150,17 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result == null) {
-					Log.e("XMLRPCDownloadManager",
-							"Error in retrieving result from XMLRPC after adding download");
-				} else {
-					boolean succes = (Boolean) result;
-					if (succes) {
-						Toast.makeText(mContext, "Download started!",
-								Toast.LENGTH_SHORT).show();
+
+				if(result instanceof XMLRPCException)	
+				{
+					Log.e("XMLRPCDownloadManager", "Error in retrieving result from XMLRPC after adding download");
+				}
+				else
+				{
+					boolean succes = (Boolean)result;
+					if(succes)
+					{
+						Toast.makeText(mContext, "Download started!", Toast.LENGTH_SHORT).show();
 						Log.i("XMLRPCDownloadManager", "Download started!");
 					} else {
 						Toast.makeText(mContext,
@@ -234,5 +238,15 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	public Uri getVideoUri()
 	{
 		return videoLink;
+	}
+	public void deleteTorrent(String infoHash, boolean deleteFiles)
+	{
+		Log.i("XMLRPCDownloadManager", "Removing torrent with infohash: " + infoHash);
+		XMLRPCCallTask task = new XMLRPCCallTask() {
+			@Override
+			protected void onPostExecute(Object result) {
+			}
+		};
+		task.execute(mClient, "downloads.remove", infoHash, deleteFiles);
 	}
 }

@@ -16,13 +16,14 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
 # DB Tuples
-from Tribler.Main.Utility.GuiDBTuples import Torrent, Channel, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent
+from Tribler.Main.Utility.GuiDBTuples import Torrent, Channel, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent, MetadataModification
 
 # Tribler communities
 from Tribler.community.search.community import SearchCommunity
 from Tribler.Core.Search.SearchManager import split_into_keywords
 from Tribler.dispersy.util import call_on_reactor_thread
 from Tribler.Core.CacheDB.sqlitecachedb import bin2str, str2bin, forceAndReturnDBThread, forceDBThread
+from Tribler.Category.Category import Category
 
 
 
@@ -40,6 +41,7 @@ class TorrentManager():
     _torrent_db = None
     _channelcast_db = None
     _votecast_db = None
+    _metadata_db = None
 
     _keywords = []
     _results = []
@@ -85,8 +87,15 @@ class TorrentManager():
             self.connected = True
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
+            self._metadata_db = self._session.open_dbhandler(NTFY_METADATA)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
+
+            self._category = Category.getInstance()
+            self._xxx_category = -1
+            for key, id in self._misc_db._category_name2id_dict.iteritems():
+                if key.lower() == "xxx":
+                    self._xxx_category = id
 
             self._dispersy = self._session.lm.dispersy
         else:
@@ -256,9 +265,11 @@ class TorrentManager():
                 remoteHit.torrent_db = self._torrent_db
                 remoteHit.channelcast_db = self._channelcast_db
 
-                # Add to result list.
-                self._add_remote_result(remoteHit)
-
+                if remoteHit.category_id == self._xxx_category and self._category.family_filter_enabled():
+                    _logger.info("Ignore XXX torrent: %s" % remoteHit.name)
+                else:
+                    # Add to result list.
+                    self._add_remote_result(remoteHit)
         finally:
             self._remote_lock.release()
 
@@ -345,6 +356,21 @@ class TorrentManager():
                 pass
 
         return torrents
+
+    def get_torrent_metadata(self, torrent):
+        message_list = self._metadata_db.getMetadataMessageList(
+            torrent.infohash, torrent.swift_hash,
+            columns=("message_id",))
+        if not message_list:
+            return []
+
+        metadata_mod_list = []
+        for message_id, in message_list:
+            data_list = self._metadata_db.getMetadataData(message_id)
+            for key, value in data_list:
+                metadata_mod_list.append(MetadataModification(torrent, message_id, key, value))
+
+        return metadata_mod_list
 
     def _prepare_torrent(self, tr):
         """

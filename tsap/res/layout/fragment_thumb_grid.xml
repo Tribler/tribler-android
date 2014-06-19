@@ -11,8 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="invisible" />
+        android:layout_centerVertical="true"/>
 
     <TextView
         android:id="@+id/thumbgrid_text_view"
@@ -20,8 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/thumbgrid_progress_bar"
-        android:textSize="20sp"
-        android:text="Type in keywords to start searching." />
+        android:textSize="20sp"/>
     
     <GridView 
 		android:id="@+id/ThumbsGrid"

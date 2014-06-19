@@ -20,13 +20,9 @@ For testing purposes:
 
 Below, some screenshots of the current GUI are shown.
 
-![home_screen_landscape](screenshots/home_screen_portrait_readme.png)
+![home_screen_landscape](screenshots/home_screen_search_vodo_readme.png)
 
-*Home screen showing list of media files.*
-
-![channels_screen_landscape](screenshots/channels_screen_portrait_readme.png)
-
-*List of channels containing torrents.*
+*Search screen showing list of found media downloads.*
 
 ![info_screen_portrait](screenshots/info_screen_portrait_readme.png)
 

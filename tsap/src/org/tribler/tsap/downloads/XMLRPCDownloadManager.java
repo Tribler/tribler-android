@@ -91,7 +91,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		return new Download((String) map.get("name"),
 				(String) map.get("infohash"), (Integer) map.get("status"),
 				downloadSpeed, uploadSpeed, (Double) map.get("progress"),
-				(Double) map.get("vod_eta"));
+				(Double) map.get("vod_eta"), (Boolean) map.get("vod_playable"));
 	}
 
 	/**

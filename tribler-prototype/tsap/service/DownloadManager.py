@@ -433,6 +433,9 @@ class DownloadManager():
                                'status_string': dlstatus_strings[dstate.get_status()],
                                })
             if vod:
+                print("Now in vod section")
+                print("vod_eta is: %s" % dstate.get_vod_playable_after())
+                print("vod_playable is: %s" % dstate.get_vod_playable())
                 dlinfo.update({'vod_eta': dstate.get_vod_playable_after(),
                                'vod_prebuffer_progress': dstate.get_vod_prebuffering_progress(),
                                'vod_consec_prebuffer_progress': dstate.get_vod_prebuffering_progress_consec(),

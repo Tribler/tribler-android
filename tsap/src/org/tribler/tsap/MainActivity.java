@@ -13,6 +13,7 @@ import org.tribler.tsap.downloads.DownloadListFragment;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.videolan.vlc.VLCApplication;
 
+import org.tribler.tsap.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;

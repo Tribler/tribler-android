@@ -54,6 +54,7 @@
     <string name="hardware_acceleration_error_title">HW acceleration error</string>
     <string name="hardware_acceleration_error_message">An error occurred with hardware acceleration. Would you like to disable it and try again?</string>
     <string name="navigation_drawer">navigation_drawer</string>
+
 	<string name="remove_download_dialog_title">Remove download</string>
     <string name="remove_download_dialog_message">Do you also want to remove any files associated with this download?</string>
     

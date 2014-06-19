@@ -63,7 +63,7 @@ class TriblerSession():
         :return: Boolean indicating success.
         """
         # We are on android, setup the swift binary!
-        sdcard_path = os.path.abspath(os.path.join(os.getcwd(), '..'))
+        sdcard_path = os.getcwd()
         binary_source = os.path.join(sdcard_path, binary_name)
         binary_dest = os.path.join(os.environ['ANDROID_PRIVATE'], binary_name)
 

@@ -94,7 +94,7 @@ pushd $PY4APATH
 popd
 
 # FIXME: copy precompiled swift binary
-cp "${CURRENTFOLDERPATH}/swift.arm" "${CURRENTFOLDERPATH}/tsap/swift"
+cp "${CURRENTFOLDERPATH}/swift.arm" "${CURRENTFOLDERPATH}/tsap/service/swift"
 
 # Build apk
 cd "${PY4APATH}/dist/${DIRNAME}/"

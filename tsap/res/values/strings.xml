@@ -53,7 +53,7 @@
     <string name="hardware_acceleration_error_title">HW acceleration error</string>
     <string name="hardware_acceleration_error_message">An error occurred with hardware acceleration. Would you like to disable it and try again?</string>
     <string name="navigation_drawer">navigation_drawer</string>
-    <string name="remove_download_dialog_title">Remove download</string>
+	<string name="remove_download_dialog_title">Remove download</string>
     <string name="remove_download_dialog_message">Do you also want to remove any files associated with this download?</string>
     
     <!-- Strings from downloadActivity -->
@@ -63,7 +63,14 @@
     <string name="download_info_down_speed_title">Speed down:</string>
     <string name="download_info_up_speed_title">Speed up:</string>
     <string name="download_info_stream_button">Stream video</string>
-    <string name="download_info_delete_torrent_button">Remove download</string>
+	<string name="download_info_delete_torrent_button">Remove download</string>
+	
+    <!-- Status Strings from ThumbGridFragment -->
+    <string name="thumb_grid_loading_tribler">Loading Tribler...</string>
+    <string name="thumb_grid_loading_results">Loading results...</string>
+    <string name="thumb_grid_search_submitted">"Searching..."</string>
+    <string name="thumb_grid_server_started">"Type in keywords to start searching."</string>
+    <string name="thumb_grid_connection_failed">"Could not connect to Tribler."</string>    
     
     <!-- Strings for settings -->
 	<string name="pref_supportedTorrentTypes">Supported torrent types</string>
@@ -81,5 +88,5 @@
 	<string name="pref_maxUploadRate">Maximum upload rate</string>
 	<string name="pref_maxUploadRate_summary">Set the maximum upload rate for Tribler</string>
 	<string name="pref_maxUploadRate_dialog_message">Set the upload download rate in kB/s. For an unlimited rate this value should be set to 0.</string>
-	
+
 </resources>

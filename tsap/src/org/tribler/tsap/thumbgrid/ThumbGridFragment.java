@@ -35,10 +35,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 
 	private XMLRPCTorrentManager mTorrentManager = null;
 	private ThumbAdapter mThumbAdapter;
-	int mLastFoundResultAmount = 0;
-	View mView;
-	// stores the menu handler to remove the search item in onPause()
-	private Menu mMenu;
+	private View mView;
+	private boolean mJustOpened = true; 
 
 	/**
 	 * Defines that this fragment has an own option menu
@@ -50,6 +48,12 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mThumbAdapter = new ThumbAdapter(getActivity(), R.layout.thumb_grid_item);
+		try {
+			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter, this);
+		} catch (MalformedURLException e) {
+			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
+		}
 	}
 
 	/**
@@ -69,14 +73,18 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 
 		mView = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
 		GridView gridView = (GridView) mView.findViewById(R.id.ThumbsGrid);
-
-		mThumbAdapter = new ThumbAdapter(container.getContext(), R.layout.thumb_grid_item);
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
-		try {
-			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter, this);
-		} catch (MalformedURLException e) {
-			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
+		
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		if(mJustOpened)
+		{
+			message.setText(R.string.thumb_grid_loading_tribler);
+			mJustOpened = false;
+		}
+		else
+		{
+			message.setText(R.string.thumb_grid_loading_results);
 		}
 		return mView;
 	}
@@ -133,9 +141,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		mMenu = menu;
-		inflater.inflate(R.menu.thumbgrid_fragment, mMenu);
-		MenuItem searchMenuItem = mMenu.findItem(R.id.action_search_thumbgrid);
+		inflater.inflate(R.menu.thumbgrid_fragment, menu);
+		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
 		searchView.setQueryHint("Search videos");
@@ -179,7 +186,6 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
-		mLastFoundResultAmount = 0;
 		mTorrentManager.search(query);
 		// Don't care about this.
 		return true;
@@ -190,8 +196,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
 		progressBar.setVisibility(View.VISIBLE);
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText(R.string.thumb_grid_search_submitted);
 		message.setVisibility(View.VISIBLE);
-		message.setText("Searching...");
 	}
 
 	@Override
@@ -200,5 +206,24 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		progressBar.setVisibility(View.GONE);
 		View message = mView.findViewById(R.id.thumbgrid_text_view);
 		message.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onServerStarted() {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.INVISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText(R.string.thumb_grid_server_started);
+		message.setVisibility(View.VISIBLE);
+		
+	}
+
+	@Override
+	public void onConnectionFailed(Exception exception) {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.INVISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText(R.string.thumb_grid_connection_failed);
+		message.setVisibility(View.VISIBLE);
 	}
 }

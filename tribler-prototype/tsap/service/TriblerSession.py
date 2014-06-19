@@ -114,8 +114,8 @@ class TriblerSession():
 
         if not defaultDLConfig.get_dest_dir():
             defaultDLConfig.set_dest_dir(os.environ['TRIBLER_DOWNLOAD_DIR'])
-            self._sconfig.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], STATEDIR_TORRENTCOLL_DIR))
-            self._sconfig.set_swift_meta_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], STATEDIR_SWIFTRESEED_DIR))
+            self._sconfig.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_TORRENTCOLL_DIR))
+            self._sconfig.set_swift_meta_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_SWIFTRESEED_DIR))
 
         if not os.path.isdir(defaultDLConfig.get_dest_dir()):
             try:

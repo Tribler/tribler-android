@@ -20,6 +20,8 @@ import android.widget.Button;
 public class PlayButtonListener implements OnClickListener, Observer {
 
 	private ThumbItem thumbData;
+	private String infoHash;
+	private boolean needsToBeDownloaded;
 	private Poller mPoller;
 	private FragmentManager mFragManager;
 	private VODDialogFragment dialog;
@@ -29,6 +31,18 @@ public class PlayButtonListener implements OnClickListener, Observer {
 	public PlayButtonListener(ThumbItem thumbData, FragmentManager fragManager,
 			Context context) {
 		this.thumbData = thumbData;
+		this.infoHash = thumbData.getInfoHash();
+		this.needsToBeDownloaded = true;
+		this.mPoller = new Poller(this, 1000);
+		this.mFragManager = fragManager;
+		this.mContext = context;
+	}
+
+	public PlayButtonListener(String infoHash, FragmentManager fragManager,
+			Context context) {
+		this.thumbData = null;
+		this.infoHash = infoHash;
+		this.needsToBeDownloaded = false;
 		this.mPoller = new Poller(this, 1000);
 		this.mFragManager = fragManager;
 		this.mContext = context;
@@ -38,8 +52,10 @@ public class PlayButtonListener implements OnClickListener, Observer {
 	public void onClick(View buttonClicked) {
 		// start downloading the torrent
 		Button button = (Button) buttonClicked;
-		XMLRPCDownloadManager.getInstance().downloadTorrent(
-				thumbData.getInfoHash(), thumbData.getTitle());
+		if (needsToBeDownloaded) {
+			XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash,
+					thumbData.getTitle());
+		}
 
 		// disable the play button
 		button.setEnabled(false);
@@ -52,8 +68,7 @@ public class PlayButtonListener implements OnClickListener, Observer {
 
 	@Override
 	public void update(Observable observable, Object data) {
-		XMLRPCDownloadManager.getInstance().getProgressInfo(
-				thumbData.getInfoHash());
+		XMLRPCDownloadManager.getInstance().getProgressInfo(infoHash);
 		Download dwnld = XMLRPCDownloadManager.getInstance()
 				.getCurrentDownload();
 		AlertDialog aDialog = (AlertDialog) dialog.getDialog();
@@ -73,8 +88,7 @@ public class PlayButtonListener implements OnClickListener, Observer {
 					// if state is downloading, start vod mode if not done
 					// already:
 					if (!inVODMode) {
-						XMLRPCDownloadManager.getInstance().startVOD(
-								thumbData.getInfoHash());
+						XMLRPCDownloadManager.getInstance().startVOD(infoHash);
 						inVODMode = true;
 					}
 
@@ -88,9 +102,10 @@ public class PlayButtonListener implements OnClickListener, Observer {
 					break;
 				default:
 					if (aDialog != null)
-						aDialog.setMessage("Download status: "+Utility
-								.convertDownloadStateIntToMessage(dwnld
-										.getStatus()));
+						aDialog.setMessage("Download status: "
+								+ Utility
+										.convertDownloadStateIntToMessage(dwnld
+												.getStatus()));
 					break;
 				}
 

@@ -95,14 +95,16 @@ public class DownloadActivity extends Activity {
 				    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				        public void onClick(DialogInterface dialog, int which) { 
 							XMLRPCDownloadManager.getInstance().deleteTorrent(
-									mDownload.getInfoHash(), true, a);
+									mDownload.getInfoHash(), true);
+							a.onBackPressed();
 				        }
 				     })
 				     // Android.R.string.no == Cancel - https://code.google.com/p/android/issues/detail?id=3713
 				    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 				        public void onClick(DialogInterface dialog, int which) { 
 							XMLRPCDownloadManager.getInstance().deleteTorrent(
-									mDownload.getInfoHash(), false, a);
+									mDownload.getInfoHash(), false);
+							a.onBackPressed();
 				        }
 				     })
 				    //.setIcon(android.R.drawable.ic_dialog_alert)
@@ -110,6 +112,7 @@ public class DownloadActivity extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// .. nothing
+							a.onBackPressed();
 						}
 					})
 				    .show();

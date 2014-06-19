@@ -11,6 +11,8 @@ import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.XMLRPCCallTask;
 import org.tribler.tsap.AbstractXMLRPCManager;
 
+import de.timroes.axmlrpc.XMLRPCException;
+
 /**
  * Class for receiving channels over XMPRPC using the aXMLRPC library
  * 
@@ -50,7 +52,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				Log.v("XMPLRCChannelManager", "Local search returned.");
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Object[] arrayResult = (Object[]) result;
 					ArrayList<Channel> resultsList = new ArrayList<Channel>();
 					Log.v("XMLRPC", "Got " + arrayResult.length + "results");
@@ -90,7 +92,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 			@Override
 			protected void onPostExecute(Object result) {
 				Log.v("XMPLRCChannelManager", "Remote search returned.");
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Boolean hasPeers = (Boolean) result;
 					if (hasPeers) {
 						Log.v("XMLRPC", "Looking for query " + query
@@ -113,7 +115,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Integer count = (Integer) result;
 					if (count > mLastFoundResultsCount) {
 						mLastFoundResultsCount = count;
@@ -139,7 +141,7 @@ class XMLRPCChannelManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					Object[] arrayResult = (Object[]) result;
 					ArrayList<Channel> resultsList = new ArrayList<Channel>();
 					Log.v("XMLRPC", "Got " + arrayResult.length + " results");

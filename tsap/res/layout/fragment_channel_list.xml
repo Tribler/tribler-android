@@ -25,7 +25,7 @@
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@id/channel_list_text_view"
         android:layout_centerHorizontal="true" >
 
     </ListView>

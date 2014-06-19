@@ -17,4 +17,7 @@ public interface ISearchListener
 	 * Callback function, called when a search returns results for the first time.
 	 */
 	void onSearchResults();
+	
+	void onServerStarted();
+	void onConnectionFailed(Exception exception);
 }

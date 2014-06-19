@@ -27,7 +27,7 @@ public class XMLRPCCallTask extends AsyncTask<Object, Void, Object> {
 	 * string containing the name of the function.
 	 */
 	@Override
-	protected Object doInBackground(Object... params) {
+	protected Object doInBackground(Object... params){
 		XMLRPCClient client = null;
 		String functionName = null;
 		if (params[0] instanceof XMLRPCClient)
@@ -41,15 +41,13 @@ public class XMLRPCCallTask extends AsyncTask<Object, Void, Object> {
 			Log.e("XMLRPCCallTask",
 					"Second argument to XMLRPCCallTask should be a String.");
 
-		Object result = null;
+		Object result;
 		try {
 			result = client.call(functionName,
 					Arrays.copyOfRange(params, 2, params.length));
 
 		} catch (XMLRPCException e) {
-			Log.e("XMLRPC", "Error while calling function: " + functionName
-					+ " with aXMLRPC:");
-			e.printStackTrace();
+			result = e;
 		}
 		return result;
 	}

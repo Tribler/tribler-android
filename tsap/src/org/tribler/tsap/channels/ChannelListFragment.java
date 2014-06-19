@@ -181,4 +181,16 @@ public class ChannelListFragment extends ListFragment implements OnQueryTextList
 		View message = mView.findViewById(R.id.channel_list_text_view);
 		message.setVisibility(View.GONE);
 	}
+
+	@Override
+	public void onServerStarted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onConnectionFailed(Exception exception) {
+		// TODO Auto-generated method stub
+		
+	}
 }

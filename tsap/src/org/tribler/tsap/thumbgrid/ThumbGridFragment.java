@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.R;
+import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.Fragment;
@@ -215,6 +216,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
 		message.setText(R.string.thumb_grid_server_started);
 		message.setVisibility(View.VISIBLE);
+		mTorrentManager.logAvailableFunctions();
+		Settings.setInitialValues();
 		
 	}
 

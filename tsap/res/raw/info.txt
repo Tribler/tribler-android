@@ -1,0 +1,7 @@
+<h3>Tribler Play</h3>
+Version 1.0<br>
+Copyright 2011<br>
+<b>https://github.com/wtud/tsap</b><br><br>
+1-800-555-1234
+
+

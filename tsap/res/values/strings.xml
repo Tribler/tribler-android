@@ -93,4 +93,6 @@
 	<string name="pref_os_licences">Open-source licences</string>
 	<string name="pref_os_licences_summary">Licence details for open source software</string>
 	
+	<string name="pref_about">About this app</string>
+	
 </resources>

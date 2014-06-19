@@ -37,7 +37,7 @@ public class Download implements Serializable {
 	 * @param progress
 	 * @param vodETA
 	 */
-	Download(String name, String infoHash, int status, double downloadSpeed,
+	public Download(String name, String infoHash, int status, double downloadSpeed,
 			double uploadSpeed, double progress, double vodETA,
 			boolean vodPlayable) {
 		this.name = name;

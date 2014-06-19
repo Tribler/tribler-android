@@ -6,13 +6,16 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.Button;
 
 @SuppressLint("ValidFragment") public class VODDialogFragment extends DialogFragment {
 
 	private Poller mPoller;
+	private Button mButton;
 
-	public VODDialogFragment(Poller mPoller) {
+	public VODDialogFragment(Poller mPoller,Button mButton) {
 		this.mPoller = mPoller;
+		this.mButton = mButton;
 	}
 	
 	public VODDialogFragment(){
@@ -28,12 +31,18 @@ import android.os.Bundle;
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								// User cancelled the dialog
-								mPoller.pause();
 							}
 						});
 		
 		// Create the AlertDialog object and return it
 		return builder.create();
+	}
+	
+	@Override
+	public void onDestroyView(){
+		super.onDestroyView();
+		mPoller.pause();
+		mButton.setEnabled(true);
 	}
 
 }

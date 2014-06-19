@@ -7,44 +7,44 @@ import android.test.AndroidTestCase;
 public class UtilityTest extends AndroidTestCase {
 	public void testBytesToStringConversion()
 	{
-		assertEquals("bytes formatted incorrectly", "0B",
+		assertEquals("bytes formatted incorrectly", "0 B",
 				Utility.convertBytesToString(0));
-		assertEquals("bytes formatted incorrectly", "44B",
+		assertEquals("bytes formatted incorrectly", "44 B",
 				Utility.convertBytesToString(44));
-		assertEquals("bytes formatted incorrectly", "-347B",
+		assertEquals("bytes formatted incorrectly", "-347 B",
 				Utility.convertBytesToString(-347.1829));
-		assertEquals("bytes formatted incorrectly", "77.7kB",
+		assertEquals("bytes formatted incorrectly", "77.7 kB",
 				Utility.convertBytesToString(77708.99));
-		assertEquals("bytes formatted incorrectly", "-439.8MB",
+		assertEquals("bytes formatted incorrectly", "-439.8 MB",
 				Utility.convertBytesToString(-439875670.0));
-		assertEquals("bytes formatted incorrectly", "43.9GB",
+		assertEquals("bytes formatted incorrectly", "43.9 GB",
 				Utility.convertBytesToString(43987567444.0));
-		assertEquals("bytes formatted incorrectly", "-43.9TB",
+		assertEquals("bytes formatted incorrectly", "-43.9 TB",
 				Utility.convertBytesToString(-43987567444888.0));
-		assertEquals("bytes formatted incorrectly", "43.9PB",
+		assertEquals("bytes formatted incorrectly", "43.9 PB",
 				Utility.convertBytesToString(43987567444888777.0));
-		assertEquals("bytes formatted incorrectly", "-439875.6PB",
+		assertEquals("bytes formatted incorrectly", "-439875.6 PB",
 				Utility.convertBytesToString(-439875674448887771234.0));
 	}
 	public void testBytesPerSecondToStringConversion()
 	{
-		assertEquals("bytes formatted incorrectly", "0B/s",
+		assertEquals("bytes formatted incorrectly", "0 B/s",
 				Utility.convertBytesPerSecToString(0));
-		assertEquals("bytes formatted incorrectly", "-44B/s",
+		assertEquals("bytes formatted incorrectly", "-44 B/s",
 				Utility.convertBytesPerSecToString(-44));
-		assertEquals("bytes formatted incorrectly", "347B/s",
+		assertEquals("bytes formatted incorrectly", "347 B/s",
 				Utility.convertBytesPerSecToString(347.1829));
-		assertEquals("bytes formatted incorrectly", "-77.7kB/s",
+		assertEquals("bytes formatted incorrectly", "-77.7 kB/s",
 				Utility.convertBytesPerSecToString(-77708.99));
-		assertEquals("bytes formatted incorrectly", "439.8MB/s",
+		assertEquals("bytes formatted incorrectly", "439.8 MB/s",
 				Utility.convertBytesPerSecToString(439875670.0));
-		assertEquals("bytes formatted incorrectly", "-43.9GB/s",
+		assertEquals("bytes formatted incorrectly", "-43.9 GB/s",
 				Utility.convertBytesPerSecToString(-43987567444.0));
-		assertEquals("bytes formatted incorrectly", "43.9TB/s",
+		assertEquals("bytes formatted incorrectly", "43.9 TB/s",
 				Utility.convertBytesPerSecToString(43987567444888.0));
-		assertEquals("bytes formatted incorrectly", "-43.9PB/s",
+		assertEquals("bytes formatted incorrectly", "-43.9 PB/s",
 				Utility.convertBytesPerSecToString(-43987567444888777.0));
-		assertEquals("bytes formatted incorrectly", "439875.6PB/s",
+		assertEquals("bytes formatted incorrectly", "439875.6 PB/s",
 				Utility.convertBytesPerSecToString(439875674448887771234.0));
 	}
 	public void testDownloadStateConversion()

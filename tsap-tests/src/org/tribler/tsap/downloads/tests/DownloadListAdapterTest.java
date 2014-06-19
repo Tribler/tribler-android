@@ -96,9 +96,9 @@ public class DownloadListAdapterTest extends ActivityInstrumentationTestCase2<Ma
 		list.add(c);
 		list.add(d);
 		adapter.replaceAll(list);
-		checkView(adapter.getView(0, null, null), "a", "Status: Allocating disk space", "Down: 1.2kB/s", "Up: 5B/s", 20);
-		checkView(adapter.getView(1, null, null), "b", "Status: Waiting on the hash check", "Down: 123B/s", "Up: 54B/s", 30);
-		checkView(adapter.getView(2, null, null), "c", "Status: Downloading", "Down: 12B/s", "Up: 543B/s", 40);
-		checkView(adapter.getView(3, null, null), "d", "Status: Seeding", "Down: 1B/s", "Up: 5.4kB/s", 50);
+		checkView(adapter.getView(0, null, null), "a", "Status: Allocating disk space", "Down: 1.2 kB/s", "Up: 5 B/s", 20);
+		checkView(adapter.getView(1, null, null), "b", "Status: Waiting on the hash check", "Down: 123 B/s", "Up: 54 B/s", 30);
+		checkView(adapter.getView(2, null, null), "c", "Status: Downloading", "Down: 12 B/s", "Up: 543 B/s", 40);
+		checkView(adapter.getView(3, null, null), "d", "Status: Seeding", "Down: 1 B/s", "Up: 5.4 kB/s", 50);
 	}
 }

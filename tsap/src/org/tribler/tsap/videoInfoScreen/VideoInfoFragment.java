@@ -2,14 +2,12 @@ package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
-import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -7,16 +7,13 @@ import java.util.Observable;
 
 import org.tribler.tsap.AbstractXMLRPCManager;
 import org.tribler.tsap.XMLRPCCallTask;
-import org.tribler.tsap.downloads.DownloadListAdapter;
-import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
+import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
 
 /**
  * Singleton class for adding and accessing downloads.
@@ -215,11 +212,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 				if (result != null) {
 					if (!(result instanceof Boolean)) {
 						Map<String, Object> map = (Map<String, Object>) result;
-						if (map == null)
-							Log.e("DownloadManager", "Map is null");
-						else {
-							currProgressDownload = convertMapToDownload(map);
-						}
+						currProgressDownload = convertMapToDownload(map);
 					}
 				}
 				Log.v("DownloadManager", "fetch returned");

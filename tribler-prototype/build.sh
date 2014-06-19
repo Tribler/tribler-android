@@ -123,15 +123,4 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 
 </resources>" > "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml"
 
-#mv "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
-#perl -pe "s/<string name=\"private_version\">\d*.\d*<\/string>/<string name=\"private_version\">$private_version<\/string>/" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml"
-#rm "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
-
-#mv "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
-#perl -pe "s/<string name=\"public_version\">\d*.\d*<\/string>/<string name=\"public_version\">$public_version<\/string>/" "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak" > "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml"
-#rm "${CURRENTFOLDERPATH}/../tsap/res/values/asset_versions.xml.bak"
-
-# Copy the .apk files to our own app folder
-#find "${PY4APATH}/dist/${DIRNAME}/bin" -type f -name '*.apk' -exec cp {} "${CURRENTFOLDERPATH}/app" \;
-
 echo -e "${green}All done!${NC} Everything seems to be in order (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ "

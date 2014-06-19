@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 
 /**
  * The activity that is started when the application is launched
@@ -38,6 +37,7 @@ public class MainActivity extends Activity implements
 	private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
 	private ChannelListFragment mChannelFragment = new ChannelListFragment();
 	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
+	private SettingsFragment mSettingsFragment = new SettingsFragment();
 
 	/**
 	 * Used to store the last screen title. For use in
@@ -121,6 +121,11 @@ public class MainActivity extends Activity implements
 					.replace(R.id.container, mDownloadFragment).commit();
 			mTitle = getString(R.string.title_section_downloads);
 			break;
+		case 2:
+			fragmentManager.beginTransaction()
+					.replace(R.id.container, mSettingsFragment).commit();
+			mTitle = getString(R.string.title_section_settings);
+			break;
 		}
 	}
 
@@ -147,36 +152,13 @@ public class MainActivity extends Activity implements
 			// Only show items in the action bar relevant to this screen
 			// if the drawer is not showing. Otherwise, let the drawer
 			// decide what to show in the action bar.
-			getMenuInflater().inflate(R.menu.main_activity, menu);
 			restoreActionBar();
 			return true;
 		}
 
 		return super.onCreateOptionsMenu(menu);
 	}
-
-	/**
-	 * Defines the behaviour of selecting a menu item
-	 * 
-	 * @param item
-	 *            The menu item that the user has clicked
-	 * @return True iff the action belonging to the menu item has been handled
-	 *         correcly
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new SettingsFragment()).addToBackStack(null).commit();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
+	
 	/**
 	 * Returns the instance of the ChannelListFragment
 	 * 

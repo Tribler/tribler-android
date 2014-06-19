@@ -71,19 +71,6 @@ public class DownloadListFragment extends ListFragment {
 		i.putExtra(DownloadActivity.INTENT_MESSAGE, (Serializable) ((DownloadListAdapter) getListAdapter()).getItem(position));
 		startActivity(i);
 	}
-	/**
-	 * Adds channel fragment specific options to the options menu. In this case,
-	 * the search action is added and enabled.
-	 * 
-	 * @param menu
-	 *            The menu that will be created
-	 * @param inflater
-	 *            The inflater belonging to the menu
-	 */
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.download_fragment, menu);
-	}
 
 	/**
 	 * Defines the behaviour of selecting a menu item

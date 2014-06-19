@@ -87,8 +87,19 @@ class SettingsManager():
         :param xmlrpc: The XML-RPC Manager it should register to.
         :return: Nothing.
         """
+        xmlrpc.register_function(self.get_thumbs_directory, "settings.get_thumbs_directory")
         xmlrpc.register_function(self.get_family_filter, "settings.get_family_filter")
         xmlrpc.register_function(self.set_family_filter, "settings.set_family_filter")
+
+    def get_thumbs_directory(self):
+        """
+        Returns the collected_torrent_files directory that contains the folders containing collected thumbnail data.
+        These folders have the format of .../collected_torrent_files/thumbs-[INFOHASH]/[CONTENTHASH]/, where [INFOHASH]
+        is the infohash of the torrent file, and [CONTENTHASH] a hash belonging to the thumbnail torrent. Each of these
+        folders has one of multiple image files that can be used as thumbnails.
+        :return: Path to collected_torrent_files directory.
+        """
+        return self._session.get_torrent_collecting_dir()
 
     def get_family_filter(self):
         """

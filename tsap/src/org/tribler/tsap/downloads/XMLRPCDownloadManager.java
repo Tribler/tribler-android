@@ -151,16 +151,14 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 			@Override
 			protected void onPostExecute(Object result) {
 
-				if(result instanceof XMLRPCException)	
-				{
-					Log.e("XMLRPCDownloadManager", "Error in retrieving result from XMLRPC after adding download");
-				}
-				else
-				{
-					boolean succes = (Boolean)result;
-					if(succes)
-					{
-						Toast.makeText(mContext, "Download started!", Toast.LENGTH_SHORT).show();
+				if (result instanceof XMLRPCException) {
+					Log.e("XMLRPCDownloadManager",
+							"Error in retrieving result from XMLRPC after adding download");
+				} else {
+					boolean succes = (Boolean) result;
+					if (succes) {
+						Toast.makeText(mContext, "Download started!",
+								Toast.LENGTH_SHORT).show();
 						Log.i("XMLRPCDownloadManager", "Download started!");
 					} else {
 						Toast.makeText(mContext,
@@ -187,7 +185,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {
-				if (result != null) {
+				if (!(result instanceof XMLRPCException)) {
 					if (result instanceof Boolean) {
 						Log.e("XMLRPCDownloadManager",
 								"Starting in VOD mode failed. result:"
@@ -229,19 +227,18 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 		};
 		task.execute(mClient, "downloads.get_progress_info", infoHash);
 	}
-	
-	public Download getCurrentDownload()
-	{
+
+	public Download getCurrentDownload() {
 		return currProgressDownload;
 	}
-	
-	public Uri getVideoUri()
-	{
+
+	public Uri getVideoUri() {
 		return videoLink;
 	}
-	public void deleteTorrent(String infoHash, boolean deleteFiles)
-	{
-		Log.i("XMLRPCDownloadManager", "Removing torrent with infohash: " + infoHash);
+
+	public void deleteTorrent(String infoHash, boolean deleteFiles) {
+		Log.i("XMLRPCDownloadManager", "Removing torrent with infohash: "
+				+ infoHash);
 		XMLRPCCallTask task = new XMLRPCCallTask() {
 			@Override
 			protected void onPostExecute(Object result) {

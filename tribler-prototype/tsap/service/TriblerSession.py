@@ -128,11 +128,11 @@ class TriblerSession():
         self._sconfig.set_torrent_checking(False)
         self._sconfig.set_multicast_local_peer_discovery(False)
         #self._sconfig.set_megacache(False)
-        self._sconfig.set_swift_proc(False)
+        #self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
-        self._sconfig.set_torrent_collecting(False)
+        #self._sconfig.set_torrent_collecting(False)
         #self._sconfig.set_libtorrent(False)
-        self._sconfig.set_dht_torrent_collecting(False)
+        #self._sconfig.set_dht_torrent_collecting(False)
         #self._sconfig.set_videoplayer(False)
 
         self._sconfig.set_dispersy_tunnel_over_swift(False)
@@ -143,7 +143,7 @@ class TriblerSession():
         self._session = Session(self._sconfig)
         self._session.start()
 
-        #self._swift = self._session.get_swift_proc() and self._session.get_swift_process()
+        self._swift = self._session.get_swift_proc() and self._session.get_swift_process()
         self._dispersy = self._session.get_dispersy_instance()
 
         _logger.info("libTribler session started!")
@@ -175,8 +175,9 @@ class TriblerSession():
         #_logger.debug("Currently loaded dispersy communities: %s" % comm)
 
         # load metadata community
-        # comm = dispersy.define_auto_load(MetadataCommunity, self.session.dispersy_member, load=True, kargs=comm_args)
-        #_logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
+        comm = self._dispersy.define_auto_load(MetadataCommunity, self._session.dispersy_member, load=True,
+                                               kargs=comm_args)
+        _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
         # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing
         # 6.1 clients.  We will disable the BarterCommunity for version 6.2, giving people some time to upgrade

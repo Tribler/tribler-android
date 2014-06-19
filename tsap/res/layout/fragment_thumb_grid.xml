@@ -19,8 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/thumbgrid_progress_bar"
-        android:textSize="20sp"
-        android:text="Tribler starting..." />
+        android:textSize="20sp"/>
     
     <GridView 
 		android:id="@+id/ThumbsGrid"

@@ -348,6 +348,19 @@ public class NavigationDrawerFragment extends Fragment {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setTitle(R.string.app_name);
 	}
+	
+	/**
+	 * If the drawer is open, show the global app actions in the action bar. See
+	 * also {@link #showGlobalContextActionBar()}, which controls the top-left
+	 * area of the action bar.
+	 */
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (mDrawerLayout != null && isDrawerOpen()) {
+			showGlobalContextActionBar();
+		}
+		super.onCreateOptionsMenu(menu, inflater);
+	}
 
 	/**
 	 * Returns the activity's action bar

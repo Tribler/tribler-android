@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 
 /**
  * The activity that is started when the application is launched

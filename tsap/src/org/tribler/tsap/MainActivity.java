@@ -3,21 +3,18 @@ package org.tribler.tsap;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
-import org.tribler.tsap.settings.Settings;
-import org.tribler.tsap.settings.SettingsFragment;
-import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.tribler.tsap.downloads.DownloadListFragment;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
+import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.settings.SettingsFragment;
+import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.videolan.vlc.VLCApplication;
 
-import org.tribler.tsap.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -92,12 +89,6 @@ public class MainActivity extends Activity implements
 		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()
 				|| mDownloadFragment.isVisible() || mSettingsFragment.isVisible()) {
 			new OnQuitDialog(this).show();
-//			Intent startMain = new Intent(Intent.ACTION_MAIN);
-//			startMain.addCategory(Intent.CATEGORY_HOME);
-//			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			startActivity(startMain);
-//			PythonService.stop();
-//			finish();
 		} else
 			super.onBackPressed();
 	}

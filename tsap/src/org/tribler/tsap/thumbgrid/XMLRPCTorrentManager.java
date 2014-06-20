@@ -10,6 +10,7 @@ import android.util.Log;
 import org.tribler.tsap.AbstractXMLRPCManager;
 import org.tribler.tsap.ISearchListener;
 import org.tribler.tsap.R;
+import org.tribler.tsap.Utility;
 import org.tribler.tsap.XMLRPCCallTask;
 
 import de.timroes.axmlrpc.XMLRPCException;
@@ -123,13 +124,20 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	
 	private ThumbItem convertMapToThumbItem(Map<String, Object> map)
 	{
-		return new ThumbItem((String) map.get("name"),
+		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
+		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
+		String size = Utility.getFromMap(map, "length", "-1");
+		
+		return new ThumbItem(Utility.getFromMap(map, "infohash", "unknown"),
+				Utility.getFromMap(map, "name", "unknown"),
 				R.drawable.default_thumb,
-				TORRENT_HEALTH.YELLOW,
-				1000,
-				(String)map.get("infohash"));
+				Utility.calculateTorrentHealth(seeders, leechers),
+				Long.parseLong(size.trim()),
+				Utility.getFromMap(map, "category", "Unknown"),
+				seeders,
+				leechers);
 	}
-
+	
 	/**
 	 * It will send an ArrayList to all observers containing the found torrents.
 	 */

@@ -4,6 +4,7 @@ import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.Utility;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -63,7 +64,7 @@ public class VideoInfoFragment extends Fragment {
 		title.setText(thumbData.getTitle());
 
 		TextView type = (TextView) view.findViewById(R.id.video_details_type);
-		type.setText("Video");
+		type.setText(thumbData.getCategory());
 
 		TextView date = (TextView) view
 				.findViewById(R.id.video_details_upload_date);
@@ -71,19 +72,19 @@ public class VideoInfoFragment extends Fragment {
 
 		TextView size = (TextView) view
 				.findViewById(R.id.video_details_filesize);
-		size.setText(String.valueOf(thumbData.getSize()));
+		size.setText(Utility.convertBytesToString(thumbData.getSize()));
 
 		TextView seeders = (TextView) view
 				.findViewById(R.id.video_details_seeders);
-		seeders.setText(String.valueOf(1));
+		seeders.setText(thumbData.getSeeders() == -1 ? "unknown" : "" + thumbData.getSeeders());
 
 		TextView leechers = (TextView) view
 				.findViewById(R.id.video_details_leechers);
-		leechers.setText(String.valueOf(2));
+		leechers.setText(thumbData.getLeechers() == -1 ? "unknown" : "" + thumbData.getLeechers());
 
 		TextView descr = (TextView) view
 				.findViewById(R.id.video_info_description);
-		descr.setText("Blabla bla");
+		descr.setText("");
 
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);

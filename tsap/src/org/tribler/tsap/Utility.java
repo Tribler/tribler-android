@@ -1,5 +1,9 @@
 package org.tribler.tsap;
 
+import java.util.Map;
+
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
+
 /**
  * Class with static functions that are used across multiple classes, like
  * conversion functions.
@@ -83,5 +87,33 @@ public class Utility {
 			return "Invalid state";
 
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getFromMap(Map<String, Object> map, String key, T defaultValue) {
+		T returnValue = (T) map.get(key);
+		if(returnValue == null)
+		{
+			return defaultValue;
+		}
+		else
+		{
+			return returnValue;
+		}
+	}
+	
+	public static TORRENT_HEALTH calculateTorrentHealth(int seeders, int leechers)
+	{
+		if (seeders == -1 || leechers == -1)
+		{
+			return TORRENT_HEALTH.UNKNOWN;
+		}
+		
+		if (seeders == 0)
+		{
+			return TORRENT_HEALTH.RED;
+		}
+		
+		return ((leechers / seeders) > 0.5) ? TORRENT_HEALTH.YELLOW : TORRENT_HEALTH.GREEN;
 	}
 }

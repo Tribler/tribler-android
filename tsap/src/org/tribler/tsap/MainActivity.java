@@ -91,12 +91,13 @@ public class MainActivity extends Activity implements
 	public void onBackPressed() {
 		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()
 				|| mDownloadFragment.isVisible() || mSettingsFragment.isVisible()) {
-			Intent startMain = new Intent(Intent.ACTION_MAIN);
-			startMain.addCategory(Intent.CATEGORY_HOME);
-			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(startMain);
-			PythonService.stop();
-			finish();
+			new OnQuitDialog(this).show();
+//			Intent startMain = new Intent(Intent.ACTION_MAIN);
+//			startMain.addCategory(Intent.CATEGORY_HOME);
+//			startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			startActivity(startMain);
+//			PythonService.stop();
+//			finish();
 		} else
 			super.onBackPressed();
 	}

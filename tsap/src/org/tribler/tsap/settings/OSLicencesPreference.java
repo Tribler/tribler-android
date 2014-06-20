@@ -1,6 +1,5 @@
 package org.tribler.tsap.settings;
 
-import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.R;
 
 import android.content.Context;

@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 
 import org.tribler.tsap.R;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;

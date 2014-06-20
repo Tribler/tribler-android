@@ -16,10 +16,10 @@ import android.widget.TextView;
 
 public class ThumbAdapterTest extends ActivityInstrumentationTestCase2<MainActivity> {
 	ThumbAdapter adapter;
-	ThumbItem a = new ThumbItem("a", R.drawable.dracula, TORRENT_HEALTH.GREEN, 1, "infohash1");
-	ThumbItem b = new ThumbItem("b", R.drawable.dracula, TORRENT_HEALTH.YELLOW, 12, "infohash2");
-	ThumbItem c = new ThumbItem("c", R.drawable.dracula, TORRENT_HEALTH.RED, 123, "infohash3");
-	ThumbItem d = new ThumbItem("d", R.drawable.dracula, TORRENT_HEALTH.UNKNOWN, 1234, "infohash4");
+	ThumbItem a = new ThumbItem("infohash1", "a", TORRENT_HEALTH.GREEN, 1, "other", 1, 1);
+	ThumbItem b = new ThumbItem("infohash2", "b", TORRENT_HEALTH.YELLOW, 12, "other", 1, 1);
+	ThumbItem c = new ThumbItem("infohash3" ,"c", TORRENT_HEALTH.RED, 123, "other", 1, 1);
+	ThumbItem d = new ThumbItem("infohash4", "d", TORRENT_HEALTH.UNKNOWN, 1234, "other", 1, 1);
 	
 	public ThumbAdapterTest()
 	{

@@ -144,7 +144,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		File baseDirectory = Settings.getThumbFolder();
 		if(baseDirectory == null || !baseDirectory.isDirectory())
 		{
-			Log.e("ThumbAdapter", "The base thumbnailfolder " + baseDirectory.getAbsolutePath() + " could not be found");
+			Log.e("ThumbAdapter", "The collected_torrent_files thumbnailfolder could not be found");
 			return null;
 		}
 		

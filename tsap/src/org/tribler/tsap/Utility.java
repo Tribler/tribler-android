@@ -19,7 +19,7 @@ public class Utility {
 	 * @return A string in the format NNN.NXB
 	 */
 	public static String convertBytesToString(double size) {
-		String prefixes[] = { "B", "kB", "MB", "GB", "TB", "PB" };
+		String prefixes[] = { " B", " kB", " MB", " GB", " TB", " PB" };
 		int prefix = 0;
 		String minus;
 		if(size < 0)

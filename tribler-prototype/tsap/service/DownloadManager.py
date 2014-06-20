@@ -179,7 +179,7 @@ class DownloadManager():
         try:
             _logger.info("Got download status callback (%s: %s; %s)" % (type(ds).__name__, ds.get_status(), ds.get_progress()))
 
-            dldict = self._getDownloadState(ds, progress=True)
+            dldict = self._getDownloadState(ds, progress=True, vod=True)
             if dldict:
                 if dldict['infohash'] in self._downloads.keys():
                     self._downloads[dldict['infohash']].update(dldict)
@@ -275,11 +275,17 @@ class DownloadManager():
         """
         try:
             download = self._session.get_download(binascii.unhexlify(infohash))
+
+            files = download.get_def().get_files()
+            findex = 0  # TODO: ACTUALLY DETERMINE THE BEST FILE INDEX
+            download.set_selected_files(files[findex])
+
             download.set_vod_mode(True)
-        except:
+        except Exception, e:
+            print "Start_vod error: %s" % e.args
             return False
 
-        return self.get_vod_uri(infohash)
+        return self.get_vod_uri(infohash, fileindex=findex)
 
     def stop_vod(self, infohash):
         """
@@ -295,13 +301,13 @@ class DownloadManager():
 
         return True
 
-    def get_vod_uri(self, infohash):
+    def get_vod_uri(self, infohash, fileindex=0):
         """
         Returns the VOD uri for this torrent.
         :param infohash: Infohash of the torrent.
         :return: Uri that can be used to stream the torrent.
         """
-        return "http://127.0.0.1:%s/%s/0" % (self._session.get_videoplayer_port(), infohash)
+        return "http://127.0.0.1:%s/%s/%s" % (self._session.get_videoplayer_port(), infohash, fileindex)
 
     def set_state(self, infohash):
         pass
@@ -427,11 +433,19 @@ class DownloadManager():
                                'length': dstate.get_length(),
                                'speed_up': dstate.get_current_speed(UPLOAD),
                                'speed_down': dstate.get_current_speed(DOWNLOAD),
+                               'availability': dstate.get_availability(),
                                'eta': dstate.get_eta(),
                                'status': dstate.get_status(),
                                'status_string': dlstatus_strings[dstate.get_status()],
                                })
-
+            if vod:
+                dlinfo.update({'vod_eta': dstate.get_vod_playable_after(),
+                               'vod_prebuffer_progress': dstate.get_vod_prebuffering_progress(),
+                               'vod_consec_prebuffer_progress': dstate.get_vod_prebuffering_progress_consec(),
+                               'vod': dstate.is_vod(),
+                               'vod_playable': dstate.get_vod_playable(),
+                               })
+                
             return dlinfo
         except Exception, e:
             print "Error getting downloadstate: %s" % e.args

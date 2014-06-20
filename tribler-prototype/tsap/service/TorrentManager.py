@@ -92,8 +92,11 @@ class TorrentManager():
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
 
             self._category = Category.getInstance()
+            self._category_names = {}
             self._xxx_category = -1
             for key, id in self._misc_db._category_name2id_dict.iteritems():
+                self._category_names[id] = key
+
                 if key.lower() == "xxx":
                     self._xxx_category = id
 
@@ -417,6 +420,7 @@ class TorrentManager():
                 'name': tr.name,
                 #'length': tr.length,
                 'category_id': tr.category_id,
+                'category': self._category_names[tr.category_id],
                 'status_id': tr.status_id,
                 'num_seeders': tr.num_seeders,
                 'num_leechers': tr.num_leechers,

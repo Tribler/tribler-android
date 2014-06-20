@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.renpy.android.PythonService;
 import org.tribler.tsap.channels.ChannelListFragment;
+import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.settings.SettingsFragment;
 import org.tribler.tsap.thumbgrid.ThumbGridFragment;
 import org.tribler.tsap.downloads.DownloadListAdapter;
@@ -12,6 +13,7 @@ import org.tribler.tsap.downloads.DownloadListFragment;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.videolan.vlc.VLCApplication;
 
+import org.tribler.tsap.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -72,6 +74,7 @@ public class MainActivity extends Activity implements
 			DownloadListAdapter adapter = new DownloadListAdapter(this,
 					R.layout.download_list_item);
 			XMLRPCDownloadManager.setUp(adapter, url, this);
+			Settings.setXMLRPCServerLocation(url);
 		} catch (MalformedURLException e) {
 			Log.e("DownloadListFragment", "URL was malformed:\n");
 			e.printStackTrace();

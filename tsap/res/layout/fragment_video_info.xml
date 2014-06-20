@@ -41,14 +41,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/video_details_upload_date_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/video_details_upload_date"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/video_details_filesize_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,13 +79,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/video_details_type_example"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/video_details_upload_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/video_details_upload_date_example"
                 android:textSize="18sp" />
 
             <TextView

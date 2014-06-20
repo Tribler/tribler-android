@@ -68,10 +68,6 @@ public class VideoInfoFragment extends Fragment {
 		TextView type = (TextView) view.findViewById(R.id.video_details_type);
 		type.setText(thumbData.getCategory());
 
-		TextView date = (TextView) view
-				.findViewById(R.id.video_details_upload_date);
-		date.setText("5-11-1998");
-
 		TextView size = (TextView) view
 				.findViewById(R.id.video_details_filesize);
 		size.setText(Utility.convertBytesToString(thumbData.getSize()));

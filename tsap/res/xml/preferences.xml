@@ -31,5 +31,15 @@
         android:key="pref_maxUploadRate"
         android:summary="@string/pref_maxUploadRate_summary"
         android:title="@string/pref_maxUploadRate"/>
+    
+    <org.tribler.tsap.settings.OSLicencesPreference
+        android:key="pref_osLicences"
+        android:summary="@string/pref_os_licences_summary"
+        android:title="@string/pref_os_licences" />
+    
+    <org.tribler.tsap.settings.AboutPreference
+        android:key="pref_about"
+        android:icon="@drawable/ic_action_about"
+        android:title="@string/pref_about" />
 
 </PreferenceScreen>

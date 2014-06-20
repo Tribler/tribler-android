@@ -91,4 +91,9 @@
 	<string name="pref_maxUploadRate_summary">Set the maximum upload rate for Tribler</string>
 	<string name="pref_maxUploadRate_dialog_message">Set the upload download rate in kB/s. For an unlimited rate this value should be set to 0.</string>
 
+	<string name="pref_os_licences">Open-source licences</string>
+	<string name="pref_os_licences_summary">Licence details for open source software</string>
+	
+	<string name="pref_about">About this app</string>
+	
 </resources>

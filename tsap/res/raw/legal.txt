@@ -1,0 +1,3 @@
+This program is free software: you can redistribute it and/or modify it under the terms of the
+ GNU General Public License version 3 as published by the Free Software Foundation (see http://www.gnu.org/licenses/). 
+ For the licences of the software used in this app, see the 'Open-source licences' screen. 

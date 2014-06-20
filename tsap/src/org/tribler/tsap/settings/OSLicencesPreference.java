@@ -9,7 +9,8 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
-public class OSLicencesPreference extends DialogPreference implements OnPreferenceClickListener {
+public class OSLicencesPreference extends DialogPreference implements
+		OnPreferenceClickListener {
 
 	public OSLicencesPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -18,14 +19,15 @@ public class OSLicencesPreference extends DialogPreference implements OnPreferen
 		setPositiveButtonText(android.R.string.ok);
 		setNegativeButtonText(null);
 		setDialogIcon(null);
-		
+
 		setOnPreferenceClickListener(this);
 	}
 
 	@Override
 	public boolean onPreferenceClick(Preference arg0) {
-		 WebView webView = (WebView) getDialog().findViewById(R.id.os_licences_webview); 
-		 webView.loadUrl("file:///android_asset/os_licences.html");
+		WebView webView = (WebView) getDialog().findViewById(
+				R.id.os_licences_webview);
+		webView.loadUrl("file:///android_asset/os_licences.html");
 		return false;
 	}
 }

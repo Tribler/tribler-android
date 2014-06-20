@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements
 			DownloadListAdapter adapter = new DownloadListAdapter(this,
 					R.layout.download_list_item);
 			XMLRPCDownloadManager.setUp(adapter, url, this);
-			Settings.setXMLRPCServerLocation(url);
+			Settings.setup(url, this);
 		} catch (MalformedURLException e) {
 			Log.e("DownloadListFragment", "URL was malformed:\n");
 			e.printStackTrace();

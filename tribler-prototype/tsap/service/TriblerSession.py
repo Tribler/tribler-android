@@ -39,7 +39,9 @@ class TriblerSession():
 
     _dispersy_init = False
 
-    def __init__(self):
+    _running = True
+
+    def __init__(self, xmlrpc=None):
         """
         Constructor that copies the libswift and ffmpeg binaries when on Android.
         :return:
@@ -54,6 +56,18 @@ class TriblerSession():
 
                 if not self._copy_binary(binary):
                     _logger.error("Unable to find or copy the %s binary!" % binary)
+
+        if xmlrpc:
+            self._xmlrpc_register(xmlrpc)
+
+    def _xmlrpc_register(self, xmlrpc):
+        """
+        Register the public functions in this manager with an XML-RPC Manager.
+        :param xmlrpc: The XML-RPC Manager it should register to.
+        :return: Nothing.
+        """
+        xmlrpc.register_function(self.start_session, "tribler.start_session")
+        xmlrpc.register_function(self.stop_session, "tribler.stop_session")
 
     def _copy_binary(self, binary_name):
         """
@@ -196,13 +210,15 @@ class TriblerSession():
 
         self._dispersy_init = True
 
+    def keep_running(self):
+        return self._running
+
     def stop_session(self):
         """
         Unloads the Tribler session.
         :return: Nothing.
         """
 
-        # TODO: Actually stop the session
-        # self._thread.stop()
         self._session.shutdown()
+        self._running = False
         _logger.info("Bye bye")

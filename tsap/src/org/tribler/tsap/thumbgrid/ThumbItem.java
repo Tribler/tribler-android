@@ -33,9 +33,8 @@ public class ThumbItem implements Serializable{
 	 * @param size
 	 *            The size of the torrent
 	 */
-	public ThumbItem(String infoHash, String title, int thumbnailId, TORRENT_HEALTH health,
+	public ThumbItem(String infoHash, String title, TORRENT_HEALTH health,
 			long size, String category, int seeders, int leechers) {
-		this.thumbnailId = thumbnailId;
 		this.title = title;
 		this.health = health;
 		this.size = size;

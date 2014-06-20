@@ -1,5 +1,7 @@
 package org.tribler.tsap.videoInfoScreen;
 
+import java.io.File;
+
 import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
@@ -86,9 +88,11 @@ public class VideoInfoFragment extends Fragment {
 				.findViewById(R.id.video_info_description);
 		descr.setText("");
 
+		
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
-		loadBitmap(thumbData.getThumbnailId(), thumb);
+		loadBitmap(thumbData.getThumbImageFile(), thumb);
+
 		setPlayButtonListener();
 		setDownloadButtonListener();
 	}
@@ -129,12 +133,13 @@ public class VideoInfoFragment extends Fragment {
 	 * @param mImageView
 	 *            The ImageView in which the thumbnail should be loaded
 	 */
-	private void loadBitmap(int resId, ImageView mImageView) {
+	private void loadBitmap(File file, ImageView mImageView) {
 		float dens = context.getResources().getDisplayMetrics().density;
 		int thumbWidth = (int) (100 * dens);
 		int thumbHeight = (int) (150 * dens);
-		Picasso.with(context).load(resId).placeholder(R.drawable.default_thumb)
-				.resize(thumbWidth, thumbHeight).into(mImageView);
+		Picasso.with(context).load(file).placeholder(R.drawable.default_thumb)
+			.resize(thumbWidth, thumbHeight).into(mImageView);		
+
 	}
 
 }

@@ -130,7 +130,6 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 		
 		return new ThumbItem(Utility.getFromMap(map, "infohash", "unknown"),
 				Utility.getFromMap(map, "name", "unknown"),
-				R.drawable.default_thumb,
 				Utility.calculateTorrentHealth(seeders, leechers),
 				Long.parseLong(size.trim()),
 				Utility.getFromMap(map, "category", "Unknown"),

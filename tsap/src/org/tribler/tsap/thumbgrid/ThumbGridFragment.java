@@ -217,8 +217,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		message.setText(R.string.thumb_grid_server_started);
 		message.setVisibility(View.VISIBLE);
 		mTorrentManager.logAvailableFunctions();
-		Settings.setInitialValues();
-		
+		Settings.loadThumbFolder();
 	}
 
 	@Override

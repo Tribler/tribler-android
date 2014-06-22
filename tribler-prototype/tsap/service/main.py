@@ -60,6 +60,9 @@ class TSAP():
         self.tribler = TriblerSession(self.xmlrpc)
         self.tribler.start_session()
 
+        while not self.tribler._dispersy_init:
+            time.sleep(0.1)
+
         _logger.error("Loading ConfigurationManager")
         self.sm = SettingsManager(self.tribler.get_session(), self.xmlrpc)
 

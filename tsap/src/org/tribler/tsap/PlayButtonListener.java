@@ -73,6 +73,11 @@ public class PlayButtonListener implements OnClickListener, Observer {
 				.getCurrentDownload();
 		AlertDialog aDialog = (AlertDialog) dialog.getDialog();
 		if (dwnld != null) {
+			if(!dwnld.getInfoHash().equals(infoHash))
+			{
+				return;
+			}
+			
 			if (dwnld.isVODPlayable()) {
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						XMLRPCDownloadManager.getInstance().getVideoUri(),

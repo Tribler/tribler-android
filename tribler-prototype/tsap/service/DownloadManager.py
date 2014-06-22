@@ -96,10 +96,13 @@ class DownloadManager():
 
             self._dispersy = self._session.lm.dispersy
 
-            # Load previous downloads
-            self._session.load_checkpoint()
-            for dl in self._session.get_downloads():
-                dl.set_state_callback(self._update_dl_state, delay=1)
+            try:
+                # Load previous downloads
+                self._session.load_checkpoint()
+                for dl in self._session.get_downloads():
+                    dl.set_state_callback(self._update_dl_state, delay=1)
+            except:
+                pass
 
             # Schedule download checkpoints
             threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()

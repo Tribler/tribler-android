@@ -64,9 +64,9 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 						+ Utility.convertBytesPerSecToString(download
 								.getUploadSpeed()));
 		((TextView) view.findViewById(R.id.download_eta))
-		.setText("ETA: "
-				+ Utility.convertSecondsToString(download
-						.getETA()));
+		.setText((download.getStatus() == 3)
+				? "ETA: " + Utility.convertSecondsToString(download.getETA())
+				: "");
 		((ProgressBar) view.findViewById(R.id.download_progress_bar))
 				.setProgress((int) (download.getProgress() * 100));
 		return view;

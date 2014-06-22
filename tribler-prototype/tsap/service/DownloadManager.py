@@ -31,6 +31,7 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 # TODO: not hardcoded please
 DOWNLOAD_UPDATE_DELAY = 2.0
 DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
+DOWNLOAD_UPDATE_CACHE = 300.0
 
 
 class DownloadManager():
@@ -96,13 +97,8 @@ class DownloadManager():
 
             self._dispersy = self._session.lm.dispersy
 
-            try:
-                # Load previous downloads
-                self._session.load_checkpoint()
-                for dl in self._session.get_downloads():
-                    dl.set_state_callback(self._update_dl_state, delay=1)
-            except:
-                pass
+            # Schedule load checkpoints
+            threading.Timer(1.0, self._load_checkpoints, ()).start()
 
             # Schedule download checkpoints
             threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
@@ -177,6 +173,11 @@ class DownloadManager():
         return True
 
     def _update_dl_state(self, ds):
+        """
+        DownloadState callback that updates the associated download dict.
+        :param ds: DownloadState object.
+        :return: Nothing.
+        """
 
         self._dllock.acquire()
         try:
@@ -240,6 +241,69 @@ class DownloadManager():
         """
         with self._dllock:
             return self._downloads.values()
+
+    def _download_update_cache(self):
+        """
+        Periodically called function that checks if there are any downloads that are not yet tracked by the
+        DownloadManager.
+        :return: Nothing.
+        """
+        _logger.info("Downloads cache check hit..")
+
+        with self._dllock:
+            for dl in self._session.get_downloads():
+                try:
+                    infohash = binascii.hexlify(dl.get_def().get_infohash())
+                    if not infohash in self._downloads.keys():
+                        _logger.info("Added %s to download cache" % infohash)
+                        dl.set_state_callback(self._update_dl_state, delay=1)
+                    else:
+                        _logger.info("Already in download cache: " % infohash)
+                except Exception, e:
+                    _logger.info("Error checking download: " % e.args)
+                    pass
+
+        threading.Timer(DOWNLOAD_UPDATE_CACHE, self._download_update_cache, ()).start()
+
+    def _load_checkpoints(self):
+        """
+        Load the checkpoint for any downloads that can be resumed.
+        :return: Nothing.
+        """
+        _logger.info("Loading download checkpoints..")
+
+        # Niels: first remove all "swift" torrent collect checkpoints
+        dir = self._session.get_downloads_pstate_dir()
+        coldir = os.path.basename(os.path.abspath(self._session.get_torrent_collecting_dir()))
+
+        filelist = os.listdir(dir)
+        filelist = [os.path.join(dir, filename) for filename in filelist if filename.endswith('.state')]
+
+        for file in filelist:
+            try:
+                pstate = self._session.lm.load_download_pstate(file)
+
+                saveas = pstate.get('downloadconfig', 'saveas')
+                if saveas:
+                    destdir = os.path.basename(saveas)
+                    if destdir == coldir or destdir == os.path.join(self._session.get_state_dir(), "anon_test"):
+                        _logger.info("Removing swift checkpoint %s" % file)
+                        os.remove(file)
+            except:
+                pass
+
+        #from Tribler.Main.vwxGUI.UserDownloadChoice import UserDownloadChoice
+        #user_download_choice = UserDownloadChoice.get_singleton()
+        #initialdlstatus_dict = {}
+        #for id, state in user_download_choice.get_download_states().iteritems():
+        #    if state == 'stop':
+        #        initialdlstatus_dict[id] = DLSTATUS_STOPPED
+        try:
+            self._session.load_checkpoint()
+        except:
+            pass
+
+        threading.Timer(1.0, self._download_update_cache, ()).start()
 
     def get_full(self, infohash):
         """

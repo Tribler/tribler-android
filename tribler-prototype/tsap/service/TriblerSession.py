@@ -224,6 +224,9 @@ class TriblerSession():
         _logger.info("Shutting down Tribler..")
         self._session.shutdown()
 
+        # Just a tad of extra time
+        time.sleep(1)
+
         self._running = False
         _logger.info("Bye bye")
 

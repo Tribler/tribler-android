@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.renpy.android.PythonService;
 
@@ -51,10 +53,12 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 	public void onClick(DialogInterface arg0, int buttonClicked) {
 		if (buttonClicked == BUTTON_POSITIVE) {
 			// show new non-cancelable dialog
-			new AlertDialog.Builder(mContext)
+			AlertDialog shutdownProgress = new AlertDialog.Builder(mContext)
 					.setMessage("Shutting down Tribler...")
-					.setCancelable(false).setTitle("Quit").show();
-
+					.setCancelable(false)
+					.setTitle("Quit")
+					.show();
+			
 			// perform XML-RPC call to shutdown tribler (should wait 5 seconds
 			// before notifying this dialog)
 			try {
@@ -64,6 +68,16 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 				Log.e("OnQuitDialog", "URL was malformed:\n");
 				e.printStackTrace();
 			}
+			
+			Timer timeoutTimer = new Timer();
+			timeoutTimer.schedule(new TimerTask() {
+				@Override
+				public void run()
+				{
+					Log.w("XMLRPCShutdownManager", "Tribler took too long to close, shutting down anyway..");
+					shutdownService();
+				}
+			}, 10 * 1000);
 		}
 	}
 
@@ -73,12 +87,17 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 	 */
 	@Override
 	public void update(Observable observable, Object data) {
+		shutdownService();
+	}
+	
+	private void shutdownService()
+	{
 		Intent startMain = new Intent(Intent.ACTION_MAIN);
 		startMain.addCategory(Intent.CATEGORY_HOME);
 		startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(startMain);
 		PythonService.stop();
-		((MainActivity) mContext).finish();
+		((MainActivity) mContext).finish();	
 	}
 
 }

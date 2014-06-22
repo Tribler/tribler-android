@@ -46,16 +46,18 @@ public class XMLRPCShutdownManager extends Observable {
 					Log.e("XMLRPCShutdownManager", "Could not shutdown Tribler");
 				} else {
 					try {
-						Thread.sleep(5000);
+						// Call is blocking, but give Tribler a second extra
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					Log.i("XMLRPCShutdownManager", "Tribler was gracefully shutdown..");
 					setChanged();
 					notifyObservers();
 				}
 			}
 		};
-		task.execute(mClient, "tribler.shutdown");
+		task.execute(mClient, "tribler.stop_session");		
 	}
 
 }

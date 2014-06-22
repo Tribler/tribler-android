@@ -18,6 +18,7 @@ public class Download implements Serializable {
 	private double downloadSpeed;
 	private double progress;
 	private double vodETA;
+	private double ETA;
 	private boolean vodPlayable;
 
 	/**
@@ -38,7 +39,7 @@ public class Download implements Serializable {
 	 * @param vodETA
 	 */
 	public Download(String name, String infoHash, int status, double downloadSpeed,
-			double uploadSpeed, double progress, double vodETA,
+			double uploadSpeed, double progress, double ETA, double vodETA,
 			boolean vodPlayable) {
 		this.name = name;
 		this.infoHash = infoHash;
@@ -46,6 +47,7 @@ public class Download implements Serializable {
 		this.downloadSpeed = downloadSpeed;
 		this.uploadSpeed = uploadSpeed;
 		this.progress = progress;
+		this.ETA = ETA;
 		this.vodETA = vodETA;
 		this.vodPlayable = vodPlayable;
 	}
@@ -74,6 +76,11 @@ public class Download implements Serializable {
 		return progress;
 	}
 
+	public double getETA()
+	{
+		return ETA;
+	}
+	
 	public double getVOD_ETA() {
 		return vodETA;
 	}

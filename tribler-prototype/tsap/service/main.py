@@ -3,6 +3,8 @@
 # Written by Wendo Sabée
 # The main class that loads the Tribler session, all managers and sets up a XML-RPC server
 
+USE_TWISTED_XMLRPC = False
+
 import threading
 import time
 import sys
@@ -25,7 +27,10 @@ from SettingsManager import SettingsManager
 from ChannelManager import ChannelManager
 from TorrentManager import TorrentManager
 from DownloadManager import DownloadManager
-from XMLRpc_twisted import XMLRPCServer
+if USE_TWISTED_XMLRPC:
+    from XMLRpc_twisted import XMLRPCServer
+else:
+    from XMLRpc import XMLRPCServer
 
 
 class TSAP():

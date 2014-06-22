@@ -27,6 +27,8 @@ import android.util.Log;
 public class OnQuitDialog extends AlertDialog implements OnClickListener,
 		Observer {
 
+	private final int MAX_SHUTDOWN_TIMEOUT = 7; // in seconds
+	
 	private Context mContext;
 
 	/**
@@ -59,8 +61,8 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 					.setTitle("Quit")
 					.show();
 			
-			// perform XML-RPC call to shutdown tribler (should wait 5 seconds
-			// before notifying this dialog)
+			// perform XML-RPC call to shutdown tribler, which notifies this
+			// dialog as soon as shutdown is done
 			try {
 				URL url = new URL("http://127.0.0.1:8000/tribler");
 				new XMLRPCShutdownManager(url, this).shutdown();
@@ -69,6 +71,8 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 				e.printStackTrace();
 			}
 			
+			// To prevent the app from hanging, force a shutdown after
+			// MAX_SHUTDOWN_TIMEOUT seconds
 			Timer timeoutTimer = new Timer();
 			timeoutTimer.schedule(new TimerTask() {
 				@Override
@@ -77,7 +81,7 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 					Log.w("XMLRPCShutdownManager", "Tribler took too long to close, shutting down anyway..");
 					shutdownService();
 				}
-			}, 10 * 1000);
+			}, MAX_SHUTDOWN_TIMEOUT * 1000);
 		}
 	}
 

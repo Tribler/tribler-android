@@ -218,7 +218,13 @@ class TriblerSession():
         Unloads the Tribler session.
         :return: Nothing.
         """
+        _logger.info("Create checkpoint..")
+        self._session.checkpoint()
 
+        _logger.info("Shutting down Tribler..")
         self._session.shutdown()
+
         self._running = False
         _logger.info("Bye bye")
+
+        return True

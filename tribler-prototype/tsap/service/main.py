@@ -48,12 +48,12 @@ class TSAP():
         :return: Nothing.
         """
 
-        _logger.error("Loading TriblerSessionService")
-        self.tribler = TriblerSession()
-        self.tribler.start_session()
-
         _logger.error("Loading XMLRPCServer")
         self.xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8000)
+
+        _logger.error("Loading TriblerSessionService")
+        self.tribler = TriblerSession(self.xmlrpc)
+        self.tribler.start_session()
 
         _logger.error("Loading ConfigurationManager")
         self.sm = SettingsManager(self.tribler.get_session(), self.xmlrpc)
@@ -71,13 +71,15 @@ class TSAP():
         _logger.error("Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port))
         self.xmlrpc.start_server()
 
+    def keep_running(self):
+        return self.tribler.keep_running()
 
 if __name__ == '__main__':
     tsap = TSAP()
     tsap.run()
 
     # Needed when using the twisted XMLRPC server
-    while True:
+    while tsap.keep_running():
         time.sleep(1)
 
     #tsap.dm.add_torrent("e9776f4626e03405b005ad30b4b4a2906125bd62", "Sintel")

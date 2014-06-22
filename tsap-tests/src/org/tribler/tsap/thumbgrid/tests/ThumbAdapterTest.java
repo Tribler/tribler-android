@@ -40,7 +40,8 @@ public class ThumbAdapterTest extends ActivityInstrumentationTestCase2<MainActiv
 	private void checkView(View view, CharSequence title, CharSequence size, int healthProgress)
 	{
 		CharSequence foundTitle = ((TextView)view.findViewById(R.id.ThumbTitle)).getText();
-		assertEquals("incorrect title in view", title, foundTitle);
+		// The \n is added to compensate the size of single line ThumbGrid items
+		assertEquals("incorrect title in view", title + "\n", foundTitle);
 		CharSequence foundSize = ((TextView) view.findViewById(R.id.ThumbSize)).getText();
 		assertEquals("incorrect size in view", size, foundSize);
 		int foundHealthProgress = ((ProgressBar) view.findViewById(R.id.ThumbHealth)).getProgress();

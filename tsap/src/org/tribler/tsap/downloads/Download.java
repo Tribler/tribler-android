@@ -28,15 +28,16 @@ public class Download implements Serializable {
 	}
 
 	/**
-	 * Constructor to fill in all the fields
-	 * 
-	 * @param name
-	 * @param infoHash
-	 * @param status
-	 * @param downloadSpeed
-	 * @param uploadSpeed
-	 * @param progress
-	 * @param vodETA
+	 * Download status object
+	 * @param name Download name
+	 * @param infoHash Torrent infohash
+	 * @param status Download status
+	 * @param downloadSpeed Download speed
+	 * @param uploadSpeed Upload speed
+	 * @param progress Download progress (0.0-1.0)
+	 * @param ETA ETA in seconds
+	 * @param vodETA VOD ETA in seconds
+	 * @param vodPlayable Is it okay to start streaming
 	 */
 	public Download(String name, String infoHash, int status, double downloadSpeed,
 			double uploadSpeed, double progress, double ETA, double vodETA,

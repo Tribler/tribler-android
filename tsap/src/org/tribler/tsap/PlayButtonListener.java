@@ -97,15 +97,18 @@ public class PlayButtonListener implements OnClickListener, Observer {
 
 					if (aDialog != null)
 						aDialog.setMessage("Video starts playing in about "
-								+ Math.round(vod_eta) + " seconds");
+								+ Utility.convertSecondsToString(vod_eta) + " ("
+								+ Utility.convertBytesPerSecToString(dwnld.getDownloadSpeed()) + ").");
 
 					break;
 				default:
 					if (aDialog != null)
+					{
+						int dlstatus = dwnld.getStatus();
 						aDialog.setMessage("Download status: "
-								+ Utility
-										.convertDownloadStateIntToMessage(dwnld
-												.getStatus()));
+								+ Utility.convertDownloadStateIntToMessage(dwnld.getStatus())
+								+ ((dlstatus == 2) ? " (" + Math.round(dwnld.getProgress() * 100) + "%)" : ""));
+					}
 					break;
 				}
 

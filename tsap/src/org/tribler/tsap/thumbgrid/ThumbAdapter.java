@@ -95,7 +95,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		}
 		
 		TextView title = (TextView) convertView.findViewById(R.id.ThumbTitle);
-		title.setText(item.getTitle());
+		title.setText(item.getTitle() + "\n");
 		
 		ImageView image = (ImageView) convertView.findViewById(R.id.ThumbImage);
 		if(item.getThumbImageFile() != null) {

@@ -343,16 +343,41 @@ class DownloadManager():
         try:
             download = self._session.get_download(binascii.unhexlify(infohash))
 
-            files = download.get_def().get_files()
-            findex = 0  # TODO: ACTUALLY DETERMINE THE BEST FILE INDEX
-            download.set_selected_files(files[findex])
+            from Tribler.Core.Video.utils import videoextdefaults
+
+            files = download.get_def().get_files_with_length()
+            files.sort(key=lambda fl: fl[1], reverse=True)
+
+            selected_file = None
+            findex = 0
+            for f in files:
+                try:
+                    _, ext = os.path.splitext(f[0])
+                    print ext
+                    if ext[1:] in videoextdefaults:
+                        selected_file = f[0]
+                        break
+                except:
+                    pass
+                findex += 1
+
+            _logger.info("Selecting %s for VOD" % selected_file)
+
+            if selected_file is None:
+                #selected_file = files[0][0]
+                return False
+
+            download.set_selected_files(selected_file)
 
             download.set_vod_mode(True)
         except Exception, e:
             print "Start_vod error: %s" % e.args
             return False
 
-        return self.get_vod_uri(infohash, fileindex=findex)
+        voduri = self.get_vod_uri(infohash, fileindex=findex)
+        _logger.info("Returning VOD uri: %s" % voduri)
+
+        return voduri
 
     def stop_vod(self, infohash):
         """

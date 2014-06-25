@@ -1,10 +1,8 @@
 package org.tribler.tsap.thumbgrid;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.tribler.tsap.ISearchListener;
+import org.tribler.tsap.Poller;
 import org.tribler.tsap.R;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
@@ -32,12 +30,13 @@ import android.widget.Toast;
  * 
  * @author Wendo Sabée
  */
-public class ThumbGridFragment extends Fragment implements OnQueryTextListener, ISearchListener {
+public class ThumbGridFragment extends Fragment implements OnQueryTextListener, XMLRPCConnection.IConnectionListener {
 
 	private XMLRPCTorrentManager mTorrentManager = null;
 	private ThumbAdapter mThumbAdapter;
 	private View mView;
-	private boolean mJustOpened = true; 
+	Poller mPoller;
+	XMLRPCConnection mConnection;
 
 	/**
 	 * Defines that this fragment has an own option menu
@@ -49,12 +48,10 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mConnection = XMLRPCConnection.getInstance();
 		mThumbAdapter = new ThumbAdapter(getActivity(), R.layout.thumb_grid_item);
-		try {
-			mTorrentManager = new XMLRPCTorrentManager(new URL("http://127.0.0.1:8000/tribler"), mThumbAdapter, this);
-		} catch (MalformedURLException e) {
-			Log.e("ChannelListFragment", "URL was malformed.\n" + e.getStackTrace());
-		}
+		mTorrentManager = new XMLRPCTorrentManager(mConnection, mThumbAdapter);
+		mPoller = new Poller(mTorrentManager, 500);
 	}
 
 	/**
@@ -78,15 +75,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		if(mJustOpened)
-		{
-			message.setText(R.string.thumb_grid_loading_tribler);
-			mJustOpened = false;
-		}
-		else
-		{
-			message.setText(R.string.thumb_grid_loading_results);
-		}
+		message.setText(R.string.thumb_grid_loading_tribler);
 		return mView;
 	}
 
@@ -112,23 +101,17 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		};
 	}
 
-	/**
-	 * Removes the search menu item so that the app doesn't crash when selecting the channel list fragment from the
-	 * navigation drawer. Also stops the polling loop.
-	 */
 	@Override
 	public void onPause() {
 		super.onPause();
-		mTorrentManager.stopPolling();
+		mConnection.removeListener(this);
+		mPoller.stop();
 	}
 	
-	/**
-	 * Starts the polling loop. 
-	 */
 	@Override
 	public void onResume() {
 		super.onResume();
-		mTorrentManager.startPolling();
+		mConnection.addListener(this);
 	}
 
 	/**
@@ -191,41 +174,29 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		// Don't care about this.
 		return true;
 	}
-	
-	@Override
-	public void onSearchSubmit(String keywords) {
-		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
-		progressBar.setVisibility(View.VISIBLE);
-		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText(R.string.thumb_grid_search_submitted);
-		message.setVisibility(View.VISIBLE);
-	}
 
-	@Override
-	public void onSearchResults() {
-		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
-		progressBar.setVisibility(View.GONE);
-		View message = mView.findViewById(R.id.thumbgrid_text_view);
-		message.setVisibility(View.GONE);
-	}
-
-	@Override
-	public void onServerStarted() {
-		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
-		progressBar.setVisibility(View.INVISIBLE);
-		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText(R.string.thumb_grid_server_started);
-		message.setVisibility(View.VISIBLE);
-		mTorrentManager.logAvailableFunctions();
-		Settings.loadThumbFolder();
-	}
-
-	@Override
+	/*@Override
 	public void onConnectionFailed(Exception exception) {
 		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
 		progressBar.setVisibility(View.INVISIBLE);
 		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
 		message.setText(R.string.thumb_grid_connection_failed);
 		message.setVisibility(View.VISIBLE);
+	}*/
+
+	@Override
+	public void onConnectionEstablished() {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.INVISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText(R.string.thumb_grid_server_started);
+		message.setVisibility(View.VISIBLE);
+		Settings.loadThumbFolder();
+		Log.e("", "Connection established.");
+		mPoller.start();
+	}
+	@Override
+	public void onConnectionLost() {
+		mPoller.stop();
 	}
 }

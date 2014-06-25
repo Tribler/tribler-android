@@ -1,21 +1,22 @@
 package org.tribler.tsap.settings;
 
 import java.io.File;
-import java.net.URL;
+
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.settings.XMLRPCThumbFolderManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-public class Settings {
+public class Settings{
 	public enum TorrentType {
 		VIDEO, ALL
 	};
 
 	private static File mThumbFolder = null;
-	private static XMLRPCSettingsManager mSettingsManager;
-	private static Context mContext; 
+	private static Context mContext;
+	private static XMLRPCThumbFolderManager mFolderManager;
 
 	public static File getThumbFolder() {
 		return mThumbFolder;
@@ -38,12 +39,12 @@ public class Settings {
 		return TorrentType.ALL;
 	}
 
-	public static void setup(URL url, Context context) {
-		mSettingsManager = new XMLRPCSettingsManager(url);
+	public static void setup(Context context, XMLRPCConnection connection) {
+		mFolderManager = new XMLRPCThumbFolderManager(connection);
 		mContext = context;
 	}
 	
 	public static void loadThumbFolder() {
-		mSettingsManager.getThumbFolder();
+		mFolderManager.getThumbFolder();
 	}
 }

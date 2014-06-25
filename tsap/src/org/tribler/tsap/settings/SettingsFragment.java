@@ -1,10 +1,7 @@
 package org.tribler.tsap.settings;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.tribler.tsap.R;
-import org.tribler.tsap.thumbgrid.XMLRPCTorrentManager;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -23,12 +20,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
-		try {
-			mSettingsManager = new XMLRPCSettingsManager(new URL("http://127.0.0.1:8000/tribler"));
-		} catch (MalformedURLException e) {
-			Log.e("SettingsFragment", "URL was malformed.\n" + e.getStackTrace());
-		}
-
+		mSettingsManager = new XMLRPCSettingsManager(XMLRPCConnection.getInstance());
 	}
 
 	@Override

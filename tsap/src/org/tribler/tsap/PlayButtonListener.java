@@ -1,51 +1,49 @@
 package org.tribler.tsap;
 
-import java.util.Observable;
-import java.util.Observer;
-
+import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class PlayButtonListener implements OnClickListener, Observer {
+public class PlayButtonListener implements OnClickListener, IPollListener {
 
 	private ThumbItem thumbData;
 	private String infoHash;
 	private boolean needsToBeDownloaded;
-	private Poller mPoller;
+	private MainThreadPoller mPoller;
 	private FragmentManager mFragManager;
 	private VODDialogFragment dialog;
 	private boolean inVODMode = false;
-	private Context mContext;
+	private Activity mActivity;
 
 	public PlayButtonListener(ThumbItem thumbData, FragmentManager fragManager,
-			Context context) {
+			Activity activity) {
 		this.thumbData = thumbData;
 		this.infoHash = thumbData.getInfoHash();
 		this.needsToBeDownloaded = true;
-		this.mPoller = new Poller(this, 1000);
 		this.mFragManager = fragManager;
-		this.mContext = context;
+		this.mActivity = activity;
+		this.mPoller = new MainThreadPoller(this, 1000, mActivity);
 	}
 
 	public PlayButtonListener(String infoHash, FragmentManager fragManager,
-			Context context) {
+			Activity activity) {
 		this.thumbData = null;
 		this.infoHash = infoHash;
 		this.needsToBeDownloaded = false;
-		this.mPoller = new Poller(this, 1000);
 		this.mFragManager = fragManager;
-		this.mContext = context;
+		this.mActivity = activity;
+		this.mPoller = new MainThreadPoller(this, 1000, mActivity);
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class PlayButtonListener implements OnClickListener, Observer {
 	}
 
 	@Override
-	public void update(Observable observable, Object data) {
+	public void onPoll() {
 		XMLRPCDownloadManager.getInstance().getProgressInfo(infoHash);
 		Download dwnld = XMLRPCDownloadManager.getInstance()
 				.getCurrentDownload();
@@ -76,10 +74,10 @@ public class PlayButtonListener implements OnClickListener, Observer {
 			if (dwnld.isVODPlayable()) {
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						XMLRPCDownloadManager.getInstance().getVideoUri(),
-						mContext.getApplicationContext(),
+						mActivity.getApplicationContext(),
 						VideoPlayerActivity.class);
-				mContext.startActivity(intent);
-				mPoller.pause();
+				mActivity.startActivity(intent);
+				mPoller.stop();
 				aDialog.cancel();
 
 			} else {

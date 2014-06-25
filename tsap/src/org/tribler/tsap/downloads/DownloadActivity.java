@@ -1,5 +1,6 @@
 package org.tribler.tsap.downloads;
 
+//import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.Utility;
@@ -120,8 +121,6 @@ public class DownloadActivity extends Activity {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// .. nothing
-										a.onBackPressed();
 									}
 								}).show();
 			}

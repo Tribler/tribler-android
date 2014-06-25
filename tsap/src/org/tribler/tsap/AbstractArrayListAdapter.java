@@ -32,7 +32,8 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	 * @param initialContent
 	 *            The initial content
 	 */
-	public AbstractArrayListAdapter(Collection<T> initialContent) {
+	public AbstractArrayListAdapter(Activity activity, Collection<T> initialContent) {
+		mActivity = activity;
 		mContent = new ArrayList<T>();
 		mContent.addAll(initialContent);
 	}

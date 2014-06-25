@@ -61,12 +61,12 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 * @param data
 	 *            The list of thumbitems
 	 */
-	public ThumbAdapter(Context context, int layoutResourceId,
+	public ThumbAdapter(Activity activity, int layoutResourceId,
 			ArrayList<ThumbItem> data) {
-		super(data);
+		super(activity, data);
 		this.layoutResourceId = layoutResourceId;
 
-		float s = context.getResources().getDisplayMetrics().density;
+		float s = activity.getResources().getDisplayMetrics().density;
 		mThumbWidth = (int) (100 * s);
 		mThumbHeight = (int) (150 * s);
 	}

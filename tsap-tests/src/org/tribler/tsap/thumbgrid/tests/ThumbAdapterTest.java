@@ -9,7 +9,6 @@ import org.tribler.tsap.thumbgrid.ThumbAdapter;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -47,11 +46,35 @@ public class ThumbAdapterTest extends ActivityInstrumentationTestCase2<MainActiv
 		assertEquals("incorrect health progress", healthProgress, foundHealthProgress);
 	}
 	
-	@UiThreadTest
 	public void testGetView() {
 		checkView(adapter.getView(0, null, null), "a", "1 B", 3);
 		checkView(adapter.getView(1, null, null), "b", "12 B", 2);
 		checkView(adapter.getView(2, null, null), "c", "123 B", 1);
 		checkView(adapter.getView(3, null, null), "d", "1.2 kB", 0);
+	}
+	
+	public void testAddNew()
+	{ 
+		ArrayList<ThumbItem> list1 = new ArrayList<ThumbItem>();
+		list1.add(a);
+		list1.add(b);
+		list1.add(c);
+		
+		ArrayList<ThumbItem> list2 = new ArrayList<ThumbItem>();
+		list2.add(d);
+		list2.add(c);
+		list2.add(b);
+		
+		ThumbAdapter adapter1 = new ThumbAdapter(this.getActivity(), R.layout.thumb_grid_item);
+		adapter1.addNew(list1);
+		assertEquals("Added count incorrect", 3, adapter1.getCount());
+		
+		ThumbAdapter adapter2 = new ThumbAdapter(this.getActivity(), R.layout.thumb_grid_item, list1);
+		adapter2.addNew(list1);
+		assertEquals("Added count incorrect", 3, adapter2.getCount());
+		
+		ThumbAdapter adapter3 = new ThumbAdapter(this.getActivity(), R.layout.thumb_grid_item, list1);
+		adapter3.addNew(list2);
+		assertEquals("Added count incorrect", 4, adapter3.getCount());
 	}
 }

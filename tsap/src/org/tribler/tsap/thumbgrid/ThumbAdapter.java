@@ -13,7 +13,6 @@ import org.tribler.tsap.settings.Settings;
 import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.PorterDuff.Mode;
 import android.util.Log;
 import android.view.LayoutInflater;

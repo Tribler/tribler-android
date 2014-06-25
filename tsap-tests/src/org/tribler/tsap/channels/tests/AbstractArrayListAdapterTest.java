@@ -2,15 +2,21 @@ package org.tribler.tsap.channels.tests;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.tribler.tsap.AbstractArrayListAdapter;
-import android.annotation.SuppressLint;
-import android.test.InstrumentationTestCase;
+import org.tribler.tsap.MainActivity;
+
+import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 import android.view.View;
 import android.view.ViewGroup;
 
 
-public class AbstractArrayListAdapterTest extends InstrumentationTestCase{
+public class AbstractArrayListAdapterTest extends ActivityInstrumentationTestCase2<MainActivity>{
+	public AbstractArrayListAdapterTest(Class<MainActivity> activityClass) {
+		super(MainActivity.class);
+	}
+
 	class MinimalArrayListAdapter extends AbstractArrayListAdapter<Integer>{
 
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -18,11 +24,11 @@ public class AbstractArrayListAdapterTest extends InstrumentationTestCase{
 		}
 		public MinimalArrayListAdapter()
 		{
-			super();
+			super(getActivity());
 		}
 		public MinimalArrayListAdapter(Collection<Integer> initialContent)
 		{
-			super(initialContent);
+			super(getActivity(), initialContent);
 		}
 	}
 	
@@ -80,61 +86,5 @@ public class AbstractArrayListAdapterTest extends InstrumentationTestCase{
 		MinimalArrayListAdapter initAdapter = new MinimalArrayListAdapter(intList);
 		initAdapter.clear();
 		assertEquals("Count incorrect after clearing", 0, initAdapter.getCount());
-	}
-	
-	@SuppressLint("UseValueOf") @UiThreadTest
-	public void testAddNew()
-	{
-		Integer one = new Integer(1), two = new Integer(2), three = new Integer(3),
-				four = new Integer(4);  
-		ArrayList<Integer> list1 = new ArrayList<Integer>();
-		list1.add(one);
-		list1.add(two);
-		list1.add(three);
-		
-		ArrayList<Integer> list2 = new ArrayList<Integer>();
-		list2.add(four);
-		list2.add(three);
-		list2.add(two);
-		
-		MinimalArrayListAdapter adapter1 = new MinimalArrayListAdapter();
-		adapter1.addNew(list1);
-		assertEquals("Added count incorrect", 3, adapter1.getCount());
-		
-		MinimalArrayListAdapter adapter2 = new MinimalArrayListAdapter(list1);
-		adapter2.addNew(list1);
-		assertEquals("Added count incorrect", 3, adapter2.getCount());
-		
-		MinimalArrayListAdapter adapter3 = new MinimalArrayListAdapter(list1);
-		adapter3.addNew(list2);
-		assertEquals("Added count incorrect", 4, adapter3.getCount());
-	}
-	
-	public void testMainThreadCheck()
-	{
-		MinimalArrayListAdapter adapter = new MinimalArrayListAdapter();
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		
-		try {
-			adapter.addNew(list);
-			fail("No exception thrown when adding from a non-UI thread.");
-		}
-		catch(IllegalStateException e)
-		{ }
-		catch(Exception e)
-		{
-			fail("Wrong exception thrown when adding from a non-UI thread.");
-		}
-		
-		try {
-			adapter.clear();
-			fail("No exception thrown when clearing from a non-UI thread.");
-		}
-		catch(IllegalStateException e)
-		{ }
-		catch(Exception e)
-		{
-			fail("Wrong exception thrown when clearing from a non-UI thread.");
-		}
 	}
 }

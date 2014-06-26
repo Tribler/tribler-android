@@ -4,9 +4,10 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+
 import android.util.Log;
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
 
 /**
  * Class that is responsible for performing the XML-RPC call to shut down
@@ -16,9 +17,7 @@ import de.timroes.axmlrpc.XMLRPCException;
  * 
  */
 public class XMLRPCShutdownManager extends Observable {
-
-	private XMLRPCClient mClient;
-
+	
 	/**
 	 * Constructor: initializes the XMLRPCClient and add obs to this class'
 	 * observers
@@ -29,7 +28,6 @@ public class XMLRPCShutdownManager extends Observable {
 	 *            Observer to add to this class' observers
 	 */
 	public XMLRPCShutdownManager(URL url, Observer obs) {
-		mClient = new XMLRPCClient(url);
 		this.addObserver(obs);
 	}
 
@@ -39,25 +37,21 @@ public class XMLRPCShutdownManager extends Observable {
 	 * notifies the observers.
 	 */
 	public void shutdown() {
-		XMLRPCCallTask task = new XMLRPCCallTask() {
+		new XMLRPCCallTask() {
 			@Override
-			protected void onPostExecute(Object result) {
-				if (result instanceof XMLRPCException) {
-					Log.e("XMLRPCShutdownManager", "Could not shutdown Tribler");
-				} else {
-					try {
-						// Call is blocking, but give Tribler a second extra
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					Log.i("XMLRPCShutdownManager", "Tribler was gracefully shutdown..");
-					setChanged();
-					notifyObservers();
+			public void onSucces(Object result) {
+				try {
+					// Call is blocking, but give Tribler a second extra
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
+				Log.i("XMLRPCShutdownManager",
+						"Tribler was gracefully shutdown..");
+				setChanged();
+				notifyObservers();
 			}
-		};
-		task.execute(mClient, "tribler.stop_session");		
+		}.call("tribler.stop_session", XMLRPCConnection.getInstance());
 	}
 
 }

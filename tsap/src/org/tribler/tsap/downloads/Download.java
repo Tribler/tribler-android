@@ -18,6 +18,7 @@ public class Download implements Serializable {
 	private double downloadSpeed;
 	private double progress;
 	private double vodETA;
+	private double ETA;
 	private boolean vodPlayable;
 
 	/**
@@ -27,18 +28,19 @@ public class Download implements Serializable {
 	}
 
 	/**
-	 * Constructor to fill in all the fields
-	 * 
-	 * @param name
-	 * @param infoHash
-	 * @param status
-	 * @param downloadSpeed
-	 * @param uploadSpeed
-	 * @param progress
-	 * @param vodETA
+	 * Download status object
+	 * @param name Download name
+	 * @param infoHash Torrent infohash
+	 * @param status Download status
+	 * @param downloadSpeed Download speed
+	 * @param uploadSpeed Upload speed
+	 * @param progress Download progress (0.0-1.0)
+	 * @param ETA ETA in seconds
+	 * @param vodETA VOD ETA in seconds
+	 * @param vodPlayable Is it okay to start streaming
 	 */
 	public Download(String name, String infoHash, int status, double downloadSpeed,
-			double uploadSpeed, double progress, double vodETA,
+			double uploadSpeed, double progress, double ETA, double vodETA,
 			boolean vodPlayable) {
 		this.name = name;
 		this.infoHash = infoHash;
@@ -46,6 +48,7 @@ public class Download implements Serializable {
 		this.downloadSpeed = downloadSpeed;
 		this.uploadSpeed = uploadSpeed;
 		this.progress = progress;
+		this.ETA = ETA;
 		this.vodETA = vodETA;
 		this.vodPlayable = vodPlayable;
 	}
@@ -74,6 +77,11 @@ public class Download implements Serializable {
 		return progress;
 	}
 
+	public double getETA()
+	{
+		return ETA;
+	}
+	
 	public double getVOD_ETA() {
 		return vodETA;
 	}

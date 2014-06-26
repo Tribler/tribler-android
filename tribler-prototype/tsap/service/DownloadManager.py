@@ -31,6 +31,7 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 # TODO: not hardcoded please
 DOWNLOAD_UPDATE_DELAY = 2.0
 DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
+DOWNLOAD_UPDATE_CACHE = 300.0
 
 
 class DownloadManager():
@@ -96,10 +97,8 @@ class DownloadManager():
 
             self._dispersy = self._session.lm.dispersy
 
-            # Load previous downloads
-            self._session.load_checkpoint()
-            for dl in self._session.get_downloads():
-                dl.set_state_callback(self._update_dl_state, delay=1)
+            # Schedule load checkpoints
+            threading.Timer(1.0, self._load_checkpoints, ()).start()
 
             # Schedule download checkpoints
             threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
@@ -174,6 +173,11 @@ class DownloadManager():
         return True
 
     def _update_dl_state(self, ds):
+        """
+        DownloadState callback that updates the associated download dict.
+        :param ds: DownloadState object.
+        :return: Nothing.
+        """
 
         self._dllock.acquire()
         try:
@@ -238,6 +242,69 @@ class DownloadManager():
         with self._dllock:
             return self._downloads.values()
 
+    def _download_update_cache(self):
+        """
+        Periodically called function that checks if there are any downloads that are not yet tracked by the
+        DownloadManager.
+        :return: Nothing.
+        """
+        _logger.info("Downloads cache check hit..")
+
+        with self._dllock:
+            for dl in self._session.get_downloads():
+                try:
+                    infohash = binascii.hexlify(dl.get_def().get_infohash())
+                    if not infohash in self._downloads.keys():
+                        _logger.info("Added %s to download cache" % infohash)
+                        dl.set_state_callback(self._update_dl_state, delay=1)
+                    else:
+                        _logger.info("Already in download cache: " % infohash)
+                except Exception, e:
+                    _logger.info("Error checking download: " % e.args)
+                    pass
+
+        threading.Timer(DOWNLOAD_UPDATE_CACHE, self._download_update_cache, ()).start()
+
+    def _load_checkpoints(self):
+        """
+        Load the checkpoint for any downloads that can be resumed.
+        :return: Nothing.
+        """
+        _logger.info("Loading download checkpoints..")
+
+        # Niels: first remove all "swift" torrent collect checkpoints
+        dir = self._session.get_downloads_pstate_dir()
+        coldir = os.path.basename(os.path.abspath(self._session.get_torrent_collecting_dir()))
+
+        filelist = os.listdir(dir)
+        filelist = [os.path.join(dir, filename) for filename in filelist if filename.endswith('.state')]
+
+        for file in filelist:
+            try:
+                pstate = self._session.lm.load_download_pstate(file)
+
+                saveas = pstate.get('downloadconfig', 'saveas')
+                if saveas:
+                    destdir = os.path.basename(saveas)
+                    if destdir == coldir or destdir == os.path.join(self._session.get_state_dir(), "anon_test"):
+                        _logger.info("Removing swift checkpoint %s" % file)
+                        os.remove(file)
+            except:
+                pass
+
+        #from Tribler.Main.vwxGUI.UserDownloadChoice import UserDownloadChoice
+        #user_download_choice = UserDownloadChoice.get_singleton()
+        #initialdlstatus_dict = {}
+        #for id, state in user_download_choice.get_download_states().iteritems():
+        #    if state == 'stop':
+        #        initialdlstatus_dict[id] = DLSTATUS_STOPPED
+        try:
+            self._session.load_checkpoint()
+        except:
+            pass
+
+        threading.Timer(1.0, self._download_update_cache, ()).start()
+
     def get_full(self, infohash):
         """
         Get the full info of a single torrent, by infohash.
@@ -276,16 +343,41 @@ class DownloadManager():
         try:
             download = self._session.get_download(binascii.unhexlify(infohash))
 
-            files = download.get_def().get_files()
-            findex = 0  # TODO: ACTUALLY DETERMINE THE BEST FILE INDEX
-            download.set_selected_files(files[findex])
+            from Tribler.Core.Video.utils import videoextdefaults
+
+            files = download.get_def().get_files_with_length()
+            files.sort(key=lambda fl: fl[1], reverse=True)
+
+            selected_file = None
+            findex = 0
+            for f in files:
+                try:
+                    _, ext = os.path.splitext(f[0])
+                    print ext
+                    if ext[1:] in videoextdefaults:
+                        selected_file = f[0]
+                        break
+                except:
+                    pass
+                findex += 1
+
+            _logger.info("Selecting %s for VOD" % selected_file)
+
+            if selected_file is None:
+                #selected_file = files[0][0]
+                return False
+
+            download.set_selected_files(selected_file)
 
             download.set_vod_mode(True)
         except Exception, e:
             print "Start_vod error: %s" % e.args
             return False
 
-        return self.get_vod_uri(infohash, fileindex=findex)
+        voduri = self.get_vod_uri(infohash, fileindex=findex)
+        _logger.info("Returning VOD uri: %s" % voduri)
+
+        return voduri
 
     def stop_vod(self, infohash):
         """

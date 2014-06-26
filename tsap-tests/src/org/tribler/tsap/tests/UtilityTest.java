@@ -57,7 +57,7 @@ public class UtilityTest extends AndroidTestCase {
 				Utility.convertDownloadStateIntToMessage(98093));
 		assertEquals("state converted incorrectly", "Allocating disk space",
 				Utility.convertDownloadStateIntToMessage(1));
-		assertEquals("state converted incorrectly", "Waiting on the hash check",
+		assertEquals("state converted incorrectly", "Waiting for hash check",
 				Utility.convertDownloadStateIntToMessage(2));
 		assertEquals("state converted incorrectly", "Downloading",
 				Utility.convertDownloadStateIntToMessage(3));

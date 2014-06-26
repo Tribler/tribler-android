@@ -1,5 +1,9 @@
 package org.tribler.tsap;
 
+import java.util.Map;
+
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
+
 /**
  * Class with static functions that are used across multiple classes, like
  * conversion functions.
@@ -9,6 +13,38 @@ package org.tribler.tsap;
  */
 public class Utility {
 
+	/**
+	 * Converts a number of seconds to a sensible string that can be
+	 * shown to the user.
+	 * @param seconds Number of seconds
+	 * @return A user friendly string
+	 */
+	public static String convertSecondsToString(double seconds)
+	{
+		if(seconds < 10)
+		{
+			return "a few seconds";
+		}
+		else if(seconds < 60)
+		{
+			return "about " + (Math.round(seconds / 10) * 10) + " seconds";
+		}
+		else if(seconds < 3600)
+		{
+			long value = Math.round(seconds / 60);
+			return "about " + value + " minute" + ((value > 1) ? "s" : "");
+		}
+		else if(seconds < 24 * 3600)
+		{
+			long value = (Math.round(seconds / 3600));
+			return "about " + value + " hour" + ((value > 1) ? "s" : "");
+		}
+		else
+		{
+			return "more than a day";
+		}
+	}
+	
 	/**
 	 * Converts an amount of bytes into a nicely formatted String. It adds the
 	 * correct prefix like KB or GB and limits the precision to one number
@@ -68,7 +104,7 @@ public class Utility {
 		case 1:
 			return "Allocating disk space";
 		case 2:
-			return "Waiting on the hash check";
+			return "Waiting for hash check";
 		case 3:
 			return "Downloading";
 		case 4:
@@ -83,5 +119,33 @@ public class Utility {
 			return "Invalid state";
 
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getFromMap(Map<String, Object> map, String key, T defaultValue) {
+		T returnValue = (T) map.get(key);
+		if(returnValue == null)
+		{
+			return defaultValue;
+		}
+		else
+		{
+			return returnValue;
+		}
+	}
+	
+	public static TORRENT_HEALTH calculateTorrentHealth(int seeders, int leechers)
+	{
+		if (seeders == -1 || leechers == -1)
+		{
+			return TORRENT_HEALTH.UNKNOWN;
+		}
+		
+		if (seeders == 0)
+		{
+			return TORRENT_HEALTH.RED;
+		}
+		
+		return ((leechers / seeders) > 0.5) ? TORRENT_HEALTH.YELLOW : TORRENT_HEALTH.GREEN;
 	}
 }

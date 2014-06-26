@@ -50,8 +50,9 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 				.getName());
 		((TextView) view.findViewById(R.id.download_status))
 				.setText("Status: "
-						+ Utility.convertDownloadStateIntToMessage(download
-								.getStatus()));
+						+ Utility.convertDownloadStateIntToMessage(download.getStatus())
+						+ ((download.getStatus() == 2 || download.getStatus() == 3) ? 
+								" (" + Math.round(download.getProgress() * 100) + "%)" : ""));
 		((TextView) view.findViewById(R.id.download_speed_down))
 				.setText("Down: "
 						+ Utility.convertBytesPerSecToString(download
@@ -60,6 +61,10 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 				.setText("Up: "
 						+ Utility.convertBytesPerSecToString(download
 								.getUploadSpeed()));
+		((TextView) view.findViewById(R.id.download_eta))
+		.setText((download.getStatus() == 3)
+				? "ETA: " + Utility.convertSecondsToString(download.getETA())
+				: "");
 		((ProgressBar) view.findViewById(R.id.download_progress_bar))
 				.setProgress((int) (download.getProgress() * 100));
 		return view;

@@ -14,9 +14,12 @@ public class ThumbItem implements Serializable{
 	private int thumbnailId;
 	private String title;
 	private TORRENT_HEALTH health;
-	private int size;
+	private long size;
 	private String infoHash;
 	private File thumbImageFile;
+	private int seeders;
+	private int leechers;
+	private String category;
 
 	/**
 	 * Constructor: initializes the instance variables
@@ -30,13 +33,15 @@ public class ThumbItem implements Serializable{
 	 * @param size
 	 *            The size of the torrent
 	 */
-	public ThumbItem(String title, int thumbnailId, TORRENT_HEALTH health,
-			int size, String infoHash) {
-		this.thumbnailId = thumbnailId;
+	public ThumbItem(String infoHash, String title, TORRENT_HEALTH health,
+			long size, String category, int seeders, int leechers) {
 		this.title = title;
 		this.health = health;
 		this.size = size;
 		this.infoHash = infoHash;
+		this.seeders = seeders;
+		this.leechers = leechers;
+		this.category = category;
 	}
 
 	/**
@@ -82,7 +87,7 @@ public class ThumbItem implements Serializable{
 	 * 
 	 * @return The size of the torrent
 	 */
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
@@ -92,7 +97,7 @@ public class ThumbItem implements Serializable{
 	 * @param size
 	 *            The new size of the torrent
 	 */
-	public void setSize(int size) {
+	public void setSize(long size) {
 		this.size = size;
 	}
 
@@ -111,6 +116,20 @@ public class ThumbItem implements Serializable{
 		thumbImageFile = file;
 	}
 
+	public void setLeechers(int leechers){
+		this.leechers = leechers;
+	}
+	
+	public void setSeeders(int seeders)
+	{
+		this.seeders = seeders;
+	}
+	
+	public void setCategory(String category)
+	{
+		this.category = category;
+	}
+	
 	/**
 	 * Returns the health of the torrent
 	 * 
@@ -146,4 +165,16 @@ public class ThumbItem implements Serializable{
 		return this.title;
 	}
 
+	public int getSeeders() {
+		return this.seeders;
+	}
+	
+	public int getLeechers() { 
+		return this.leechers;
+	}
+	
+	public String getCategory() {
+		return this.category;
+	}
+	
 }

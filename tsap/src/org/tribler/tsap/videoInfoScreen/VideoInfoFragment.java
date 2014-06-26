@@ -1,9 +1,12 @@
 package org.tribler.tsap.videoInfoScreen;
 
+import java.io.File;
+
 import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.Utility;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -62,31 +65,29 @@ public class VideoInfoFragment extends Fragment {
 		title.setText(thumbData.getTitle());
 
 		TextView type = (TextView) view.findViewById(R.id.video_details_type);
-		type.setText("Video");
-
-		TextView date = (TextView) view
-				.findViewById(R.id.video_details_upload_date);
-		date.setText("5-11-1998");
+		type.setText(thumbData.getCategory());
 
 		TextView size = (TextView) view
 				.findViewById(R.id.video_details_filesize);
-		size.setText(String.valueOf(thumbData.getSize()));
+		size.setText(Utility.convertBytesToString(thumbData.getSize()));
 
 		TextView seeders = (TextView) view
 				.findViewById(R.id.video_details_seeders);
-		seeders.setText(String.valueOf(1));
+		seeders.setText(thumbData.getSeeders() == -1 ? "unknown" : "" + thumbData.getSeeders());
 
 		TextView leechers = (TextView) view
 				.findViewById(R.id.video_details_leechers);
-		leechers.setText(String.valueOf(2));
+		leechers.setText(thumbData.getLeechers() == -1 ? "unknown" : "" + thumbData.getLeechers());
 
 		TextView descr = (TextView) view
 				.findViewById(R.id.video_info_description);
-		descr.setText("Blabla bla");
+		descr.setText("");
 
+		
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
-		loadBitmap(thumbData.getThumbnailId(), thumb);
+		loadBitmap(thumbData.getThumbImageFile(), thumb);
+
 		setPlayButtonListener();
 		setDownloadButtonListener();
 	}
@@ -126,12 +127,13 @@ public class VideoInfoFragment extends Fragment {
 	 * @param mImageView
 	 *            The ImageView in which the thumbnail should be loaded
 	 */
-	private void loadBitmap(int resId, ImageView mImageView) {
+	private void loadBitmap(File file, ImageView mImageView) {
 		float dens = context.getResources().getDisplayMetrics().density;
 		int thumbWidth = (int) (100 * dens);
 		int thumbHeight = (int) (150 * dens);
-		Picasso.with(context).load(resId).placeholder(R.drawable.default_thumb)
-				.resize(thumbWidth, thumbHeight).into(mImageView);
+		Picasso.with(context).load(file).placeholder(R.drawable.default_thumb)
+			.resize(thumbWidth, thumbHeight).into(mImageView);		
+
 	}
 
 }

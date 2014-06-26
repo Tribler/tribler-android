@@ -236,10 +236,8 @@ class TorrentManager():
             _logger.info("Ignored results for %s, we are looking for %s now" % (keywords, self._keywords))
             return
 
-        try:
-            self._remote_lock.acquire()
-
-            for result in results:
+        for result in results:
+            try:
                 categories = result[4]
                 category_id = self._misc_db.categoryName2Id(categories)
 
@@ -273,8 +271,8 @@ class TorrentManager():
                 else:
                     # Add to result list.
                     self._add_remote_result(remoteHit)
-        finally:
-            self._remote_lock.release()
+            except:
+                pass
 
         return
 
@@ -287,17 +285,21 @@ class TorrentManager():
         """
         # TODO: RLocks instead of normal locks.
 
-        # Do not add duplicates
-        if torrent.infohash in self._result_infohashes:
-            _logger.error("Torrent duplicate: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
-            return False
+        try:
+            self._remote_lock.acquire()
 
-        self._results.append(torrent)
-        self._result_infohashes.append(torrent.infohash)
+            # Do not add duplicates
+            if torrent.infohash in self._result_infohashes:
+                _logger.error("Torrent duplicate: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
+                return False
 
-        _logger.error("Torrent added: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
-        return True
+            self._results.append(torrent)
+            self._result_infohashes.append(torrent.infohash)
 
+            _logger.error("Torrent added: %s [%s]" % (torrent.name, binascii.hexlify(torrent.infohash)))
+            return True
+        finally:
+            self._remote_lock.release()
 
     def get_remote_results(self):
         """
@@ -418,10 +420,11 @@ class TorrentManager():
                     tr.swift_torrent_hash).upper() if tr.swift_torrent_hash else False,
                 'torrent_file_name': tr.torrent_file_name or False,
                 'name': tr.name,
-                #'length': tr.length,
+                'length': str(tr.length) if tr.length else "-1",
                 'category_id': tr.category_id,
                 'category': self._category_names[tr.category_id],
                 'status_id': tr.status_id,
-                'num_seeders': tr.num_seeders,
-                'num_leechers': tr.num_leechers,
+                'num_seeders': tr.num_seeders if tr.num_seeders else -1,
+                'num_leechers': tr.num_leechers if tr.num_leechers else -1,
+                'relevance': tr.relevance_score if tr.relevance_score else -1,
         }

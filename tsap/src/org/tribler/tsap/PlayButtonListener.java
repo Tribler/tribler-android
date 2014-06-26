@@ -71,6 +71,11 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 				.getCurrentDownload();
 		AlertDialog aDialog = (AlertDialog) dialog.getDialog();
 		if (dwnld != null) {
+			if(!dwnld.getInfoHash().equals(infoHash))
+			{
+				return;
+			}
+			
 			if (dwnld.isVODPlayable()) {
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						XMLRPCDownloadManager.getInstance().getVideoUri(),
@@ -95,15 +100,18 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 
 					if (aDialog != null)
 						aDialog.setMessage("Video starts playing in about "
-								+ Math.round(vod_eta) + " seconds");
+								+ Utility.convertSecondsToString(vod_eta) + " ("
+								+ Utility.convertBytesPerSecToString(dwnld.getDownloadSpeed()) + ").");
 
 					break;
 				default:
 					if (aDialog != null)
+					{
+						int dlstatus = dwnld.getStatus();
 						aDialog.setMessage("Download status: "
-								+ Utility
-										.convertDownloadStateIntToMessage(dwnld
-												.getStatus()));
+								+ Utility.convertDownloadStateIntToMessage(dwnld.getStatus())
+								+ ((dlstatus == 2) ? " (" + Math.round(dwnld.getProgress() * 100) + "%)" : ""));
+					}
 					break;
 				}
 

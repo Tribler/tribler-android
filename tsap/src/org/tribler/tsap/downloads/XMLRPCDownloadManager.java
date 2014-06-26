@@ -1,39 +1,36 @@
 package org.tribler.tsap.downloads;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Observable;
 
-import org.tribler.tsap.AbstractXMLRPCManager;
-import org.tribler.tsap.XMLRPCCallTask;
+import org.tribler.tsap.Poller.IPollListener;
+import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
 
 /**
  * Singleton class for adding and accessing downloads.
  * 
  * @author Dirk Schut
  */
-public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
-
-	private static DownloadListAdapter mAdapter = null;
+public class XMLRPCDownloadManager implements IPollListener{
+	
+	private DownloadListAdapter mAdapter = null;
 	private static XMLRPCDownloadManager mInstance = null;
-	private static Context mContext;
+	private Context mContext;
 	private Download currProgressDownload;
 	private Uri videoLink;
+	private XMLRPCConnection mConnection;
 
 	/**
 	 * private constructor exists only so the class is only accessible through
 	 * getInstance
 	 */
 	private XMLRPCDownloadManager() {
-		super(2000);
 	}
 
 	/**
@@ -59,13 +56,11 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	 * @param context
 	 *            Context for creating toasts and intents.
 	 */
-	public static void setUp(DownloadListAdapter adapter, URL url,
-			Context context) {
+	public void setUp(DownloadListAdapter adapter, XMLRPCConnection connection, Context context) {
 		getInstance();
 		mAdapter = adapter;
 		mContext = context;
-		mInstance.mClient = new XMLRPCClient(url);
-		mInstance.logAvailableFunctions();
+		mConnection = connection;
 	}
 
 	public DownloadListAdapter getAdapter() {
@@ -99,40 +94,22 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	 * Retrieves the list of downloads.
 	 */
 	@SuppressWarnings("unchecked")
-	private void getAllProgressInfo() {
-		Log.v("DownloadManager", "Fetching results");
-		XMLRPCCallTask task = new XMLRPCCallTask() {
-			@Override
-			protected void onPostExecute(Object result) {
-				if (!(result instanceof XMLRPCException)) {
-					Object[] arrayResult = (Object[]) result;
-					Log.v("DownloadManager", arrayResult.length + " result(s)");
-					ArrayList<Download> resultsList = new ArrayList<Download>();
-					for (int i = 0; i < arrayResult.length; i++) {
-						if (arrayResult[i] == null)
-							Log.e("DownloadManager", "result is null");
-						else {
-							Log.v("DownloadManager", "result != null");
-							Log.v("DownloadManager",
-									((Map<String, Object>) arrayResult[i])
-											.keySet().toString());
-							resultsList
-									.add(convertMapToDownload((Map<String, Object>) arrayResult[i]));
-						}
-					}
-					mAdapter.replaceAll(resultsList);
-				}
-				Log.v("DownloadManager", "fetch returned");
-				startPolling();
-			}
-		};
-		stopPolling();
-		task.execute(mClient, "downloads.get_all_progress_info");
+	private void replaceAllProgressInfo() {
+		
+		Object result = mConnection.call("downloads.get_all_progress_info");
+		Log.e("", "Result is: " + result.toString());
+		Object[] arrayResult = (Object[]) result;
+		ArrayList<Download> resultsList = new ArrayList<Download>();
+		
+		for (int i = 0; i < arrayResult.length; i++) {
+			resultsList.add(convertMapToDownload((Map<String, Object>) arrayResult[i]));
+		}
+		mAdapter.replaceAll(resultsList);
 	}
 
 	@Override
-	public void update(Observable observable, Object data) {
-		getAllProgressInfo();
+	public void onPoll() {
+		replaceAllProgressInfo();
 	}
 
 	/**
@@ -147,30 +124,21 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	public void downloadTorrent(String infoHash, String name) {
 		Log.i("XMLRPCDownloadManager", "Adding download with infohash: "
 				+ infoHash + " and name: " + name);
-		XMLRPCCallTask task = new XMLRPCCallTask() {
+		new XMLRPCCallTask() {
 			@Override
-			protected void onPostExecute(Object result) {
-
-				if (result instanceof XMLRPCException) {
-					Log.e("XMLRPCDownloadManager",
-							"Error in retrieving result from XMLRPC after adding download");
+			public void onSucces(Object result) {
+				if ((Boolean) result) {
+					Toast.makeText(mContext, "Download started!",
+							Toast.LENGTH_SHORT).show();
+					Log.i("XMLRPCDownloadManager", "Download started!");
 				} else {
-					boolean succes = (Boolean) result;
-					if (succes) {
-						Toast.makeText(mContext, "Download started!",
-								Toast.LENGTH_SHORT).show();
-						Log.i("XMLRPCDownloadManager", "Download started!");
-					} else {
-						Toast.makeText(mContext,
-								"Could not start downloading.",
-								Toast.LENGTH_LONG).show();
-						Log.e("XMLRPCDownloadManager",
-								"Tribler could not add the download.");
-					}
+					Toast.makeText(mContext, "Could not start downloading.",
+							Toast.LENGTH_LONG).show();
+					Log.e("XMLRPCDownloadManager",
+							"Tribler could not add the download.");
 				}
 			}
-		};
-		task.execute(mClient, "downloads.add", infoHash, name);
+		}.call("downloads.add", mConnection, infoHash, name);
 	}
 
 	/**
@@ -182,25 +150,22 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	public void startVOD(String infoHash) {
 		Log.i("XMLRPCDownloadManager", "Making a VODlink with infohash: "
 				+ infoHash);
-		XMLRPCCallTask task = new XMLRPCCallTask() {
+		new XMLRPCCallTask() {
 			@Override
-			protected void onPostExecute(Object result) {
-				if (!(result instanceof XMLRPCException)) {
-					if (result instanceof Boolean) {
-						Log.e("XMLRPCDownloadManager",
-								"Starting in VOD mode failed. result:"
-										+ (Boolean) result);
-					} else {
-						String VODString = (String) result;
-						Toast.makeText(mContext, "VODlink =" + VODString,
-								Toast.LENGTH_LONG).show();
-						Log.i("XMLRPCDownloadManager", "VODlink created!");
-						videoLink = Uri.parse(VODString);
-					}
+			public void onSucces(Object result) {
+				if (result instanceof Boolean) {
+					Log.e("XMLRPCDownloadManager",
+							"Starting in VOD mode failed. result:"
+									+ (Boolean) result);
+				} else {
+					String VODString = (String) result;
+					Toast.makeText(mContext, "VODlink =" + VODString,
+							Toast.LENGTH_LONG).show();
+					Log.i("XMLRPCDownloadManager", "VODlink created!");
+					videoLink = Uri.parse(VODString);
 				}
 			}
-		};
-		task.execute(mClient, "downloads.start_vod", infoHash);
+		}.call("downloads.start_vod", mConnection, infoHash);
 	}
 
 	/**
@@ -209,19 +174,16 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	@SuppressWarnings("unchecked")
 	public void getProgressInfo(String infoHash) {
 		Log.v("DownloadManager", "Fetching progress for torrent: " + infoHash);
-		XMLRPCCallTask task = new XMLRPCCallTask() {
+		new XMLRPCCallTask() {
 			@Override
-			protected void onPostExecute(Object result) {
-				if (result != null) {
-					if (!(result instanceof Boolean)) {
-						Map<String, Object> map = (Map<String, Object>) result;
-						currProgressDownload = convertMapToDownload(map);
-					}
+			public void onSucces(Object result) {
+				if (!(result instanceof Boolean)) {
+					Map<String, Object> map = (Map<String, Object>) result;
+					currProgressDownload = convertMapToDownload(map);
 				}
 				Log.v("DownloadManager", "fetch returned");
 			}
-		};
-		task.execute(mClient, "downloads.get_progress_info", infoHash);
+		}.call("downloads.get_progress_info", mConnection, infoHash);
 	}
 
 	public Download getCurrentDownload() {
@@ -235,11 +197,7 @@ public class XMLRPCDownloadManager extends AbstractXMLRPCManager {
 	public void deleteTorrent(String infoHash, boolean deleteFiles) {
 		Log.i("XMLRPCDownloadManager", "Removing torrent with infohash: "
 				+ infoHash);
-		XMLRPCCallTask task = new XMLRPCCallTask() {
-			@Override
-			protected void onPostExecute(Object result) {
-			}
-		};
-		task.execute(mClient, "downloads.remove", infoHash, deleteFiles);
+		XMLRPCCallTask task = new XMLRPCCallTask();
+		task.call("downloads.remove", mConnection, infoHash, deleteFiles);
 	}
 }

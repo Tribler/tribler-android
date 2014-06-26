@@ -8,7 +8,6 @@ import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.DownloadListAdapter;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,7 +30,6 @@ public class DownloadListAdapterTest extends ActivityInstrumentationTestCase2<Ma
 		adapter = new DownloadListAdapter(this.getActivity(), R.layout.download_list_item);
 	}
 	
-	@UiThreadTest
 	public void testReplaceAll()
 	{
 		ArrayList<Download> list1 = new ArrayList<Download>();
@@ -59,21 +57,6 @@ public class DownloadListAdapterTest extends ActivityInstrumentationTestCase2<Ma
 		assertEquals("replaced item incorrect", a, adapter.getItem(3));
 	}
 	
-	public void testMainThreadCheck()
-	{	
-		ArrayList<Download> list = new ArrayList<Download>();
-		try {
-			adapter.replaceAll(list);
-			fail("No exception thrown when replacing from a non-UI thread.");
-		}
-		catch(IllegalStateException e)
-		{ }
-		catch(Exception e)
-		{
-			fail("Wrong exception thrown when replacing from a non-UI thread.");
-		}
-	}
-	
 	public void checkView(View view, CharSequence name, CharSequence status, CharSequence downloadSpeed, CharSequence uploadSpeed, int progress)
 	{
 		CharSequence foundName = ((TextView)view.findViewById(R.id.download_name)).getText();
@@ -88,7 +71,6 @@ public class DownloadListAdapterTest extends ActivityInstrumentationTestCase2<Ma
 		assertEquals("incorrect progress in view", progress, foundProgress);
 	}
 	
-	@UiThreadTest
 	public void testGetView() {
 		ArrayList<Download> list = new ArrayList<Download>();
 		list.add(a);

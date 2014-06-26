@@ -1,30 +1,23 @@
 package org.tribler.tsap.thumbgrid;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Observable;
+
+import org.tribler.tsap.Poller;
+import org.tribler.tsap.Utility;
+import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 
 import android.util.Log;
-
-import org.tribler.tsap.AbstractXMLRPCManager;
-import org.tribler.tsap.ISearchListener;
-import org.tribler.tsap.R;
-import org.tribler.tsap.Utility;
-import org.tribler.tsap.XMLRPCCallTask;
-
-import de.timroes.axmlrpc.XMLRPCException;
 
 /**
  * Class for receiving torrents over XMPRPC using the aXMLRPC library
  * 
  * @author Dirk Schut
  */
-public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
+public class XMLRPCTorrentManager implements Poller.IPollListener{
 	private ThumbAdapter mAdapter;
-	private int mLastFoundResultsCount = 0;
-	private boolean connected = false;
-	private ISearchListener mSearchListener;
+	XMLRPCConnection mConnection;
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server and starts a
@@ -33,19 +26,9 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	 * @param url
 	 *            The url of the XMLRPC server
 	 */
-	public XMLRPCTorrentManager(URL url, ThumbAdapter adapter, ISearchListener searchListener) {
-		super(url, 500);
+	public XMLRPCTorrentManager(XMLRPCConnection connection, ThumbAdapter adapter) {
+		mConnection = connection;
 		mAdapter = adapter;
-		mSearchListener = searchListener;
-	}
-	
-	private void handleLostConnection(XMLRPCException exception) {
-		if (connected)
-		{
-			mSearchListener.onConnectionFailed(exception);
-			connected = false;
-			exception.printStackTrace();
-		}
 	}
 
 	/**
@@ -58,68 +41,35 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 	 *            channels
 	 */
 	private void searchRemote(final String keywords) {
-		Log.v("XMPLRCChannelManager", "Remote search for \"" + keywords
+		Log.v("XMPLRCTorrentManager", "Remote search for \"" + keywords
 				+ "\" launched.");
-		XMLRPCCallTask task = new XMLRPCCallTask() {
-			@Override
-			protected void onPostExecute(Object result) {
-				if (!(result instanceof XMLRPCException)) {
-					Log.v("XMPLRCTorrentManager", "Remote search returned.");
-					// TODO: do something with the output of this function call. To
-					// be able to do this first a bug in the Tribler core has to be
-					// fixed. Right now the function allways returns None, while it
-					// should return a Boolean just like XMLRPCChannelManager
-					/*
-					 * Boolean hasPeers = (Boolean) result; if (hasPeers) {
-					 * Log.v("XMLRPC", "Looking for query " + query +
-					 * " across peers."); } else { Log.v("XMLRPC",
-					 * "Not enough peers found for query " + query + "."); }
-					 */
-				} else {
-					handleLostConnection((XMLRPCException)result);
-				}
-			}
-		};
-		task.execute(mClient, "torrents.search_remote", keywords);
+		new XMLRPCCallTask().call("torrents.search_remote", mConnection, keywords);
 	}
 
 	/**
 	 * It will send an Integer to all observers describing the amount of found
 	 * results.
 	 */
-	private void getRemoteResultsCount() {
-		XMLRPCCallTask task = new XMLRPCCallTask() {
-			@Override
-			protected void onPostExecute(Object result) {
-				if (!(result instanceof XMLRPCException)) {
-					Integer count = (Integer) result;
-					if (!connected)
-					{
-						if (count <= mLastFoundResultsCount)
-						{
-							mSearchListener.onServerStarted();
-						}
-						connected = true;
-					}
-					if (count > mLastFoundResultsCount) {
-						mLastFoundResultsCount = count;
-						getRemoteResults();
-					}
-					else {
-						startPolling();
-					}
-				}
-				else {
-					startPolling();
-					if(connected)
-					{
-						handleLostConnection((XMLRPCException)result);
-					}
-				}
-			}
-		};
-		stopPolling();
-		task.execute(mClient, "torrents.get_remote_results_count");
+	private int getRemoteResultsCount() {
+		return (Integer) mConnection.call("torrents.get_remote_results_count");
+	}
+	
+	/**
+	 * It will send the found torrents to the adapter.
+	 */
+	private void addRemoteResults() {
+		Object[] arrayResult = (Object[]) mConnection.call("torrents.get_remote_results");
+		ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
+		
+		Log.v("XMPLRCTorrentManager", "Got " + arrayResult.length + " results");
+		
+		for (int i = 0; i < arrayResult.length; i++) {
+			@SuppressWarnings("unchecked")
+			ThumbItem item = convertMapToThumbItem(
+					(Map<String, Object>) arrayResult[i]);
+			resultsList.add(item);
+		}
+		mAdapter.addNew(resultsList);
 	}
 	
 	private ThumbItem convertMapToThumbItem(Map<String, Object> map)
@@ -136,50 +86,17 @@ public class XMLRPCTorrentManager extends AbstractXMLRPCManager {
 				seeders,
 				leechers);
 	}
-	
-	/**
-	 * It will send an ArrayList to all observers containing the found torrents.
-	 */
-	private void getRemoteResults() {
-		XMLRPCCallTask task = new XMLRPCCallTask() {
-			@Override
-			protected void onPostExecute(Object result) {
-				if (!(result instanceof XMLRPCException)) {
-					Object[] arrayResult = (Object[]) result;
-					ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
-					Log.v("XMPLRCTorrentManager", "Got " + arrayResult.length + " results");
-					for (int i = 0; i < arrayResult.length; i++) {
-						@SuppressWarnings("unchecked")
-						ThumbItem item = convertMapToThumbItem(
-								(Map<String, Object>) arrayResult[i]);
-						resultsList.add(item);
-					}
-					/*Map<String, Object> firstResult = (Map<String,
-					 Object>)arrayResult[0];
-					Log.v("XMPLRCChannelManager",
-					"KeySet: "+firstResult.keySet());*/
-					mSearchListener.onSearchResults();
-					mAdapter.addNew(resultsList);
-				} else {
-					handleLostConnection((XMLRPCException)result);
-				}
-				startPolling();
-			}
-		};
-		task.execute(mClient, "torrents.get_remote_results");
-	}
 
 	public void search(String keywords) {
-		mLastFoundResultsCount = 0;
 		mAdapter.clear();
-		mSearchListener.onSearchSubmit(keywords);
 		searchRemote(keywords);
 		Log.i("XMPLRCTorrentManager", "Search for \"" + keywords + "\" launched.");
 	}
 
 	@Override
-	public void update(Observable observable, Object data) {
-		getRemoteResultsCount();
-		//Log.i("TorrentPoll","Poll");
+	public void onPoll() {
+		int foundResults = getRemoteResultsCount();
+		if(foundResults > mAdapter.getCount())
+			addRemoteResults();
 	}
 }

@@ -2,10 +2,8 @@ package org.tribler.tsap;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import org.tribler.tsap.ThreadPreconditions;
-
+import android.app.Activity;
 import android.widget.BaseAdapter;
 
 /**
@@ -15,14 +13,17 @@ import android.widget.BaseAdapter;
  */
 
 public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
-	protected ArrayList<T> content;
+	protected ArrayList<T> mContent;
+	protected final Object mLock = new Object();
+	protected Activity mActivity;
 
 	/**
 	 * Constructor: Initializes the AbstractArrayListAdapter with an empty
 	 * ArrayList.
 	 */
-	public AbstractArrayListAdapter() {
-		content = new ArrayList<T>();
+	public AbstractArrayListAdapter(Activity activity) {
+		mContent = new ArrayList<T>();
+		mActivity = activity;
 	}
 
 	/**
@@ -31,9 +32,10 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	 * @param initialContent
 	 *            The initial content
 	 */
-	public AbstractArrayListAdapter(Collection<T> initialContent) {
-		content = new ArrayList<T>();
-		content.addAll(initialContent);
+	public AbstractArrayListAdapter(Activity activity, Collection<T> initialContent) {
+		mActivity = activity;
+		mContent = new ArrayList<T>();
+		mContent.addAll(initialContent);
 	}
 
 	/**
@@ -44,23 +46,7 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	 */
 	@Override
 	public T getItem(int position) {
-		return content.get(position);
-	}
-
-	/**
-	 * Adds all items from a list that were not in the adapter already.
-	 * 
-	 * @param list
-	 *            list of items to add
-	 */
-	public void addNew(List<T> list) {
-		ThreadPreconditions.checkOnMainThread();
-		for (int i = 0; i < list.size(); i++) {
-			if (!content.contains(list.get(i))) {
-				content.add(list.get(i));
-			}
-		}
-		notifyDataSetChanged();
+		return mContent.get(position);
 	}
 
 	/**
@@ -68,7 +54,9 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return content.size();
+		synchronized (mLock) {
+			return mContent.size();
+		}
 	}
 
 	/**
@@ -84,11 +72,21 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	}
 
 	/**
-	 * Removes all data from the adpater.
+	 * Removes all data from the adapater.
 	 */
 	public void clear() {
-		ThreadPreconditions.checkOnMainThread();
-		content.clear();
-		notifyDataSetChanged();
+		synchronized (mLock) {
+			mContent.clear();
+		}
+		notifyChangesToUiThread();
+	}
+	
+	protected void notifyChangesToUiThread() {
+		mActivity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				notifyDataSetChanged();
+			}
+		});
 	}
 }

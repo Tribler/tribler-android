@@ -2,18 +2,22 @@ package org.tribler.tsap.downloads;
 
 import java.io.Serializable;
 
+import org.tribler.tsap.Poller;
 import org.tribler.tsap.R;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection.IConnectionListener;
 
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-public class DownloadListFragment extends ListFragment {
+public class DownloadListFragment extends ListFragment implements IConnectionListener {
 
+	private XMLRPCConnection mConnection;
+	private Poller mPoller;
 	/**
 	 * Initializes the channel adapter
 	 * 
@@ -24,8 +28,9 @@ public class DownloadListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-
 		this.setListAdapter(XMLRPCDownloadManager.getInstance().getAdapter());
+		mPoller = new Poller(XMLRPCDownloadManager.getInstance(), 2000);
+		mConnection = XMLRPCConnection.getInstance();
 	}
 	
 	/**
@@ -35,8 +40,7 @@ public class DownloadListFragment extends ListFragment {
 	public void onResume()
 	{
 		super.onResume();
-		XMLRPCDownloadManager.getInstance().startPolling();
-		Log.i("DownloadListFragment","Started polling");
+		mConnection.addListener(this);
 	}
 	
 	/**
@@ -46,8 +50,8 @@ public class DownloadListFragment extends ListFragment {
 	public void onPause()
 	{
 		super.onPause();
-		XMLRPCDownloadManager.getInstance().stopPolling();
-		Log.i("DownloadListFragment","Stopped polling");
+		mConnection.removeListener(this);
+		mPoller.stop();
 	}
 
 	/**
@@ -85,5 +89,14 @@ public class DownloadListFragment extends ListFragment {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onConnectionEstablished() {
+		mPoller.start();
+	}
+	@Override
+	public void onConnectionLost() {
+		mPoller.stop();
 	}
 }

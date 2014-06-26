@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
-import org.tribler.tsap.ThreadPreconditions;
 import org.tribler.tsap.Utility;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +25,10 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 	 * @param resource
 	 *            The resource id of the layout
 	 */
-	public DownloadListAdapter(Context context, int resource) {
-		super();
+	public DownloadListAdapter(Activity activity, int resource) {
+		super(activity);
 		this.resource = resource;
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = activity.getLayoutInflater();
 	}
 
 	/**
@@ -78,9 +76,11 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 	 * 			The new list of downloads
 	 */
 	public void replaceAll(ArrayList<Download> newList) {
-		ThreadPreconditions.checkOnMainThread();
-		content = newList;
-		notifyDataSetChanged();
+		synchronized (mLock)
+		{
+			mContent = newList;
+			notifyChangesToUiThread();
+		}
 	}
 	
 	public Download getDownload(String infoHash)

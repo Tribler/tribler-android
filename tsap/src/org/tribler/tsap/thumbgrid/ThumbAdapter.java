@@ -3,6 +3,7 @@ package org.tribler.tsap.thumbgrid;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
@@ -12,7 +13,6 @@ import org.tribler.tsap.settings.Settings;
 import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.PorterDuff.Mode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +28,6 @@ import android.widget.TextView;
  * @author Wendo Sabée
  */
 public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
-	private Context context;
 	private int layoutResourceId;
 
 	private int mThumbWidth;
@@ -42,12 +41,11 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 * @param layoutResourceId
 	 *            The resource id of the layout
 	 */
-	public ThumbAdapter(Context context, int layoutResourceId) {
-		super();
+	public ThumbAdapter(Activity activity, int layoutResourceId) {
+		super(activity);
 		this.layoutResourceId = layoutResourceId;
-		this.context = context;
 
-		float s = context.getResources().getDisplayMetrics().density;
+		float s = mActivity.getResources().getDisplayMetrics().density;
 		mThumbWidth = (int) (100 * s);
 		mThumbHeight = (int) (150 * s);
 	}
@@ -62,13 +60,12 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 * @param data
 	 *            The list of thumbitems
 	 */
-	public ThumbAdapter(Context context, int layoutResourceId,
+	public ThumbAdapter(Activity activity, int layoutResourceId,
 			ArrayList<ThumbItem> data) {
-		super(data);
+		super(activity, data);
 		this.layoutResourceId = layoutResourceId;
-		this.context = context;
 
-		float s = context.getResources().getDisplayMetrics().density;
+		float s = activity.getResources().getDisplayMetrics().density;
 		mThumbWidth = (int) (100 * s);
 		mThumbHeight = (int) (150 * s);
 	}
@@ -90,7 +87,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		ThumbItem item = this.getItem(position);
 
 		if (convertView == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			LayoutInflater inflater = (mActivity).getLayoutInflater();
 			convertView = inflater.inflate(layoutResourceId, parent, false);
 		}
 		
@@ -120,7 +117,6 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 
 		return convertView;
 	}
-	
 
 	private File findImage(File directory) {
 		File[] foundImages = directory.listFiles(new FilenameFilter() {
@@ -132,7 +128,6 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		
 		// TODO: Find the best one
 		if(foundImages.length > 0) {
-			Log.d("ThumbAdapter", foundImages[0].getAbsolutePath());
 			return foundImages[0];
 		} else {
 			Log.d("ThumbAdapter", "No thumbnailimages found: " + foundImages.length);
@@ -171,6 +166,24 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		
 		return findImage(thumbsSubDirectory);
 	}
+	
+	/**
+	 * Adds all items from a list that were not in the adapter already.
+	 * 
+	 * @param list
+	 *            list of items to add
+	 */
+	public void addNew(List<ThumbItem> list) {
+		synchronized (mLock) {
+			for (int i = 0; i < list.size(); i++) {
+				if (!mContent.contains(list.get(i))) {
+					mContent.add(list.get(i));
+				}
+			}
+		}
+		Log.e("", "Torrents added!");
+		notifyChangesToUiThread();
+	}
 
 	/**
 	 * Loads the thumbnail of the thumb item
@@ -181,12 +194,12 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 *            The ImageView in which the thumbnail should be loaded
 	 */
 	private void loadBitmap(int resId, ImageView imageView) {
-		Picasso.with(context).load(resId).placeholder(R.drawable.default_thumb)
+		Picasso.with(mActivity).load(resId).placeholder(R.drawable.default_thumb)
 				.resize(mThumbWidth, mThumbHeight).into(imageView);
 	}
 	
 	private void loadBitmap(File file, ImageView imageView) {
-		Picasso.with(context).load(file).placeholder(R.drawable.default_thumb)
+		Picasso.with(mActivity).load(file).placeholder(R.drawable.default_thumb)
 				.resize(mThumbWidth, mThumbHeight).into(imageView);
 	}
 }

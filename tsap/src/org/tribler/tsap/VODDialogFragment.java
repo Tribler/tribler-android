@@ -41,7 +41,7 @@ import android.widget.Button;
 	@Override
 	public void onDestroyView(){
 		super.onDestroyView();
-		mPoller.pause();
+		mPoller.stop();
 		mButton.setEnabled(true);
 	}
 

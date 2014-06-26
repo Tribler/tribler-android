@@ -31,7 +31,6 @@ public class VideoInfoFragment extends Fragment {
 	private ThumbItem thumbData;
 	private View view;
 	private Context context;
-	private View.OnClickListener mViewButtonOnClickListener;
 
 	/**
 	 * Initializes the video info fragment's layout according to the selected
@@ -100,8 +99,8 @@ public class VideoInfoFragment extends Fragment {
 	private void setPlayButtonListener() {
 		final Button viewButton = (Button) view
 				.findViewById(R.id.video_info_stream_video);
-		mViewButtonOnClickListener = new PlayButtonListener(thumbData, getFragmentManager(), getActivity());
-		viewButton.setOnClickListener(mViewButtonOnClickListener);		
+		PlayButtonListener onClickListener = new PlayButtonListener(thumbData, getFragmentManager(), getActivity());
+		viewButton.setOnClickListener(onClickListener);		
 	}
 
 	/**
@@ -111,14 +110,13 @@ public class VideoInfoFragment extends Fragment {
 	private void setDownloadButtonListener() {
 		Button downloadButton = (Button) view
 				.findViewById(R.id.video_info_download_video);
-		mViewButtonOnClickListener = new View.OnClickListener() {
-
+		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				XMLRPCDownloadManager.getInstance().downloadTorrent(thumbData.getInfoHash(), thumbData.getTitle());
 			}
 		};
-		downloadButton.setOnClickListener(mViewButtonOnClickListener);
+		downloadButton.setOnClickListener(onClickListener);
 	}
 
 	/**

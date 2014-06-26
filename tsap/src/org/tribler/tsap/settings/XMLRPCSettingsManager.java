@@ -1,13 +1,8 @@
 package org.tribler.tsap.settings;
 
-import java.io.File;
-import java.net.URL;
 
-import org.tribler.tsap.XMLRPCCallTask;
-
-import android.util.Log;
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
+import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 
 /**
  * Singleton class for adding and accessing downloads. 
@@ -15,36 +10,13 @@ import de.timroes.axmlrpc.XMLRPCException;
  */
 public class XMLRPCSettingsManager {
 
-	protected XMLRPCClient mClient;
+	protected XMLRPCConnection mConnection;
 	
-	public XMLRPCSettingsManager(URL url) {
-		mClient = new XMLRPCClient(url);
+	public XMLRPCSettingsManager(XMLRPCConnection connection) {
+		mConnection = connection;
 	}
 	
 	public void setFamilyFilter(boolean onOff) {
-		XMLRPCCallTask task = new XMLRPCCallTask() {
-			@Override
-			protected void onPostExecute(Object result) {
-				if (result instanceof XMLRPCException) {
-					Log.e("XMLRPCSettingsManager", "Could not set the family filter.");
-				}
-			}
-		};
-		task.execute(mClient, "settings.set_family_filter", onOff);
-	}
-	
-	public void getThumbFolder() {
-		XMLRPCCallTask task = new XMLRPCCallTask() {
-			@Override
-			protected void onPostExecute(Object result) {
-				if (!(result instanceof XMLRPCException)) {
-					Settings.XMLRPCSetThumbFolder(new File((String)result));
-				}
-				else {
-					Log.e("XMLRPCSettingsManager", "Could not get the thumb folder.");
-				}
-			}
-		};
-		task.execute(mClient, "settings.get_thumbs_directory");
+		new XMLRPCCallTask().call("settings.set_family_filter", mConnection, onOff);
 	}
 }

@@ -3,7 +3,7 @@ package org.tribler.tsap;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.tribler.tsap.channels.ChannelListFragment;
+import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.downloads.DownloadListAdapter;
 import org.tribler.tsap.downloads.DownloadListFragment;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
+import de.timroes.axmlrpc.XMLRPCClient;
 
 /**
  * The activity that is started when the application is launched
@@ -34,8 +35,8 @@ public class MainActivity extends Activity implements
 	 * navigation drawer.
 	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
+	
 	private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
-	private ChannelListFragment mChannelFragment = new ChannelListFragment();
 	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
 	private SettingsFragment mSettingsFragment = new SettingsFragment();
 
@@ -68,14 +69,15 @@ public class MainActivity extends Activity implements
 		VLCApplication.setContext(getApplicationContext());
 		try {
 			URL url = new URL("http://127.0.0.1:8000/tribler");
-			DownloadListAdapter adapter = new DownloadListAdapter(this,
-					R.layout.download_list_item);
-			XMLRPCDownloadManager.setUp(adapter, url, this);
-			Settings.setup(url, this);
+			XMLRPCConnection.getInstance().setup(new XMLRPCClient(url), this);
 		} catch (MalformedURLException e) {
 			Log.e("DownloadListFragment", "URL was malformed:\n");
 			e.printStackTrace();
 		}
+		DownloadListAdapter adapter = new DownloadListAdapter(this,
+				R.layout.download_list_item);
+		XMLRPCDownloadManager.getInstance().setUp(adapter, XMLRPCConnection.getInstance(), this);
+		Settings.setup(this, XMLRPCConnection.getInstance());
 	}
 
 	/**
@@ -86,7 +88,7 @@ public class MainActivity extends Activity implements
 	 */
 	@Override
 	public void onBackPressed() {
-		if (mThumbGridFragment.isVisible() || mChannelFragment.isVisible()
+		if (mThumbGridFragment.isVisible()
 				|| mDownloadFragment.isVisible() || mSettingsFragment.isVisible()) {
 			new OnQuitDialog(this).show();
 		} else
@@ -153,15 +155,6 @@ public class MainActivity extends Activity implements
 		}
 
 		return super.onCreateOptionsMenu(menu);
-	}
-	
-	/**
-	 * Returns the instance of the ChannelListFragment
-	 * 
-	 * @return This Activity's ChannelListFragment instance
-	 */
-	public ChannelListFragment getChannelListFragment() {
-		return mChannelFragment;
 	}
 
 	/**

@@ -1,80 +1,71 @@
 package org.tribler.tsap;
 
-import java.util.Observable;
-import java.util.Observer;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import android.os.Handler;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
- * Polling class that calls the update function of it's observer with a constant
- * interval
+ * Polling class that calls the onPoll function of it's listener with a constant
+ * interval.
+ * 
+ * It's a wrapper class for java.util.Timer that calls back to an interface
+ * instead of an abstract class. So you don't need multiple inheritance, which
+ * Java doesn't have.
  * 
  * @author Dirk Schut
  */
-public class Poller extends Observable implements Runnable {
-	Observer mObserver;
-	private Handler mPollingHandler = new Handler();
-	public int pollingPeriod;
-	boolean shouldRun = false, hasBlocked = true;
-	Lock lock = new ReentrantLock();
+public class Poller{
+	protected IPollListener mListener;
+	private Timer mTimer = null;
+	private TimerTask mTask;
+	private long mPollingInterval;
 
 	/**
-	 * Constructor: sets up the observer
+	 * Sets up the poller to poll from a new thread. If you want to poll from
+	 * another thread (like the UI thread), use the other constructor.
 	 * 
-	 * @param observer
-	 *            The observer that will be updated every interval
+	 * @param listener
+	 *            The listener whose onPoll function will be called each
+	 *            interval
+	 * @param interval
+	 *            The interval between two onPoll calls
 	 */
-	public Poller(Observer observer, int pollingPeriod) {
-		mObserver = observer;
-		this.addObserver(observer);
-		this.pollingPeriod = pollingPeriod;
-	}
-
-	/**
-	 * Calls the observers update function and makes sure run will be called
-	 * again in POLLING_PERIOD microseconds. This function should not be called
-	 * from outside the class.
-	 */
-	@Override
-	public void run() {
-		lock.lock();
-		if (shouldRun)
-		{
-			setChanged();
-			notifyObservers();
-			mPollingHandler.postDelayed(this, pollingPeriod);
-		}
-		else
-		{
-			hasBlocked = true;
-		}
-		lock.unlock();
+	public Poller(IPollListener listener, long interval) {
+		mListener = listener;
+		mPollingInterval = interval;
 	}
 
 	/**
 	 * Pauses the polling.
 	 */
-	public void pause() {
-		lock.lock();
-		shouldRun = false;
-		hasBlocked = false;
-		lock.unlock();
+	public synchronized void stop() {
+		if(mTimer != null)
+		{
+			mTimer.cancel();
+			mTimer = null;
+		}
+	}
+	
+	protected TimerTask MakeTimerTask() {
+		return new TimerTask() {
+			public void run() {
+				mListener.onPoll();
+			}
+		};
 	}
 
 	/**
 	 * Starts the polling. If the Poller is already polling, nothing changes.
 	 */
-	public void start() {
-		lock.lock();
-		if (!shouldRun) {
-			shouldRun = true;
-			if(hasBlocked)
-			{
-				mPollingHandler.postDelayed(this, pollingPeriod);
-			}
+	public synchronized void start() {
+		if(mTimer == null)
+		{
+			mTimer = new Timer();
+			mTask = MakeTimerTask();
+			mTimer.scheduleAtFixedRate(mTask, 0, mPollingInterval);
 		}
-		lock.unlock();
+	}
+
+	public interface IPollListener {
+		public void onPoll();
 	}
 }

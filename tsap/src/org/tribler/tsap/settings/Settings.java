@@ -29,13 +29,13 @@ public class Settings {
 	public static int getMaxDownloadRate() {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
-		return sharedPref.getInt("pref_maxDownloadRate", 0);
+		return Integer.valueOf(sharedPref.getString("pref_maxDownloadRate", "0"));
 	}
 
 	public static int getMaxUploadRate() {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
-		return sharedPref.getInt("pref_maxUploadRate", 0);
+		return Integer.valueOf(sharedPref.getString("pref_maxUploadRate", "0"));
 	}
 
 	public static boolean getFamilyFilterOn() {

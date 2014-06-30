@@ -2,10 +2,12 @@ package org.tribler.tsap.downloads;
 
 //import org.tribler.tsap.PlayButtonListener;
 import java.io.File;
+import java.io.FilenameFilter;
 
 import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.Utility;
+import org.tribler.tsap.settings.Settings;
 
 import com.squareup.picasso.Picasso;
 
@@ -15,6 +17,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -69,7 +72,7 @@ public class DownloadActivity extends Activity {
 		
 		ImageView thumb = (ImageView) mView
 				.findViewById(R.id.download_info_thumbnail);
-		loadBitmap(mDownload.getThumbImageFile(), thumb);
+		loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
 
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);
@@ -181,5 +184,54 @@ public class DownloadActivity extends Activity {
 		int thumbHeight = (int) (150 * dens);
 		Picasso.with(this).load(file).placeholder(R.drawable.default_thumb)
 			.resize(thumbWidth, thumbHeight).into(mImageView);		
+	}
+	
+	private File getImageLocation(final String infoHash) {
+		File baseDirectory = Settings.getThumbFolder();
+		if(baseDirectory == null || !baseDirectory.isDirectory())
+		{
+			Log.e("DownloadInfo", "The collected_torrent_files thumbnailfolder could not be found");
+			return null;
+		}
+		
+		File thumbsDirectory = new File(baseDirectory, "thumbs-" + infoHash);
+		if(!thumbsDirectory.exists()) {
+			Log.d("DownloadInfo", "No thumbnailfolder found for " + infoHash);
+			return null;
+		}
+				
+		File thumbsSubDirectory = null;
+		for(File file : thumbsDirectory.listFiles()){
+			if(file.isDirectory())
+			{
+				thumbsSubDirectory = file;
+				break;
+			}
+		}
+
+		if(thumbsSubDirectory == null)
+		{
+			Log.d("DownloadInfo", "No thumbnail subfolder found for " + infoHash);
+			return null;
+		}
+		
+		return findImage(thumbsSubDirectory);
+	}
+	
+	private File findImage(File directory) {
+		File[] foundImages = directory.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String name) {
+				return name.endsWith(".png") || name.endsWith(".gif") || name.endsWith(".jpg") || name.endsWith(".jpeg");
+			}
+		});
+		
+		// TODO: Find the best one
+		if(foundImages.length > 0) {
+			return foundImages[0];
+		} else {
+			Log.d("DownloadInfo", "No thumbnailimages found: " + foundImages.length);
+			return null;
+		}
 	}
 }

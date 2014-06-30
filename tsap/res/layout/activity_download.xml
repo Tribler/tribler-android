@@ -20,14 +20,6 @@
             android:paddingRight="10dp" >
 
             <TextView
-                android:id="@+id/download_info_type_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/download_info_type_title"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/download_info_filesize_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,13 +51,6 @@
             android:layout_toRightOf="@id/download_info_detail_titles"
             android:orientation="vertical"
             android:paddingRight="10dp" >
-
-            <TextView
-                android:id="@+id/download_info_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="video"
-                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/download_info_filesize"

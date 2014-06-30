@@ -47,10 +47,6 @@ public class DownloadActivity extends Activity implements IPollListener {
 	}
 
 	private void fillLayout() {
-		TextView type = (TextView) mView.findViewById(R.id.download_info_type);
-		type.setText((mDownload.getCategory() != null) ? mDownload
-				.getCategory() : "");
-
 		TextView size = (TextView) mView
 				.findViewById(R.id.download_info_filesize);
 		size.setText(Utility.convertBytesToString(mDownload.getSize()));

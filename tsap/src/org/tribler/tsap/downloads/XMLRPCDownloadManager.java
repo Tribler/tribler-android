@@ -3,9 +3,9 @@ package org.tribler.tsap.downloads;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.util.Poller.IPollListener;
 
 import android.content.Context;
 import android.net.Uri;

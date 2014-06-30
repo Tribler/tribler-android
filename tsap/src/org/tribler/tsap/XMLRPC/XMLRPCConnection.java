@@ -2,8 +2,8 @@ package org.tribler.tsap.XMLRPC;
 
 import java.util.ArrayList;
 
-import org.tribler.tsap.Poller;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
+import org.tribler.tsap.util.Poller;
 
 import android.app.Activity;
 import android.util.Log;

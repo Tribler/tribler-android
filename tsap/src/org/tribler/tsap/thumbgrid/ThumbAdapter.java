@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
-import org.tribler.tsap.Utility;
 import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.util.Utility;
 
 import com.squareup.picasso.Picasso;
 

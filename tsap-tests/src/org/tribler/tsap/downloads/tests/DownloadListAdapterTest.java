@@ -16,13 +16,13 @@ public class DownloadListAdapterTest extends
 		ActivityInstrumentationTestCase2<MainActivity> {
 	DownloadListAdapter adapter;
 	Download a = new Download("a", "hash1", 1, 1234.5, 5.4321, 0.2, 0.1, 0.1,
-			false, 8, 5, "Unknown", 756);
+			false, 8, 5, "Unknown", 756,0);
 	Download b = new Download("b", "hash2", 2, 123.45, 54.321, 0.3, 0.1, 0.1,
-			false, 6, 5, "Other", 86);
+			false, 6, 5, "Other", 86,1);
 	Download c = new Download("c", "hash3", 3, 12.345, 543.21, 0.4, 0.1, 0.1,
-			false, 75, 5, "Video", 23);
+			false, 75, 5, "Video", 23,5);
 	Download d = new Download("d", "hash4", 4, 1.2345, 5432.1, 0.5, 0.1, 0.1,
-			false, 0, 0, "Unknown", -1);
+			false, 0, 0, "Unknown", -1,0);
 
 	public DownloadListAdapterTest() {
 		super(MainActivity.class);

@@ -44,10 +44,6 @@ public class DownloadActivity extends Activity {
 		TextView type = (TextView) mView.findViewById(R.id.download_info_type);
 		type.setText(mDownload.getCategory());
 
-		TextView date = (TextView) mView
-				.findViewById(R.id.download_info_upload_date);
-		date.setText("5-11-1998");
-
 		TextView size = (TextView) mView
 				.findViewById(R.id.download_info_filesize);
 		size.setText(Utility.convertBytesToString(mDownload.getSize()));

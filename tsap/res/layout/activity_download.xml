@@ -28,14 +28,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/download_info_upload_date_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/download_info_upload_date_title"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/download_info_filesize_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,13 +65,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="video"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/download_info_upload_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1-1-1970"
                 android:textSize="18sp" />
 
             <TextView

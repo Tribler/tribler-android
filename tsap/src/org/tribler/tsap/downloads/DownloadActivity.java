@@ -48,7 +48,8 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 	private void fillLayout() {
 		TextView type = (TextView) mView.findViewById(R.id.download_info_type);
-		type.setText(mDownload.getCategory());
+		type.setText((mDownload.getCategory() != null) ? mDownload
+				.getCategory() : "");
 
 		TextView size = (TextView) mView
 				.findViewById(R.id.download_info_filesize);
@@ -153,6 +154,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button);
 
 		mPoller = new Poller(this, 2000);
+		mPoller.start();
 	}
 
 	/**
@@ -247,6 +249,14 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 	@Override
 	public void onPoll() {
-		fillLayout();
+		XMLRPCDownloadManager.getInstance().getProgressInfo(
+				mDownload.getInfoHash());
+		Download currDownload = XMLRPCDownloadManager.getInstance()
+				.getCurrentDownload();
+		if (currDownload != null
+				&& currDownload.getInfoHash().equals(mDownload.getInfoHash())) {
+			mDownload = currDownload;
+			fillLayout();
+		}
 	}
 }

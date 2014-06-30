@@ -90,6 +90,7 @@
     <string name="pref_os_licences">Open-source licences</string>
     <string name="pref_os_licences_summary">Licence details for open source software</string>
     <string name="pref_about">About this app</string>
+    <string name="pref_about_description">App logo</string>
 
     <!-- Strings for OnQuitDialog -->
     <string name="on_quit_initial_message">Are you sure you want to close this app including the Tribler service?</string>

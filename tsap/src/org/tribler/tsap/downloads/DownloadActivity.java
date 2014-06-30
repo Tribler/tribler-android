@@ -3,14 +3,12 @@ package org.tribler.tsap.downloads;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import org.tribler.tsap.MainThreadPoller;
 import org.tribler.tsap.PlayButtonListener;
-import org.tribler.tsap.Poller;
 import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.Utility;
 import org.tribler.tsap.settings.Settings;
-
-import com.squareup.picasso.Picasso;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -26,11 +24,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 public class DownloadActivity extends Activity implements IPollListener {
 	private ActionBar mActionBar;
 	private Download mDownload;
 	private View mView;
-	private Poller mPoller;
+	private MainThreadPoller mPoller;
 
 	public final static String INTENT_MESSAGE = "org.tribler.tsap.DownloadActivity.IntentMessage";
 
@@ -47,41 +47,35 @@ public class DownloadActivity extends Activity implements IPollListener {
 	}
 
 	private void fillLayout() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				TextView type = (TextView) mView
-						.findViewById(R.id.download_info_type);
-				type.setText((mDownload.getCategory() != null) ? mDownload
-						.getCategory() : "");
+		TextView type = (TextView) mView.findViewById(R.id.download_info_type);
+		type.setText((mDownload.getCategory() != null) ? mDownload
+				.getCategory() : "");
 
-				TextView size = (TextView) mView
-						.findViewById(R.id.download_info_filesize);
-				size.setText(Utility.convertBytesToString(mDownload.getSize()));
+		TextView size = (TextView) mView
+				.findViewById(R.id.download_info_filesize);
+		size.setText(Utility.convertBytesToString(mDownload.getSize()));
 
-				TextView download = (TextView) mView
-						.findViewById(R.id.download_info_down_speed);
-				download.setText(Utility.convertBytesPerSecToString(mDownload
-						.getDownloadSpeed()));
+		TextView download = (TextView) mView
+				.findViewById(R.id.download_info_down_speed);
+		download.setText(Utility.convertBytesPerSecToString(mDownload
+				.getDownloadSpeed()));
 
-				TextView upload = (TextView) mView
-						.findViewById(R.id.download_info_up_speed);
-				upload.setText(Utility.convertBytesPerSecToString(mDownload
-						.getUploadSpeed()));
+		TextView upload = (TextView) mView
+				.findViewById(R.id.download_info_up_speed);
+		upload.setText(Utility.convertBytesPerSecToString(mDownload
+				.getUploadSpeed()));
 
-				TextView descr = (TextView) mView
-						.findViewById(R.id.download_info_description);
-				descr.setText("");
+		TextView descr = (TextView) mView
+				.findViewById(R.id.download_info_description);
+		descr.setText("");
 
-				ImageView thumb = (ImageView) mView
-						.findViewById(R.id.download_info_thumbnail);
-				loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
+		ImageView thumb = (ImageView) mView
+				.findViewById(R.id.download_info_thumbnail);
+		loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
 
-				ProgressBar bar = (ProgressBar) mView
-						.findViewById(R.id.download_info_progress_bar);
-				bar.setProgress((int) (100 * mDownload.getProgress()));
-			}
-		});
+		ProgressBar bar = (ProgressBar) mView
+				.findViewById(R.id.download_info_progress_bar);
+		bar.setProgress((int) (100 * mDownload.getProgress()));
 	}
 
 	private void setStreamButtonListener() {
@@ -159,7 +153,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 		setStreamButtonListener();
 		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button);
 
-		mPoller = new Poller(this, 2000);
+		mPoller = new MainThreadPoller(this, 2000, this);
 		mPoller.start();
 	}
 
@@ -171,13 +165,12 @@ public class DownloadActivity extends Activity implements IPollListener {
 		super.onPause();
 		mPoller.stop();
 	}
-	
+
 	/**
 	 * Resumes the poller
 	 */
 	@Override
-	public void onResume()
-	{
+	public void onResume() {
 		super.onResume();
 		mPoller.start();
 	}

@@ -3,6 +3,8 @@
 # Manages local settings. SETTINGS ARE NOT SAVED LOCALLY BETWEEN SESSIONS (for now)!
 
 import threading
+import os
+import ast
 
 # Setup logger
 import logging
@@ -15,6 +17,8 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, dlstatus_strings
 
+
+ENVIRONMENT_SETTINGS_PREFIX = "TRIBLER_SETTING_"
 
 class SettingsManager():
     # Code to make this a singleton
@@ -51,6 +55,8 @@ class SettingsManager():
         self._remote_lock = threading.Lock()
 
         self._connect()
+
+        self._load_settings_from_env()
 
         if xmlrpc:
             self._xmlrpc_register(xmlrpc)
@@ -90,6 +96,33 @@ class SettingsManager():
         xmlrpc.register_function(self.get_thumbs_directory, "settings.get_thumbs_directory")
         xmlrpc.register_function(self.get_family_filter, "settings.get_family_filter")
         xmlrpc.register_function(self.set_family_filter, "settings.set_family_filter")
+
+    def _load_settings_from_env(self):
+        """
+        Settings are passed to the Tribler process on startup with the TRIBLER_SETTING_* environment variables. This
+        function iterates over the environment variables and calls the setter functions associated with any found
+        variables.
+        :return: Nothing.
+        """
+        def get_value(value):
+            if value.lower() == "true":
+                return True
+            elif value.lower() == "false":
+                return False
+            else:
+                return ast.literal_eval(value)
+
+        for envkey in os.environ.keys():
+            if envkey.startswith(ENVIRONMENT_SETTINGS_PREFIX):
+                try:
+                    function_name = "set_%s" % envkey[len(ENVIRONMENT_SETTINGS_PREFIX):].lower()
+                    function_value = os.environ[envkey]
+                    _logger.info("Setting preset setting with %s(%s)" % (function_name, function_value))
+
+                    # Call setter
+                    getattr(self, function_name)(get_value(function_value))
+                except Exception, e:
+                    _logger.warn("Could net set settings for key %s: %s" % (envkey, e.args))
 
     def get_thumbs_directory(self):
         """

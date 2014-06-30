@@ -1,9 +1,13 @@
 package org.tribler.tsap.downloads;
 
 //import org.tribler.tsap.PlayButtonListener;
+import java.io.File;
+
 import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.Utility;
+
+import com.squareup.picasso.Picasso;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,6 +18,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -61,6 +66,10 @@ public class DownloadActivity extends Activity {
 		TextView descr = (TextView) mView
 				.findViewById(R.id.download_info_description);
 		descr.setText("");
+		
+		ImageView thumb = (ImageView) mView
+				.findViewById(R.id.download_info_thumbnail);
+		loadBitmap(mDownload.getThumbImageFile(), thumb);
 
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);
@@ -156,5 +165,21 @@ public class DownloadActivity extends Activity {
 		} else {
 			return super.onOptionsItemSelected(menuItem);
 		}
+	}
+	
+	/**
+	 * Loads the thumbnail of the selected torrent
+	 * 
+	 * @param resId
+	 *            The resource id of the thumbnail
+	 * @param mImageView
+	 *            The ImageView in which the thumbnail should be loaded
+	 */
+	private void loadBitmap(File file, ImageView mImageView) {
+		float dens = getResources().getDisplayMetrics().density;
+		int thumbWidth = (int) (100 * dens);
+		int thumbHeight = (int) (150 * dens);
+		Picasso.with(this).load(file).placeholder(R.drawable.default_thumb)
+			.resize(thumbWidth, thumbHeight).into(mImageView);		
 	}
 }

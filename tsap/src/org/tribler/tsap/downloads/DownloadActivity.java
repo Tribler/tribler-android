@@ -85,7 +85,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 				+ Utility.convertBytesPerSecToString(mDownload
 						.getUploadSpeed()));
 		
-		TextView eta = (TextView)mView.findViewById(R.id.download_eta);
+		TextView eta = (TextView)mView.findViewById(R.id.download_info_eta_text);
 		eta.setText((mDownload.getStatus() == 3)
 				? "ETA: " + Utility.convertSecondsToString(mDownload.getETA())
 				: "");

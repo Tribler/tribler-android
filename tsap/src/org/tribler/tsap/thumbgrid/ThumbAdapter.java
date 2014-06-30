@@ -175,9 +175,11 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 */
 	public void addNew(List<ThumbItem> list) {
 		synchronized (mLock) {
-			for (int i = 0; i < list.size(); i++) {
-				if (!mContent.contains(list.get(i))) {
-					mContent.add(list.get(i));
+			for (ThumbItem item : list)
+			{
+				if(!mContent.contains(item))
+				{
+					mContent.add(item);
 				}
 			}
 		}

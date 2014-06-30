@@ -3,14 +3,12 @@ package org.tribler.tsap.downloads;
 import java.io.Serializable;
 
 import org.tribler.tsap.Poller;
-import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection.IConnectionListener;
 
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -72,23 +70,6 @@ public class DownloadListFragment extends ListFragment implements IConnectionLis
 		Intent i = new Intent(getActivity().getApplicationContext(), DownloadActivity.class);
 		i.putExtra(DownloadActivity.INTENT_MESSAGE, (Serializable) ((DownloadListAdapter) getListAdapter()).getItem(position));
 		startActivity(i);
-	}
-
-	/**
-	 * Defines the behaviour of selecting a menu item
-	 * 
-	 * @param item
-	 *            The menu item that has been clicked
-	 * @return True iff the menu item's behaviour is executed correctly
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_search_channel:
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
 	}
 
 	@Override

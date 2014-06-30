@@ -578,13 +578,6 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
         }
         if(data.getData() == null) return;
 
-        String uri = data.getData().getPath();
-        //TODO: clean up this reference to CommonDialogs
-        /*if(requestCode == CommonDialogs.INTENT_SPECIFIC) {
-            Log.d(TAG, "Specific subtitle file: " + uri);
-        } else if(requestCode == CommonDialogs.INTENT_GENERIC) {
-            Log.d(TAG, "Generic subtitle file: " + uri);
-        }*/
         mSubtitleSelectedFiles.add(data.getData().getPath());
     }
 

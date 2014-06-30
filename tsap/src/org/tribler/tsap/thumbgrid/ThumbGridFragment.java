@@ -129,7 +129,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
-		searchView.setQueryHint("Search videos");
+		searchView.setQueryHint(getString(R.string.thumb_grid_searchview));
 	}
 
 	/**

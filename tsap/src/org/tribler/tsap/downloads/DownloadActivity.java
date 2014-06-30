@@ -42,7 +42,7 @@ public class DownloadActivity extends Activity {
 		// title.setText(mDownload.getName());
 
 		TextView type = (TextView) mView.findViewById(R.id.download_info_type);
-		type.setText("Video");
+		type.setText(mDownload.getCategory());
 
 		TextView date = (TextView) mView
 				.findViewById(R.id.download_info_upload_date);
@@ -50,7 +50,7 @@ public class DownloadActivity extends Activity {
 
 		TextView size = (TextView) mView
 				.findViewById(R.id.download_info_filesize);
-		size.setText(String.valueOf(1) + "KB");
+		size.setText(Utility.convertBytesToString(mDownload.getSize()));
 
 		TextView download = (TextView) mView
 				.findViewById(R.id.download_info_down_speed);

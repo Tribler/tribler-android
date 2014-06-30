@@ -87,7 +87,7 @@ public class XMLRPCDownloadManager implements IPollListener {
 
 		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
 		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
-		String size = Utility.getFromMap(map, "length", "-1");
+		long size = Utility.getFromMap(map, "length", -1);
 
 		return new Download((String) map.get("name"),
 				(String) map.get("infohash"), (Integer) map.get("status"),
@@ -95,7 +95,7 @@ public class XMLRPCDownloadManager implements IPollListener {
 				(Double) map.get("eta"), (Double) map.get("vod_eta"),
 				(Boolean) map.get("vod_playable"), seeders, leechers,
 				Utility.getFromMap(map, "category", "Unknown"),
-				Long.parseLong(size.trim()));
+				size);
 	}
 
 	/**

@@ -76,12 +76,12 @@ public class DownloadActivity extends Activity implements IPollListener {
 						" (" + Math.round(mDownload.getProgress() * 100) + "%)" : ""));
 		
 		TextView downloadRate = (TextView)mView.findViewById(R.id.download_info_down_text);
-		downloadRate.setText("Down: "
+		downloadRate.setText("Download speed: "
 				+ Utility.convertBytesPerSecToString(mDownload
 						.getDownloadSpeed()));
 		
 		TextView uploadRate = (TextView)mView.findViewById(R.id.download_info_up_text);
-		uploadRate.setText("Up: "
+		uploadRate.setText("Upload speed: "
 				+ Utility.convertBytesPerSecToString(mDownload
 						.getUploadSpeed()));
 		

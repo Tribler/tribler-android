@@ -50,7 +50,7 @@ public class Download implements Serializable {
 	 */
 	public Download(String name, String infoHash, int status, double downloadSpeed,
 			double uploadSpeed, double progress, double ETA, double vodETA,
-			boolean vodPlayable) {
+			boolean vodPlayable, File thumbFile, int seeders, int leechers, String category, long size) {
 		this.name = name;
 		this.infoHash = infoHash;
 		this.status = status;
@@ -60,6 +60,12 @@ public class Download implements Serializable {
 		this.ETA = ETA;
 		this.vodETA = vodETA;
 		this.vodPlayable = vodPlayable;
+		
+		this.thumbImageFile = thumbFile;
+		this.seeders = seeders;
+		this.leechers = leechers;
+		this.category = category;
+		this.size = size;
 	}
 
 	public String getName() {

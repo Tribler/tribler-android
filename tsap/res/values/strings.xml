@@ -73,6 +73,7 @@
     <string name="thumb_grid_search_submitted">"Searching..."</string>
     <string name="thumb_grid_server_started">"Type in keywords to start searching."</string>
     <string name="thumb_grid_connection_failed">"Could not connect to Tribler."</string>    
+    <string name="thumb_grid_searchview">Search videos</string>
     
     <!-- Strings for settings -->
 	<string name="pref_supportedTorrentTypes">Supported torrent types</string>

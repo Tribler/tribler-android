@@ -2,9 +2,9 @@ package org.tribler.tsap.downloads;
 
 import java.io.Serializable;
 
-import org.tribler.tsap.Poller;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection.IConnectionListener;
+import org.tribler.tsap.util.Poller;
 
 import android.app.ListFragment;
 import android.content.Intent;

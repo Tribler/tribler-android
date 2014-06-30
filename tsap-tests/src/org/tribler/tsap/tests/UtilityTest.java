@@ -1,6 +1,6 @@
 package org.tribler.tsap.tests;
 
-import org.tribler.tsap.Utility;
+import org.tribler.tsap.util.Utility;
 
 import android.test.AndroidTestCase;
 

@@ -1,5 +1,7 @@
 package org.tribler.tsap;
 
+import org.tribler.tsap.util.Poller;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;

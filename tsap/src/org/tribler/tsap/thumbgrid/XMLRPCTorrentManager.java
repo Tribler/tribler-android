@@ -3,10 +3,10 @@ package org.tribler.tsap.thumbgrid;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.tribler.tsap.Poller;
-import org.tribler.tsap.Utility;
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.util.Poller;
+import org.tribler.tsap.util.Utility;
 
 import android.util.Log;
 

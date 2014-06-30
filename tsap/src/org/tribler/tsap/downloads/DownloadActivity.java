@@ -3,7 +3,7 @@ package org.tribler.tsap.downloads;
 //import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
-import org.tribler.tsap.Utility;
+import org.tribler.tsap.util.Utility;
 
 import android.app.ActionBar;
 import android.app.Activity;

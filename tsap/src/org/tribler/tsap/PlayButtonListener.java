@@ -1,9 +1,11 @@
 package org.tribler.tsap;
 
-import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.util.MainThreadPoller;
+import org.tribler.tsap.util.Utility;
+import org.tribler.tsap.util.Poller.IPollListener;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Activity;

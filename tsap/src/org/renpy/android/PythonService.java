@@ -1,6 +1,7 @@
 package org.renpy.android;
 
 import org.tribler.tsap.MainActivity;
+import org.tribler.tsap.settings.Settings;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -115,8 +116,16 @@ public class PythonService extends Service implements Runnable {
 				"ANDROID_DOWNLOAD_DIRECTORY",
 				Environment.getExternalStoragePublicDirectory(
 						Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+		setSettings();
 		nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
 				pythonServiceArgument);
+	}
+
+	private void setSettings() {
+		nativeSetEnv("TRIBLER_SETTING_FAMILYFILTER",
+				Boolean.toString(Settings.getFamilyFilterOn()));
+		// set max download
+		// set max upload
 	}
 
 	public static void stop() {

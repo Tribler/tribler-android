@@ -94,6 +94,9 @@
     <!-- Strings for OnQuitDialog -->
     <string name="on_quit_initial_message">Are you sure you want to close this app including the Tribler service?</string>
     <string name="on_quit_shutdown_message">Shutting down Tribler...</string>
-	<string name="on_quit_title">Quit</string>
-    
+    <string name="on_quit_title">Quit</string>
+
+    <!-- Strings for VODDialog -->
+    <string name="vod_dialog_initial_message">Please wait before the video starts playing...</string>
+
 </resources>

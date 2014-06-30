@@ -1,5 +1,6 @@
-package org.tribler.tsap;
+package org.tribler.tsap.streaming;
 
+import org.tribler.tsap.R;
 import org.tribler.tsap.util.Poller;
 
 import android.annotation.SuppressLint;

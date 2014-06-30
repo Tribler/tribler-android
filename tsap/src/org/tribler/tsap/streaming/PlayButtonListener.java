@@ -1,4 +1,4 @@
-package org.tribler.tsap;
+package org.tribler.tsap.streaming;
 
 import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;

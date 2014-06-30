@@ -1,8 +1,8 @@
 package org.tribler.tsap.downloads;
 
 //import org.tribler.tsap.PlayButtonListener;
-import org.tribler.tsap.PlayButtonListener;
 import org.tribler.tsap.R;
+import org.tribler.tsap.streaming.PlayButtonListener;
 import org.tribler.tsap.util.Utility;
 
 import android.app.ActionBar;

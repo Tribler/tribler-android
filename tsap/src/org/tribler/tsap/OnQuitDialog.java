@@ -40,8 +40,8 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 	public OnQuitDialog(Context context) {
 		super(context);
 		mContext = context;
-		setTitle("Quit");
-		setMessage("Are you sure you want to close this app including the Tribler service?");
+		setTitle(context.getString(R.string.on_quit_title));
+		setMessage(context.getString(R.string.on_quit_initial_message));
 		setButton(BUTTON_POSITIVE, "Yes", this);
 		setButton(BUTTON_NEGATIVE, "No", this);
 	}
@@ -56,9 +56,9 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 		if (buttonClicked == BUTTON_POSITIVE) {
 			// show new non-cancelable dialog
 			AlertDialog shutdownProgress = new AlertDialog.Builder(mContext)
-					.setMessage("Shutting down Tribler...")
+					.setMessage(mContext.getString(R.string.on_quit_shutdown_message))
 					.setCancelable(false)
-					.setTitle("Quit")
+					.setTitle(mContext.getString(R.string.on_quit_title))
 					.show();
 			
 			// perform XML-RPC call to shutdown tribler, which notifies this

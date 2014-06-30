@@ -151,15 +151,15 @@ public class PythonActivity extends Activity implements Runnable {
 	}
 
 	public void run() {
-		setProgressText("Extracting assets...");
+		setProgressText(getString(R.string.python_activity_extract_message));
 		unpackData("private", getFilesDir());
 		unpackData("public", externalStorage);
 
-		setProgressText("Starting Tribler service...");
+		setProgressText(getString(R.string.python_activity_start_service_message));
 		start_service("Tribler", "Service running Tribler", "");
 		Log.d(TAG, "Service started");
 		
-		setProgressText("Starting the main activity...");
+		setProgressText(getString(R.string.python_activity_start_activity_message));
 		startActivity(new Intent(this, MainActivity.class));
 	}
 	

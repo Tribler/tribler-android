@@ -99,4 +99,9 @@
     <!-- Strings for VODDialog -->
     <string name="vod_dialog_initial_message">Please wait before the video starts playing...</string>
 
+    <!-- Strings for PythonActivity -->
+    <string name="python_activity_extract_message">Extracting assets...</string>
+    <string name="python_activity_start_service_message">Starting Tribler service...</string>
+    <string name="python_activity_start_activity_message">Starting the main activity...</string>
+
 </resources>

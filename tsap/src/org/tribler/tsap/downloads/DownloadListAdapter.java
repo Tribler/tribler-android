@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
-import org.tribler.tsap.Utility;
+import org.tribler.tsap.util.Utility;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

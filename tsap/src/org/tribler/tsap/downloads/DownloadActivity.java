@@ -1,10 +1,11 @@
 package org.tribler.tsap.downloads;
 
-//import org.tribler.tsap.PlayButtonListener;
 import java.io.File;
 import java.io.FilenameFilter;
 
 import org.tribler.tsap.PlayButtonListener;
+import org.tribler.tsap.Poller;
+import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.R;
 import org.tribler.tsap.Utility;
 import org.tribler.tsap.settings.Settings;
@@ -25,10 +26,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class DownloadActivity extends Activity {
+public class DownloadActivity extends Activity implements IPollListener {
 	private ActionBar mActionBar;
 	private Download mDownload;
 	private View mView;
+	private Poller mPoller;
 
 	public final static String INTENT_MESSAGE = "org.tribler.tsap.DownloadActivity.IntentMessage";
 
@@ -45,10 +47,6 @@ public class DownloadActivity extends Activity {
 	}
 
 	private void fillLayout() {
-		// TextView title = (TextView)
-		// mView.findViewById(R.id.download_info_title);
-		// title.setText(mDownload.getName());
-
 		TextView type = (TextView) mView.findViewById(R.id.download_info_type);
 		type.setText(mDownload.getCategory());
 
@@ -65,11 +63,11 @@ public class DownloadActivity extends Activity {
 				.findViewById(R.id.download_info_up_speed);
 		upload.setText(Utility.convertBytesPerSecToString(mDownload
 				.getUploadSpeed()));
-		
+
 		TextView descr = (TextView) mView
 				.findViewById(R.id.download_info_description);
 		descr.setText("");
-		
+
 		ImageView thumb = (ImageView) mView
 				.findViewById(R.id.download_info_thumbnail);
 		loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
@@ -153,6 +151,17 @@ public class DownloadActivity extends Activity {
 		fillLayout();
 		setStreamButtonListener();
 		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button);
+
+		mPoller = new Poller(this, 2000);
+	}
+
+	/**
+	 * Pauses polling
+	 */
+	@Override
+	public void onPause() {
+		super.onPause();
+		mPoller.stop();
 	}
 
 	/**
@@ -169,7 +178,7 @@ public class DownloadActivity extends Activity {
 			return super.onOptionsItemSelected(menuItem);
 		}
 	}
-	
+
 	/**
 	 * Loads the thumbnail of the selected torrent
 	 * 
@@ -183,55 +192,61 @@ public class DownloadActivity extends Activity {
 		int thumbWidth = (int) (100 * dens);
 		int thumbHeight = (int) (150 * dens);
 		Picasso.with(this).load(file).placeholder(R.drawable.default_thumb)
-			.resize(thumbWidth, thumbHeight).into(mImageView);		
+				.resize(thumbWidth, thumbHeight).into(mImageView);
 	}
-	
+
 	private File getImageLocation(final String infoHash) {
 		File baseDirectory = Settings.getThumbFolder();
-		if(baseDirectory == null || !baseDirectory.isDirectory())
-		{
-			Log.e("DownloadInfo", "The collected_torrent_files thumbnailfolder could not be found");
+		if (baseDirectory == null || !baseDirectory.isDirectory()) {
+			Log.e("DownloadInfo",
+					"The collected_torrent_files thumbnailfolder could not be found");
 			return null;
 		}
-		
+
 		File thumbsDirectory = new File(baseDirectory, "thumbs-" + infoHash);
-		if(!thumbsDirectory.exists()) {
+		if (!thumbsDirectory.exists()) {
 			Log.d("DownloadInfo", "No thumbnailfolder found for " + infoHash);
 			return null;
 		}
-				
+
 		File thumbsSubDirectory = null;
-		for(File file : thumbsDirectory.listFiles()){
-			if(file.isDirectory())
-			{
+		for (File file : thumbsDirectory.listFiles()) {
+			if (file.isDirectory()) {
 				thumbsSubDirectory = file;
 				break;
 			}
 		}
 
-		if(thumbsSubDirectory == null)
-		{
-			Log.d("DownloadInfo", "No thumbnail subfolder found for " + infoHash);
+		if (thumbsSubDirectory == null) {
+			Log.d("DownloadInfo", "No thumbnail subfolder found for "
+					+ infoHash);
 			return null;
 		}
-		
+
 		return findImage(thumbsSubDirectory);
 	}
-	
+
 	private File findImage(File directory) {
 		File[] foundImages = directory.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String name) {
-				return name.endsWith(".png") || name.endsWith(".gif") || name.endsWith(".jpg") || name.endsWith(".jpeg");
+				return name.endsWith(".png") || name.endsWith(".gif")
+						|| name.endsWith(".jpg") || name.endsWith(".jpeg");
 			}
 		});
-		
+
 		// TODO: Find the best one
-		if(foundImages.length > 0) {
+		if (foundImages.length > 0) {
 			return foundImages[0];
 		} else {
-			Log.d("DownloadInfo", "No thumbnailimages found: " + foundImages.length);
+			Log.d("DownloadInfo", "No thumbnailimages found: "
+					+ foundImages.length);
 			return null;
 		}
+	}
+
+	@Override
+	public void onPoll() {
+		fillLayout();
 	}
 }

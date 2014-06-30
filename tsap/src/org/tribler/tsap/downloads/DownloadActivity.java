@@ -171,6 +171,16 @@ public class DownloadActivity extends Activity implements IPollListener {
 		super.onPause();
 		mPoller.stop();
 	}
+	
+	/**
+	 * Resumes the poller
+	 */
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		mPoller.start();
+	}
 
 	/**
 	 * Called when one of the icons in the start bar is tapped: When the home

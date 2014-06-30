@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.util.Poller;
 import org.tribler.tsap.util.Utility;
 
@@ -60,6 +61,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 	private void addRemoteResults() {
 		Object[] arrayResult = (Object[]) mConnection.call("torrents.get_remote_results");
 		ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
+		Settings.TorrentType localFilter = Settings.getFilteredTorrentTypes();
 		
 		Log.v("XMPLRCTorrentManager", "Got " + arrayResult.length + " results");
 		
@@ -67,7 +69,15 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 			@SuppressWarnings("unchecked")
 			ThumbItem item = convertMapToThumbItem(
 					(Map<String, Object>) arrayResult[i]);
-			resultsList.add(item);
+			
+			if(Utility.applyResultFilter(item, localFilter))
+			{
+				resultsList.add(item);
+			}
+			else
+			{
+				Log.e("TorrentFilter", "Filtered remote result because of category filter (" + item.getTitle() + ", " + item.getCategory() + ")");
+			}
 		}
 		mAdapter.addNew(resultsList);
 	}

@@ -123,10 +123,10 @@ public class PythonService extends Service implements Runnable {
 
 	private void setSettings() {
 		Settings.setup(getApplicationContext());
-		nativeSetEnv("TRIBLER_SETTING_FAMILYFILTER",
+		nativeSetEnv("TRIBLER_SETTING_FAMILY_FILTER",
 				Boolean.toString(Settings.getFamilyFilterOn()));		
-		nativeSetEnv("TRIBLER_SETTING_MAXDOWNLOAD", Integer.toString(Settings.getMaxDownloadRate()));
-		nativeSetEnv("TRIBLER_SETTING_MAXUPLOAD", Integer.toString(Settings.getMaxUploadRate()));
+		nativeSetEnv("TRIBLER_SETTING_MAX_DOWNLOAD", Integer.toString(Settings.getMaxDownloadRate()));
+		nativeSetEnv("TRIBLER_SETTING_MAX_UPLOAD", Integer.toString(Settings.getMaxUploadRate()));
 	}
 
 	public static void stop() {

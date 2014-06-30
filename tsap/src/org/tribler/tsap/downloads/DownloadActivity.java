@@ -47,35 +47,41 @@ public class DownloadActivity extends Activity implements IPollListener {
 	}
 
 	private void fillLayout() {
-		TextView type = (TextView) mView.findViewById(R.id.download_info_type);
-		type.setText((mDownload.getCategory() != null) ? mDownload
-				.getCategory() : "");
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				TextView type = (TextView) mView
+						.findViewById(R.id.download_info_type);
+				type.setText((mDownload.getCategory() != null) ? mDownload
+						.getCategory() : "");
 
-		TextView size = (TextView) mView
-				.findViewById(R.id.download_info_filesize);
-		size.setText(Utility.convertBytesToString(mDownload.getSize()));
+				TextView size = (TextView) mView
+						.findViewById(R.id.download_info_filesize);
+				size.setText(Utility.convertBytesToString(mDownload.getSize()));
 
-		TextView download = (TextView) mView
-				.findViewById(R.id.download_info_down_speed);
-		download.setText(Utility.convertBytesPerSecToString(mDownload
-				.getDownloadSpeed()));
+				TextView download = (TextView) mView
+						.findViewById(R.id.download_info_down_speed);
+				download.setText(Utility.convertBytesPerSecToString(mDownload
+						.getDownloadSpeed()));
 
-		TextView upload = (TextView) mView
-				.findViewById(R.id.download_info_up_speed);
-		upload.setText(Utility.convertBytesPerSecToString(mDownload
-				.getUploadSpeed()));
+				TextView upload = (TextView) mView
+						.findViewById(R.id.download_info_up_speed);
+				upload.setText(Utility.convertBytesPerSecToString(mDownload
+						.getUploadSpeed()));
 
-		TextView descr = (TextView) mView
-				.findViewById(R.id.download_info_description);
-		descr.setText("");
+				TextView descr = (TextView) mView
+						.findViewById(R.id.download_info_description);
+				descr.setText("");
 
-		ImageView thumb = (ImageView) mView
-				.findViewById(R.id.download_info_thumbnail);
-		loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
+				ImageView thumb = (ImageView) mView
+						.findViewById(R.id.download_info_thumbnail);
+				loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
 
-		ProgressBar bar = (ProgressBar) mView
-				.findViewById(R.id.download_info_progress_bar);
-		bar.setProgress((int) (100 * mDownload.getProgress()));
+				ProgressBar bar = (ProgressBar) mView
+						.findViewById(R.id.download_info_progress_bar);
+				bar.setProgress((int) (100 * mDownload.getProgress()));
+			}
+		});
 	}
 
 	private void setStreamButtonListener() {

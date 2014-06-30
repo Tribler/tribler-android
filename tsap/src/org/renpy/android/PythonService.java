@@ -122,6 +122,7 @@ public class PythonService extends Service implements Runnable {
 	}
 
 	private void setSettings() {
+		Log.e("service", "TRIBLER_SETTING_FAMILYFILTER is: "+Boolean.toString(Settings.getFamilyFilterOn()));
 		nativeSetEnv("TRIBLER_SETTING_FAMILYFILTER",
 				Boolean.toString(Settings.getFamilyFilterOn()));
 		// set max download

@@ -25,6 +25,16 @@ public class Settings{
 		mThumbFolder = thumbFolder;
 	}
 
+	public static int getMaxDownloadRate() {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+		return sharedPref.getInt("pref_maxDownloadRate", 0);
+	}
+	
+	public static int getMaxUploadRate() {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+		return sharedPref.getInt("pref_maxUploadRate", 0);
+	}
+	
 	public static boolean getFamilyFilterOn() {
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 		return sharedPref.getBoolean("pref_familyFilter", true);

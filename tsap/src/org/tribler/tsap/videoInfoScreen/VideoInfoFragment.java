@@ -79,7 +79,6 @@ public class VideoInfoFragment extends Fragment {
 		TextView descr = (TextView) view
 				.findViewById(R.id.video_info_description);
 		descr.setText("");
-
 		
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);

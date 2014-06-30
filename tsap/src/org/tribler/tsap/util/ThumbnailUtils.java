@@ -18,5 +18,8 @@ public class ThumbnailUtils {
 		Picasso.with(context).load(file).placeholder(R.drawable.default_thumb)
 			.resize(thumbWidth, thumbHeight).into(mImageView);	
 	}
-
+	
+	public static void loadDefaultThumbnail(ImageView imageView, Context context) {
+		loadThumbnail(null, imageView, context);
+	}
 }

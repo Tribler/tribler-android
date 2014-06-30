@@ -63,6 +63,7 @@
     <string name="download_info_filesize_title">Size:</string>
     <string name="download_info_down_speed_title">Speed down:</string>
     <string name="download_info_up_speed_title">Speed up:</string>
+    <string name="download_info_availability_title">Availability:</string>
     <string name="download_info_stream_button">Stream video</string>
 	<string name="download_info_delete_torrent_button">Remove download</string>
 	<string name="download_info_information_title">Download information</string>

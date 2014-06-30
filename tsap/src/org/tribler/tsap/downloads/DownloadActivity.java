@@ -61,6 +61,10 @@ public class DownloadActivity extends Activity implements IPollListener {
 		upload.setText(Utility.convertBytesPerSecToString(mDownload
 				.getUploadSpeed()));
 
+		TextView availability = (TextView) mView
+				.findViewById(R.id.download_info_availability);
+		availability.setText(Integer.toString(mDownload.getAvailability()));
+
 		TextView descr = (TextView) mView
 				.findViewById(R.id.download_info_description);
 		descr.setText("");
@@ -69,27 +73,33 @@ public class DownloadActivity extends Activity implements IPollListener {
 				.findViewById(R.id.download_info_thumbnail);
 		loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
 
-		TextView status = (TextView) mView.findViewById(R.id.download_info_status_text);
+		TextView status = (TextView) mView
+				.findViewById(R.id.download_info_status_text);
 		status.setText("Status: "
-				+ Utility.convertDownloadStateIntToMessage(mDownload.getStatus())
-				+ ((mDownload.getStatus() == 2 || mDownload.getStatus() == 3) ? 
-						" (" + Math.round(mDownload.getProgress() * 100) + "%)" : ""));
-		
-		TextView downloadRate = (TextView)mView.findViewById(R.id.download_info_down_text);
+				+ Utility.convertDownloadStateIntToMessage(mDownload
+						.getStatus())
+				+ ((mDownload.getStatus() == 2 || mDownload.getStatus() == 3) ? " ("
+						+ Math.round(mDownload.getProgress() * 100) + "%)"
+						: ""));
+
+		TextView downloadRate = (TextView) mView
+				.findViewById(R.id.download_info_down_text);
 		downloadRate.setText("Download speed: "
 				+ Utility.convertBytesPerSecToString(mDownload
 						.getDownloadSpeed()));
-		
-		TextView uploadRate = (TextView)mView.findViewById(R.id.download_info_up_text);
-		uploadRate.setText("Upload speed: "
-				+ Utility.convertBytesPerSecToString(mDownload
-						.getUploadSpeed()));
-		
-		TextView eta = (TextView)mView.findViewById(R.id.download_info_eta_text);
-		eta.setText((mDownload.getStatus() == 3)
-				? "ETA: " + Utility.convertSecondsToString(mDownload.getETA())
-				: "");
-		
+
+		TextView uploadRate = (TextView) mView
+				.findViewById(R.id.download_info_up_text);
+		uploadRate
+				.setText("Upload speed: "
+						+ Utility.convertBytesPerSecToString(mDownload
+								.getUploadSpeed()));
+
+		TextView eta = (TextView) mView
+				.findViewById(R.id.download_info_eta_text);
+		eta.setText((mDownload.getStatus() == 3) ? "ETA: "
+				+ Utility.convertSecondsToString(mDownload.getETA()) : "");
+
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);
 		bar.setProgress((int) (100 * mDownload.getProgress()));

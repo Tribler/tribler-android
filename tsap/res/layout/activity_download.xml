@@ -140,7 +140,7 @@
             android:text="@string/download_info_delete_torrent_button" />
 
         <TextView
-            android:id="@+id/video_info_description"
+            android:id="@+id/download_info_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/download_info_delete_torrent_button"

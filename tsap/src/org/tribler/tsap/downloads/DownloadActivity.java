@@ -61,6 +61,10 @@ public class DownloadActivity extends Activity {
 				.findViewById(R.id.download_info_up_speed);
 		upload.setText(Utility.convertBytesPerSecToString(mDownload
 				.getUploadSpeed()));
+		
+		TextView descr = (TextView) mView
+				.findViewById(R.id.download_info_description);
+		descr.setText("");
 
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);

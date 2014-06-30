@@ -28,6 +28,7 @@ public class Download implements Serializable {
 	private int leechers;
 	private String category;
 	private long size;
+	private int availability;
 
 
 	/**
@@ -50,7 +51,7 @@ public class Download implements Serializable {
 	 */
 	public Download(String name, String infoHash, int status, double downloadSpeed,
 			double uploadSpeed, double progress, double ETA, double vodETA,
-			boolean vodPlayable, int seeders, int leechers, String category, long size) {
+			boolean vodPlayable, int seeders, int leechers, String category, long size, int availability) {
 		this.name = name;
 		this.infoHash = infoHash;
 		this.status = status;
@@ -65,6 +66,7 @@ public class Download implements Serializable {
 		this.leechers = leechers;
 		this.category = category;
 		this.size = size;
+		this.availability = availability;
 	}
 
 	public String getName() {
@@ -122,5 +124,10 @@ public class Download implements Serializable {
 
 	public long getSize() {
 		return size;
+	}
+	
+	public int getAvailability()
+	{
+		return availability;
 	}
 }

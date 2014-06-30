@@ -122,11 +122,16 @@ public class PythonService extends Service implements Runnable {
 	}
 
 	private void setSettings() {
+		Settings.setup(getApplicationContext());
 		Log.e("service", "TRIBLER_SETTING_FAMILYFILTER is: "+Boolean.toString(Settings.getFamilyFilterOn()));
 		nativeSetEnv("TRIBLER_SETTING_FAMILYFILTER",
 				Boolean.toString(Settings.getFamilyFilterOn()));
-		// set max download
-		// set max upload
+		
+		Log.e("service", "TRIBLER_SETTING_MAXDOWNLOAD is: "+Integer.toString(Settings.getMaxDownloadRate()));
+		nativeSetEnv("TRIBLER_SETTING_MAXDOWNLOAD", Integer.toString(Settings.getMaxDownloadRate()));
+
+		Log.e("service", "TRIBLER_SETTING_MAXUPLOAD is: "+Integer.toString(Settings.getMaxUploadRate()));
+		nativeSetEnv("TRIBLER_SETTING_MAXUPLOAD", Integer.toString(Settings.getMaxUploadRate()));
 	}
 
 	public static void stop() {

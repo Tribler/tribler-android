@@ -69,6 +69,27 @@ public class DownloadActivity extends Activity implements IPollListener {
 				.findViewById(R.id.download_info_thumbnail);
 		loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
 
+		TextView status = (TextView) mView.findViewById(R.id.download_info_status_text);
+		status.setText("Status: "
+				+ Utility.convertDownloadStateIntToMessage(mDownload.getStatus())
+				+ ((mDownload.getStatus() == 2 || mDownload.getStatus() == 3) ? 
+						" (" + Math.round(mDownload.getProgress() * 100) + "%)" : ""));
+		
+		TextView downloadRate = (TextView)mView.findViewById(R.id.download_info_down_text);
+		downloadRate.setText("Down: "
+				+ Utility.convertBytesPerSecToString(mDownload
+						.getDownloadSpeed()));
+		
+		TextView uploadRate = (TextView)mView.findViewById(R.id.download_info_up_text);
+		uploadRate.setText("Up: "
+				+ Utility.convertBytesPerSecToString(mDownload
+						.getUploadSpeed()));
+		
+		TextView eta = (TextView)mView.findViewById(R.id.download_eta);
+		eta.setText((mDownload.getStatus() == 3)
+				? "ETA: " + Utility.convertSecondsToString(mDownload.getETA())
+				: "");
+		
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);
 		bar.setProgress((int) (100 * mDownload.getProgress()));

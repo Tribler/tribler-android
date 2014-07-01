@@ -2,6 +2,7 @@ package org.tribler.tsap.downloads;
 
 import java.io.Serializable;
 
+import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection.IConnectionListener;
 import org.tribler.tsap.util.Poller;
@@ -9,13 +10,18 @@ import org.tribler.tsap.util.Poller;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class DownloadListFragment extends ListFragment implements IConnectionListener {
 
 	private XMLRPCConnection mConnection;
 	private Poller mPoller;
+	private TextView mEmptyTextView;
+	public final static long POLLING_INTERVAL = 2000;
 	/**
 	 * Initializes the channel adapter
 	 * 
@@ -27,8 +33,16 @@ public class DownloadListFragment extends ListFragment implements IConnectionLis
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		this.setListAdapter(XMLRPCDownloadManager.getInstance().getAdapter());
-		mPoller = new Poller(XMLRPCDownloadManager.getInstance(), 2000);
+		mPoller = new Poller(XMLRPCDownloadManager.getInstance(), POLLING_INTERVAL);
 		mConnection = XMLRPCConnection.getInstance();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.fragment_download_list, null);
+		mEmptyTextView = (TextView)v.findViewById(android.R.id.empty);
+		mEmptyTextView.setText(R.string.connection_loading);
+		return v;
 	}
 	
 	/**
@@ -74,10 +88,12 @@ public class DownloadListFragment extends ListFragment implements IConnectionLis
 
 	@Override
 	public void onConnectionEstablished() {
+		mEmptyTextView.setText(R.string.download_list_empty);
 		mPoller.start();
 	}
 	@Override
 	public void onConnectionLost() {
+		mEmptyTextView.setText(R.string.connection_failed);
 		mPoller.stop();
 	}
 }

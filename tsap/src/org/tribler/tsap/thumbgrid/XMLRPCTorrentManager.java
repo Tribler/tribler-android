@@ -3,6 +3,8 @@ package org.tribler.tsap.thumbgrid;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.tribler.tsap.R;
+import org.tribler.tsap.StatusViewer;
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.settings.Settings;
@@ -18,7 +20,9 @@ import android.util.Log;
  */
 public class XMLRPCTorrentManager implements Poller.IPollListener{
 	private ThumbAdapter mAdapter;
-	XMLRPCConnection mConnection;
+	private XMLRPCConnection mConnection;
+	private StatusViewer mStatusViewer;
+	private boolean mJustStarted = true;
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server and starts a
@@ -27,9 +31,10 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 	 * @param url
 	 *            The url of the XMLRPC server
 	 */
-	public XMLRPCTorrentManager(XMLRPCConnection connection, ThumbAdapter adapter) {
+	public XMLRPCTorrentManager(XMLRPCConnection connection, ThumbAdapter adapter, StatusViewer statusViewer) {
 		mConnection = connection;
 		mAdapter = adapter;
+		mStatusViewer = statusViewer;
 	}
 
 	/**
@@ -45,6 +50,8 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 		Log.v("XMPLRCTorrentManager", "Remote search for \"" + keywords
 				+ "\" launched.");
 		new XMLRPCCallTask().call("torrents.search_remote", mConnection, keywords);
+		mStatusViewer.setMessage(R.string.thumb_grid_search_submitted, true);
+		//TODO: communicate if the search succeeded.
 	}
 
 	/**
@@ -79,6 +86,11 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 				Log.e("TorrentFilter", "Filtered remote result because of category filter (" + item.getTitle() + ", " + item.getCategory() + ")");
 			}
 		}
+		//if the thumbgrid was empty, remove the StatusViewer
+		if(mAdapter.getCount() == 0)
+		{
+			mStatusViewer.disable();
+		}
 		mAdapter.addNew(resultsList);
 	}
 	
@@ -99,6 +111,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 
 	public void search(String keywords) {
 		mAdapter.clear();
+		mStatusViewer.enable();
 		searchRemote(keywords);
 		Log.i("XMPLRCTorrentManager", "Search for \"" + keywords + "\" launched.");
 	}
@@ -107,6 +120,12 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 	public void onPoll() {
 		int foundResults = getRemoteResultsCount();
 		if(foundResults > mAdapter.getCount())
+		{
 			addRemoteResults();
+			mJustStarted = false;
+		} else if(mJustStarted) {
+			mJustStarted = false;
+			mStatusViewer.setMessage(R.string.thumb_grid_server_started, false);
+		}
 	}
 }

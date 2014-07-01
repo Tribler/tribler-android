@@ -48,6 +48,7 @@ public class XMLRPCConnection implements Poller.IPollListener {
 			notifyConnectionLost();
 			Log.i("XMLRPCConnection", "Connection Lost. Trying to re-establish connection.");
 			mPoller.start();
+			mConnected = false;
 			return e;
 		}
 	}
@@ -103,6 +104,9 @@ public class XMLRPCConnection implements Poller.IPollListener {
 	public boolean isConnected()
 	{
 		return mConnected;
+	}
+	public boolean isJustStarted() {
+		return mJustStarted;
 	}
 	
 	public interface IConnectionListener {

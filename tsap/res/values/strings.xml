@@ -102,5 +102,7 @@
     
     <!-- Strings for DownloadListFragment -->
 	<string name="download_list_empty">Currently no downloads are active.</string>
+	
+	<string name="empty"></string>
 
 </resources>

@@ -1,4 +1,4 @@
-package org.tribler.tsap;
+package org.tribler.tsap.util;
 
 import java.util.Timer;
 import java.util.TimerTask;

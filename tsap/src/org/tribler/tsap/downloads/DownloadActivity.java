@@ -1,14 +1,15 @@
 package org.tribler.tsap.downloads;
 
+
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.tribler.tsap.MainThreadPoller;
-import org.tribler.tsap.PlayButtonListener;
-import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.R;
-import org.tribler.tsap.Utility;
 import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.streaming.PlayButtonListener;
+import org.tribler.tsap.util.MainThreadPoller;
+import org.tribler.tsap.util.Poller.IPollListener;
+import org.tribler.tsap.util.Utility;
 
 import android.app.ActionBar;
 import android.app.Activity;

@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
-import org.tribler.tsap.Utility;
 import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.util.Utility;
 
 import com.squareup.picasso.Picasso;
 
@@ -175,9 +175,11 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 */
 	public void addNew(List<ThumbItem> list) {
 		synchronized (mLock) {
-			for (int i = 0; i < list.size(); i++) {
-				if (!mContent.contains(list.get(i))) {
-					mContent.add(list.get(i));
+			for (ThumbItem item : list)
+			{
+				if(!mContent.contains(item))
+				{
+					mContent.add(item);
 				}
 			}
 		}

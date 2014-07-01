@@ -1,8 +1,13 @@
-package org.tribler.tsap;
+package org.tribler.tsap.util;
 
 import java.util.Map;
 
+import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.settings.Settings.TorrentType;
 import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
+import org.tribler.tsap.thumbgrid.ThumbItem;
+
+import android.util.Log;
 
 /**
  * Class with static functions that are used across multiple classes, like
@@ -147,5 +152,34 @@ public class Utility {
 		}
 		
 		return ((leechers / seeders) > 0.5) ? TORRENT_HEALTH.YELLOW : TORRENT_HEALTH.GREEN;
+	}
+	
+	/**
+	 * Applies filter to ThumbItem
+	 * @param item The item which should be filtered (or not)
+	 * @param filter The filter which should be applied
+	 * @return True if the item should be let through, false if the item should be filtered
+	 */
+	public static boolean applyResultFilter(ThumbItem item, Settings.TorrentType filter)
+	{
+		String category = (item != null) ? item.getCategory().toLowerCase() : null;
+		
+		// Something went wrong here
+		if(category == null)
+			return false;
+		
+		switch(filter)
+		{
+		// True when: Video, VideoClip, XXX, Other.
+		// "XXX" isn't filtered because we have a family filter, and most are video anyway
+		// "Other" isn't filtered, as not all torrents have a correct category set
+		case VIDEO:
+			return (category.startsWith("video") || category.equals("other") || category.equals("xxx"));
+
+		// ALL or any unknown filter should just let them all through
+		case ALL:
+		default:
+			return true;
+		}
 	}
 }

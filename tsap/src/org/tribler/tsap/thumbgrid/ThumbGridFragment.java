@@ -1,9 +1,9 @@
 package org.tribler.tsap.thumbgrid;
 
-import org.tribler.tsap.Poller;
 import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.util.Poller;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.Fragment;
@@ -129,7 +129,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
-		searchView.setQueryHint("Search videos");
+		searchView.setQueryHint(getString(R.string.thumb_grid_searchview));
 	}
 
 	/**

@@ -13,7 +13,7 @@ import de.timroes.axmlrpc.XMLRPCException;
 public class XMLRPCConnection implements Poller.IPollListener {
 	private XMLRPCClient mClient;
 	ArrayList<IConnectionListener> mListeners;
-	boolean mConnected = false;
+	boolean mConnected = false, mJustStarted = true;
 	Poller mPoller;
 	Activity mActivity;
 	static XMLRPCConnection mInstance = null;
@@ -56,7 +56,7 @@ public class XMLRPCConnection implements Poller.IPollListener {
 		mListeners.add(listener);
 		if(mConnected)
 			listener.onConnectionEstablished();
-		else
+		else if(!mJustStarted)
 			listener.onConnectionLost();
 	}
 
@@ -93,6 +93,7 @@ public class XMLRPCConnection implements Poller.IPollListener {
 			
 			notifyConnectionEstablished();
 			mConnected = true;
+			mJustStarted = false;
 			mPoller.stop();
 			Log.i("XMLRPCConnection", "Stopped poller.");
 		} catch (XMLRPCException e) {

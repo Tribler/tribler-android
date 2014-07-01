@@ -1,8 +1,8 @@
 package org.tribler.tsap.thumbgrid;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.StatusViewer;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
-import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.util.Poller;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
@@ -38,8 +38,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	private View mView;
 	Poller mPoller;
 	XMLRPCConnection mConnection;
-	ProgressBar mProgressBar;
-	TextView mMessage;
+	StatusViewer mStatusViewer;
+	final static long POLLING_INTERVAL = 500;
 
 	/**
 	 * Defines that this fragment has an own option menu
@@ -53,8 +53,9 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		setHasOptionsMenu(true);
 		mConnection = XMLRPCConnection.getInstance();
 		mThumbAdapter = new ThumbAdapter(getActivity(), R.layout.thumb_grid_item);
-		mTorrentManager = new XMLRPCTorrentManager(mConnection, mThumbAdapter);
-		mPoller = new Poller(mTorrentManager, 500);
+		mStatusViewer = new StatusViewer(getActivity());
+		mTorrentManager = new XMLRPCTorrentManager(mConnection, mThumbAdapter, mStatusViewer);
+		mPoller = new Poller(mTorrentManager, POLLING_INTERVAL);
 	}
 
 	/**
@@ -77,33 +78,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		
-		mProgressBar = (ProgressBar)mView.findViewById(R.id.thumbgrid_progress_bar);
-		mMessage = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		setProgressMessage(R.string.thumb_grid_loading_tribler, true);
+		mStatusViewer.updateViews((ProgressBar)mView.findViewById(R.id.thumbgrid_progress_bar),
+				(TextView)mView.findViewById(R.id.thumbgrid_text_view));
+		
+		mStatusViewer.setMessage(R.string.thumb_grid_loading_tribler, true);
 		return mView;
-	}
-	
-	void setProgressMessage(final int messageId, final boolean progressBarVisibible) {
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (progressBarVisibible)
-					mProgressBar.setVisibility(View.VISIBLE);
-				else
-					mProgressBar.setVisibility(View.INVISIBLE);
-				mMessage.setVisibility(View.VISIBLE);
-				mMessage.setText(messageId);
-			}
-		});
-	}
-	void hideProgressMessage() {
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				mProgressBar.setVisibility(View.GONE);
-				mMessage.setVisibility(View.GONE);
-			}
-		});
 	}
 
 	/**
@@ -198,18 +177,17 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	public boolean onQueryTextSubmit(String query) {
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
 		mTorrentManager.search(query);
-		setProgressMessage(R.string.thumb_grid_search_submitted, true);
 		return true;
 	}
 
 	@Override
 	public void onConnectionEstablished() {
-		setProgressMessage(R.string.thumb_grid_server_started, false);
+		mStatusViewer.setMessage(R.string.thumb_grid_server_started, false);
 		mPoller.start();
 	}
 	@Override
 	public void onConnectionLost() {
-		setProgressMessage(R.string.thumb_grid_connection_failed, false);
+		mStatusViewer.setMessage(R.string.thumb_grid_connection_failed, false);
 		mPoller.stop();
 	}
 }

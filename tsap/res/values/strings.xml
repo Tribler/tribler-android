@@ -63,9 +63,9 @@
     <!-- Status Strings from ThumbGridFragment -->
     <string name="thumb_grid_loading_tribler">Loading Tribler&#8230;</string>
     <!-- <string name="thumb_grid_loading_results">Loading results&#8230;</string> -->
-    <!-- <string name="thumb_grid_search_submitted">"Searching&#8230;"</string> -->
+    <string name="thumb_grid_search_submitted">"Searching&#8230;"</string>
     <string name="thumb_grid_server_started">"Type in keywords to start searching."</string>
-    <!-- <string name="thumb_grid_connection_failed">"Could not connect to Tribler."</string> -->
+    <string name="thumb_grid_connection_failed">"Could not connect to Tribler."</string>
     <string name="thumb_grid_searchview">Search videos</string>
 
     <!-- Strings for settings -->

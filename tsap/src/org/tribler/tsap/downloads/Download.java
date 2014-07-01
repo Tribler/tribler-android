@@ -1,5 +1,6 @@
 package org.tribler.tsap.downloads;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -20,6 +21,15 @@ public class Download implements Serializable {
 	private double vodETA;
 	private double ETA;
 	private boolean vodPlayable;
+	
+	//needed for updating the download info
+	private File thumbImageFile;
+	private int seeders;
+	private int leechers;
+	private String category;
+	private long size;
+	private int availability;
+
 
 	/**
 	 * empty constructor for serialization
@@ -41,7 +51,7 @@ public class Download implements Serializable {
 	 */
 	public Download(String name, String infoHash, int status, double downloadSpeed,
 			double uploadSpeed, double progress, double ETA, double vodETA,
-			boolean vodPlayable) {
+			boolean vodPlayable, int seeders, int leechers, String category, long size, int availability) {
 		this.name = name;
 		this.infoHash = infoHash;
 		this.status = status;
@@ -51,6 +61,12 @@ public class Download implements Serializable {
 		this.ETA = ETA;
 		this.vodETA = vodETA;
 		this.vodPlayable = vodPlayable;
+		
+		this.seeders = seeders;
+		this.leechers = leechers;
+		this.category = category;
+		this.size = size;
+		this.availability = availability;
 	}
 
 	public String getName() {
@@ -88,5 +104,30 @@ public class Download implements Serializable {
 
 	public boolean isVODPlayable() {
 		return vodPlayable;
+	}
+	
+	public File getThumbImageFile() {
+		return thumbImageFile;
+	}
+
+	public int getSeeders() {
+		return seeders;
+	}
+
+	public int getLeechers() {
+		return leechers;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public long getSize() {
+		return size;
+	}
+	
+	public int getAvailability()
+	{
+		return availability;
 	}
 }

@@ -52,11 +52,12 @@
     <string name="remove_download_dialog_message">Do you also want to remove any files associated with this download?</string>
 
     <!-- Strings from downloadActivity -->
-    <string name="download_info_type_title">Type:</string>
-    <string name="download_info_upload_date_title">Uploaded on:</string>
     <string name="download_info_filesize_title">Size:</string>
     <string name="download_info_down_speed_title">Speed down:</string>
     <string name="download_info_up_speed_title">Speed up:</string>
+    <string name="download_info_availability_title">Availability:</string>
+    <string name="download_info_status_title">Status:</string>
+    <string name="download_info_eta_title">ETA:</string>
     <string name="download_info_delete_torrent_button">Remove download</string>
 
     <!-- Status Strings from ThumbGridFragment -->

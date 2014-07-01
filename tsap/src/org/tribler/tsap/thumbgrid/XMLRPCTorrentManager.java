@@ -44,6 +44,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 		Log.v("XMPLRCTorrentManager", "Remote search for \"" + keywords
 				+ "\" launched.");
 		new XMLRPCCallTask().call("torrents.search_remote", mConnection, keywords);
+		//TODO: communicate if the search succeeded.
 	}
 
 	/**
@@ -91,6 +92,8 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 	public void onPoll() {
 		int foundResults = getRemoteResultsCount();
 		if(foundResults > mAdapter.getCount())
+		{
 			addRemoteResults();
+		}
 	}
 }

@@ -84,7 +84,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 		TextView eta = (TextView) mView
 				.findViewById(R.id.download_info_eta_text);
 		eta.setText((mDownload.getStatus() == 3) ? Utility
-				.convertSecondsToString(mDownload.getETA()) : "");
+				.convertSecondsToString(mDownload.getETA()) : "Unknown");
 
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);

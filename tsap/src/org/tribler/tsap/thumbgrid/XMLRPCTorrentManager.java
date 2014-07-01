@@ -20,8 +20,9 @@ import android.util.Log;
  */
 public class XMLRPCTorrentManager implements Poller.IPollListener{
 	private ThumbAdapter mAdapter;
-	XMLRPCConnection mConnection;
-	StatusViewer mStatusViewer;
+	private XMLRPCConnection mConnection;
+	private StatusViewer mStatusViewer;
+	private boolean mJustStarted = true;
 
 	/**
 	 * Constructor: Makes a connection with an XMLRPC server and starts a
@@ -85,6 +86,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 				Log.e("TorrentFilter", "Filtered remote result because of category filter (" + item.getTitle() + ", " + item.getCategory() + ")");
 			}
 		}
+		//if the thumbgrid was empty, remove the StatusViewer
 		if(mAdapter.getCount() == 0)
 		{
 			mStatusViewer.disable();
@@ -120,6 +122,10 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 		if(foundResults > mAdapter.getCount())
 		{
 			addRemoteResults();
+			mJustStarted = false;
+		} else if(mJustStarted) {
+			mJustStarted = false;
+			mStatusViewer.setMessage(R.string.thumb_grid_server_started, false);
 		}
 	}
 }

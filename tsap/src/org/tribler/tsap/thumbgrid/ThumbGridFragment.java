@@ -182,7 +182,6 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 
 	@Override
 	public void onConnectionEstablished() {
-		mStatusViewer.setMessage(R.string.thumb_grid_server_started, false);
 		mPoller.start();
 	}
 	@Override

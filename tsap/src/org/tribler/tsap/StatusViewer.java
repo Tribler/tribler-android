@@ -18,6 +18,9 @@ public class StatusViewer {
 	public void updateViews(ProgressBar progressBar, TextView message) {
 		mProgressBar = progressBar;
 		mMessage = message;
+		if(!mEnabled) {
+			disable();
+		}
 	}
 	
 	public void setMessage(final int messageId, final boolean progressBarVisibible) {

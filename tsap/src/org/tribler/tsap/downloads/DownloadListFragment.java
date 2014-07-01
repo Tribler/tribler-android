@@ -21,7 +21,6 @@ public class DownloadListFragment extends ListFragment implements IConnectionLis
 	private XMLRPCConnection mConnection;
 	private Poller mPoller;
 	private TextView mEmptyTextView;
-	//private StatusViewer mStatusViewer;
 	public final static long POLLING_INTERVAL = 2000;
 	/**
 	 * Initializes the channel adapter
@@ -34,7 +33,6 @@ public class DownloadListFragment extends ListFragment implements IConnectionLis
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		this.setListAdapter(XMLRPCDownloadManager.getInstance().getAdapter());
-		//mStatusViewer = new StatusViewer(getActivity());
 		mPoller = new Poller(XMLRPCDownloadManager.getInstance(), POLLING_INTERVAL);
 		mConnection = XMLRPCConnection.getInstance();
 	}
@@ -43,7 +41,7 @@ public class DownloadListFragment extends ListFragment implements IConnectionLis
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_download_list, null);
 		mEmptyTextView = (TextView)v.findViewById(android.R.id.empty);
-		mEmptyTextView.setText("Loading Tribler...");
+		mEmptyTextView.setText(R.string.connection_loading);
 		return v;
 	}
 	
@@ -90,12 +88,12 @@ public class DownloadListFragment extends ListFragment implements IConnectionLis
 
 	@Override
 	public void onConnectionEstablished() {
-		mEmptyTextView.setText("Currently no downloads are active.");
+		mEmptyTextView.setText(R.string.download_list_empty);
 		mPoller.start();
 	}
 	@Override
 	public void onConnectionLost() {
-		mEmptyTextView.setText("Could not connect to Tribler.");
+		mEmptyTextView.setText(R.string.connection_failed);
 		mPoller.stop();
 	}
 }

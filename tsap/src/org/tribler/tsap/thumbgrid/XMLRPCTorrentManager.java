@@ -3,12 +3,13 @@ package org.tribler.tsap.thumbgrid;
 import java.util.ArrayList;
 import java.util.Map;
 
-import android.util.Log;
-
-import org.tribler.tsap.Poller;
-import org.tribler.tsap.R;
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.util.Poller;
+import org.tribler.tsap.util.Utility;
+
+import android.util.Log;
 
 /**
  * Class for receiving torrents over XMPRPC using the aXMLRPC library
@@ -61,6 +62,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 	private void addRemoteResults() {
 		Object[] arrayResult = (Object[]) mConnection.call("torrents.get_remote_results");
 		ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
+		Settings.TorrentType localFilter = Settings.getFilteredTorrentTypes();
 		
 		Log.v("XMPLRCTorrentManager", "Got " + arrayResult.length + " results");
 		
@@ -68,18 +70,32 @@ public class XMLRPCTorrentManager implements Poller.IPollListener{
 			@SuppressWarnings("unchecked")
 			ThumbItem item = convertMapToThumbItem(
 					(Map<String, Object>) arrayResult[i]);
-			resultsList.add(item);
+			
+			if(Utility.applyResultFilter(item, localFilter))
+			{
+				resultsList.add(item);
+			}
+			else
+			{
+				Log.e("TorrentFilter", "Filtered remote result because of category filter (" + item.getTitle() + ", " + item.getCategory() + ")");
+			}
 		}
 		mAdapter.addNew(resultsList);
 	}
 	
 	private ThumbItem convertMapToThumbItem(Map<String, Object> map)
 	{
-		return new ThumbItem((String) map.get("name"),
-				R.drawable.default_thumb,
-				TORRENT_HEALTH.YELLOW,
-				1000,
-				(String)map.get("infohash"));
+		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
+		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
+		String size = Utility.getFromMap(map, "length", "-1");
+		
+		return new ThumbItem(Utility.getFromMap(map, "infohash", "unknown"),
+				Utility.getFromMap(map, "name", "unknown"),
+				Utility.calculateTorrentHealth(seeders, leechers),
+				Long.parseLong(size.trim()),
+				Utility.getFromMap(map, "category", "Unknown"),
+				seeders,
+				leechers);
 	}
 
 	public void search(String keywords) {

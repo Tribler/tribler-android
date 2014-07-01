@@ -1,9 +1,11 @@
-package org.tribler.tsap;
+package org.tribler.tsap.streaming;
 
-import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.util.MainThreadPoller;
+import org.tribler.tsap.util.Utility;
+import org.tribler.tsap.util.Poller.IPollListener;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Activity;
@@ -71,6 +73,11 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 				.getCurrentDownload();
 		AlertDialog aDialog = (AlertDialog) dialog.getDialog();
 		if (dwnld != null) {
+			if(!dwnld.getInfoHash().equals(infoHash))
+			{
+				return;
+			}
+			
 			if (dwnld.isVODPlayable()) {
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						XMLRPCDownloadManager.getInstance().getVideoUri(),
@@ -95,15 +102,18 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 
 					if (aDialog != null)
 						aDialog.setMessage("Video starts playing in about "
-								+ Math.round(vod_eta) + " seconds");
+								+ Utility.convertSecondsToString(vod_eta) + " ("
+								+ Utility.convertBytesPerSecToString(dwnld.getDownloadSpeed()) + ").");
 
 					break;
 				default:
 					if (aDialog != null)
+					{
+						int dlstatus = dwnld.getStatus();
 						aDialog.setMessage("Download status: "
-								+ Utility
-										.convertDownloadStateIntToMessage(dwnld
-												.getStatus()));
+								+ Utility.convertDownloadStateIntToMessage(dwnld.getStatus())
+								+ ((dlstatus == 2) ? " (" + Math.round(dwnld.getProgress() * 100) + "%)" : ""));
+					}
 					break;
 				}
 

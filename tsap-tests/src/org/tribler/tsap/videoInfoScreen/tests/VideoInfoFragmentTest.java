@@ -19,6 +19,14 @@ public class VideoInfoFragmentTest extends
 		ActivityInstrumentationTestCase2<MainActivity> {
 
 	private VideoInfoFragment mVideoInfoFrag;
+	
+	private static final String infohash = "infohash";
+	private static final String title = "Sintel 2010";
+	private static final TORRENT_HEALTH health = TORRENT_HEALTH.RED;
+	private static final long size = 349834;
+	private static final String category = "other";
+	private static final int leechers = 434;
+	private static final int seeders = 434;
 
 	public VideoInfoFragmentTest() {
 		super(MainActivity.class);
@@ -29,7 +37,7 @@ public class VideoInfoFragmentTest extends
 		super.setUp();
 		mVideoInfoFrag = new VideoInfoFragment();
 		Bundle args = new Bundle();
-		ThumbItem item = new ThumbItem("Test torrent", R.drawable.dracula, TORRENT_HEALTH.UNKNOWN, 555, "infoHash");
+		ThumbItem item = new ThumbItem(infohash, title, health, size, category, leechers, seeders);
 		args.putSerializable("thumbData", item);
 		mVideoInfoFrag.setArguments(args);
 

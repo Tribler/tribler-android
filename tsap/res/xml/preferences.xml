@@ -1,45 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="pref_familyFilter"
-        android:summary="@string/pref_familyFilter_summary"
-        android:title="@string/pref_familyFilter" />
-
-    <ListPreference
-        android:defaultValue="@string/pref_supported_types_default"
-        android:dialogTitle="@string/pref_chooseSupportedTorrentTypes"
-        android:entries="@array/pref_supported_types"
-        android:entryValues="@array/pref_supported_types"
-        android:key="pref_supportedTorrentTypes"
-        android:summary="@string/pref_supportedTorrentTypes_summary"
-        android:title="@string/pref_supportedTorrentTypes" />
+	<PreferenceCategory 
+        android:title="Search settings"
+        android:key="pref_key_search_settings">
     
-    <EditTextPreference 
-        android:defaultValue="0"
-        android:dialogMessage="@string/pref_maxDownloadRate_dialog_message"
-        android:inputType="number"
-        android:key="pref_maxDownloadRate"
-        android:summary="@string/pref_maxDownloadRate_summary"
-        android:title="@string/pref_maxDownloadRate"/>
-    
-    <EditTextPreference 
-        android:defaultValue="0"
-        android:dialogMessage="@string/pref_maxUploadRate_dialog_message"
-        android:inputType="number"
-        android:key="pref_maxUploadRate"
-        android:summary="@string/pref_maxUploadRate_summary"
-        android:title="@string/pref_maxUploadRate"/>
-    
-    <org.tribler.tsap.settings.OSLicencesPreference
-        android:key="pref_osLicences"
-        android:summary="@string/pref_os_licences_summary"
-        android:title="@string/pref_os_licences" />
-    
-    <org.tribler.tsap.settings.AboutPreference
-        android:key="pref_about"
-        android:icon="@drawable/ic_action_about"
-        android:title="@string/pref_about" />
+	    <CheckBoxPreference
+	        android:defaultValue="true"
+	        android:key="pref_familyFilter"
+	        android:summary="@string/pref_familyFilter_summary"
+	        android:title="@string/pref_familyFilter" />
+	
+	    <ListPreference
+	        android:defaultValue="@string/pref_supported_types_default"
+	        android:dialogTitle="@string/pref_chooseSupportedTorrentTypes"
+	        android:entries="@array/pref_supported_types"
+	        android:entryValues="@array/pref_supported_types"
+	        android:key="pref_supportedTorrentTypes"
+	        android:summary="@string/pref_supportedTorrentTypes_summary"
+	        android:title="@string/pref_supportedTorrentTypes" />
+	</PreferenceCategory>
+	    
+	<PreferenceCategory 
+        android:title="Download settings"
+        android:key="pref_key_download_settings">
+	    <EditTextPreference 
+	        android:defaultValue="0"
+	        android:dialogMessage="@string/pref_maxDownloadRate_dialog_message"
+	        android:inputType="number"
+	        android:key="pref_maxDownloadRate"
+	        android:summary="@string/pref_maxDownloadRate_summary"
+	        android:title="@string/pref_maxDownloadRate"/>
+	    
+	    <EditTextPreference 
+	        android:defaultValue="0"
+	        android:dialogMessage="@string/pref_maxUploadRate_dialog_message"
+	        android:inputType="number"
+	        android:key="pref_maxUploadRate"
+	        android:summary="@string/pref_maxUploadRate_summary"
+	        android:title="@string/pref_maxUploadRate"/>
+	</PreferenceCategory>	    
+	    
+	<PreferenceCategory 
+        android:title="Information"
+        android:key="pref_key_information">
+        
+	    <org.tribler.tsap.settings.OSLicencesPreference
+	        android:key="pref_osLicences"
+	        android:summary="@string/pref_os_licences_summary"
+	        android:title="@string/pref_os_licences" />
+	    
+	    <org.tribler.tsap.settings.AboutPreference
+	        android:key="pref_about"
+	        android:icon="@drawable/ic_action_about"
+	        android:title="@string/pref_about" />
+	</PreferenceCategory>
 
 </PreferenceScreen>

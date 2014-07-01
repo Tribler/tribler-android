@@ -1,10 +1,8 @@
 package org.tribler.tsap.thumbgrid.tests;
 
-import org.tribler.tsap.R;
 import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 
-import android.graphics.Color;
 import android.test.AndroidTestCase;
 
 /**
@@ -16,11 +14,19 @@ public class ThumbItemTest extends AndroidTestCase {
 
 	private ThumbItem mThumbItem;
 
+	private static final String infohash = "infohash";
+	private static final String title = "Sintel 2010";
+	private static final TORRENT_HEALTH health = TORRENT_HEALTH.RED;
+	private static final long size = 349834;
+	private static final String category = "other";
+	private static final int leechers = 434;
+	private static final int seeders = 434;
+	
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mThumbItem = new ThumbItem("Sintel 2010", R.drawable.sintel,
-				TORRENT_HEALTH.GREEN, 500, "bla");
+		mThumbItem = new ThumbItem(infohash, title, health, size, category, leechers, seeders);
 	}
 
 	/**
@@ -34,15 +40,13 @@ public class ThumbItemTest extends AndroidTestCase {
 	 * Tests whether the getX functions of ThumbItem behave correctly
 	 */
 	public void testGetters() {
-		assertEquals("getThumbnailId() incorrect", R.drawable.sintel,
-				mThumbItem.getThumbnailId());
-		assertEquals("getTitle() incorrect", "Sintel 2010",
-				mThumbItem.getTitle());
-		assertEquals("getSize() incorrect", 500, mThumbItem.getSize());
-		assertEquals("getHealth() incorrect", TORRENT_HEALTH.GREEN,
-				mThumbItem.getHealth());
-		assertEquals("getHealthColor() incorrect", Color.GREEN,
-				mThumbItem.getHealthColor());
+		assertEquals("getTitle() incorrect", title,	mThumbItem.getTitle());
+		assertEquals("getSize() incorrect", size, mThumbItem.getSize());
+		assertEquals("getHealth() incorrect", health, mThumbItem.getHealth());
+		assertEquals("getHealthColor() incorrect", TORRENT_HEALTH.toColor(health), mThumbItem.getHealthColor());
+		assertEquals("getCategory() incorrect", category, mThumbItem.getCategory());
+		assertEquals("getLeechers() incorrect", leechers, mThumbItem.getLeechers());
+		assertEquals("getSeeders() incorrect", seeders, mThumbItem.getSeeders());
 	}
 
 	/**
@@ -56,22 +60,25 @@ public class ThumbItemTest extends AndroidTestCase {
 	/**
 	 * Tests whether the ThumbItem.setThumbnail() function behaves correctly
 	 */
-	public void testSetThumbnail() {
+	/*public void testSetThumbnail() {
 		assertEquals("getThumbnailId() incorrect", R.drawable.sintel,
 				mThumbItem.getThumbnailId());
 		mThumbItem.setThumbnail(24);
 		assertEquals("setThumbnailId() incorrect", 24,
 				mThumbItem.getThumbnailId());
-	}
+	}*/
 
 	/**
 	 * Tests whether the ThumbItem.setTitle() method actually changes the title
 	 */
 	public void testSetTitle() {
-		assertEquals("getTitle() incorrect", "Sintel 2010",
+		String newTitle = "TestMovie";
+
+		assertEquals("getTitle() incorrect", title,
 				mThumbItem.getTitle());
-		mThumbItem.setTitle("Test Movie");
-		assertEquals("setTitle() incorrect", "Test Movie",
+	
+		mThumbItem.setTitle(newTitle);
+		assertEquals("setTitle() incorrect", newTitle,
 				mThumbItem.getTitle());
 	}
 
@@ -79,22 +86,66 @@ public class ThumbItemTest extends AndroidTestCase {
 	 * Tests whether the ThumbItem.setSize() method actually changes the size
 	 */
 	public void testSetSize() {
-		assertEquals("getSize() incorrect", 500, mThumbItem.getSize());
-		mThumbItem.setSize(120);
-		assertEquals("setSize() incorrect", 120, mThumbItem.getSize());
+		long newSize = 2389478923L;
+		
+		assertEquals("getSize() incorrect", size, mThumbItem.getSize());
+		
+		mThumbItem.setSize(newSize);
+		assertEquals("setSize() incorrect", newSize, mThumbItem.getSize());
 	}
 
+	/**
+	 * Tests whether the ThumbItem.setLeechers() method actually changes the leechers
+	 */
+	public void testSetLeechers() {
+		int newLeechers = 238;
+		
+		assertEquals("getLeechers() incorrect", leechers, mThumbItem.getLeechers());
+		
+		mThumbItem.setLeechers(newLeechers);
+		assertEquals("setLeechers() incorrect", newLeechers, mThumbItem.getLeechers());
+	}
+	
+	/**
+	 * Tests whether the ThumbItem.setSeeders() method actually changes the seeders
+	 */
+	public void testSetSeeders() {
+		int newSeeders = 238;
+		
+		assertEquals("getSeeders() incorrect", seeders, mThumbItem.getSeeders());
+		
+		mThumbItem.setSeeders(newSeeders);
+		assertEquals("setSeeders() incorrect", newSeeders, mThumbItem.getSeeders());
+	}
+	
+	/**
+	 * Tests whether the ThumbItem.setCategory() method actually changes the category
+	 */
+	public void testSetCategory() {
+		String newCategory = "XXX";
+
+		assertEquals("getTitle() incorrect", category,
+				mThumbItem.getCategory());
+	
+		mThumbItem.setCategory(newCategory);
+		assertEquals("setCategory() incorrect", newCategory,
+				mThumbItem.getCategory());
+	}
+	
 	/**
 	 * Tests whether the health and healthcolor are actually changed by calling
 	 * ThumbItem.setHealth()
 	 */
 	public void testSetHealth() {
-		assertEquals("getHealth() incorrect", TORRENT_HEALTH.GREEN,
+		TORRENT_HEALTH newHealth = TORRENT_HEALTH.GREEN;
+		
+		assertEquals("getHealth() incorrect", health,
 				mThumbItem.getHealth());
-		mThumbItem.setHealth(TORRENT_HEALTH.RED);
-		assertEquals("setHealth() incorrect", TORRENT_HEALTH.RED,
+		
+		mThumbItem.setHealth(newHealth);
+		assertEquals("setHealth() incorrect", newHealth,
 				mThumbItem.getHealth());
-		assertEquals("setHealth() incorrect color", Color.RED,
+		assertEquals("setHealth() incorrect color", TORRENT_HEALTH.toColor(newHealth),
 				mThumbItem.getHealthColor());
 	}
 	
@@ -102,6 +153,6 @@ public class ThumbItemTest extends AndroidTestCase {
 	 * Tests wheter the infoHash getter works
 	 */
 	public void testGetInfoHash() {
-		assertEquals("getInfoHash incorrect", "bla", mThumbItem.getInfoHash());
+		assertEquals("getInfoHash incorrect", infohash, mThumbItem.getInfoHash());
 	}
 }

@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
-import org.tribler.tsap.Utility;
 import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.util.Utility;
 
 import com.squareup.picasso.Picasso;
 
@@ -92,7 +92,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		}
 		
 		TextView title = (TextView) convertView.findViewById(R.id.ThumbTitle);
-		title.setText(item.getTitle());
+		title.setText(item.getTitle() + "\n");
 		
 		ImageView image = (ImageView) convertView.findViewById(R.id.ThumbImage);
 		if(item.getThumbImageFile() != null) {
@@ -117,16 +117,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 
 		return convertView;
 	}
-	
-	private File findDirectory(File directory, String name) {
-		File thumbdirectory = new File(directory, "thumbs-" + name);
-		if(thumbdirectory.exists()) {
-			return thumbdirectory;
-		} else {
-			//Log.e("ThumbAdapter", "Could not find thumb folder for this infohash.");
-			return null;
-		}
-	}
+
 	private File findImage(File directory) {
 		File[] foundImages = directory.listFiles(new FilenameFilter() {
 			@Override
@@ -134,10 +125,12 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 				return name.endsWith(".png") || name.endsWith(".gif") || name.endsWith(".jpg") || name.endsWith(".jpeg");
 			}
 		});
+		
+		// TODO: Find the best one
 		if(foundImages.length > 0) {
 			return foundImages[0];
 		} else {
-			//Log.e("ThumbAdapter", "No images found: " + foundImages.length);
+			Log.d("ThumbAdapter", "No thumbnailimages found: " + foundImages.length);
 			return null;
 		}
 	}
@@ -146,22 +139,32 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		File baseDirectory = Settings.getThumbFolder();
 		if(baseDirectory == null || !baseDirectory.isDirectory())
 		{
-			Log.e("ThumbAdapter", "The base folder is not a folder.");
+			Log.e("ThumbAdapter", "The collected_torrent_files thumbnailfolder could not be found");
 			return null;
 		}
-		File thumbsDirectory = findDirectory(baseDirectory, infoHash);
-		if(thumbsDirectory == null || !thumbsDirectory.isDirectory())
+		
+		File thumbsDirectory = new File(baseDirectory, "thumbs-" + infoHash);
+		if(!thumbsDirectory.exists()) {
+			Log.d("ThumbAdapter", "No thumbnailfolder found for " + infoHash);
+			return null;
+		}
+				
+		File thumbsSubDirectory = null;
+		for(File file : thumbsDirectory.listFiles()){
+			if(file.isDirectory())
+			{
+				thumbsSubDirectory = file;
+				break;
+			}
+		}
+
+		if(thumbsSubDirectory == null)
 		{
-			//Log.e("ThumbAdapter", "The thumbs folder is not a folder.");
+			Log.d("ThumbAdapter", "No thumbnail subfolder found for " + infoHash);
 			return null;
 		}
-		File thumbnailDirectory = thumbsDirectory.listFiles()[0];
-		if(thumbnailDirectory == null || !thumbnailDirectory.isDirectory())
-		{
-			//Log.e("ThumbAdapter", "The thumb folder is not a folder.");
-			return null;
-		}
-		return findImage(thumbnailDirectory);
+		
+		return findImage(thumbsSubDirectory);
 	}
 	
 	/**
@@ -172,9 +175,11 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 */
 	public void addNew(List<ThumbItem> list) {
 		synchronized (mLock) {
-			for (int i = 0; i < list.size(); i++) {
-				if (!mContent.contains(list.get(i))) {
-					mContent.add(list.get(i));
+			for (ThumbItem item : list)
+			{
+				if(!mContent.contains(item))
+				{
+					mContent.add(item);
 				}
 			}
 		}

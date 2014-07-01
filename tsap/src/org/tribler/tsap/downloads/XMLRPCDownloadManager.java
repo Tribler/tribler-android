@@ -3,9 +3,10 @@ package org.tribler.tsap.downloads;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.tribler.tsap.Poller.IPollListener;
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.util.Poller.IPollListener;
+import org.tribler.tsap.util.Utility;
 
 import android.content.Context;
 import android.net.Uri;
@@ -17,8 +18,8 @@ import android.widget.Toast;
  * 
  * @author Dirk Schut
  */
-public class XMLRPCDownloadManager implements IPollListener{
-	
+public class XMLRPCDownloadManager implements IPollListener {
+
 	private DownloadListAdapter mAdapter = null;
 	private static XMLRPCDownloadManager mInstance = null;
 	private Context mContext;
@@ -56,7 +57,8 @@ public class XMLRPCDownloadManager implements IPollListener{
 	 * @param context
 	 *            Context for creating toasts and intents.
 	 */
-	public void setUp(DownloadListAdapter adapter, XMLRPCConnection connection, Context context) {
+	public void setUp(DownloadListAdapter adapter, XMLRPCConnection connection,
+			Context context) {
 		getInstance();
 		mAdapter = adapter;
 		mContext = context;
@@ -76,15 +78,29 @@ public class XMLRPCDownloadManager implements IPollListener{
 			downloadSpeed = (Double) map.get("speed_down");
 		else
 			downloadSpeed = (Integer) map.get("speed_down");
+
 		double uploadSpeed;
 		if (map.get("speed_down") instanceof Double)
 			uploadSpeed = (Double) map.get("speed_up");
 		else
 			uploadSpeed = (Integer) map.get("speed_up");
+
+		long size;
+		if (map.get("length") instanceof Integer)
+			size = (Integer) map.get("length");
+		else
+			size = Math.round((Double) map.get("length"));
+
+		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
+		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
+
 		return new Download((String) map.get("name"),
 				(String) map.get("infohash"), (Integer) map.get("status"),
 				downloadSpeed, uploadSpeed, (Double) map.get("progress"),
-				(Double) map.get("vod_eta"), (Boolean) map.get("vod_playable"));
+				(Double) map.get("eta"), (Double) map.get("vod_eta"),
+				(Boolean) map.get("vod_playable"), seeders, leechers,
+				Utility.getFromMap(map, "category", "Unknown"), size,
+				(Integer) map.get("availability"));
 	}
 
 	/**
@@ -92,14 +108,15 @@ public class XMLRPCDownloadManager implements IPollListener{
 	 */
 	@SuppressWarnings("unchecked")
 	private void replaceAllProgressInfo() {
-		
+
 		Object result = mConnection.call("downloads.get_all_progress_info");
 		Log.e("", "Result is: " + result.toString());
 		Object[] arrayResult = (Object[]) result;
 		ArrayList<Download> resultsList = new ArrayList<Download>();
-		
+
 		for (int i = 0; i < arrayResult.length; i++) {
-			resultsList.add(convertMapToDownload((Map<String, Object>) arrayResult[i]));
+			resultsList
+					.add(convertMapToDownload((Map<String, Object>) arrayResult[i]));
 		}
 		mAdapter.replaceAll(resultsList);
 	}

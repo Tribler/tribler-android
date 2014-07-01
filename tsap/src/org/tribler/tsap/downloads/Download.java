@@ -1,5 +1,6 @@
 package org.tribler.tsap.downloads;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -18,7 +19,17 @@ public class Download implements Serializable {
 	private double downloadSpeed;
 	private double progress;
 	private double vodETA;
+	private double ETA;
 	private boolean vodPlayable;
+	
+	//needed for updating the download info
+	private File thumbImageFile;
+	private int seeders;
+	private int leechers;
+	private String category;
+	private long size;
+	private int availability;
+
 
 	/**
 	 * empty constructor for serialization
@@ -27,27 +38,35 @@ public class Download implements Serializable {
 	}
 
 	/**
-	 * Constructor to fill in all the fields
-	 * 
-	 * @param name
-	 * @param infoHash
-	 * @param status
-	 * @param downloadSpeed
-	 * @param uploadSpeed
-	 * @param progress
-	 * @param vodETA
+	 * Download status object
+	 * @param name Download name
+	 * @param infoHash Torrent infohash
+	 * @param status Download status
+	 * @param downloadSpeed Download speed
+	 * @param uploadSpeed Upload speed
+	 * @param progress Download progress (0.0-1.0)
+	 * @param ETA ETA in seconds
+	 * @param vodETA VOD ETA in seconds
+	 * @param vodPlayable Is it okay to start streaming
 	 */
 	public Download(String name, String infoHash, int status, double downloadSpeed,
-			double uploadSpeed, double progress, double vodETA,
-			boolean vodPlayable) {
+			double uploadSpeed, double progress, double ETA, double vodETA,
+			boolean vodPlayable, int seeders, int leechers, String category, long size, int availability) {
 		this.name = name;
 		this.infoHash = infoHash;
 		this.status = status;
 		this.downloadSpeed = downloadSpeed;
 		this.uploadSpeed = uploadSpeed;
 		this.progress = progress;
+		this.ETA = ETA;
 		this.vodETA = vodETA;
 		this.vodPlayable = vodPlayable;
+		
+		this.seeders = seeders;
+		this.leechers = leechers;
+		this.category = category;
+		this.size = size;
+		this.availability = availability;
 	}
 
 	public String getName() {
@@ -74,11 +93,41 @@ public class Download implements Serializable {
 		return progress;
 	}
 
+	public double getETA()
+	{
+		return ETA;
+	}
+	
 	public double getVOD_ETA() {
 		return vodETA;
 	}
 
 	public boolean isVODPlayable() {
 		return vodPlayable;
+	}
+	
+	public File getThumbImageFile() {
+		return thumbImageFile;
+	}
+
+	public int getSeeders() {
+		return seeders;
+	}
+
+	public int getLeechers() {
+		return leechers;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public long getSize() {
+		return size;
+	}
+	
+	public int getAvailability()
+	{
+		return availability;
 	}
 }

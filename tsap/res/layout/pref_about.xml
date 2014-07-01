@@ -11,6 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center"
+            android:contentDescription="@string/pref_about_description"
             android:src="@drawable/about_logo" />
 
         <TextView
@@ -30,7 +31,7 @@
             android:layout_margin="8dip"
             android:layout_span="2"
             android:textColor="#cccccc"
-            android:textSize="10dip"
+            android:textSize="10sp"
             android:textStyle="italic" />
     </TableRow>
 

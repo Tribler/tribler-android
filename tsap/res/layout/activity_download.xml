@@ -52,14 +52,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/download_info_status_text_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/download_info_status_title"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/download_info_eta_text_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,12 +93,6 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/download_info_status_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp" />
-
-            <TextView
                 android:id="@+id/download_info_eta_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,13 +107,36 @@
             android:layout_toRightOf="@id/download_info_details"
             android:contentDescription="@string/video_info_thumbnail_descr"
             android:src="@drawable/default_thumb" />
-        
+
+        <LinearLayout
+            android:id="@+id/download_info_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/download_info_thumbnail"
+            android:paddingTop="10dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/download_info_status_text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_info_status_title"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/download_info_status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" />
+        </LinearLayout>
+
         <ProgressBar
             android:id="@+id/download_info_progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/download_info_thumbnail"
+            android:layout_below="@id/download_info_status"
             android:paddingTop="5dp" />
 
         <Button
@@ -145,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/download_info_stream_button"
             android:contentDescription="@string/video_info_download_button"
-            android:text="@string/download_info_delete_torrent_button" />        
+            android:text="@string/download_info_delete_torrent_button" />
 
         <TextView
             android:id="@+id/download_info_description"

@@ -98,8 +98,7 @@ public class XMLRPCDownloadManager implements IPollListener {
 				(String) map.get("infohash"), (Integer) map.get("status"),
 				downloadSpeed, uploadSpeed, (Double) map.get("progress"),
 				(Double) map.get("eta"), (Double) map.get("vod_eta"),
-				(Boolean) map.get("vod_playable"), seeders, leechers,
-				Utility.getFromMap(map, "category", "Unknown"), size,
+				(Boolean) map.get("vod_playable"), seeders, leechers, size,
 				(Integer) map.get("availability"));
 	}
 

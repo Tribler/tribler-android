@@ -35,6 +35,14 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private Activity mActivity;
 	private Download mDownload;
 
+	/**
+	 * @param infoHash
+	 *            The infohash for the torrent
+	 * @param activity
+	 *            The activity in which the button resides
+	 * @param needsToBeDownloaded
+	 *            Indicates whether the torrent still needs to be downloaded
+	 */
 	public PlayButtonListener(String infoHash, Activity activity,
 			boolean needsToBeDownloaded) {
 		this.infoHash = infoHash;
@@ -43,6 +51,11 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		this.mPoller = new MainThreadPoller(this, POLLER_INTERVAL, mActivity);
 	}
 
+	/**
+	 * When the 'Play video' button is clicked, this method will start
+	 * downloading the torrent (if necessary), disable the button and show the
+	 * VOD dialog
+	 */
 	@Override
 	public void onClick(View buttonClicked) {
 		// start downloading the torrent
@@ -67,6 +80,10 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash, "");
 	}
 
+	/**
+	 * Called when the Poller returns: starts streaming the video when its ready
+	 * or updates the message of the vod dialog to the current download status
+	 */
 	@Override
 	public void onPoll() {
 		XMLRPCDownloadManager.getInstance().getProgressInfo(infoHash);
@@ -96,7 +113,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	}
 
 	/**
-	 * 
+	 * Starts downloading in vod mode if necessary and updates the dialog
 	 */
 	private void update() {
 		int statusCode = mDownload.getDownloadStatus().getStatus();
@@ -108,8 +125,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	}
 
 	/**
-	 * @param downStat
-	 * @param vod_eta
+	 * Updates the message of the dialog to the current download status
 	 */
 	private void updateDialog() {
 		if (aDialog != null) {
@@ -122,7 +138,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	}
 
 	/**
-	 * 
+	 * Updates the dialog message to show the VOD ETA
 	 */
 	private void updateVODMessage() {
 		aDialog.setMessage("Video starts playing in about "
@@ -133,7 +149,10 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	}
 
 	/**
+	 * Updated the dialog message to the current status
+	 * 
 	 * @param statusCode
+	 *            The status code of the download
 	 */
 	private void updateMessageToStatus(int statusCode) {
 		aDialog.setMessage("Download status: "

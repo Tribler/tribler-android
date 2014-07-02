@@ -31,34 +31,36 @@ from Tribler.Main.globals import DefaultDownloadStartupConfig, get_default_dscfg
 from Tribler.Core.simpledefs import STATEDIR_DLPSTATE_DIR, STATEDIR_TORRENTCOLL_DIR, STATEDIR_SWIFTRESEED_DIR
 
 
-class TriblerSession():
+from BaseManager import BaseManager
+
+class TriblerSession(BaseManager):
     _sconfig = None
-    _session = None
     _dispersy = None
-    _searchkeywords = None
 
     _dispersy_init = False
 
     _running = True
 
-    def __init__(self, xmlrpc=None):
+    def _connect(self):
         """
-        Constructor that copies the libswift and ffmpeg binaries when on Android.
+        Copies the libswift and ffmpeg binaries when on Android.
         :return:
         """
 
-        # Copy the swift and ffmpeg binaries
-        if is_android(strict=True):
-            binaries = ['swift', 'ffmpeg']
+        if not self._connected:
+            self._connected = True
 
-            for binary in binaries:
-                _logger.info("Setting up the %s binary.." % binary)
+            # Copy the swift and ffmpeg binaries
+            if is_android(strict=True):
+                binaries = ['swift', 'ffmpeg']
 
-                if not self._copy_binary(binary):
-                    _logger.error("Unable to find or copy the %s binary!" % binary)
+                for binary in binaries:
+                    _logger.info("Setting up the %s binary.." % binary)
 
-        if xmlrpc:
-            self._xmlrpc_register(xmlrpc)
+                    if not self._copy_binary(binary):
+                        _logger.error("Unable to find or copy the %s binary!" % binary)
+        else:
+            raise RuntimeError('TriblerSession already connected')
 
     def _xmlrpc_register(self, xmlrpc):
         """

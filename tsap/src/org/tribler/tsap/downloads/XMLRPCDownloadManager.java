@@ -66,6 +66,9 @@ public class XMLRPCDownloadManager implements IPollListener {
 		mConnection = connection;
 	}
 
+	/**
+	 * @return the download list adapter
+	 */
 	public DownloadListAdapter getAdapter() {
 		return mAdapter;
 	}
@@ -231,14 +234,27 @@ public class XMLRPCDownloadManager implements IPollListener {
 		}.call("downloads.get_progress_info", mConnection, infoHash);
 	}
 
+	/**
+	 * @return the current download
+	 */
 	public Download getCurrentDownload() {
 		return currProgressDownload;
 	}
 
+	/**
+	 * @return the video uri of the current download
+	 */
 	public Uri getVideoUri() {
 		return videoLink;
 	}
 
+	/**
+	 * Deletes the torrent specified by infoHash (and its files if
+	 * deleteFiles==true)
+	 * 
+	 * @param infoHash
+	 * @param deleteFiles
+	 */
 	public void deleteTorrent(String infoHash, boolean deleteFiles) {
 		Log.i("XMLRPCDownloadManager", "Removing torrent with infohash: "
 				+ infoHash);

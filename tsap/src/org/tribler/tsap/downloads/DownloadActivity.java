@@ -21,6 +21,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Activity that shows detailed information of a download
+ * 
+ * @author Dirk Schut & Niels Spruit
+ * 
+ */
 public class DownloadActivity extends Activity implements IPollListener {
 	private ActionBar mActionBar;
 	private Download mDownload;
@@ -42,9 +48,36 @@ public class DownloadActivity extends Activity implements IPollListener {
 		mActionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
+	/**
+	 * Fills the layout with the current values of the download
+	 */
 	private void fillLayout() {
+		fillInfoLayout();
+		fillThumbnail();
+		fillProgressLayout();
+
+		TextView descr = (TextView) mView
+				.findViewById(R.id.download_info_description);
+		descr.setText("");
+	}
+
+	/**
+	 * Loads the thumbnail into the view
+	 */
+	private void fillThumbnail() {
+		ImageView thumb = (ImageView) mView
+				.findViewById(R.id.download_info_thumbnail);
+
+		ThumbnailUtils.loadThumbnail(
+				ThumbnailUtils.getThumbnailLocation(mTorrent.getInfoHash()),
+				thumb, this);
+	}
+
+	/**
+	 * Fills the views of the information of the download
+	 */
+	private void fillInfoLayout() {
 		DownloadStatus downStat = mDownload.getDownloadStatus();
-		int statusCode = downStat.getStatus();
 
 		TextView size = (TextView) mView
 				.findViewById(R.id.download_info_filesize);
@@ -63,18 +96,18 @@ public class DownloadActivity extends Activity implements IPollListener {
 		TextView availability = (TextView) mView
 				.findViewById(R.id.download_info_availability);
 		availability.setText(Integer.toString(mDownload.getAvailability()));
+	}
 
-		TextView descr = (TextView) mView
-				.findViewById(R.id.download_info_description);
-		descr.setText("");
-
-		ImageView thumb = (ImageView) mView
-				.findViewById(R.id.download_info_thumbnail);
-
-		ThumbnailUtils.loadThumbnail(
-				ThumbnailUtils.getThumbnailLocation(mTorrent.getInfoHash()),
-				thumb, this);
-
+	/**
+	 * Fills the status progress views with the correct values
+	 * 
+	 * @param downStat
+	 *            The status of the download
+	 * @param statusCode
+	 */
+	private void fillProgressLayout() {
+		DownloadStatus downStat = mDownload.getDownloadStatus();
+		int statusCode = downStat.getStatus();
 		TextView status = (TextView) mView
 				.findViewById(R.id.download_info_status_text);
 		status.setText(Utility.convertDownloadStateIntToMessage(statusCode)
@@ -91,6 +124,9 @@ public class DownloadActivity extends Activity implements IPollListener {
 		bar.setProgress((int) (100 * downStat.getProgress()));
 	}
 
+	/**
+	 * Sets the stream button listener to PlayButtonListener
+	 */
 	private void setStreamButtonListener() {
 		Button streamButton = (Button) mView
 				.findViewById(R.id.download_info_stream_button);
@@ -99,6 +135,11 @@ public class DownloadActivity extends Activity implements IPollListener {
 		streamButton.setOnClickListener(streamButtonOnClickListener);
 	}
 
+	/**
+	 * Sets the listener of the remove download button and its dialog
+	 * 
+	 * @param resource
+	 */
 	private void setTorrentRemoveButtonListener(int resource) {
 		Button removeButton = (Button) mView.findViewById(resource);
 		final DownloadActivity a = this;
@@ -109,7 +150,8 @@ public class DownloadActivity extends Activity implements IPollListener {
 				// Show dialog
 				AlertDialog.Builder alertRemove = new AlertDialog.Builder(
 						v.getContext());
-				alertRemove.setTitle(R.string.remove_download_dialog_title)
+				alertRemove
+						.setTitle(R.string.remove_download_dialog_title)
 						.setMessage(R.string.remove_download_dialog_message)
 						// Android.R.string.yes == Ok -
 						// https://code.google.com/p/android/issues/detail?id=3713
@@ -137,7 +179,6 @@ public class DownloadActivity extends Activity implements IPollListener {
 										a.onBackPressed();
 									}
 								})
-						// .setIcon(android.R.drawable.ic_dialog_alert)
 						.setNeutralButton(android.R.string.cancel,
 								new DialogInterface.OnClickListener() {
 									@Override
@@ -150,6 +191,9 @@ public class DownloadActivity extends Activity implements IPollListener {
 		removeButton.setOnClickListener(removeButtonOnClickListener);
 	}
 
+	/**
+	 * Initializes the view and the instance variables
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -202,6 +246,10 @@ public class DownloadActivity extends Activity implements IPollListener {
 		}
 	}
 
+	/**
+	 * Called when the poller time expired: updated the progress of the current
+	 * download
+	 */
 	@Override
 	public void onPoll() {
 		String infohash = mTorrent.getInfoHash();

@@ -17,7 +17,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+/**
+ * Class that makes sure that a torrent is downloaded (if needed), shows a
+ * dialog with the download status and starts VLC when the video is ready to be
+ * streamed.
+ * 
+ * @author Niels Spruit
+ * 
+ */
 public class PlayButtonListener implements OnClickListener, IPollListener {
+
+	private final int POLLER_INTERVAL = 1000; // in ms
 
 	private Torrent thumbData;
 	private String infoHash;
@@ -32,7 +42,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		this.infoHash = thumbData.getInfoHash();
 		this.needsToBeDownloaded = true;
 		this.mActivity = activity;
-		this.mPoller = new MainThreadPoller(this, 1000, mActivity);
+		this.mPoller = new MainThreadPoller(this, POLLER_INTERVAL, mActivity);
 	}
 
 	public PlayButtonListener(String infoHash, Activity activity) {
@@ -40,7 +50,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		this.infoHash = infoHash;
 		this.needsToBeDownloaded = false;
 		this.mActivity = activity;
-		this.mPoller = new MainThreadPoller(this, 1000, mActivity);
+		this.mPoller = new MainThreadPoller(this, POLLER_INTERVAL, mActivity);
 	}
 
 	@Override
@@ -48,8 +58,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		// start downloading the torrent
 		Button button = (Button) buttonClicked;
 		if (needsToBeDownloaded) {
-			XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash,
-					thumbData.getName());
+			startDownload();
 		}
 
 		// disable the play button
@@ -59,6 +68,14 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		mPoller.start();
 		dialog = new VODDialogFragment(mPoller, button);
 		dialog.show(mActivity.getFragmentManager(), "wait_vod");
+	}
+
+	/**
+	 * Starts downloading the torrent
+	 */
+	private void startDownload() {
+		XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash,
+				thumbData.getName());
 	}
 
 	@Override

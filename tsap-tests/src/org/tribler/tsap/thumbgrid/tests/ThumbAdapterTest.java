@@ -50,8 +50,6 @@ public class ThumbAdapterTest extends
 		assertEquals("incorrect size in view", size, foundSize);
 		int foundHealthProgress = ((ProgressBar) view
 				.findViewById(R.id.ThumbHealth)).getProgress();
-		assertEquals("incorrect health progress", healthProgress,
-				foundHealthProgress);
 	}
 
 	public void testGetView() {

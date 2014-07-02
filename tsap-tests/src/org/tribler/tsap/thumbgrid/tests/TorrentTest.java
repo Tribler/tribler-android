@@ -16,7 +16,7 @@ public class TorrentTest extends AndroidTestCase {
 
 	private static final String infohash = "infohash";
 	private static final String title = "Sintel 2010";
-	private static final TORRENT_HEALTH health = TORRENT_HEALTH.RED;
+	private static final TORRENT_HEALTH health = TORRENT_HEALTH.YELLOW;
 	private static final long size = 349834;
 	private static final String category = "other";
 	private static final int leechers = 434;

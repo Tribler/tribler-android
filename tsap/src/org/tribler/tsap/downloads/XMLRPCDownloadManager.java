@@ -74,6 +74,23 @@ public class XMLRPCDownloadManager implements IPollListener {
 	 * Converts a Map as returned by XMLRPC to a Download object
 	 */
 	private Download convertMapToDownload(Map<String, Object> map) {
+		Torrent torrent = getTorrentFrom(map);
+		DownloadStatus downStat = getDownloadStatusFrom(map);
+
+		int availability = (Integer) map.get("availability");
+		boolean vodPlayable = (Boolean) map.get("vod_playable");
+		double vodETA = (Double) map.get("vod_eta");
+
+		return new Download(torrent, downStat, vodETA, vodPlayable,
+				availability);
+	}
+
+	/**
+	 * @param map
+	 *            The map containing the data
+	 * @return the torrent created from the data in the map
+	 */
+	private Torrent getTorrentFrom(Map<String, Object> map) {
 		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
 		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
 
@@ -87,9 +104,15 @@ public class XMLRPCDownloadManager implements IPollListener {
 		String name = Utility.getFromMap(map, "name", "unknown");
 		String category = Utility.getFromMap(map, "category", "Unknown");
 
-		Torrent torrent = new Torrent(name, infoHash, size, seeders, leechers,
-				category);
+		return new Torrent(name, infoHash, size, seeders, leechers, category);
+	}
 
+	/**
+	 * @param map
+	 *            The map containing the data
+	 * @return the download status created from the data in the map
+	 */
+	private DownloadStatus getDownloadStatusFrom(Map<String, Object> map) {
 		double downloadSpeed;
 		if (map.get("speed_down") instanceof Double)
 			downloadSpeed = (Double) map.get("speed_down");
@@ -106,15 +129,8 @@ public class XMLRPCDownloadManager implements IPollListener {
 		int status = (Integer) map.get("status");
 		double eta = (Double) map.get("eta");
 
-		DownloadStatus downStat = new DownloadStatus(status, downloadSpeed,
-				uploadSpeed, progress, eta);
-
-		int availability = (Integer) map.get("availability");
-		boolean vodPlayable = (Boolean) map.get("vod_playable");
-		double vodETA = (Double) map.get("vod_eta");
-
-		return new Download(torrent, downStat, vodETA, vodPlayable,
-				availability);
+		return new DownloadStatus(status, downloadSpeed, uploadSpeed, progress,
+				eta);
 	}
 
 	/**

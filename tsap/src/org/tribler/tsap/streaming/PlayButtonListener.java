@@ -11,7 +11,6 @@ import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -24,27 +23,22 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private String infoHash;
 	private boolean needsToBeDownloaded;
 	private MainThreadPoller mPoller;
-	private FragmentManager mFragManager;
 	private VODDialogFragment dialog;
 	private boolean inVODMode = false;
 	private Activity mActivity;
 
-	public PlayButtonListener(Torrent thumbData, FragmentManager fragManager,
-			Activity activity) {
+	public PlayButtonListener(Torrent thumbData, Activity activity) {
 		this.thumbData = thumbData;
 		this.infoHash = thumbData.getInfoHash();
 		this.needsToBeDownloaded = true;
-		this.mFragManager = fragManager;
 		this.mActivity = activity;
 		this.mPoller = new MainThreadPoller(this, 1000, mActivity);
 	}
 
-	public PlayButtonListener(String infoHash, FragmentManager fragManager,
-			Activity activity) {
+	public PlayButtonListener(String infoHash, Activity activity) {
 		this.thumbData = null;
 		this.infoHash = infoHash;
 		this.needsToBeDownloaded = false;
-		this.mFragManager = fragManager;
 		this.mActivity = activity;
 		this.mPoller = new MainThreadPoller(this, 1000, mActivity);
 	}
@@ -64,7 +58,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		// start waiting for VOD
 		mPoller.start();
 		dialog = new VODDialogFragment(mPoller, button);
-		dialog.show(mFragManager, "wait_vod");
+		dialog.show(mActivity.getFragmentManager(), "wait_vod");
 	}
 
 	@Override

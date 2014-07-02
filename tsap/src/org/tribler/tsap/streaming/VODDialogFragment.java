@@ -21,10 +21,6 @@ import android.widget.Button;
 		this.mButton = mButton;
 	}
 	
-	public VODDialogFragment(){
-		super();
-	}
-	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the Builder class for convenient dialog construction

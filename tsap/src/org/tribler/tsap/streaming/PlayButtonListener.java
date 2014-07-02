@@ -33,7 +33,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private String infoHash;
 	private boolean needsToBeDownloaded;
 	private MainThreadPoller mPoller;
-	private VODDialogFragment dialog;
+	private AlertDialog aDialog;
 	private boolean inVODMode = false;
 	private Activity mActivity;
 
@@ -66,8 +66,9 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 
 		// start waiting for VOD
 		mPoller.start();
-		dialog = new VODDialogFragment(mPoller, button);
+		VODDialogFragment dialog = new VODDialogFragment(mPoller, button);
 		dialog.show(mActivity.getFragmentManager(), "wait_vod");
+		aDialog = (AlertDialog) dialog.getDialog();
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		XMLRPCDownloadManager.getInstance().getProgressInfo(infoHash);
 		Download dwnld = XMLRPCDownloadManager.getInstance()
 				.getCurrentDownload();
-		AlertDialog aDialog = (AlertDialog) dialog.getDialog();
+		// AlertDialog aDialog = (AlertDialog) dialog.getDialog();
 		if (dwnld != null) {
 			if (!dwnld.getTorrent().getInfoHash().equals(infoHash)) {
 				return;

@@ -8,9 +8,9 @@ import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
 /**
- * Basic UI test case that launches the Tribler Play app. This class should be extended
- * for additional UI test cases. Each test case in the subclasses should call
- * the startTSAP method first to launch the app.
+ * Basic UI test case that launches the Tribler Play app. This class should be
+ * extended for additional UI test cases. Each test case in the subclasses
+ * should call the startTSAP method first to launch the app.
  * 
  * @author Niels Spruit
  */

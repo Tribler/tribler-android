@@ -12,7 +12,8 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 public class DownloadInfoLandscapeUiTest extends DownloadInfoUiTest {
 
 	/**
-	 * Launches the Tribler Play app on the device and sets the orientation to Right
+	 * Launches the Tribler Play app on the device and sets the orientation to
+	 * Right
 	 * 
 	 * @throws UiObjectNotFoundException
 	 * @throws RemoteException

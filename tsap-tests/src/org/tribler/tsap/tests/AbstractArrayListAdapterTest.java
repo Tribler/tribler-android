@@ -11,63 +11,60 @@ import android.test.UiThreadTest;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-public class AbstractArrayListAdapterTest extends ActivityInstrumentationTestCase2<MainActivity>{
+public class AbstractArrayListAdapterTest extends
+		ActivityInstrumentationTestCase2<MainActivity> {
 	public AbstractArrayListAdapterTest(Class<MainActivity> activityClass) {
 		super(MainActivity.class);
 	}
 
-	class MinimalArrayListAdapter extends AbstractArrayListAdapter<Integer>{
+	class MinimalArrayListAdapter extends AbstractArrayListAdapter<Integer> {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			return null;
 		}
-		public MinimalArrayListAdapter()
-		{
+
+		public MinimalArrayListAdapter() {
 			super(getActivity());
 		}
-		public MinimalArrayListAdapter(Collection<Integer> initialContent)
-		{
+
+		public MinimalArrayListAdapter(Collection<Integer> initialContent) {
 			super(getActivity(), initialContent);
 		}
 	}
-	
-	public void testInitalEmpty()
-	{
+
+	public void testInitalEmpty() {
 		MinimalArrayListAdapter initAdapter = new MinimalArrayListAdapter();
 		assertEquals("Initial count incorrect", 0, initAdapter.getCount());
 	}
-	
-	public void testInitalData()
-	{
+
+	public void testInitalData() {
 		ArrayList<Integer> intList = new ArrayList<Integer>();
 		intList.add(4);
 		intList.add(5);
 		intList.add(6);
-		MinimalArrayListAdapter initAdapter = new MinimalArrayListAdapter(intList);
+		MinimalArrayListAdapter initAdapter = new MinimalArrayListAdapter(
+				intList);
 		assertEquals("Initial count incorrect", 3, initAdapter.getCount());
-		assertEquals("Initial value incorrect", Integer.valueOf(4), initAdapter.getItem(0));
-		assertEquals("Initial value incorrect", Integer.valueOf(5), initAdapter.getItem(1));
-		assertEquals("Initial value incorrect", Integer.valueOf(6), initAdapter.getItem(2));
+		assertEquals("Initial value incorrect", Integer.valueOf(4),
+				initAdapter.getItem(0));
+		assertEquals("Initial value incorrect", Integer.valueOf(5),
+				initAdapter.getItem(1));
+		assertEquals("Initial value incorrect", Integer.valueOf(6),
+				initAdapter.getItem(2));
 	}
-	
-	public void testOutOfBoundsException()
-	{
+
+	public void testOutOfBoundsException() {
 		MinimalArrayListAdapter adapter = new MinimalArrayListAdapter();
 		try {
 			adapter.getItem(1);
 			fail("No exception thrown when accessing an element that was out of bounds.");
-		}
-		catch(IndexOutOfBoundsException e)
-		{ }
-		catch(Exception e)
-		{
+		} catch (IndexOutOfBoundsException e) {
+		} catch (Exception e) {
 			fail("Wrong type of exception thrown when accessing an element that was out of bounds.");
 		}
 	}
-	
-	public void testGetId()
-	{
+
+	public void testGetId() {
 		MinimalArrayListAdapter initAdapter = new MinimalArrayListAdapter();
 		assertEquals("ID incorrect", -34234, initAdapter.getItemId(-34234));
 		assertEquals("ID incorrect", -1, initAdapter.getItemId(-1));
@@ -75,16 +72,17 @@ public class AbstractArrayListAdapterTest extends ActivityInstrumentationTestCas
 		assertEquals("ID incorrect", 1, initAdapter.getItemId(1));
 		assertEquals("ID incorrect", 456456, initAdapter.getItemId(456456));
 	}
-	
+
 	@UiThreadTest
-	public void testClear()
-	{
+	public void testClear() {
 		ArrayList<Integer> intList = new ArrayList<Integer>();
 		intList.add(4);
 		intList.add(5);
 		intList.add(6);
-		MinimalArrayListAdapter initAdapter = new MinimalArrayListAdapter(intList);
+		MinimalArrayListAdapter initAdapter = new MinimalArrayListAdapter(
+				intList);
 		initAdapter.clear();
-		assertEquals("Count incorrect after clearing", 0, initAdapter.getCount());
+		assertEquals("Count incorrect after clearing", 0,
+				initAdapter.getCount());
 	}
 }

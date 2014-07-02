@@ -22,8 +22,9 @@ from Tribler.Main.Utility.GuiDBTuples import Channel, RemoteChannel, ChannelTorr
 from Tribler.community.allchannel.community import AllChannelCommunity
 from Tribler.Core.Search.SearchManager import split_into_keywords
 
+from BaseManager import BaseManager
 
-class ChannelManager():
+class ChannelManager(BaseManager):
     # Code to make this a singleton
     __single = None
 
@@ -42,41 +43,13 @@ class ChannelManager():
     _results = []
     _result_cids = []
 
-    def __init__(self, session, xmlrpc=None):
-        """
-        Constructor for the ChannelManager that loads all db connections.
-        :param session: The Tribler session that the ChannelManager should apply to.
-        :param xmlrpc: The XML-RPC Manager that the ChannelManager should apply to. If specified, the ChannelManager
-        registers its public functions with the XMLRpcManager.
-        :return:
-        """
-        if ChannelManager.__single:
-            raise RuntimeError("ChannelManager is singleton")
-        self.connected = False
-
-        self._session = session
-        self._remote_lock = threading.Lock()
-
-        self._connect()
-
-        if xmlrpc:
-            self._xmlrpc_register(xmlrpc)
-
-    def getInstance(*args, **kw):
-        if ChannelManager.__single is None:
-            ChannelManager.__single = ChannelManager(*args, **kw)
-        return ChannelManager.__single
-    getInstance = staticmethod(getInstance)
-
-    def delInstance(*args, **kw):
-        ChannelManager.__single = None
-    delInstance = staticmethod(delInstance)
-
     def _connect(self):
         """
         Load database handles and Dispersy.
         :return: Nothing.
         """
+        self._remote_lock = threading.Lock()
+
         if not self.connected:
             self.connected = True
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)

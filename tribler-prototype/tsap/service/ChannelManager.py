@@ -26,11 +26,6 @@ from BaseManager import BaseManager
 
 class ChannelManager(BaseManager):
     # Code to make this a singleton
-    __single = None
-
-    connected = False
-
-    _session = None
     _dispersy = None
     _remote_lock = None
 
@@ -50,8 +45,8 @@ class ChannelManager(BaseManager):
         """
         self._remote_lock = threading.Lock()
 
-        if not self.connected:
-            self.connected = True
+        if not self._connected:
+            self._connected = True
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)

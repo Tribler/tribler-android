@@ -9,6 +9,7 @@ import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.streaming.PlayButtonListener;
 import org.tribler.tsap.util.MainThreadPoller;
 import org.tribler.tsap.util.Poller.IPollListener;
+import org.tribler.tsap.util.ThumbnailUtils;
 import org.tribler.tsap.util.Utility;
 
 import android.app.ActionBar;
@@ -24,8 +25,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 public class DownloadActivity extends Activity implements IPollListener {
 	private ActionBar mActionBar;
@@ -72,7 +71,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 		ImageView thumb = (ImageView) mView
 				.findViewById(R.id.download_info_thumbnail);
-		loadBitmap(getImageLocation(mDownload.getInfoHash()), thumb);
+		ThumbnailUtils.loadThumbnail(getImageLocation(mDownload.getInfoHash()), thumb, this);
 
 		TextView status = (TextView) mView
 				.findViewById(R.id.download_info_status_text);
@@ -202,22 +201,6 @@ public class DownloadActivity extends Activity implements IPollListener {
 		} else {
 			return super.onOptionsItemSelected(menuItem);
 		}
-	}
-
-	/**
-	 * Loads the thumbnail of the selected torrent
-	 * 
-	 * @param resId
-	 *            The resource id of the thumbnail
-	 * @param mImageView
-	 *            The ImageView in which the thumbnail should be loaded
-	 */
-	private void loadBitmap(File file, ImageView mImageView) {
-		float dens = getResources().getDisplayMetrics().density;
-		int thumbWidth = (int) (100 * dens);
-		int thumbHeight = (int) (150 * dens);
-		Picasso.with(this).load(file).placeholder(R.drawable.default_thumb)
-				.resize(thumbWidth, thumbHeight).into(mImageView);
 	}
 
 	private File getImageLocation(final String infoHash) {

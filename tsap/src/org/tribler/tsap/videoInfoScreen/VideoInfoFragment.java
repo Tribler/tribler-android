@@ -1,11 +1,10 @@
 package org.tribler.tsap.videoInfoScreen;
 
-import java.io.File;
-
 import org.tribler.tsap.R;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.streaming.PlayButtonListener;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.util.ThumbnailUtils;
 import org.tribler.tsap.util.Utility;
 
 import android.app.Fragment;
@@ -17,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 /**
  * Fragment that shows the detailed info belonging to the selected torrent in
@@ -82,11 +79,10 @@ public class VideoInfoFragment extends Fragment {
 		TextView descr = (TextView) view
 				.findViewById(R.id.video_info_description);
 		descr.setText("");
-
 		
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
-		loadBitmap(thumbData.getThumbImageFile(), thumb);
+		ThumbnailUtils.loadThumbnail(thumbData.getThumbImageFile(), thumb, context);
 
 		setPlayButtonListener();
 		setDownloadButtonListener();
@@ -117,23 +113,6 @@ public class VideoInfoFragment extends Fragment {
 			}
 		};
 		downloadButton.setOnClickListener(onClickListener);
-	}
-
-	/**
-	 * Loads the thumbnail of the selected torrent
-	 * 
-	 * @param resId
-	 *            The resource id of the thumbnail
-	 * @param mImageView
-	 *            The ImageView in which the thumbnail should be loaded
-	 */
-	private void loadBitmap(File file, ImageView mImageView) {
-		float dens = context.getResources().getDisplayMetrics().density;
-		int thumbWidth = (int) (100 * dens);
-		int thumbHeight = (int) (150 * dens);
-		Picasso.with(context).load(file).placeholder(R.drawable.default_thumb)
-			.resize(thumbWidth, thumbHeight).into(mImageView);		
-
 	}
 
 }

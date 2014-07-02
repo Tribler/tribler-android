@@ -8,9 +8,8 @@ import java.util.List;
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
 import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.util.ThumbnailUtils;
 import org.tribler.tsap.util.Utility;
-
-import com.squareup.picasso.Picasso;
 
 import android.app.Activity;
 import android.graphics.PorterDuff.Mode;
@@ -30,9 +29,6 @@ import android.widget.TextView;
 public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	private int layoutResourceId;
 
-	private int mThumbWidth;
-	private int mThumbHeight;
-
 	/**
 	 * Constructor: initializes the instance variables
 	 * 
@@ -44,10 +40,6 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	public ThumbAdapter(Activity activity, int layoutResourceId) {
 		super(activity);
 		this.layoutResourceId = layoutResourceId;
-
-		float s = mActivity.getResources().getDisplayMetrics().density;
-		mThumbWidth = (int) (100 * s);
-		mThumbHeight = (int) (150 * s);
 	}
 
 	/**
@@ -64,10 +56,6 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 			ArrayList<ThumbItem> data) {
 		super(activity, data);
 		this.layoutResourceId = layoutResourceId;
-
-		float s = activity.getResources().getDisplayMetrics().density;
-		mThumbWidth = (int) (100 * s);
-		mThumbHeight = (int) (150 * s);
 	}
 
 	/**
@@ -96,15 +84,15 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		
 		ImageView image = (ImageView) convertView.findViewById(R.id.ThumbImage);
 		if(item.getThumbImageFile() != null) {
-			loadBitmap(item.getThumbImageFile(), image);
+			ThumbnailUtils.loadThumbnail(item.getThumbImageFile(), image, mActivity);
 		} else {
 			File file = getImageLocation(item.getInfoHash());
 			if(file != null) {
-				loadBitmap(file, image);
+				ThumbnailUtils.loadThumbnail(file, image, mActivity);
 				item.setThumbImageFile(file);
 			}
 			else {
-				loadBitmap(R.drawable.default_thumb, image);
+				ThumbnailUtils.loadDefaultThumbnail(image, mActivity);
 			}
 		}
 		
@@ -185,23 +173,5 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		}
 		Log.e("", "Torrents added!");
 		notifyChangesToUiThread();
-	}
-
-	/**
-	 * Loads the thumbnail of the thumb item
-	 * 
-	 * @param resId
-	 *            The resource id of the thumbnail
-	 * @param mImageView
-	 *            The ImageView in which the thumbnail should be loaded
-	 */
-	private void loadBitmap(int resId, ImageView imageView) {
-		Picasso.with(mActivity).load(resId).placeholder(R.drawable.default_thumb)
-				.resize(mThumbWidth, mThumbHeight).into(imageView);
-	}
-	
-	private void loadBitmap(File file, ImageView imageView) {
-		Picasso.with(mActivity).load(file).placeholder(R.drawable.default_thumb)
-				.resize(mThumbWidth, mThumbHeight).into(imageView);
 	}
 }

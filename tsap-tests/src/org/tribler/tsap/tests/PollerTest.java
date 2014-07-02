@@ -41,14 +41,9 @@ public class PollerTest extends TestCase implements Poller.IPollListener {
 	public void testSlowPause()
 	{
 		pollTest(4);
-		while (System.currentTimeMillis() < startTime + (10)*POLLING_PERIOD);
-		assertEquals("Amount of polls received gets bigger after pausing.", 4, updateCalled);
-	}
-	public void testDirectPause()
-	{
 		poller.stop();
 		while (System.currentTimeMillis() < startTime + (10)*POLLING_PERIOD);
-		assertEquals("Amount of polls received gets bigger after pausing.", 1, updateCalled);
+		assertEquals("Amount of polls received gets bigger after pausing.", 4, updateCalled);
 	}
 
 	@Override

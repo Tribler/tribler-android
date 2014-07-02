@@ -3,8 +3,11 @@ package org.tribler.tsap.util;
 import java.util.Map;
 
 import org.tribler.tsap.settings.Settings;
+import org.tribler.tsap.settings.Settings.TorrentType;
 import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbItem;
+
+import android.util.Log;
 
 /**
  * Class with static functions that are used across multiple classes, like

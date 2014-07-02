@@ -59,14 +59,13 @@
     <string name="download_info_status_title">Status:</string>
     <string name="download_info_eta_title">ETA:</string>
     <string name="download_info_delete_torrent_button">Remove download</string>
-    
-    <!-- Status strings for connecting -->
-    <string name="connection_loading">Loading Tribler&#8230;</string>
-    <string name="connection_failed">Could not connect to Tribler.</string>
 
     <!-- Status Strings from ThumbGridFragment -->
-    <string name="thumb_grid_search_submitted">Searching&#8230;</string>
-    <string name="thumb_grid_server_started">Type in keywords to start searching.</string>
+    <string name="thumb_grid_loading_tribler">Loading Tribler&#8230;</string>
+    <!-- <string name="thumb_grid_loading_results">Loading results&#8230;</string> -->
+    <!-- <string name="thumb_grid_search_submitted">"Searching&#8230;"</string> -->
+    <string name="thumb_grid_server_started">"Type in keywords to start searching."</string>
+    <!-- <string name="thumb_grid_connection_failed">"Could not connect to Tribler."</string> -->
     <string name="thumb_grid_searchview">Search videos</string>
 
     <!-- Strings for settings -->
@@ -99,10 +98,5 @@
     <string name="python_activity_extract_message">Extracting assets&#8230;</string>
     <string name="python_activity_start_service_message">Starting Tribler service&#8230;</string>
     <string name="python_activity_start_activity_message">Starting the main activity&#8230;</string>
-    
-    <!-- Strings for DownloadListFragment -->
-	<string name="download_list_empty">Currently no downloads are active.</string>
-	
-	<string name="empty"></string>
 
 </resources>

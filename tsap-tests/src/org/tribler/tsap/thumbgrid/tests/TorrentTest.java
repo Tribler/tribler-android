@@ -26,7 +26,7 @@ public class TorrentTest extends AndroidTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mTorrent = new Torrent(title,infohash,size,seeders,leechers,null,category);
+		mTorrent = new Torrent(title,infohash,size,seeders,leechers,category);
 	}
 
 	/**

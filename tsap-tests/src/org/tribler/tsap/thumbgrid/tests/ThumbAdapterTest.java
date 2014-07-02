@@ -25,10 +25,10 @@ public class ThumbAdapterTest extends
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		a = new Torrent("a", "infohash1", 1, 1, 1, null, "other");
-		b = new Torrent("b", "infohash2", 12, 1, 1, null, "other");
-		c = new Torrent("c", "infohash3", 123, 1, 1, null, "other");
-		a = new Torrent("d", "infohash4", 1234, 1, 1, null, "other");
+		a = new Torrent("a", "infohash1", 1, 1, 1, "other");
+		b = new Torrent("b", "infohash2", 12, 1, 1, "other");
+		c = new Torrent("c", "infohash3", 123, 1, 1, "other");
+		d = new Torrent("d", "infohash4", 1234, 1, 1, "other");
 
 		ArrayList<Torrent> list = new ArrayList<Torrent>();
 		list.add(a);

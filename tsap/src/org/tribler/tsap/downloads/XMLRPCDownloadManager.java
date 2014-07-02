@@ -88,7 +88,7 @@ public class XMLRPCDownloadManager implements IPollListener {
 		String category = Utility.getFromMap(map, "category", "Unknown");
 
 		Torrent torrent = new Torrent(name, infoHash, size, seeders, leechers,
-				null, category);
+				category);
 
 		double downloadSpeed;
 		if (map.get("speed_down") instanceof Double)

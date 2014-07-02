@@ -105,7 +105,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 		String name = Utility.getFromMap(map, "name", "unknown");
 		String category = Utility.getFromMap(map, "category", "Unknown");
 
-		return new Torrent(name, infoHash, size, seeders, leechers, null, category);
+		return new Torrent(name, infoHash, size, seeders, leechers, category);
 	}
 
 	public void search(String keywords) {

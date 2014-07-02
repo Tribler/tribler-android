@@ -3,6 +3,7 @@ package org.tribler.tsap.downloads;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.util.Poller.IPollListener;
@@ -73,6 +74,17 @@ public class XMLRPCDownloadManager implements IPollListener {
 	 * Converts a Map as returned by XMLRPC to a Download object
 	 */
 	private Download convertMapToDownload(Map<String, Object> map) {
+		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
+		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
+		long size = Long.parseLong(Utility.getFromMap(map, "length", "-1")
+				.trim());
+		String infoHash = Utility.getFromMap(map, "infohash", "unknown");
+		String name = Utility.getFromMap(map, "name", "unknown");
+		String category = Utility.getFromMap(map, "category", "Unknown");
+
+		Torrent torrent = new Torrent(name, infoHash, size, seeders, leechers,
+				null, category);
+
 		double downloadSpeed;
 		if (map.get("speed_down") instanceof Double)
 			downloadSpeed = (Double) map.get("speed_down");
@@ -85,21 +97,19 @@ public class XMLRPCDownloadManager implements IPollListener {
 		else
 			uploadSpeed = (Integer) map.get("speed_up");
 
-		long size;
-		if (map.get("length") instanceof Integer)
-			size = (Integer) map.get("length");
-		else
-			size = Math.round((Double) map.get("length"));
+		double progress = (Double) map.get("progress");
+		int status = (Integer) map.get("status");
+		double eta = (Double) map.get("eta");
 
-		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
-		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
+		DownloadStatus downStat = new DownloadStatus(status, downloadSpeed,
+				uploadSpeed, progress, eta);
 
-//		return new Download((String) map.get("name"),
-//				(String) map.get("infohash"), (Integer) map.get("status"),
-//				downloadSpeed, uploadSpeed, (Double) map.get("progress"),
-//				(Double) map.get("eta"), (Double) map.get("vod_eta"),
-//				(Boolean) map.get("vod_playable"), seeders, leechers, size,
-//				(Integer) map.get("availability"));
+		int availability = (Integer) map.get("availability");
+		boolean vodPlayable = (Boolean) map.get("vod_playable");
+		double vodETA = (Double) map.get("vod_eta");
+
+		return new Download(torrent, downStat, vodETA, vodPlayable,
+				availability);
 	}
 
 	/**

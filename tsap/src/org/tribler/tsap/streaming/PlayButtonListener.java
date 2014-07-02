@@ -2,6 +2,7 @@ package org.tribler.tsap.streaming;
 
 import org.tribler.tsap.Torrent;
 import org.tribler.tsap.downloads.Download;
+import org.tribler.tsap.downloads.DownloadStatus;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.util.MainThreadPoller;
 import org.tribler.tsap.util.Poller.IPollListener;
@@ -73,11 +74,10 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 				.getCurrentDownload();
 		AlertDialog aDialog = (AlertDialog) dialog.getDialog();
 		if (dwnld != null) {
-			if(!dwnld.getInfoHash().equals(infoHash))
-			{
+			if (!dwnld.getTorrent().getInfoHash().equals(infoHash)) {
 				return;
 			}
-			
+
 			if (dwnld.isVODPlayable()) {
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						XMLRPCDownloadManager.getInstance().getVideoUri(),
@@ -88,7 +88,10 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 				aDialog.cancel();
 
 			} else {
-				switch (dwnld.getStatus()) {
+				DownloadStatus downStat = dwnld.getDownloadStatus();
+				int statusCode = downStat.getStatus();
+
+				switch (statusCode) {
 				case 3:
 					// if state is downloading, start vod mode if not done
 					// already:
@@ -102,17 +105,21 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 
 					if (aDialog != null)
 						aDialog.setMessage("Video starts playing in about "
-								+ Utility.convertSecondsToString(vod_eta) + " ("
-								+ Utility.convertBytesPerSecToString(dwnld.getDownloadSpeed()) + ").");
+								+ Utility.convertSecondsToString(vod_eta)
+								+ " ("
+								+ Utility.convertBytesPerSecToString(downStat
+										.getDownloadSpeed()) + ").");
 
 					break;
 				default:
-					if (aDialog != null)
-					{
-						int dlstatus = dwnld.getStatus();
+					if (aDialog != null) {
 						aDialog.setMessage("Download status: "
-								+ Utility.convertDownloadStateIntToMessage(dwnld.getStatus())
-								+ ((dlstatus == 2) ? " (" + Math.round(dwnld.getProgress() * 100) + "%)" : ""));
+								+ Utility
+										.convertDownloadStateIntToMessage(statusCode)
+								+ ((statusCode == 2) ? " ("
+										+ Math.round(downStat.getProgress() * 100)
+										+ "%)"
+										: ""));
 					}
 					break;
 				}

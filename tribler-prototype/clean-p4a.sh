@@ -2,7 +2,7 @@
 
 echo "Clearing python for android folders.."
 pushd python-for-android
-rm -r build/ dist -f
+rm -r build/ dist .packages/Tribler-* -f
 popd
 
 echo "Clearing assets (*.mp3).."

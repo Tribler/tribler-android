@@ -61,7 +61,7 @@ class TSAP():
         self.tribler.start_session()
 
         # Wait for dispersy to initialize
-        while not self.tribler._dispersy_init:
+        while not self.tribler.is_running():
             time.sleep(0.1)
 
         # Disable ChannelManager
@@ -82,7 +82,7 @@ class TSAP():
         self.xmlrpc.start_server()
 
     def keep_running(self):
-        return self.tribler.keep_running()
+        return self.tribler.is_running()
 
 if __name__ == '__main__':
     tsap = TSAP()

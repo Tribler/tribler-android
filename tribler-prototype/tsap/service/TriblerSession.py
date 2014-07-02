@@ -31,34 +31,34 @@ from Tribler.Main.globals import DefaultDownloadStartupConfig, get_default_dscfg
 from Tribler.Core.simpledefs import STATEDIR_DLPSTATE_DIR, STATEDIR_TORRENTCOLL_DIR, STATEDIR_SWIFTRESEED_DIR
 
 
-class TriblerSession():
+from BaseManager import BaseManager
+
+class TriblerSession(BaseManager):
     _sconfig = None
-    _session = None
     _dispersy = None
-    _searchkeywords = None
 
-    _dispersy_init = False
+    _running = False
 
-    _running = True
-
-    def __init__(self, xmlrpc=None):
+    def _connect(self):
         """
-        Constructor that copies the libswift and ffmpeg binaries when on Android.
+        Copies the libswift and ffmpeg binaries when on Android.
         :return:
         """
 
-        # Copy the swift and ffmpeg binaries
-        if is_android(strict=True):
-            binaries = ['swift', 'ffmpeg']
+        if not self._connected:
+            self._connected = True
 
-            for binary in binaries:
-                _logger.info("Setting up the %s binary.." % binary)
+            # Copy the swift and ffmpeg binaries
+            if is_android(strict=True):
+                binaries = ['swift', 'ffmpeg']
 
-                if not self._copy_binary(binary):
-                    _logger.error("Unable to find or copy the %s binary!" % binary)
+                for binary in binaries:
+                    _logger.info("Setting up the %s binary.." % binary)
 
-        if xmlrpc:
-            self._xmlrpc_register(xmlrpc)
+                    if not self._copy_binary(binary):
+                        _logger.error("Unable to find or copy the %s binary!" % binary)
+        else:
+            raise RuntimeError('TriblerSession already connected')
 
     def _xmlrpc_register(self, xmlrpc):
         """
@@ -107,6 +107,9 @@ class TriblerSession():
         starts a Tribler session.
         :return: Nothing.
         """
+        if self._running:
+            return False
+
         _logger.info("Set tribler_state_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
 
         # Load configuration file (if exists)
@@ -208,9 +211,9 @@ class TriblerSession():
         #comm = self._dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
         #_logger.debug("Currently loaded dispersy communities: %s" % comm)
 
-        self._dispersy_init = True
+        self._running = True
 
-    def keep_running(self):
+    def is_running(self):
         return self._running
 
     def stop_session(self):

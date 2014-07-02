@@ -26,14 +26,9 @@ from Tribler.Core.CacheDB.sqlitecachedb import bin2str, str2bin, forceAndReturnD
 from Tribler.Category.Category import Category
 
 
+from BaseManager import BaseManager
 
-class TorrentManager():
-    # Code to make this a singleton
-    __single = None
-
-    connected = False
-
-    _session = None
+class TorrentManager(BaseManager):
     _dispersy = None
     _remote_lock = None
 
@@ -47,44 +42,15 @@ class TorrentManager():
     _results = []
     _result_infohashes = []
 
-    def __init__(self, session, xmlrpc=None):
-        """
-        Constructor for the TorrentManager that loads all db connections.
-        :param session: The Tribler session that the TorrentManager should apply to.
-        :param xmlrpc: The XML-RPC Manager that the TorrentManager should apply to. If specified, the TorrentManager
-        registers its public functions with the XMLRpcManager.
-        :return:
-        """
-        if TorrentManager.__single:
-            raise RuntimeError("TorrentManager is singleton")
-
-        self.connected = False
-
-        self._session = session
-        self._remote_lock = threading.Lock()
-
-        self._connect()
-
-        if xmlrpc:
-            self._xmlrpc_register(xmlrpc)
-
-    def getInstance(*args, **kw):
-        if TorrentManager.__single is None:
-            TorrentManager.__single = TorrentManager(*args, **kw)
-        return TorrentManager.__single
-    getInstance = staticmethod(getInstance)
-
-    def delInstance(*args, **kw):
-        TorrentManager.__single = None
-    delInstance = staticmethod(delInstance)
-
     def _connect(self):
         """
         Load database handles and Dispersy.
         :return: Nothing.
         """
-        if not self.connected:
-            self.connected = True
+        if not self._connected:
+            self._connected = True
+            self._remote_lock = threading.Lock()
+
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
             self._metadata_db = self._session.open_dbhandler(NTFY_METADATA)

@@ -14,22 +14,37 @@ import android.os.AsyncTask;
  * @author Dirk Schut
  * 
  */
-public class XMLRPCCallTask{
-	
-	
-	public void onSucces(Object result) {};
-	public void onFailure(XMLRPCException result) {};
-	
-	public void call(final String functionName, final XMLRPCConnection connection, final Object... params ) {
+public class XMLRPCCallTask {
+
+	public void onSucces(Object result) {
+	};
+
+	public void onFailure(XMLRPCException result) {
+	};
+
+	/**
+	 * Calls the function specified by functionName in the Tribler service using
+	 * the connection and optional arguments
+	 * 
+	 * @param functionName
+	 *            The function to call
+	 * @param connection
+	 *            The XML-RPC connection to use
+	 * @param params
+	 *            The (optional) arguments of the function
+	 */
+	public void call(final String functionName,
+			final XMLRPCConnection connection, final Object... params) {
 		AsyncTask<Void, Void, Object> backgroundTask = new AsyncTask<Void, Void, Object>() {
 
 			@Override
 			protected Object doInBackground(Void... voidParams) {
 				return connection.call(functionName, params);
 			}
+
 			protected void onPostExecute(Object result) {
 				if (result instanceof XMLRPCException) {
-					onFailure((XMLRPCException)result);
+					onFailure((XMLRPCException) result);
 				} else {
 					onSucces(result);
 				}

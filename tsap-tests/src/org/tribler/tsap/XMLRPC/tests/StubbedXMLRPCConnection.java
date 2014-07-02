@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
-import org.tribler.tsap.XMLRPC.XMLRPCConnection.IConnectionListener;
 
 public class StubbedXMLRPCConnection extends XMLRPCConnection{
 	private Map<String, Object> returnValues;

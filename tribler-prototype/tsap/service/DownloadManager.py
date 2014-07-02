@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 from Tribler.Core.TorrentDef import TorrentDef
 from Tribler.Core.simpledefs import DOWNLOAD, UPLOAD
 from Tribler.Main.globals import DefaultDownloadStartupConfig
+from Tribler.Policies.RateManager import UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager
 
 from Tribler.Core.Video.VideoPlayer import VideoPlayer
 
@@ -43,6 +44,7 @@ class DownloadManager():
     _dllock = threading.Lock()
     _session = None
     _dispersy = None
+    _ratelimiter = None
     _remote_lock = None
 
     _misc_db = None
@@ -67,6 +69,7 @@ class DownloadManager():
 
         self._session = session
         self._remote_lock = threading.Lock()
+        self._ratelimiter = UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager()
 
         self._connect()
 
@@ -103,6 +106,9 @@ class DownloadManager():
             # Schedule download checkpoints
             threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
 
+            # Schedule Ratelimiter callback
+            self._session.set_download_states_callback(self._ratelimit_speed)
+
         else:
             raise RuntimeError('TorrentManager already connected')
 
@@ -137,6 +143,32 @@ class DownloadManager():
 
         #test
         xmlrpc.register_function(self.launch_vlc, "downloads.launch_vlc")
+
+    def set_max_download(self, maxspeed):
+        """
+        Set the global maximum download speed.
+        :param maxspeed: Maximum download speed in Kib/s, 0 for unlimited
+        :return:
+        """
+        return self._ratelimiter.set_global_max_speed(DOWNLOAD, maxspeed)
+
+    def set_max_upload(self, maxspeed):
+        """
+        Set the global maximum upload speed.
+        :param maxspeed: Maximum upload speed in Kib/s, 0 for unlimited
+        :return:
+        """
+        self._ratelimiter.set_global_max_speed(UPLOAD, maxspeed)
+
+    def get_max_download(self):
+        return self._ratelimiter.get_global_max_speed(DOWNLOAD)
+
+    def _ratelimit_speed(self, dslist):
+        """
+        Divides any set speedlimits between registered downloads.
+        :return: Nothing.
+        """
+        pass
 
     def add_torrent(self, infohash, name):
         """

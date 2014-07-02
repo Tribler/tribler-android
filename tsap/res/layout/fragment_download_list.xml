@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Currently no downloads are available."
+        android:text="@string/download_list_empty"
         android:textSize="20sp" />
 
     <ListView

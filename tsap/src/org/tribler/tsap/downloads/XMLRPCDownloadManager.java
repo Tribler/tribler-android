@@ -201,6 +201,7 @@ public class XMLRPCDownloadManager implements IPollListener {
 					Log.e("XMLRPCDownloadManager",
 							"Starting in VOD mode failed. result:"
 									+ (Boolean) result);
+					videoLink = null;
 				} else {
 					String VODString = (String) result;
 					Toast.makeText(mContext, "VODlink =" + VODString,

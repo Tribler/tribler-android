@@ -10,6 +10,7 @@ import org.videolan.vlc.gui.video.VideoPlayerActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -104,12 +105,18 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	 * Starts streaming the video with VLC and cleans up the dialog and poller
 	 */
 	private void startStreaming() {
-		Intent intent = new Intent(Intent.ACTION_VIEW, XMLRPCDownloadManager
-				.getInstance().getVideoUri(),
-				mActivity.getApplicationContext(), VideoPlayerActivity.class);
-		mActivity.startActivity(intent);
+		Uri videoLink = XMLRPCDownloadManager.getInstance().getVideoUri();
+		if (videoLink != null) {
+			Intent intent = new Intent(Intent.ACTION_VIEW,
+					XMLRPCDownloadManager.getInstance().getVideoUri(),
+					mActivity.getApplicationContext(),
+					VideoPlayerActivity.class);
+			mActivity.startActivity(intent);
+			aDialog.cancel();
+		} else
+			aDialog.setMessage("No video file could be found in the torrent");
+
 		mPoller.stop();
-		aDialog.cancel();
 	}
 
 	/**

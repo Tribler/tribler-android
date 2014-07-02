@@ -98,8 +98,8 @@ public class VideoInfoFragment extends Fragment {
 	private void setPlayButtonListener() {
 		final Button viewButton = (Button) view
 				.findViewById(R.id.video_info_stream_video);
-		PlayButtonListener onClickListener = new PlayButtonListener(
-				thumbData.getInfoHash(), getActivity(), true);
+		PlayButtonListener onClickListener = new PlayButtonListener(thumbData,
+				getActivity(), true);
 		viewButton.setOnClickListener(onClickListener);
 	}
 

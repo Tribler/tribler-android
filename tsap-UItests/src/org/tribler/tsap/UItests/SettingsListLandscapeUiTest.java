@@ -5,15 +5,14 @@ import android.os.RemoteException;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 
 /**
- * UI test cases for the video info screen in landscape mode
+ * UI test cases for the settings list fragment in landscape mode
  * 
  * @author Niels Spruit
  */
-public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
+public class SettingsListLandscapeUiTest extends SettingsListUiTest {
 
 	/**
-	 * Launches the Tribler Play app on the device and sets the orientation to
-	 * Right
+	 * Launches the TSAP app on the device and sets the orientation to Right
 	 * 
 	 * @throws UiObjectNotFoundException
 	 * @throws RemoteException
@@ -24,4 +23,5 @@ public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
 		super.startTSAP();
 		getUiDevice().setOrientationRight();
 	}
+
 }

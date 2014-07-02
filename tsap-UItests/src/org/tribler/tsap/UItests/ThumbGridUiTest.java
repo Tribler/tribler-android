@@ -214,8 +214,8 @@ public class ThumbGridUiTest extends BasicUiTestCase {
 				searchView.getText().trim());
 		assertEquals("SearchView isn't an EditText", "android.widget.EditText",
 				searchView.getClassName());
-		
-		//press back twice to return to home
+
+		// press back twice to return to home
 		getUiDevice().pressBack();
 		getUiDevice().pressBack();
 	}

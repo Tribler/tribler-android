@@ -5,11 +5,11 @@ import android.os.RemoteException;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 
 /**
- * UI test cases for the video info screen in landscape mode
+ * UI test cases for the download info screen in landscape mode
  * 
  * @author Niels Spruit
  */
-public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
+public class DownloadInfoLandscapeUiTest extends DownloadInfoUiTest {
 
 	/**
 	 * Launches the Tribler Play app on the device and sets the orientation to

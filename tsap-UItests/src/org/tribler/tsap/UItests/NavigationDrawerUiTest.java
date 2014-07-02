@@ -64,11 +64,12 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 
 		assertEquals(
 				"Navigation drawer doesn't contain the right number of items",
-				2, navDrawer.getChildCount());
+				3, navDrawer.getChildCount());
 	}
 
 	/**
-	 * Tests whether the title in the action is TSAP when the drawer is opened
+	 * Tests whether the title in the action is Tribler Play when the drawer is
+	 * opened
 	 * 
 	 * @throws UiObjectNotFoundException
 	 * @throws RemoteException
@@ -77,8 +78,9 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 			RemoteException {
 		openNavigationDrawer();
 
-		UiObject titleView = new UiObject(new UiSelector().text("TSAP"));
-		assertEquals("Title text incorrect", "TSAP", titleView.getText());
+		UiObject titleView = new UiObject(new UiSelector().text("Tribler Play"));
+		assertEquals("Title text incorrect", "Tribler Play",
+				titleView.getText());
 		assertTrue("Title doesn't exist", titleView.exists());
 		assertTrue("Title isn't enabled", titleView.isEnabled());
 	}
@@ -103,23 +105,43 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the drawer contains the channels item and whether its
-	 * properties are corrects
+	 * Test whether the drawer contains the downloads item and whether its
+	 * properties are correct
 	 * 
 	 * @throws UiObjectNotFoundException
 	 * @throws RemoteException
 	 */
-	public void testChannelsItemProperties() throws UiObjectNotFoundException,
+	public void testDownloadsItemProperties() throws UiObjectNotFoundException,
 			RemoteException {
 		openNavigationDrawer();
 		UiObject navDrawer = new UiObject(
 				new UiSelector().description("navigation_drawer"));
 
-		UiObject channelsItem = navDrawer.getChild(new UiSelector()
-				.text("Channels"));
+		UiObject downloadsItem = navDrawer.getChild(new UiSelector()
+				.text("Downloads"));
 
-		assertTrue("Channels item doesn't exist", channelsItem.exists());
-		assertTrue("Channels item isn't enabled", channelsItem.isEnabled());
+		assertTrue("Downloads item doesn't exist", downloadsItem.exists());
+		assertTrue("Downloads item isn't enabled", downloadsItem.isEnabled());
+	}
+
+	/**
+	 * Test whether the drawer contains the settings item and whether its
+	 * properties are correct
+	 * 
+	 * @throws UiObjectNotFoundException
+	 * @throws RemoteException
+	 */
+	public void testSettingsItemProperties() throws UiObjectNotFoundException,
+			RemoteException {
+		openNavigationDrawer();
+		UiObject navDrawer = new UiObject(
+				new UiSelector().description("navigation_drawer"));
+
+		UiObject settingsItem = navDrawer.getChild(new UiSelector()
+				.text("Settings"));
+
+		assertTrue("Settings item doesn't exist", settingsItem.exists());
+		assertTrue("Settings item isn't enabled", settingsItem.isEnabled());
 	}
 
 	/**
@@ -155,26 +177,26 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 	}
 
 	/**
-	 * Test whether the drawer opens the channels fragment when the second list
-	 * item (channels item) is clicked
+	 * Test whether the drawer opens the download list fragment when the second
+	 * list item (downloads item) is clicked
 	 * 
 	 * @throws UiObjectNotFoundException
 	 * @throws RemoteException
 	 */
-	public void testChannelsItemClick() throws UiObjectNotFoundException,
+	public void testDownloadsItemClick() throws UiObjectNotFoundException,
 			RemoteException {
 		openNavigationDrawer();
 		UiObject navDrawer = new UiObject(
 				new UiSelector().description("navigation_drawer"));
 
-		UiObject channelsItem = navDrawer.getChild(new UiSelector()
-				.text("Channels"));
+		UiObject downloadsItem = navDrawer.getChild(new UiSelector()
+				.text("Downloads"));
 		assertTrue("Navigation drawer doesn't exist", navDrawer.exists());
-		assertTrue("Channels item click failed", channelsItem.click());
+		assertTrue("Downloads item click failed", downloadsItem.click());
 
 		// check whether nav drawer is closed
 		assertFalse(
-				"Navigation drawer is still open after clicking channels item",
+				"Navigation drawer is still open after clicking downloads item",
 				navDrawer.exists());
 
 		// check if the app title is changed correctly
@@ -185,7 +207,41 @@ public class NavigationDrawerUiTest extends BasicUiTestCase {
 
 		assertEquals(
 				"App title not correctly changed after clicking channels item",
-				"Channels", title.getText());
+				"Downloads", title.getText());
+	}
+
+	/**
+	 * Test whether the drawer opens the settings fragment when the thirs list
+	 * item (settings item) is clicked
+	 * 
+	 * @throws UiObjectNotFoundException
+	 * @throws RemoteException
+	 */
+	public void testSettingsItemClick() throws UiObjectNotFoundException,
+			RemoteException {
+		openNavigationDrawer();
+		UiObject navDrawer = new UiObject(
+				new UiSelector().description("navigation_drawer"));
+
+		UiObject settingsItem = navDrawer.getChild(new UiSelector()
+				.text("Settings"));
+		assertTrue("Navigation drawer doesn't exist", navDrawer.exists());
+		assertTrue("Settings item click failed", settingsItem.click());
+
+		// check whether nav drawer is closed
+		assertFalse(
+				"Navigation drawer is still open after clicking settings item",
+				navDrawer.exists());
+
+		// check if the app title is changed correctly
+		UiObject upButton = new UiObject(
+				new UiSelector().descriptionContains("navigation drawer"));
+		UiObject title = upButton.getChild(new UiSelector()
+				.className("android.widget.TextView"));
+
+		assertEquals(
+				"App title not correctly changed after clicking channels item",
+				"Settings", title.getText());
 	}
 
 	/**

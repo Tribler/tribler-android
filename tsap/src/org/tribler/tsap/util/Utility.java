@@ -2,8 +2,8 @@ package org.tribler.tsap.util;
 
 import java.util.Map;
 
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.settings.Settings;
-import org.tribler.tsap.thumbgrid.ThumbItem;
 
 /**
  * Class with static functions that are used across multiple classes, like
@@ -141,7 +141,7 @@ public class Utility {
 	 * @param filter The filter which should be applied
 	 * @return True if the item should be let through, false if the item should be filtered
 	 */
-	public static boolean applyResultFilter(ThumbItem item, Settings.TorrentType filter)
+	public static boolean applyResultFilter(Torrent item, Settings.TorrentType filter)
 	{
 		String category = (item != null) ? item.getCategory().toLowerCase() : null;
 		

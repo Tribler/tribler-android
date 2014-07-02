@@ -1,6 +1,5 @@
 package org.tribler.tsap.streaming;
 
-import org.tribler.tsap.Torrent;
 import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.util.MainThreadPoller;
@@ -35,16 +34,9 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private Activity mActivity;
 	private Download mDownload;
 
-	public PlayButtonListener(Torrent thumbData, Activity activity) {
-		this.infoHash = thumbData.getInfoHash();
-		this.needsToBeDownloaded = true;
-		this.mActivity = activity;
-		this.mPoller = new MainThreadPoller(this, POLLER_INTERVAL, mActivity);
-	}
-
-	public PlayButtonListener(String infoHash, Activity activity) {
+	public PlayButtonListener(String infoHash, Activity activity, boolean needsToBeDownloaded ) {
 		this.infoHash = infoHash;
-		this.needsToBeDownloaded = false;
+		this.needsToBeDownloaded = needsToBeDownloaded;
 		this.mActivity = activity;
 		this.mPoller = new MainThreadPoller(this, POLLER_INTERVAL, mActivity);
 	}

@@ -95,7 +95,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 		Button streamButton = (Button) mView
 				.findViewById(R.id.download_info_stream_button);
 		View.OnClickListener streamButtonOnClickListener = new PlayButtonListener(
-				mTorrent.getInfoHash(), this);
+				mTorrent.getInfoHash(), this, false);
 		streamButton.setOnClickListener(streamButtonOnClickListener);
 	}
 

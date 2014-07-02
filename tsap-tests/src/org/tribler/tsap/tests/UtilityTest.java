@@ -1,10 +1,26 @@
 package org.tribler.tsap.tests;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import org.tribler.tsap.util.Utility;
 
 import android.test.AndroidTestCase;
 
 public class UtilityTest extends AndroidTestCase {
+	
+	public Map<String, Object> testMap;
+	
+	@Override
+	protected void setUp(){
+		testMap = new HashMap<String, Object>();
+		
+		testMap.put("integertest", 33);
+		testMap.put("stringtest", "hello");
+		testMap.put("booltest", false);
+		testMap.put("doubletest", 33.2);
+	}
+	
 	public void testBytesToStringConversion()
 	{
 		assertEquals("bytes formatted incorrectly", "0 B",
@@ -26,6 +42,7 @@ public class UtilityTest extends AndroidTestCase {
 		assertEquals("bytes formatted incorrectly", "-439875.6 PB",
 				Utility.convertBytesToString(-439875674448887771234.0));
 	}
+	
 	public void testBytesPerSecondToStringConversion()
 	{
 		assertEquals("bytes formatted incorrectly", "0 B/s",
@@ -47,7 +64,8 @@ public class UtilityTest extends AndroidTestCase {
 		assertEquals("bytes formatted incorrectly", "439875.6 PB/s",
 				Utility.convertBytesPerSecToString(439875674448887771234.0));
 	}
-	public void testDownloadStateConversion()
+	
+	public void testDownloadStateConversionInvalid()
 	{
 		assertEquals("state converted incorrectly", "Invalid state",
 				Utility.convertDownloadStateIntToMessage(0));
@@ -55,6 +73,10 @@ public class UtilityTest extends AndroidTestCase {
 				Utility.convertDownloadStateIntToMessage(-1));
 		assertEquals("state converted incorrectly", "Invalid state",
 				Utility.convertDownloadStateIntToMessage(98093));
+	}
+	
+	public void testDownloadStateConversionValid()
+	{
 		assertEquals("state converted incorrectly", "Allocating disk space",
 				Utility.convertDownloadStateIntToMessage(1));
 		assertEquals("state converted incorrectly", "Waiting for hash check",
@@ -69,5 +91,29 @@ public class UtilityTest extends AndroidTestCase {
 				Utility.convertDownloadStateIntToMessage(6));
 		assertEquals("state converted incorrectly", "Acquiring metadata",
 				Utility.convertDownloadStateIntToMessage(7));
+	}
+	
+	public void testGetFromMapInteger()
+	{
+		assertTrue(Utility.getFromMap(testMap, "integertest", (int) -1) == (int) 33);
+		assertTrue(Utility.getFromMap(testMap, "invalid_int", (int) -1) == (int) -1);
+	}
+	
+	public void testGetFromMapDouble()
+	{
+		assertTrue(Utility.getFromMap(testMap, "doubletest", (double) -1.1) == (double) 33.2);
+		assertTrue(Utility.getFromMap(testMap, "invalid_double", (double) -1.1) == (double) -1.1);
+	}
+	
+	public void testGetFromMapString()
+	{
+		assertTrue(Utility.getFromMap(testMap, "stringtest", "fail").equals("hello"));
+		assertTrue(Utility.getFromMap(testMap, "invalid_string", "fail").equals("fail"));
+	}
+	
+	public void testGetFromMapBool()
+	{
+		assertTrue(Utility.getFromMap(testMap, "booltest", true) == false);
+		assertTrue(Utility.getFromMap(testMap, "invalid_bool", true) == true);
 	}
 }

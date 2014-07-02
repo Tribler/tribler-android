@@ -9,7 +9,7 @@ import android.graphics.Color;
  * 
  * @author Wendo Sabée
  */
-public enum TORRENT_HEALTH implements Serializable{
+public enum TORRENT_HEALTH implements Serializable {
 	UNKNOWN, RED, YELLOW, GREEN;
 
 	/**

@@ -7,7 +7,6 @@ import java.util.List;
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
 import org.tribler.tsap.Torrent;
-import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.util.ThumbnailUtils;
 import org.tribler.tsap.util.Utility;
 
@@ -82,30 +81,49 @@ public class ThumbAdapter extends AbstractArrayListAdapter<Torrent> {
 		TextView title = (TextView) convertView.findViewById(R.id.ThumbTitle);
 		title.setText(item.getName() + "\n");
 
+		setThumbnail(convertView, item);
+		setProgressBar(convertView, item);
+
+		TextView size = (TextView) convertView.findViewById(R.id.ThumbSize);
+		size.setText(Utility.convertBytesToString(item.getSize()));
+
+		return convertView;
+	}
+
+	/**
+	 * Sets the health progress bar to the correct color
+	 * 
+	 * @param convertView
+	 * @param item
+	 */
+	private void setProgressBar(View convertView, Torrent item) {
+		ProgressBar health = (ProgressBar) convertView
+				.findViewById(R.id.ThumbHealth);
+		health.setProgress(item.getHealth().ordinal());
+		health.getProgressDrawable().setColorFilter(
+				TORRENT_HEALTH.toColor(item.getHealth()), Mode.SRC_IN);
+	}
+
+	/**
+	 * Loads the thumbnail of the Torrent item into convertView
+	 * 
+	 * @param convertView
+	 * @param item
+	 */
+	private void setThumbnail(View convertView, Torrent item) {
 		ImageView image = (ImageView) convertView.findViewById(R.id.ThumbImage);
 		if (item.getThumbnailFile() != null) {
 			ThumbnailUtils.loadThumbnail(item.getThumbnailFile(), image,
 					mActivity);
 		} else {
 			File file = ThumbnailUtils.getThumbnailLocation(item.getInfoHash());
-			if(file != null) {
+			if (file != null) {
 				ThumbnailUtils.loadThumbnail(file, image, mActivity);
 				item.setThumbnailFile(file);
 			} else {
 				ThumbnailUtils.loadDefaultThumbnail(image, mActivity);
 			}
 		}
-
-		ProgressBar health = (ProgressBar) convertView
-				.findViewById(R.id.ThumbHealth);
-		health.setProgress(item.getHealth().ordinal());
-		health.getProgressDrawable().setColorFilter(
-				TORRENT_HEALTH.toColor(item.getHealth()), Mode.SRC_IN);
-
-		TextView size = (TextView) convertView.findViewById(R.id.ThumbSize);
-		size.setText(Utility.convertBytesToString(item.getSize()));
-
-		return convertView;
 	}
 
 	/**

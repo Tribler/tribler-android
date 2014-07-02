@@ -10,7 +10,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,8 +21,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -83,6 +82,14 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 
+		updateStatusViewer();
+		return mView;
+	}
+
+	/**
+	 * Sets the views of the status viewer to the correct text
+	 */
+	private void updateStatusViewer() {
 		mStatusViewer.updateViews(
 				(ProgressBar) mView.findViewById(R.id.thumbgrid_progress_bar),
 				(TextView) mView.findViewById(R.id.thumbgrid_text_view));
@@ -91,7 +98,6 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 		} else {
 			mStatusViewer.setMessage(R.string.empty, true);
 		}
-		return mView;
 	}
 
 	/**
@@ -119,6 +125,9 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 		};
 	}
 
+	/**
+	 * Stops listening the the connection and stops the poller
+	 */
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -126,6 +135,9 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 		mPoller.stop();
 	}
 
+	/**
+	 * Starts listening the the connection
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -196,11 +208,19 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 		return true;
 	}
 
+	/**
+	 * Is called when the connection with Tribler is established: start the
+	 * Poller
+	 */
 	@Override
 	public void onConnectionEstablished() {
 		mPoller.start();
 	}
 
+	/**
+	 * Is called when the connection with Tribler is lost: stops the Poller and
+	 * displays a message
+	 */
 	@Override
 	public void onConnectionLost() {
 		mStatusViewer.setMessage(R.string.connection_failed, false);

@@ -21,7 +21,7 @@ public class Torrent implements Serializable {
 	private long size;
 	private int seeders;
 	private int leechers;
-	private File thumbnailFile;
+	private File thumbnailFile = null;
 	private String category;
 
 	/**
@@ -37,19 +37,16 @@ public class Torrent implements Serializable {
 	 *            The number of seeders of the torrent
 	 * @param leechers
 	 *            The number of leechers of the torrent
-	 * @param thumbnailFile
-	 *            The file containing the thumbnail of the torrent
 	 * @param category
 	 *            The category of the torrent
 	 */
 	public Torrent(String name, String infoHash, long size, int seeders,
-			int leechers, File thumbnailFile, String category) {
+			int leechers, String category) {
 		this.name = name;
 		this.infoHash = infoHash;
 		this.size = size;
 		this.seeders = seeders;
 		this.leechers = leechers;
-		this.thumbnailFile = thumbnailFile;
 		this.category = category;
 	}
 

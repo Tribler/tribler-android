@@ -12,8 +12,24 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+/**
+ * Utility function for locating and loading thumbnails
+ * 
+ * @author Niels Spruit
+ * 
+ */
 public class ThumbnailUtils {
 
+	/**
+	 * Loads the thumbnail of the file into mImageView
+	 * 
+	 * @param file
+	 *            The location of the thumbnail
+	 * @param mImageView
+	 *            The view to load the image into
+	 * @param context
+	 *            The context of the view
+	 */
 	public static void loadThumbnail(File file, ImageView mImageView,
 			Context context) {
 		float dens = context.getResources().getDisplayMetrics().density;
@@ -23,10 +39,27 @@ public class ThumbnailUtils {
 				.resize(thumbWidth, thumbHeight).into(mImageView);
 	}
 
+	/**
+	 * Loads the default thumbnail into imageView
+	 * 
+	 * @param imageView
+	 *            The view to load the image into
+	 * @param context
+	 *            The context of the view
+	 */
 	public static void loadDefaultThumbnail(ImageView imageView, Context context) {
 		loadThumbnail(null, imageView, context);
 	}
 
+	/**
+	 * Returns the thumbnail location of the torrent specified by infoHash (if
+	 * it exists)
+	 * 
+	 * @param infoHash
+	 *            The infohash of the torrent
+	 * @return the thumbnail location of the torrent specified by infoHash (if
+	 *         it exists)
+	 */
 	public static File getThumbnailLocation(final String infoHash) {
 		File baseDirectory = Settings.getThumbFolder();
 		if (baseDirectory == null || !baseDirectory.isDirectory()) {
@@ -58,6 +91,13 @@ public class ThumbnailUtils {
 		return findImage(thumbsSubDirectory);
 	}
 
+	/**
+	 * Returns the location of a thumbnail
+	 * 
+	 * @param directory
+	 *            The directory to look for a thumnail
+	 * @return the location of a thumbnail
+	 */
 	private static File findImage(File directory) {
 		File[] foundImages = directory.listFiles(new FilenameFilter() {
 			@Override

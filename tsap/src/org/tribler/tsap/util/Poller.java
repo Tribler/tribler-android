@@ -13,7 +13,7 @@ import java.util.TimerTask;
  * 
  * @author Dirk Schut
  */
-public class Poller{
+public class Poller {
 	protected IPollListener mListener;
 	private Timer mTimer = null;
 	private TimerTask mTask;
@@ -38,13 +38,16 @@ public class Poller{
 	 * Pauses the polling.
 	 */
 	public synchronized void stop() {
-		if(mTimer != null)
-		{
+		if (mTimer != null) {
 			mTimer.cancel();
 			mTimer = null;
 		}
 	}
-	
+
+	/**
+	 * @return a timer task that runs the onPoll method of the listener when the
+	 *         timer expires
+	 */
 	protected TimerTask MakeTimerTask() {
 		return new TimerTask() {
 			public void run() {
@@ -57,14 +60,19 @@ public class Poller{
 	 * Starts the polling. If the Poller is already polling, nothing changes.
 	 */
 	public synchronized void start() {
-		if(mTimer == null)
-		{
+		if (mTimer == null) {
 			mTimer = new Timer();
 			mTask = MakeTimerTask();
 			mTimer.scheduleAtFixedRate(mTask, 0, mPollingInterval);
 		}
 	}
 
+	/**
+	 * Interface to implement when you want a poller attached to your class
+	 * 
+	 * @author Dirk Schut
+	 * 
+	 */
 	public interface IPollListener {
 		public void onPoll();
 	}

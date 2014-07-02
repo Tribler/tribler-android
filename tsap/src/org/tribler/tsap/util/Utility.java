@@ -12,37 +12,29 @@ import java.util.Map;
 public class Utility {
 
 	/**
-	 * Converts a number of seconds to a sensible string that can be
-	 * shown to the user.
-	 * @param seconds Number of seconds
+	 * Converts a number of seconds to a sensible string that can be shown to
+	 * the user.
+	 * 
+	 * @param seconds
+	 *            Number of seconds
 	 * @return A user friendly string
 	 */
-	public static String convertSecondsToString(double seconds)
-	{
-		if(seconds < 10)
-		{
+	public static String convertSecondsToString(double seconds) {
+		if (seconds < 10) {
 			return "a few seconds";
-		}
-		else if(seconds < 60)
-		{
+		} else if (seconds < 60) {
 			return "about " + (Math.round(seconds / 10) * 10) + " seconds";
-		}
-		else if(seconds < 3600)
-		{
+		} else if (seconds < 3600) {
 			long value = Math.round(seconds / 60);
 			return "about " + value + " minute" + ((value > 1) ? "s" : "");
-		}
-		else if(seconds < 24 * 3600)
-		{
+		} else if (seconds < 24 * 3600) {
 			long value = (Math.round(seconds / 3600));
 			return "about " + value + " hour" + ((value > 1) ? "s" : "");
-		}
-		else
-		{
+		} else {
 			return "more than a day";
 		}
 	}
-	
+
 	/**
 	 * Converts an amount of bytes into a nicely formatted String. It adds the
 	 * correct prefix like KB or GB and limits the precision to one number
@@ -56,13 +48,10 @@ public class Utility {
 		String prefixes[] = { " B", " kB", " MB", " GB", " TB", " PB" };
 		int prefix = 0;
 		String minus;
-		if(size < 0)
-		{
+		if (size < 0) {
 			size = -size;
 			minus = "-";
-		}
-		else
-		{
+		} else {
 			minus = "";
 		}
 		while (size > 1000 && prefix < prefixes.length - 1) {
@@ -74,7 +63,8 @@ public class Utility {
 			return intString + prefixes[prefix];
 		} else {
 			return intString + "."
-					+ String.valueOf(size - (int) size).charAt(2) + prefixes[prefix];
+					+ String.valueOf(size - (int) size).charAt(2)
+					+ prefixes[prefix];
 		}
 	}
 
@@ -115,20 +105,30 @@ public class Utility {
 			return "Acquiring metadata";
 		default:
 			return "Invalid state";
-
 		}
 	}
 
+	/**
+	 * Returns the value belonging to key if it exists in the map, otherwise it
+	 * retursn defaultValue
+	 * 
+	 * @param map
+	 *            The map to search for the value
+	 * @param key
+	 *            The key to look for
+	 * @param defaultValue
+	 *            The value that is returned when the map doesn't contain the
+	 *            key
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getFromMap(Map<String, Object> map, String key, T defaultValue) {
+	public static <T> T getFromMap(Map<String, Object> map, String key,
+			T defaultValue) {
 		T returnValue = (T) map.get(key);
-		if(returnValue == null)
-		{
+		if (returnValue == null) {
 			return defaultValue;
-		}
-		else
-		{
+		} else {
 			return returnValue;
 		}
-	}	
+	}
 }

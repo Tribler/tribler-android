@@ -33,6 +33,7 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 DOWNLOAD_UPDATE_DELAY = 2.0
 DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
 DOWNLOAD_UPDATE_CACHE = 300.0
+RATELIMIT_UPDATE_DELAY = 15.0
 
 
 class DownloadManager():
@@ -147,28 +148,42 @@ class DownloadManager():
     def set_max_download(self, maxspeed):
         """
         Set the global maximum download speed.
-        :param maxspeed: Maximum download speed in Kib/s, 0 for unlimited
-        :return:
+        :param maxspeed: Maximum download speed in KiB/s, 0 for unlimited
+        :return: Boolean indicating success.
         """
         return self._ratelimiter.set_global_max_speed(DOWNLOAD, maxspeed)
 
     def set_max_upload(self, maxspeed):
         """
         Set the global maximum upload speed.
-        :param maxspeed: Maximum upload speed in Kib/s, 0 for unlimited
-        :return:
+        :param maxspeed: Maximum upload speed in KiB/s, 0 for unlimited
+        :return: Boolean indicating success.
         """
         self._ratelimiter.set_global_max_speed(UPLOAD, maxspeed)
 
     def get_max_download(self):
+        """
+        Get the global maximum download speed.
+        :return: The maximum download speed in KiB/s
+        """
         return self._ratelimiter.get_global_max_speed(DOWNLOAD)
+
+    def get_max_upload(self):
+        """
+        Get the global maximum upload speed.
+        :return: The maximum upload speed in KiB/s
+        """
+        return self._ratelimiter.get_global_max_speed(UPLOAD)
+
 
     def _ratelimit_speed(self, dslist):
         """
         Divides any set speedlimits between registered downloads.
         :return: Nothing.
         """
-        pass
+        self._ratelimiter.adjust_speeds()
+
+        return (RATELIMIT_UPDATE_DELAY, [])
 
     def add_torrent(self, infohash, name):
         """
@@ -219,8 +234,10 @@ class DownloadManager():
             if dldict:
                 if dldict['infohash'] in self._downloads.keys():
                     self._downloads[dldict['infohash']].update(dldict)
+                    self._ratelimiter.add_downloadstate(ds)
                 else:
                     self._downloads[dldict['infohash']] = dldict
+                    self._ratelimiter.add_downloadstate(ds)
             else:
                 _logger.warn("Error updating download state")
 

@@ -12,7 +12,7 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 public class VideoInfoLandscapeUiTest extends VideoInfoUiTest {
 
 	/**
-	 * Launches the TSAP app on the device and sets the orientation to Right
+	 * Launches the Tribler Play app on the device and sets the orientation to Right
 	 * 
 	 * @throws UiObjectNotFoundException
 	 * @throws RemoteException

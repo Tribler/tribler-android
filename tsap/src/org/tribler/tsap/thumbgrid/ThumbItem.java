@@ -177,4 +177,22 @@ public class ThumbItem implements Serializable{
 		return this.category;
 	}
 	
+	/**
+	 * The default equals function, only checks on infohash
+	 * @param obj The object to be compared with
+	 * @return True if equal infohashes, otherwise false.
+	 */
+	public boolean equals(Object obj)
+	{
+		// Pre-check if we are the same
+		if (this == obj)
+			return true;
+		
+		// Only check infohash if it's actually a ThumbItem
+		if (!(obj instanceof ThumbItem))
+			return false;
+		
+		// Compare infohashes
+		return ((ThumbItem) obj).getInfoHash().equals(this.getInfoHash());
+	}
 }

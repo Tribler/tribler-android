@@ -2,7 +2,6 @@ package org.tribler.tsap.streaming;
 
 import org.tribler.tsap.Torrent;
 import org.tribler.tsap.downloads.Download;
-import org.tribler.tsap.downloads.DownloadStatus;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.util.MainThreadPoller;
 import org.tribler.tsap.util.Poller.IPollListener;
@@ -12,7 +11,6 @@ import org.videolan.vlc.gui.video.VideoPlayerActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,16 +27,15 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 
 	private final int POLLER_INTERVAL = 1000; // in ms
 
-	private Torrent thumbData;
 	private String infoHash;
 	private boolean needsToBeDownloaded;
 	private MainThreadPoller mPoller;
 	private AlertDialog aDialog;
 	private boolean inVODMode = false;
 	private Activity mActivity;
+	private Download mDownload;
 
 	public PlayButtonListener(Torrent thumbData, Activity activity) {
-		this.thumbData = thumbData;
 		this.infoHash = thumbData.getInfoHash();
 		this.needsToBeDownloaded = true;
 		this.mActivity = activity;
@@ -46,7 +43,6 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	}
 
 	public PlayButtonListener(String infoHash, Activity activity) {
-		this.thumbData = null;
 		this.infoHash = infoHash;
 		this.needsToBeDownloaded = false;
 		this.mActivity = activity;
@@ -75,68 +71,66 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	 * Starts downloading the torrent
 	 */
 	private void startDownload() {
-		XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash,
-				thumbData.getName());
+		XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash, "");
 	}
 
 	@Override
 	public void onPoll() {
 		XMLRPCDownloadManager.getInstance().getProgressInfo(infoHash);
-		Download dwnld = XMLRPCDownloadManager.getInstance()
-				.getCurrentDownload();
+		mDownload = XMLRPCDownloadManager.getInstance().getCurrentDownload();
 		// AlertDialog aDialog = (AlertDialog) dialog.getDialog();
-		if (dwnld != null) {
-			if (!dwnld.getTorrent().getInfoHash().equals(infoHash)) {
+		if (mDownload != null) {
+			if (!mDownload.getTorrent().getInfoHash().equals(infoHash)) {
 				return;
 			}
 
-			if (dwnld.isVODPlayable()) {
-				Intent intent = new Intent(Intent.ACTION_VIEW,
-						XMLRPCDownloadManager.getInstance().getVideoUri(),
-						mActivity.getApplicationContext(),
-						VideoPlayerActivity.class);
-				mActivity.startActivity(intent);
-				mPoller.stop();
-				aDialog.cancel();
+			if (mDownload.isVODPlayable()) {
+				startStreaming();
 
 			} else {
-				DownloadStatus downStat = dwnld.getDownloadStatus();
-				int statusCode = downStat.getStatus();
+				int statusCode = mDownload.getDownloadStatus().getStatus();
 
-				switch (statusCode) {
-				case 3:
-					// if state is downloading, start vod mode if not done
-					// already:
-					if (!inVODMode) {
-						XMLRPCDownloadManager.getInstance().startVOD(infoHash);
-						inVODMode = true;
-					}
-
-					Double vod_eta = dwnld.getVOD_ETA();
-					Log.d("PlayButtonListener", "VOD_ETA is: " + vod_eta);
-
-					if (aDialog != null)
-						aDialog.setMessage("Video starts playing in about "
-								+ Utility.convertSecondsToString(vod_eta)
-								+ " ("
-								+ Utility.convertBytesPerSecToString(downStat
-										.getDownloadSpeed()) + ").");
-
-					break;
-				default:
-					if (aDialog != null) {
-						aDialog.setMessage("Download status: "
-								+ Utility
-										.convertDownloadStateIntToMessage(statusCode)
-								+ ((statusCode == 2) ? " ("
-										+ Math.round(downStat.getProgress() * 100)
-										+ "%)"
-										: ""));
-					}
-					break;
+				if (statusCode == 3 && !inVODMode) {
+					XMLRPCDownloadManager.getInstance().startVOD(infoHash);
+					inVODMode = true;
 				}
+				if (aDialog != null)
+					updateDialog();
 
 			}
+		}
+	}
+
+	/**
+	 * Starts streaming the video with VLC and cleans up the dialog and poller
+	 */
+	private void startStreaming() {
+		Intent intent = new Intent(Intent.ACTION_VIEW, XMLRPCDownloadManager
+				.getInstance().getVideoUri(),
+				mActivity.getApplicationContext(), VideoPlayerActivity.class);
+		mActivity.startActivity(intent);
+		mPoller.stop();
+		aDialog.cancel();
+	}
+
+	/**
+	 * @param downStat
+	 * @param vod_eta
+	 */
+	private void updateDialog() {
+		int statusCode = mDownload.getDownloadStatus().getStatus();
+		if (statusCode == 3) {
+			aDialog.setMessage("Video starts playing in about "
+					+ Utility.convertSecondsToString(mDownload.getVOD_ETA())
+					+ " ("
+					+ Utility.convertBytesPerSecToString(mDownload
+							.getDownloadStatus().getDownloadSpeed()) + ").");
+		} else {
+			aDialog.setMessage("Download status: "
+					+ Utility.convertDownloadStateIntToMessage(statusCode)
+					+ ((statusCode == 2) ? " ("
+							+ Math.round(mDownload.getDownloadStatus()
+									.getProgress() * 100) + "%)" : ""));
 		}
 	}
 }

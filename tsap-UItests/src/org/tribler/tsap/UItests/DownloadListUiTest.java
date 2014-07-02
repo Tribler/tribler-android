@@ -215,9 +215,9 @@ public class DownloadListUiTest extends BasicUiTestCase {
 			upButton.click();
 		}
 
-		UiObject channelsItem = navDrawer.getChild(new UiSelector()
+		UiObject downloadsItem = navDrawer.getChild(new UiSelector()
 				.text("Downloads"));
-		channelsItem.click();
+		downloadsItem.click();
 	}
 
 }

@@ -11,20 +11,33 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Button;
 
-@SuppressLint("ValidFragment") public class VODDialogFragment extends DialogFragment {
+/**
+ * Class showing a dialog (when the 'Play video' button is pressed) that is used
+ * to inform the user about the status of a download and when it can be streamed
+ * 
+ * @author Niels Spruit
+ * 
+ */
+@SuppressLint("ValidFragment")
+public class VODDialogFragment extends DialogFragment {
 
 	private Poller mPoller;
 	private Button mButton;
 
-	public VODDialogFragment(Poller mPoller,Button mButton) {
+	/**
+	 * @param mPoller
+	 *            Poller that makes sure the dialog is updated
+	 * @param mButton
+	 *            The button that was clicked to open this dialog
+	 */
+	public VODDialogFragment(Poller mPoller, Button mButton) {
 		this.mPoller = mPoller;
 		this.mButton = mButton;
 	}
-	
-	public VODDialogFragment(){
-		super();
-	}
-	
+
+	/**
+	 * Creates the actual dialog
+	 */
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the Builder class for convenient dialog construction
@@ -36,13 +49,17 @@ import android.widget.Button;
 								// User cancelled the dialog
 							}
 						});
-		
+
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-	
+
+	/**
+	 * When the dialog is destroyed, this method stops the poller and enables
+	 * the button again
+	 */
 	@Override
-	public void onDestroyView(){
+	public void onDestroyView() {
 		super.onDestroyView();
 		mPoller.stop();
 		mButton.setEnabled(true);

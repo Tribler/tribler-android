@@ -37,9 +37,7 @@ class TriblerSession(BaseManager):
     _sconfig = None
     _dispersy = None
 
-    _dispersy_init = False
-
-    _running = True
+    _running = False
 
     def _connect(self):
         """
@@ -109,6 +107,9 @@ class TriblerSession(BaseManager):
         starts a Tribler session.
         :return: Nothing.
         """
+        if self._running:
+            return False
+
         _logger.info("Set tribler_state_dir to %s" % os.environ['TRIBLER_STATE_DIR'])
 
         # Load configuration file (if exists)
@@ -210,9 +211,9 @@ class TriblerSession(BaseManager):
         #comm = self._dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
         #_logger.debug("Currently loaded dispersy communities: %s" % comm)
 
-        self._dispersy_init = True
+        self._running = True
 
-    def keep_running(self):
+    def is_running(self):
         return self._running
 
     def stop_session(self):

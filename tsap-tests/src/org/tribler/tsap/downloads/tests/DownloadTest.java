@@ -8,10 +8,11 @@ import junit.framework.TestCase;
 
 public class DownloadTest extends TestCase {
 	public void testDownload() {
-		Torrent torrent = new Torrent("","", 0, 0, 0, "");
-		DownloadStatus downloadStatus = new DownloadStatus(0, 0.0, 0.0, 0.0, 0.0);
+		Torrent torrent = new Torrent("", "", 0, 0, 0, "");
+		DownloadStatus downloadStatus = new DownloadStatus(0, 0.0, 0.0, 0.0,
+				0.0);
 		Download download = new Download(torrent, downloadStatus, 1.5, true, 1);
-		
+
 		assertEquals(torrent, download.getTorrent());
 		assertEquals(downloadStatus, download.getDownloadStatus());
 		assertEquals(1.5, download.getVOD_ETA());

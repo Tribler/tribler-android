@@ -22,10 +22,14 @@ public class DownloadListAdapterTest extends
 	private Torrent two = new Torrent("b", "hash2", 86, 6, 5, "Other");
 	private Torrent three = new Torrent("c", "hash3", 23, 75, 5, "Video");
 	private Torrent four = new Torrent("d", "hash4", -1, 0, 0, "Unknown");
-	private DownloadStatus status1 = new DownloadStatus(1, 1234.5, 5.4321, 0.2, 15.4);
-	private DownloadStatus status2 = new DownloadStatus(2, 123.45, 54.321, 0.3, 896.42);
-	private DownloadStatus status3 = new DownloadStatus(3, 12.345, 543.21, 0.4, 88.8);
-	private DownloadStatus status4 = new DownloadStatus(4, 1.2345, 5432.1, 0.5, 54.45);
+	private DownloadStatus status1 = new DownloadStatus(1, 1234.5, 5.4321, 0.2,
+			15.4);
+	private DownloadStatus status2 = new DownloadStatus(2, 123.45, 54.321, 0.3,
+			896.42);
+	private DownloadStatus status3 = new DownloadStatus(3, 12.345, 543.21, 0.4,
+			88.8);
+	private DownloadStatus status4 = new DownloadStatus(4, 1.2345, 5432.1, 0.5,
+			54.45);
 
 	public DownloadListAdapterTest() {
 		super(MainActivity.class);

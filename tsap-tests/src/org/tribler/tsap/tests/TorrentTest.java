@@ -1,4 +1,4 @@
-package org.tribler.tsap.thumbgrid.tests;
+package org.tribler.tsap.tests;
 
 import org.tribler.tsap.Torrent;
 import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;

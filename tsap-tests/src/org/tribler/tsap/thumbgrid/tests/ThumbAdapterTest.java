@@ -9,7 +9,6 @@ import org.tribler.tsap.thumbgrid.ThumbAdapter;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ThumbAdapterTest extends
@@ -48,8 +47,6 @@ public class ThumbAdapterTest extends
 		CharSequence foundSize = ((TextView) view.findViewById(R.id.ThumbSize))
 				.getText();
 		assertEquals("incorrect size in view", size, foundSize);
-		int foundHealthProgress = ((ProgressBar) view
-				.findViewById(R.id.ThumbHealth)).getProgress();
 	}
 
 	public void testGetView() {

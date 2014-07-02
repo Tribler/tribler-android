@@ -1,13 +1,11 @@
 package org.tribler.tsap.thumbgrid;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
-import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.util.ThumbnailUtils;
 import org.tribler.tsap.util.Utility;
 
@@ -86,7 +84,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		if(item.getThumbImageFile() != null) {
 			ThumbnailUtils.loadThumbnail(item.getThumbImageFile(), image, mActivity);
 		} else {
-			File file = getImageLocation(item.getInfoHash());
+			File file = ThumbnailUtils.getThumbnailLocation(item.getInfoHash());
 			if(file != null) {
 				ThumbnailUtils.loadThumbnail(file, image, mActivity);
 				item.setThumbImageFile(file);
@@ -104,55 +102,6 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 		size.setText(Utility.convertBytesToString(item.getSize()));
 
 		return convertView;
-	}
-
-	private File findImage(File directory) {
-		File[] foundImages = directory.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String name) {
-				return name.endsWith(".png") || name.endsWith(".gif") || name.endsWith(".jpg") || name.endsWith(".jpeg");
-			}
-		});
-		
-		// TODO: Find the best one
-		if(foundImages.length > 0) {
-			return foundImages[0];
-		} else {
-			Log.d("ThumbAdapter", "No thumbnailimages found: " + foundImages.length);
-			return null;
-		}
-	}
-	
-	private File getImageLocation(final String infoHash) {
-		File baseDirectory = Settings.getThumbFolder();
-		if(baseDirectory == null || !baseDirectory.isDirectory())
-		{
-			Log.e("ThumbAdapter", "The collected_torrent_files thumbnailfolder could not be found");
-			return null;
-		}
-		
-		File thumbsDirectory = new File(baseDirectory, "thumbs-" + infoHash);
-		if(!thumbsDirectory.exists()) {
-			Log.d("ThumbAdapter", "No thumbnailfolder found for " + infoHash);
-			return null;
-		}
-				
-		File thumbsSubDirectory = null;
-		for(File file : thumbsDirectory.listFiles()){
-			if(file.isDirectory())
-			{
-				thumbsSubDirectory = file;
-				break;
-			}
-		}
-
-		if(thumbsSubDirectory == null)
-		{
-			Log.d("ThumbAdapter", "No thumbnail subfolder found for " + infoHash);
-			return null;
-		}
-		
-		return findImage(thumbsSubDirectory);
 	}
 	
 	/**

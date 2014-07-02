@@ -18,6 +18,8 @@ from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, dlstatus_strings
 
 
+from DownloadManager import DownloadManager
+
 ENVIRONMENT_SETTINGS_PREFIX = "TRIBLER_SETTING_"
 
 class SettingsManager():
@@ -96,6 +98,10 @@ class SettingsManager():
         xmlrpc.register_function(self.get_thumbs_directory, "settings.get_thumbs_directory")
         xmlrpc.register_function(self.get_family_filter, "settings.get_family_filter")
         xmlrpc.register_function(self.set_family_filter, "settings.set_family_filter")
+        xmlrpc.register_function(self.set_max_download, "settings.set_max_download")
+        xmlrpc.register_function(self.get_max_download, "settings.get_max_download")
+        xmlrpc.register_function(self.set_max_download, "settings.set_max_upload")
+        xmlrpc.register_function(self.get_max_download, "settings.get_max_upload")
 
     def _load_settings_from_env(self):
         """
@@ -122,7 +128,7 @@ class SettingsManager():
                     # Call setter
                     getattr(self, function_name)(get_value(function_value))
                 except Exception, e:
-                    _logger.warn("Could net set settings for key %s: %s" % (envkey, e.args))
+                    _logger.warn("Could not set settings for key %s: %s" % (envkey, e.args))
 
     def get_thumbs_directory(self):
         """
@@ -151,5 +157,49 @@ class SettingsManager():
         try:
             Category.getInstance().set_family_filter(enable)
             return True
+        except:
+            return False
+
+    def set_max_download(self, speed):
+        """
+        Sets the maximum download speed in the rate limiter.
+        :param speed: The maximum speed in kB/s
+        :return: Boolean indicating success.
+        """
+        try:
+            DownloadManager.getInstance().set_max_download(speed)
+            return True
+        except:
+            return False
+
+    def get_max_download(self):
+        """
+        Gets the maximum download speed from the rate limiter
+        :return: Maximum download speed in kB/s
+        """
+        try:
+            return DownloadManager.getInstance().get_max_download()
+        except:
+            return False
+
+    def set_max_upload(self, speed):
+        """
+        Sets the maximum upload speed in the rate limiter.
+        :param speed: The maximum speed in kB/s
+        :return: Boolean indicating success.
+        """
+        try:
+            DownloadManager.getInstance().set_max_upload(speed)
+            return True
+        except:
+            return False
+
+    def get_max_upload(self):
+        """
+        Gets the maximum upload speed from the rate limiter
+        :return: Maximum upload speed in kB/s
+        """
+        try:
+            return DownloadManager.getInstance().get_max_upload()
         except:
             return False

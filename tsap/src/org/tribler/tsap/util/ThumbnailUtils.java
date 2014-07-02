@@ -27,7 +27,7 @@ public class ThumbnailUtils {
 		loadThumbnail(null, imageView, context);
 	}
 
-	public static File getImageLocation(final String infoHash) {
+	public static File getThumbnailLocation(final String infoHash) {
 		File baseDirectory = Settings.getThumbFolder();
 		if (baseDirectory == null || !baseDirectory.isDirectory()) {
 			Log.e("ThumbnailUtils",

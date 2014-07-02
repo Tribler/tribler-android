@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.tribler.tsap.R;
 import org.tribler.tsap.StatusViewer;
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.XMLRPC.XMLRPCCallTask;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.settings.Settings;
@@ -66,12 +67,12 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 	}
 	
 	/**
-	 * Applies filter to ThumbItem
+	 * Applies filter to Torrent
 	 * @param item The item which should be filtered (or not)
 	 * @param filter The filter which should be applied
 	 * @return True if the item should be let through, false if the item should be filtered
 	 */
-	public static boolean applyResultFilter(ThumbItem item, Settings.TorrentType filter)
+	public static boolean applyResultFilter(Torrent item, Settings.TorrentType filter)
 	{
 		String category = (item != null) ? item.getCategory().toLowerCase(Locale.US) : null;
 		
@@ -100,21 +101,21 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 	private void addRemoteResults() {
 		Object[] arrayResult = (Object[]) mConnection
 				.call("torrents.get_remote_results");
-		ArrayList<ThumbItem> resultsList = new ArrayList<ThumbItem>();
+		ArrayList<Torrent> resultsList = new ArrayList<Torrent>();
 		Settings.TorrentType localFilter = Settings.getFilteredTorrentTypes();
 
 		Log.v("XMPLRCTorrentManager", "Got " + arrayResult.length + " results");
 
 		for (int i = 0; i < arrayResult.length; i++) {
 			@SuppressWarnings("unchecked")
-			ThumbItem item = convertMapToThumbItem((Map<String, Object>) arrayResult[i]);
+			Torrent item = convertMapToTorrent((Map<String, Object>) arrayResult[i]);
 
 			if (applyResultFilter(item, localFilter)) {
 				resultsList.add(item);
 			} else {
 				Log.e("TorrentFilter",
 						"Filtered remote result because of category filter ("
-								+ item.getTitle() + ", " + item.getCategory()
+								+ item.getName() + ", " + item.getCategory()
 								+ ")");
 			}
 		}
@@ -125,16 +126,16 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 		mAdapter.addNew(resultsList);
 	}
 
-	private ThumbItem convertMapToThumbItem(Map<String, Object> map) {
+	private Torrent convertMapToTorrent(Map<String, Object> map) {
 		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
 		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
-		String size = Utility.getFromMap(map, "length", "-1");
+		long size = Long.parseLong(Utility.getFromMap(map, "length", "-1")
+				.trim());
+		String infoHash = Utility.getFromMap(map, "infohash", "unknown");
+		String name = Utility.getFromMap(map, "name", "unknown");
+		String category = Utility.getFromMap(map, "category", "Unknown");
 
-		return new ThumbItem(Utility.getFromMap(map, "infohash", "unknown"),
-				Utility.getFromMap(map, "name", "unknown"),
-				Utility.calculateTorrentHealth(seeders, leechers),
-				Long.parseLong(size.trim()), Utility.getFromMap(map,
-						"category", "Unknown"), seeders, leechers);
+		return new Torrent(name, infoHash, size, seeders, leechers, category);
 	}
 
 	public void search(String keywords) {

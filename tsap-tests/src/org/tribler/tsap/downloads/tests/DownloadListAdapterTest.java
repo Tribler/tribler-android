@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.R;
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.DownloadListAdapter;
+import org.tribler.tsap.downloads.DownloadStatus;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
@@ -14,15 +16,16 @@ import android.widget.TextView;
 
 public class DownloadListAdapterTest extends
 		ActivityInstrumentationTestCase2<MainActivity> {
-	DownloadListAdapter adapter;
-	Download a = new Download("a", "hash1", 1, 1234.5, 5.4321, 0.2, 0.1, 0.1,
-			false, 8, 5, "Unknown", 756,0);
-	Download b = new Download("b", "hash2", 2, 123.45, 54.321, 0.3, 0.1, 0.1,
-			false, 6, 5, "Other", 86,1);
-	Download c = new Download("c", "hash3", 3, 12.345, 543.21, 0.4, 0.1, 0.1,
-			false, 75, 5, "Video", 23,5);
-	Download d = new Download("d", "hash4", 4, 1.2345, 5432.1, 0.5, 0.1, 0.1,
-			false, 0, 0, "Unknown", -1,0);
+	private DownloadListAdapter adapter;
+	private Download a, b, c, d;
+	private Torrent one = new Torrent("a", "hash1", 756, 8, 5, "Unknown");
+	private Torrent two = new Torrent("b", "hash2", 86, 6, 5, "Other");
+	private Torrent three = new Torrent("c", "hash3", 23, 75, 5, "Video");
+	private Torrent four = new Torrent("d", "hash4", -1, 0, 0, "Unknown");
+	private DownloadStatus status1 = new DownloadStatus(1, 1234.5, 5.4321, 0.2, 15.4);
+	private DownloadStatus status2 = new DownloadStatus(2, 123.45, 54.321, 0.3, 896.42);
+	private DownloadStatus status3 = new DownloadStatus(3, 12.345, 543.21, 0.4, 88.8);
+	private DownloadStatus status4 = new DownloadStatus(4, 1.2345, 5432.1, 0.5, 54.45);
 
 	public DownloadListAdapterTest() {
 		super(MainActivity.class);
@@ -31,6 +34,10 @@ public class DownloadListAdapterTest extends
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		a = new Download(one, status1, 121.56, false, 0);
+		b = new Download(two, status2, 586.2, true, 2);
+		c = new Download(three, status3, 565, false, 1);
+		d = new Download(four, status4, 85.65, true, 0);
 		adapter = new DownloadListAdapter(this.getActivity(),
 				R.layout.download_list_item);
 	}

@@ -2,8 +2,7 @@ package org.tribler.tsap.videoInfoScreen.tests;
 
 import org.tribler.tsap.MainActivity;
 import org.tribler.tsap.R;
-import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
-import org.tribler.tsap.thumbgrid.ThumbItem;
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.FragmentTransaction;
@@ -19,10 +18,9 @@ public class VideoInfoFragmentTest extends
 		ActivityInstrumentationTestCase2<MainActivity> {
 
 	private VideoInfoFragment mVideoInfoFrag;
-	
+
 	private static final String infohash = "infohash";
 	private static final String title = "Sintel 2010";
-	private static final TORRENT_HEALTH health = TORRENT_HEALTH.RED;
 	private static final long size = 349834;
 	private static final String category = "other";
 	private static final int leechers = 434;
@@ -37,7 +35,8 @@ public class VideoInfoFragmentTest extends
 		super.setUp();
 		mVideoInfoFrag = new VideoInfoFragment();
 		Bundle args = new Bundle();
-		ThumbItem item = new ThumbItem(infohash, title, health, size, category, leechers, seeders);
+		Torrent item = new Torrent(title, infohash, size, seeders, leechers,
+				category);
 		args.putSerializable("thumbData", item);
 		mVideoInfoFrag.setArguments(args);
 

@@ -4,7 +4,6 @@
 
 import threading
 import binascii
-import time
 import os
 
 # Setup logger
@@ -15,9 +14,6 @@ from Tribler.Core.TorrentDef import TorrentDef
 from Tribler.Core.simpledefs import DOWNLOAD, UPLOAD
 from Tribler.Main.globals import DefaultDownloadStartupConfig
 from Tribler.Policies.RateManager import UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager
-
-from Tribler.Core.Video.VideoPlayer import VideoPlayer
-
 
 # Tribler defs
 from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES, \
@@ -35,15 +31,10 @@ DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
 DOWNLOAD_UPDATE_CACHE = 300.0
 RATELIMIT_UPDATE_DELAY = 15.0
 
+from BaseManager import BaseManager
 
-class DownloadManager():
-    # Code to make this a singleton
-    __single = None
-
-    connected = False
-
+class DownloadManager(BaseManager):
     _dllock = threading.Lock()
-    _session = None
     _dispersy = None
     _ratelimiter = None
     _remote_lock = None
@@ -55,45 +46,16 @@ class DownloadManager():
 
     _downloads = {}
 
-    def __init__(self, session, xmlrpc=None):
-        """
-        Constructor for the DownloadManager that loads all db connections.
-        :param session: The Tribler session that the DownloadManager should apply to.
-        :param xmlrpc: The XML-RPC Manager that the DownloadManager should apply to. If specified, the DownloadManager
-        registers its public functions with the XMLRpcManager.
-        :return:
-        """
-        if DownloadManager.__single:
-            raise RuntimeError("DownloadManager is singleton")
-
-        self.connected = False
-
-        self._session = session
-        self._remote_lock = threading.Lock()
-        self._ratelimiter = UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager()
-
-        self._connect()
-
-        if xmlrpc:
-            self._xmlrpc_register(xmlrpc)
-
-    def getInstance(*args, **kw):
-        if DownloadManager.__single is None:
-            DownloadManager.__single = DownloadManager(*args, **kw)
-        return DownloadManager.__single
-    getInstance = staticmethod(getInstance)
-
-    def delInstance(*args, **kw):
-        DownloadManager.__single = None
-    delInstance = staticmethod(delInstance)
-
     def _connect(self):
         """
         Load database handles and Dispersy.
         :return: Nothing.
         """
-        if not self.connected:
-            self.connected = True
+        if not self._connected:
+            self._connected = True
+            self._remote_lock = threading.Lock()
+            self._ratelimiter = UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager()
+
             self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
@@ -465,25 +427,6 @@ class DownloadManager():
             _ = t.channel
             _ = t.metadata
             return t
-
-    """
-    def _add_torrent_file(self, torrent_path, destination_path):
-        _logger.error("Downloading %s to %s" % (torrent_path, destination_path))
-
-        tdef = TorrentDef.load(torrent_path)
-        defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
-        dscfg = defaultDLConfig.copy()
-
-        dscfg.set_dest_dir(destination_path)
-
-        dl = self._session.start_download(tdef, dscfg)
-
-        while not dl.handle:
-            time.sleep(1)
-            _logger.error("Waiting for libtorrent (%s)" % dl.tdef.get_name())
-
-        return dl
-    """
 
     def launch_vlc(self, infohash):
         assert os.environ['ANDROID_HOST'].startswith("ANDROID")

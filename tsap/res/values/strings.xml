@@ -102,5 +102,12 @@
 
      <!-- Strings for DownloadListFragment -->
  	<string name="download_list_empty">Currently no downloads are active.</string>
+ 	
+ 	<!-- Strings for XMLRPCSettingsManager -->
+ 	<string name="settings_manager_fail_familyfilter">Could not set the familyfilter.</string>
+ 	<string name="settings_manager_fail_download">Could not set the maximum download speed.</string>
+ 	<string name="settings_manager_fail_upload">Could not set the maximum upload speed.</string>
+ 	
+ 	<!-- Empty string -->
  	<string name="empty"></string>
 </resources>

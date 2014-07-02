@@ -20,17 +20,18 @@ public class SettingsFragment extends PreferenceFragment implements
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
-		mSettingsManager = new XMLRPCSettingsManager(XMLRPCConnection.getInstance());
+		mSettingsManager = new XMLRPCSettingsManager(XMLRPCConnection.getInstance(), getActivity());
 	}
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals("pref_familyFilter"))
-		{
-			boolean familyFilterOn = Settings.getFamilyFilterOn();
-			mSettingsManager.setFamilyFilter(familyFilterOn);
-			Log.i("SettingsFragment", "family filter made: " + familyFilterOn);
+		if (key.equals("pref_familyFilter")) {
+			mSettingsManager.setFamilyFilter(Settings.getFamilyFilterOn());
+		} else if (key.equals("pref_maxDownloadRate")) {
+			mSettingsManager.setMaxDownloadSpeed(Settings.getMaxDownloadRate());
+		} else if (key.equals("pref_maxUploadRate")) {
+			mSettingsManager.setMaxUploadSpeed(Settings.getMaxUploadRate());
 		}
 	}
 	

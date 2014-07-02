@@ -13,7 +13,7 @@ import de.timroes.axmlrpc.XMLRPCException;
 public class XMLRPCConnection implements Poller.IPollListener {
 	private XMLRPCClient mClient;
 	ArrayList<IConnectionListener> mListeners;
-	boolean mConnected = false, mJustStarted = true;
+	boolean mConnected = false;
 	Poller mPoller;
 	Activity mActivity;
 	static XMLRPCConnection mInstance = null;
@@ -48,7 +48,6 @@ public class XMLRPCConnection implements Poller.IPollListener {
 			notifyConnectionLost();
 			Log.i("XMLRPCConnection", "Connection Lost. Trying to re-establish connection.");
 			mPoller.start();
-			mConnected = false;
 			return e;
 		}
 	}
@@ -57,7 +56,7 @@ public class XMLRPCConnection implements Poller.IPollListener {
 		mListeners.add(listener);
 		if(mConnected)
 			listener.onConnectionEstablished();
-		else if(!mJustStarted)
+		else
 			listener.onConnectionLost();
 	}
 
@@ -94,7 +93,6 @@ public class XMLRPCConnection implements Poller.IPollListener {
 			
 			notifyConnectionEstablished();
 			mConnected = true;
-			mJustStarted = false;
 			mPoller.stop();
 			Log.i("XMLRPCConnection", "Stopped poller.");
 		} catch (XMLRPCException e) {
@@ -104,9 +102,6 @@ public class XMLRPCConnection implements Poller.IPollListener {
 	public boolean isConnected()
 	{
 		return mConnected;
-	}
-	public boolean isJustStarted() {
-		return mJustStarted;
 	}
 	
 	public interface IConnectionListener {

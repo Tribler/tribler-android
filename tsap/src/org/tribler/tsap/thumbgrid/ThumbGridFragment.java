@@ -1,8 +1,8 @@
 package org.tribler.tsap.thumbgrid;
 
 import org.tribler.tsap.R;
-import org.tribler.tsap.StatusViewer;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.util.Poller;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -31,15 +30,13 @@ import android.widget.Toast;
  * 
  * @author Wendo Sabée
  */
-public class ThumbGridFragment extends Fragment implements OnQueryTextListener, XMLRPCConnection.IConnectionListener{
+public class ThumbGridFragment extends Fragment implements OnQueryTextListener, XMLRPCConnection.IConnectionListener {
 
 	private XMLRPCTorrentManager mTorrentManager = null;
 	private ThumbAdapter mThumbAdapter;
 	private View mView;
 	Poller mPoller;
 	XMLRPCConnection mConnection;
-	StatusViewer mStatusViewer;
-	final static long POLLING_INTERVAL = 500;
 
 	/**
 	 * Defines that this fragment has an own option menu
@@ -53,9 +50,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		setHasOptionsMenu(true);
 		mConnection = XMLRPCConnection.getInstance();
 		mThumbAdapter = new ThumbAdapter(getActivity(), R.layout.thumb_grid_item);
-		mStatusViewer = new StatusViewer(getActivity());
-		mTorrentManager = new XMLRPCTorrentManager(mConnection, mThumbAdapter, mStatusViewer);
-		mPoller = new Poller(mTorrentManager, POLLING_INTERVAL);
+		mTorrentManager = new XMLRPCTorrentManager(mConnection, mThumbAdapter);
+		mPoller = new Poller(mTorrentManager, 500);
 	}
 
 	/**
@@ -78,13 +74,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
 		
-		mStatusViewer.updateViews((ProgressBar)mView.findViewById(R.id.thumbgrid_progress_bar),
-				(TextView)mView.findViewById(R.id.thumbgrid_text_view));
-		if(mConnection.isJustStarted()) {
-			mStatusViewer.setMessage(R.string.connection_loading, true);
-		} else {
-			mStatusViewer.setMessage(R.string.empty, true);
-		}
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText(R.string.thumb_grid_loading_tribler);
 		return mView;
 	}
 
@@ -180,16 +171,32 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	public boolean onQueryTextSubmit(String query) {
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
 		mTorrentManager.search(query);
+		// Don't care about this.
 		return true;
 	}
 
+	/*@Override
+	public void onConnectionFailed(Exception exception) {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.INVISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText(R.string.thumb_grid_connection_failed);
+		message.setVisibility(View.VISIBLE);
+	}*/
+
 	@Override
 	public void onConnectionEstablished() {
+		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
+		progressBar.setVisibility(View.INVISIBLE);
+		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
+		message.setText(R.string.thumb_grid_server_started);
+		message.setVisibility(View.VISIBLE);
+		Settings.loadThumbFolder();
+		Log.e("", "Connection established.");
 		mPoller.start();
 	}
 	@Override
 	public void onConnectionLost() {
-		mStatusViewer.setMessage(R.string.connection_failed, false);
 		mPoller.stop();
 	}
 }

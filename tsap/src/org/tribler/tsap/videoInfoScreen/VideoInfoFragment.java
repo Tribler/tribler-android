@@ -1,9 +1,9 @@
 package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.streaming.PlayButtonListener;
-import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.tribler.tsap.util.ThumbnailUtils;
 import org.tribler.tsap.util.Utility;
 
@@ -25,7 +25,7 @@ import android.widget.TextView;
  */
 public class VideoInfoFragment extends Fragment {
 
-	private ThumbItem thumbData;
+	private Torrent thumbData;
 	private View view;
 	private Context context;
 
@@ -48,7 +48,7 @@ public class VideoInfoFragment extends Fragment {
 		view = inflater.inflate(R.layout.fragment_video_info, container, false);
 		context = container.getContext();
 		if (getArguments() != null)
-			thumbData = (ThumbItem)getArguments().getSerializable("thumbData");
+			thumbData = (Torrent)getArguments().getSerializable("thumbData");
 
 		setValues();
 		return view;
@@ -59,7 +59,7 @@ public class VideoInfoFragment extends Fragment {
 	 */
 	private void setValues() {
 		TextView title = (TextView) view.findViewById(R.id.video_info_title);
-		title.setText(thumbData.getTitle());
+		title.setText(thumbData.getName());
 
 		TextView type = (TextView) view.findViewById(R.id.video_details_type);
 		type.setText(thumbData.getCategory());
@@ -82,7 +82,7 @@ public class VideoInfoFragment extends Fragment {
 		
 		ImageView thumb = (ImageView) view
 				.findViewById(R.id.video_info_thumbnail);
-		ThumbnailUtils.loadThumbnail(thumbData.getThumbImageFile(), thumb, context);
+		ThumbnailUtils.loadThumbnail(thumbData.getThumbnailFile(), thumb, context);
 
 		setPlayButtonListener();
 		setDownloadButtonListener();
@@ -109,7 +109,7 @@ public class VideoInfoFragment extends Fragment {
 		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				XMLRPCDownloadManager.getInstance().downloadTorrent(thumbData.getInfoHash(), thumbData.getTitle());
+				XMLRPCDownloadManager.getInstance().downloadTorrent(thumbData.getInfoHash(), thumbData.getName());
 			}
 		};
 		downloadButton.setOnClickListener(onClickListener);

@@ -1,11 +1,11 @@
 package org.tribler.tsap.streaming;
 
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.downloads.Download;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
-import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.tribler.tsap.util.MainThreadPoller;
-import org.tribler.tsap.util.Utility;
 import org.tribler.tsap.util.Poller.IPollListener;
+import org.tribler.tsap.util.Utility;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Activity;
@@ -19,7 +19,7 @@ import android.widget.Button;
 
 public class PlayButtonListener implements OnClickListener, IPollListener {
 
-	private ThumbItem thumbData;
+	private Torrent thumbData;
 	private String infoHash;
 	private boolean needsToBeDownloaded;
 	private MainThreadPoller mPoller;
@@ -28,7 +28,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private boolean inVODMode = false;
 	private Activity mActivity;
 
-	public PlayButtonListener(ThumbItem thumbData, FragmentManager fragManager,
+	public PlayButtonListener(Torrent thumbData, FragmentManager fragManager,
 			Activity activity) {
 		this.thumbData = thumbData;
 		this.infoHash = thumbData.getInfoHash();
@@ -54,7 +54,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		Button button = (Button) buttonClicked;
 		if (needsToBeDownloaded) {
 			XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash,
-					thumbData.getTitle());
+					thumbData.getName());
 		}
 
 		// disable the play button

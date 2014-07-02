@@ -46,7 +46,7 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 			view = convertView;
 		}
 
-		((TextView) view.findViewById(R.id.download_name)).setText(download
+		((TextView) view.findViewById(R.id.download_name)).setText(download.getTorrent()
 				.getName());
 		((TextView) view.findViewById(R.id.download_status))
 				.setText("Status: "
@@ -89,7 +89,7 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		for(int i=0; i<getCount();i++)
 		{
 			currItem = getItem(i);
-			if(currItem.getInfoHash() == infoHash)
+			if(currItem.getTorrent().getInfoHash() == infoHash)
 				return currItem;
 		}
 		return null;

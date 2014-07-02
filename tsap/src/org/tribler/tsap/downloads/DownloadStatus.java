@@ -9,6 +9,7 @@ package org.tribler.tsap.downloads;
  */
 public class DownloadStatus {
 
+	private int status;
 	private double downloadSpeed;
 	private double uploadSpeed;
 	private double progress;
@@ -17,6 +18,8 @@ public class DownloadStatus {
 	/**
 	 * Constructor: initializes the instance variables
 	 * 
+	 * @param status	
+	 * 			The status code of the download
 	 * @param downloadSpeed
 	 *            The download speed of the download
 	 * @param uploadSpeed
@@ -26,8 +29,9 @@ public class DownloadStatus {
 	 * @param eta
 	 *            The ETA of the download
 	 */
-	public DownloadStatus(double downloadSpeed, double uploadSpeed,
+	public DownloadStatus(int status, double downloadSpeed, double uploadSpeed,
 			double progress, double eta) {
+		this.status = status;
 		this.downloadSpeed = downloadSpeed;
 		this.uploadSpeed = uploadSpeed;
 		this.progress = progress;
@@ -60,6 +64,14 @@ public class DownloadStatus {
 	 */
 	public double getETA() {
 		return eta;
+	}
+	
+	/**
+	 * @return the status code of the download
+	 */
+	public int getStatus()
+	{
+		return status;
 	}
 
 }

@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.tribler.tsap.AbstractArrayListAdapter;
 import org.tribler.tsap.R;
+import org.tribler.tsap.Torrent;
+import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.util.ThumbnailUtils;
 import org.tribler.tsap.util.Utility;
 
@@ -20,11 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
- * Adapter belonging to the ThumbGridFragment that holds the thumbitems
+ * Adapter belonging to the ThumbGridFragment that holds the thumb items
  * 
  * @author Wendo Sabée
  */
-public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
+public class ThumbAdapter extends AbstractArrayListAdapter<Torrent> {
 	private int layoutResourceId;
 
 	/**
@@ -51,7 +53,7 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 *            The list of thumbitems
 	 */
 	public ThumbAdapter(Activity activity, int layoutResourceId,
-			ArrayList<ThumbItem> data) {
+			ArrayList<Torrent> data) {
 		super(activity, data);
 		this.layoutResourceId = layoutResourceId;
 	}
@@ -70,52 +72,52 @@ public class ThumbAdapter extends AbstractArrayListAdapter<ThumbItem> {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ThumbItem item = this.getItem(position);
+		Torrent item = this.getItem(position);
 
 		if (convertView == null) {
 			LayoutInflater inflater = (mActivity).getLayoutInflater();
 			convertView = inflater.inflate(layoutResourceId, parent, false);
 		}
-		
+
 		TextView title = (TextView) convertView.findViewById(R.id.ThumbTitle);
-		title.setText(item.getTitle() + "\n");
-		
+		title.setText(item.getName() + "\n");
+
 		ImageView image = (ImageView) convertView.findViewById(R.id.ThumbImage);
-		if(item.getThumbImageFile() != null) {
-			ThumbnailUtils.loadThumbnail(item.getThumbImageFile(), image, mActivity);
+		if (item.getThumbnailFile() != null) {
+			ThumbnailUtils.loadThumbnail(item.getThumbnailFile(), image,
+					mActivity);
 		} else {
 			File file = ThumbnailUtils.getThumbnailLocation(item.getInfoHash());
 			if(file != null) {
 				ThumbnailUtils.loadThumbnail(file, image, mActivity);
-				item.setThumbImageFile(file);
-			}
-			else {
+				item.setThumbnailFile(file);
+			} else {
 				ThumbnailUtils.loadDefaultThumbnail(image, mActivity);
 			}
 		}
-		
-		ProgressBar health = (ProgressBar) convertView.findViewById(R.id.ThumbHealth);
+
+		ProgressBar health = (ProgressBar) convertView
+				.findViewById(R.id.ThumbHealth);
 		health.setProgress(item.getHealth().ordinal());
-		health.getProgressDrawable().setColorFilter(item.getHealthColor(), Mode.SRC_IN);
-		
+		health.getProgressDrawable().setColorFilter(
+				TORRENT_HEALTH.toColor(item.getHealth()), Mode.SRC_IN);
+
 		TextView size = (TextView) convertView.findViewById(R.id.ThumbSize);
 		size.setText(Utility.convertBytesToString(item.getSize()));
 
 		return convertView;
 	}
-	
+
 	/**
 	 * Adds all items from a list that were not in the adapter already.
 	 * 
 	 * @param list
 	 *            list of items to add
 	 */
-	public void addNew(List<ThumbItem> list) {
+	public void addNew(List<Torrent> list) {
 		synchronized (mLock) {
-			for (ThumbItem item : list)
-			{
-				if(!mContent.contains(item))
-				{
+			for (Torrent item : list) {
+				if (!mContent.contains(item)) {
 					mContent.add(item);
 				}
 			}

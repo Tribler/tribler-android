@@ -1,11 +1,12 @@
 package org.tribler.tsap.streaming;
 
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.downloads.Download;
+import org.tribler.tsap.downloads.DownloadStatus;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
-import org.tribler.tsap.thumbgrid.ThumbItem;
 import org.tribler.tsap.util.MainThreadPoller;
-import org.tribler.tsap.util.Utility;
 import org.tribler.tsap.util.Poller.IPollListener;
+import org.tribler.tsap.util.Utility;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Activity;
@@ -19,7 +20,7 @@ import android.widget.Button;
 
 public class PlayButtonListener implements OnClickListener, IPollListener {
 
-	private ThumbItem thumbData;
+	private Torrent thumbData;
 	private String infoHash;
 	private boolean needsToBeDownloaded;
 	private MainThreadPoller mPoller;
@@ -28,7 +29,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private boolean inVODMode = false;
 	private Activity mActivity;
 
-	public PlayButtonListener(ThumbItem thumbData, FragmentManager fragManager,
+	public PlayButtonListener(Torrent thumbData, FragmentManager fragManager,
 			Activity activity) {
 		this.thumbData = thumbData;
 		this.infoHash = thumbData.getInfoHash();
@@ -54,7 +55,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		Button button = (Button) buttonClicked;
 		if (needsToBeDownloaded) {
 			XMLRPCDownloadManager.getInstance().downloadTorrent(infoHash,
-					thumbData.getTitle());
+					thumbData.getName());
 		}
 
 		// disable the play button
@@ -73,11 +74,10 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 				.getCurrentDownload();
 		AlertDialog aDialog = (AlertDialog) dialog.getDialog();
 		if (dwnld != null) {
-			if(!dwnld.getInfoHash().equals(infoHash))
-			{
+			if (!dwnld.getTorrent().getInfoHash().equals(infoHash)) {
 				return;
 			}
-			
+
 			if (dwnld.isVODPlayable()) {
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						XMLRPCDownloadManager.getInstance().getVideoUri(),
@@ -88,7 +88,10 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 				aDialog.cancel();
 
 			} else {
-				switch (dwnld.getStatus()) {
+				DownloadStatus downStat = dwnld.getDownloadStatus();
+				int statusCode = downStat.getStatus();
+
+				switch (statusCode) {
 				case 3:
 					// if state is downloading, start vod mode if not done
 					// already:
@@ -102,17 +105,21 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 
 					if (aDialog != null)
 						aDialog.setMessage("Video starts playing in about "
-								+ Utility.convertSecondsToString(vod_eta) + " ("
-								+ Utility.convertBytesPerSecToString(dwnld.getDownloadSpeed()) + ").");
+								+ Utility.convertSecondsToString(vod_eta)
+								+ " ("
+								+ Utility.convertBytesPerSecToString(downStat
+										.getDownloadSpeed()) + ").");
 
 					break;
 				default:
-					if (aDialog != null)
-					{
-						int dlstatus = dwnld.getStatus();
+					if (aDialog != null) {
 						aDialog.setMessage("Download status: "
-								+ Utility.convertDownloadStateIntToMessage(dwnld.getStatus())
-								+ ((dlstatus == 2) ? " (" + Math.round(dwnld.getProgress() * 100) + "%)" : ""));
+								+ Utility
+										.convertDownloadStateIntToMessage(statusCode)
+								+ ((statusCode == 2) ? " ("
+										+ Math.round(downStat.getProgress() * 100)
+										+ "%)"
+										: ""));
 					}
 					break;
 				}

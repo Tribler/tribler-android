@@ -1,6 +1,7 @@
 package org.tribler.tsap.downloads;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.streaming.PlayButtonListener;
 import org.tribler.tsap.util.MainThreadPoller;
 import org.tribler.tsap.util.Poller.IPollListener;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 public class DownloadActivity extends Activity implements IPollListener {
 	private ActionBar mActionBar;
 	private Download mDownload;
+	private Torrent mTorrent;
 	private View mView;
 	private MainThreadPoller mPoller;
 
@@ -41,18 +43,21 @@ public class DownloadActivity extends Activity implements IPollListener {
 	}
 
 	private void fillLayout() {
+		DownloadStatus downStat = mDownload.getDownloadStatus();
+		int statusCode = downStat.getStatus();
+
 		TextView size = (TextView) mView
 				.findViewById(R.id.download_info_filesize);
-		size.setText(Utility.convertBytesToString(mDownload.getSize()));
+		size.setText(Utility.convertBytesToString(mTorrent.getSize()));
 
 		TextView download = (TextView) mView
 				.findViewById(R.id.download_info_down_speed);
-		download.setText(Utility.convertBytesPerSecToString(mDownload
+		download.setText(Utility.convertBytesPerSecToString(downStat
 				.getDownloadSpeed()));
 
 		TextView upload = (TextView) mView
 				.findViewById(R.id.download_info_up_speed);
-		upload.setText(Utility.convertBytesPerSecToString(mDownload
+		upload.setText(Utility.convertBytesPerSecToString(downStat
 				.getUploadSpeed()));
 
 		TextView availability = (TextView) mView
@@ -65,33 +70,32 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 		ImageView thumb = (ImageView) mView
 				.findViewById(R.id.download_info_thumbnail);
+
 		ThumbnailUtils.loadThumbnail(
-				ThumbnailUtils.getThumbnailLocation(mDownload.getInfoHash()),
+				ThumbnailUtils.getThumbnailLocation(mTorrent.getInfoHash()),
 				thumb, this);
 
 		TextView status = (TextView) mView
 				.findViewById(R.id.download_info_status_text);
-		status.setText(Utility.convertDownloadStateIntToMessage(mDownload
-				.getStatus())
-				+ ((mDownload.getStatus() == 2 || mDownload.getStatus() == 3) ? " ("
-						+ Math.round(mDownload.getProgress() * 100) + "%)"
-						: ""));
+		status.setText(Utility.convertDownloadStateIntToMessage(statusCode)
+				+ ((statusCode == 2 || statusCode == 3) ? " ("
+						+ Math.round(downStat.getProgress() * 100) + "%)" : ""));
 
 		TextView eta = (TextView) mView
 				.findViewById(R.id.download_info_eta_text);
-		eta.setText((mDownload.getStatus() == 3) ? Utility
-				.convertSecondsToString(mDownload.getETA()) : "Unknown");
+		eta.setText((statusCode == 3) ? Utility.convertSecondsToString(downStat
+				.getETA()) : "Unknown");
 
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);
-		bar.setProgress((int) (100 * mDownload.getProgress()));
+		bar.setProgress((int) (100 * downStat.getProgress()));
 	}
 
 	private void setStreamButtonListener() {
 		Button streamButton = (Button) mView
 				.findViewById(R.id.download_info_stream_button);
 		View.OnClickListener streamButtonOnClickListener = new PlayButtonListener(
-				mDownload.getInfoHash(), getFragmentManager(), this);
+				mTorrent.getInfoHash(), getFragmentManager(), this);
 		streamButton.setOnClickListener(streamButtonOnClickListener);
 	}
 
@@ -113,10 +117,9 @@ public class DownloadActivity extends Activity implements IPollListener {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
-										XMLRPCDownloadManager
-												.getInstance()
+										XMLRPCDownloadManager.getInstance()
 												.deleteTorrent(
-														mDownload.getInfoHash(),
+														mTorrent.getInfoHash(),
 														true);
 										a.onBackPressed();
 									}
@@ -127,10 +130,9 @@ public class DownloadActivity extends Activity implements IPollListener {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
-										XMLRPCDownloadManager
-												.getInstance()
+										XMLRPCDownloadManager.getInstance()
 												.deleteTorrent(
-														mDownload.getInfoHash(),
+														mTorrent.getInfoHash(),
 														false);
 										a.onBackPressed();
 									}
@@ -156,8 +158,9 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 		Intent intent = getIntent();
 		mDownload = (Download) intent.getSerializableExtra(INTENT_MESSAGE);
+		mTorrent = mDownload.getTorrent();
 
-		setupActionBar(mDownload.getName());
+		setupActionBar(mTorrent.getName());
 		fillLayout();
 		setStreamButtonListener();
 		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button);
@@ -201,12 +204,12 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 	@Override
 	public void onPoll() {
-		XMLRPCDownloadManager.getInstance().getProgressInfo(
-				mDownload.getInfoHash());
+		String infohash = mTorrent.getInfoHash();
+		XMLRPCDownloadManager.getInstance().getProgressInfo(infohash);
 		Download currDownload = XMLRPCDownloadManager.getInstance()
 				.getCurrentDownload();
 		if (currDownload != null
-				&& currDownload.getInfoHash().equals(mDownload.getInfoHash())) {
+				&& currDownload.getTorrent().getInfoHash().equals(infohash)) {
 			mDownload = currDownload;
 			fillLayout();
 		}

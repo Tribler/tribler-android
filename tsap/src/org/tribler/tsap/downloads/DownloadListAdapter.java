@@ -45,51 +45,51 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		} else {
 			view = convertView;
 		}
+		
+		int downStatus = download.getDownloadStatus().getStatus();
 
 		((TextView) view.findViewById(R.id.download_name)).setText(download
-				.getName());
+				.getTorrent().getName());
 		((TextView) view.findViewById(R.id.download_status))
 				.setText("Status: "
-						+ Utility.convertDownloadStateIntToMessage(download.getStatus())
-						+ ((download.getStatus() == 2 || download.getStatus() == 3) ? 
-								" (" + Math.round(download.getProgress() * 100) + "%)" : ""));
+						+ Utility.convertDownloadStateIntToMessage(downStatus)
+						+ ((downStatus == 2 || downStatus == 3) ? " ("
+								+ Math.round(download.getDownloadStatus()
+										.getProgress() * 100) + "%)" : ""));
 		((TextView) view.findViewById(R.id.download_speed_down))
 				.setText("Down: "
 						+ Utility.convertBytesPerSecToString(download
-								.getDownloadSpeed()));
-		((TextView) view.findViewById(R.id.download_speed_up))
-				.setText("Up: "
-						+ Utility.convertBytesPerSecToString(download
-								.getUploadSpeed()));
-		((TextView) view.findViewById(R.id.download_eta))
-		.setText((download.getStatus() == 3)
-				? "ETA: " + Utility.convertSecondsToString(download.getETA())
-				: "");
+								.getDownloadStatus().getDownloadSpeed()));
+		((TextView) view.findViewById(R.id.download_speed_up)).setText("Up: "
+				+ Utility.convertBytesPerSecToString(download
+						.getDownloadStatus().getUploadSpeed()));
+		((TextView) view.findViewById(R.id.download_eta)).setText((downStatus == 3) ? "ETA: "
+				+ Utility.convertSecondsToString(download.getDownloadStatus()
+						.getETA()) : "");
 		((ProgressBar) view.findViewById(R.id.download_progress_bar))
-				.setProgress((int) (download.getProgress() * 100));
+				.setProgress((int) (download.getDownloadStatus().getProgress() * 100));
 		return view;
 	}
-	
+
 	/**
-	 * Replace the current list of downloads with a new one with more current information.
+	 * Replace the current list of downloads with a new one with more current
+	 * information.
+	 * 
 	 * @param newList
-	 * 			The new list of downloads
+	 *            The new list of downloads
 	 */
 	public void replaceAll(ArrayList<Download> newList) {
-		synchronized (mLock)
-		{
+		synchronized (mLock) {
 			mContent = newList;
 			notifyChangesToUiThread();
 		}
 	}
-	
-	public Download getDownload(String infoHash)
-	{
+
+	public Download getDownload(String infoHash) {
 		Download currItem;
-		for(int i=0; i<getCount();i++)
-		{
+		for (int i = 0; i < getCount(); i++) {
 			currItem = getItem(i);
-			if(currItem.getInfoHash() == infoHash)
+			if (currItem.getTorrent().getInfoHash() == infoHash)
 				return currItem;
 		}
 		return null;

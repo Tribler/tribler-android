@@ -163,7 +163,7 @@ class SettingsManager():
     def set_max_download(self, speed):
         """
         Sets the maximum download speed in the rate limiter.
-        :param speed: The maximum speed in kB/s
+        :param speed: The maximum speed in KiB/s
         :return: Boolean indicating success.
         """
         try:
@@ -175,7 +175,7 @@ class SettingsManager():
     def get_max_download(self):
         """
         Gets the maximum download speed from the rate limiter
-        :return: Maximum download speed in kB/s
+        :return: Maximum download speed in KiB/s
         """
         try:
             return DownloadManager.getInstance().get_max_download()
@@ -185,7 +185,7 @@ class SettingsManager():
     def set_max_upload(self, speed):
         """
         Sets the maximum upload speed in the rate limiter.
-        :param speed: The maximum speed in kB/s
+        :param speed: The maximum speed in KiB/s
         :return: Boolean indicating success.
         """
         try:
@@ -197,7 +197,7 @@ class SettingsManager():
     def get_max_upload(self):
         """
         Gets the maximum upload speed from the rate limiter
-        :return: Maximum upload speed in kB/s
+        :return: Maximum upload speed in KiB/s
         """
         try:
             return DownloadManager.getInstance().get_max_upload()

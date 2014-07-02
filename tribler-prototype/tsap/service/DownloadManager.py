@@ -203,8 +203,6 @@ class DownloadManager():
                 defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
                 dscfg = defaultDLConfig.copy()
 
-                #dscfg.set_dest_dir(self._session.)
-
                 dl = self._session.start_download(tdef, dscfg)
                 dl.set_state_callback(self._update_dl_state, delay=1)
 
@@ -553,8 +551,8 @@ class DownloadManager():
 
     def _getDownloadState(self, dstate, vod=False, progress=False, files=False, network=False):
         """
-        Convert a LibTorrentDownloadImpl object to a dictionary.
-        :param dstate: A LibTorrentDownloadImpl object.
+        Convert a DownloadState object to a dictionary.
+        :param dstate: A DownloadState object.
         :param vod: Include info about vod.
         :param progress: Include info about download progress.
         :param files: Include info about files.

@@ -29,6 +29,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private String infoHash;
 	private boolean needsToBeDownloaded;
 	private MainThreadPoller mPoller;
+	private VODDialogFragment vodDialog;
 	private AlertDialog aDialog;
 	private boolean inVODMode = false;
 	private Activity mActivity;
@@ -54,9 +55,8 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 		button.setEnabled(false);
 
 		// start waiting for VOD
-		VODDialogFragment dialog = new VODDialogFragment(mPoller, button);
-		dialog.show(mActivity.getFragmentManager(), "wait_vod");
-		aDialog = (AlertDialog) dialog.getDialog();
+		vodDialog = new VODDialogFragment(mPoller, button);
+		vodDialog.show(mActivity.getFragmentManager(), "wait_vod");
 		mPoller.start();
 	}
 
@@ -71,7 +71,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	public void onPoll() {
 		XMLRPCDownloadManager.getInstance().getProgressInfo(infoHash);
 		mDownload = XMLRPCDownloadManager.getInstance().getCurrentDownload();
-
+		aDialog = (AlertDialog) vodDialog.getDialog();
 		if (mDownload != null) {
 			if (!mDownload.getTorrent().getInfoHash().equals(infoHash))
 				return;
@@ -112,11 +112,12 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	 * @param vod_eta
 	 */
 	private void updateDialog() {
-		int statusCode = mDownload.getDownloadStatus().getStatus();
-		if (statusCode == 3) {
-			updateVODMessage();
-		} else {
-			updateMessageToStatus(statusCode);
+		if (aDialog != null) {
+			int statusCode = mDownload.getDownloadStatus().getStatus();
+			if (statusCode == 3)
+				updateVODMessage();
+			else
+				updateMessageToStatus(statusCode);
 		}
 	}
 

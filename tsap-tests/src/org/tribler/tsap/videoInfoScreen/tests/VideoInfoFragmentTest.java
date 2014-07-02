@@ -36,7 +36,7 @@ public class VideoInfoFragmentTest extends
 		mVideoInfoFrag = new VideoInfoFragment();
 		Bundle args = new Bundle();
 		Torrent item = new Torrent(title, infohash, size, seeders, leechers,
-				null, category);
+				category);
 		args.putSerializable("thumbData", item);
 		mVideoInfoFrag.setArguments(args);
 

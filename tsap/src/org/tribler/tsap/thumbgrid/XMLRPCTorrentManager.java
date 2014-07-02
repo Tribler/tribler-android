@@ -78,7 +78,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 
 		for (int i = 0; i < arrayResult.length; i++) {
 			@SuppressWarnings("unchecked")
-			Torrent item = convertMapToThumbItem((Map<String, Object>) arrayResult[i]);
+			Torrent item = convertMapToTorrent((Map<String, Object>) arrayResult[i]);
 
 			if (Utility.applyResultFilter(item, localFilter)) {
 				resultsList.add(item);
@@ -96,7 +96,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 		mAdapter.addNew(resultsList);
 	}
 
-	private Torrent convertMapToThumbItem(Map<String, Object> map) {
+	private Torrent convertMapToTorrent(Map<String, Object> map) {
 		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
 		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
 		long size = Long.parseLong(Utility.getFromMap(map, "length", "-1")

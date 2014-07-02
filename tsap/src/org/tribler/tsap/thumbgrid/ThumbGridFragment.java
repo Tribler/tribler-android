@@ -1,8 +1,8 @@
 package org.tribler.tsap.thumbgrid;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.StatusViewer;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
-import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.util.Poller;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -30,13 +31,16 @@ import android.widget.Toast;
  * 
  * @author Wendo Sabée
  */
-public class ThumbGridFragment extends Fragment implements OnQueryTextListener, XMLRPCConnection.IConnectionListener {
+public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
+		XMLRPCConnection.IConnectionListener {
 
 	private XMLRPCTorrentManager mTorrentManager = null;
 	private ThumbAdapter mThumbAdapter;
 	private View mView;
 	Poller mPoller;
 	XMLRPCConnection mConnection;
+	StatusViewer mStatusViewer;
+	final static long POLLING_INTERVAL = 500;
 
 	/**
 	 * Defines that this fragment has an own option menu
@@ -49,9 +53,12 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mConnection = XMLRPCConnection.getInstance();
-		mThumbAdapter = new ThumbAdapter(getActivity(), R.layout.thumb_grid_item);
-		mTorrentManager = new XMLRPCTorrentManager(mConnection, mThumbAdapter);
-		mPoller = new Poller(mTorrentManager, 500);
+		mThumbAdapter = new ThumbAdapter(getActivity(),
+				R.layout.thumb_grid_item);
+		mStatusViewer = new StatusViewer(getActivity());
+		mTorrentManager = new XMLRPCTorrentManager(mConnection, mThumbAdapter,
+				mStatusViewer);
+		mPoller = new Poller(mTorrentManager, POLLING_INTERVAL);
 	}
 
 	/**
@@ -66,16 +73,24 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	 * @return The created view
 	 */
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		mView = inflater.inflate(R.layout.fragment_thumb_grid, container, false);
+		mView = inflater
+				.inflate(R.layout.fragment_thumb_grid, container, false);
 		GridView gridView = (GridView) mView.findViewById(R.id.ThumbsGrid);
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
-		
-		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText(R.string.thumb_grid_loading_tribler);
+
+		mStatusViewer.updateViews(
+				(ProgressBar) mView.findViewById(R.id.thumbgrid_progress_bar),
+				(TextView) mView.findViewById(R.id.thumbgrid_text_view));
+		if (mConnection.isJustStarted()) {
+			mStatusViewer.setMessage(R.string.connection_loading, true);
+		} else {
+			mStatusViewer.setMessage(R.string.empty, true);
+		}
 		return mView;
 	}
 
@@ -87,13 +102,16 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	private OnItemClickListener initiliazeOnItemClickListener() {
 		return new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
 				VideoInfoFragment vidFrag = new VideoInfoFragment();
 				Bundle args = new Bundle();
-				args.putSerializable("thumbData", mThumbAdapter.getItem(position));
+				args.putSerializable("thumbData",
+						mThumbAdapter.getItem(position));
 				vidFrag.setArguments(args);
 
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				FragmentTransaction transaction = getFragmentManager()
+						.beginTransaction();
 				transaction.replace(R.id.container, vidFrag);
 				transaction.addToBackStack(null);
 				transaction.commit();
@@ -107,7 +125,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 		mConnection.removeListener(this);
 		mPoller.stop();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -115,8 +133,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	}
 
 	/**
-	 * Adds thumb grid fragment specific options to the options menu and stores the menu. In this case, the search
-	 * action is added and enabled.
+	 * Adds thumb grid fragment specific options to the options menu and stores
+	 * the menu. In this case, the search action is added and enabled.
 	 * 
 	 * @param menu
 	 *            The menu that will be created
@@ -127,7 +145,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.thumbgrid_fragment, menu);
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
-		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+		SearchView searchView = (SearchView) MenuItemCompat
+				.getActionView(searchMenuItem);
 		searchView.setOnQueryTextListener(this);
 		searchView.setQueryHint(getString(R.string.thumb_grid_searchview));
 	}
@@ -150,7 +169,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	}
 
 	/**
-	 * Called when the action bar search text has changed, currently does nothing.
+	 * Called when the action bar search text has changed, currently does
+	 * nothing.
 	 * 
 	 * @param query
 	 *            The query that the user has typed in the search field
@@ -161,42 +181,29 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener, 
 	}
 
 	/**
-	 * Filters the items in the grid according to the query and show a dialog showing the submitted query
+	 * Filters the items in the grid according to the query and show a dialog
+	 * showing the submitted query
 	 * 
 	 * @param query
 	 *            The query that the user has typed in the search field
-	 * @return True iff the action belonging to submitting a query has been processed correctly
+	 * @return True iff the action belonging to submitting a query has been
+	 *         processed correctly
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
 		mTorrentManager.search(query);
-		// Don't care about this.
 		return true;
 	}
 
-	/*@Override
-	public void onConnectionFailed(Exception exception) {
-		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
-		progressBar.setVisibility(View.INVISIBLE);
-		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText(R.string.thumb_grid_connection_failed);
-		message.setVisibility(View.VISIBLE);
-	}*/
-
 	@Override
 	public void onConnectionEstablished() {
-		View progressBar = mView.findViewById(R.id.thumbgrid_progress_bar);
-		progressBar.setVisibility(View.INVISIBLE);
-		TextView message = (TextView)mView.findViewById(R.id.thumbgrid_text_view);
-		message.setText(R.string.thumb_grid_server_started);
-		message.setVisibility(View.VISIBLE);
-		Settings.loadThumbFolder();
-		Log.e("", "Connection established.");
 		mPoller.start();
 	}
+
 	@Override
 	public void onConnectionLost() {
+		mStatusViewer.setMessage(R.string.connection_failed, false);
 		mPoller.stop();
 	}
 }

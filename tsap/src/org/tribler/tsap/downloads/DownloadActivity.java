@@ -1,11 +1,7 @@
 package org.tribler.tsap.downloads;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 import org.tribler.tsap.R;
 import org.tribler.tsap.Torrent;
-import org.tribler.tsap.settings.Settings;
 import org.tribler.tsap.streaming.PlayButtonListener;
 import org.tribler.tsap.util.MainThreadPoller;
 import org.tribler.tsap.util.Poller.IPollListener;
@@ -18,7 +14,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -50,7 +45,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 	private void fillLayout() {
 		DownloadStatus downStat = mDownload.getDownloadStatus();
 		int statusCode = downStat.getStatus();
-		
+
 		TextView size = (TextView) mView
 				.findViewById(R.id.download_info_filesize);
 		size.setText(Utility.convertBytesToString(mTorrent.getSize()));
@@ -75,20 +70,21 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 		ImageView thumb = (ImageView) mView
 				.findViewById(R.id.download_info_thumbnail);
-		ThumbnailUtils.loadThumbnail(getImageLocation(mTorrent.getInfoHash()),
+
+		ThumbnailUtils.loadThumbnail(
+				ThumbnailUtils.getThumbnailLocation(mTorrent.getInfoHash()),
 				thumb, this);
 
 		TextView status = (TextView) mView
 				.findViewById(R.id.download_info_status_text);
 		status.setText(Utility.convertDownloadStateIntToMessage(statusCode)
 				+ ((statusCode == 2 || statusCode == 3) ? " ("
-						+ Math.round(downStat.getProgress() * 100) + "%)"
-						: ""));
+						+ Math.round(downStat.getProgress() * 100) + "%)" : ""));
 
 		TextView eta = (TextView) mView
 				.findViewById(R.id.download_info_eta_text);
-		eta.setText((statusCode == 3) ? Utility
-				.convertSecondsToString(downStat.getETA()) : "Unknown");
+		eta.setText((statusCode == 3) ? Utility.convertSecondsToString(downStat
+				.getETA()) : "Unknown");
 
 		ProgressBar bar = (ProgressBar) mView
 				.findViewById(R.id.download_info_progress_bar);
@@ -121,8 +117,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
-										XMLRPCDownloadManager
-												.getInstance()
+										XMLRPCDownloadManager.getInstance()
 												.deleteTorrent(
 														mTorrent.getInfoHash(),
 														true);
@@ -135,8 +130,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
-										XMLRPCDownloadManager
-												.getInstance()
+										XMLRPCDownloadManager.getInstance()
 												.deleteTorrent(
 														mTorrent.getInfoHash(),
 														false);
@@ -165,7 +159,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 		Intent intent = getIntent();
 		mDownload = (Download) intent.getSerializableExtra(INTENT_MESSAGE);
 		mTorrent = mDownload.getTorrent();
-		
+
 		setupActionBar(mTorrent.getName());
 		fillLayout();
 		setStreamButtonListener();
@@ -205,56 +199,6 @@ public class DownloadActivity extends Activity implements IPollListener {
 			return true;
 		} else {
 			return super.onOptionsItemSelected(menuItem);
-		}
-	}
-
-	private File getImageLocation(final String infoHash) {
-		File baseDirectory = Settings.getThumbFolder();
-		if (baseDirectory == null || !baseDirectory.isDirectory()) {
-			Log.e("DownloadInfo",
-					"The collected_torrent_files thumbnailfolder could not be found");
-			return null;
-		}
-
-		File thumbsDirectory = new File(baseDirectory, "thumbs-" + infoHash);
-		if (!thumbsDirectory.exists()) {
-			Log.d("DownloadInfo", "No thumbnailfolder found for " + infoHash);
-			return null;
-		}
-
-		File thumbsSubDirectory = null;
-		for (File file : thumbsDirectory.listFiles()) {
-			if (file.isDirectory()) {
-				thumbsSubDirectory = file;
-				break;
-			}
-		}
-
-		if (thumbsSubDirectory == null) {
-			Log.d("DownloadInfo", "No thumbnail subfolder found for "
-					+ infoHash);
-			return null;
-		}
-
-		return findImage(thumbsSubDirectory);
-	}
-
-	private File findImage(File directory) {
-		File[] foundImages = directory.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String name) {
-				return name.endsWith(".png") || name.endsWith(".gif")
-						|| name.endsWith(".jpg") || name.endsWith(".jpeg");
-			}
-		});
-
-		// TODO: Find the best one
-		if (foundImages.length > 0) {
-			return foundImages[0];
-		} else {
-			Log.d("DownloadInfo", "No thumbnailimages found: "
-					+ foundImages.length);
-			return null;
 		}
 	}
 

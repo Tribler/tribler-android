@@ -2,9 +2,6 @@ package org.tribler.tsap.util;
 
 import java.util.Map;
 
-import org.tribler.tsap.Torrent;
-import org.tribler.tsap.settings.Settings;
-
 /**
  * Class with static functions that are used across multiple classes, like
  * conversion functions.
@@ -133,34 +130,5 @@ public class Utility {
 		{
 			return returnValue;
 		}
-	}
-	
-	/**
-	 * Applies filter to ThumbItem
-	 * @param item The item which should be filtered (or not)
-	 * @param filter The filter which should be applied
-	 * @return True if the item should be let through, false if the item should be filtered
-	 */
-	public static boolean applyResultFilter(Torrent item, Settings.TorrentType filter)
-	{
-		String category = (item != null) ? item.getCategory().toLowerCase() : null;
-		
-		// Something went wrong here
-		if(category == null)
-			return false;
-		
-		switch(filter)
-		{
-		// True when: Video, VideoClip, XXX, Other.
-		// "XXX" isn't filtered because we have a family filter, and most are video anyway
-		// "Other" isn't filtered, as not all torrents have a correct category set
-		case VIDEO:
-			return (category.startsWith("video") || category.equals("other") || category.equals("xxx"));
-
-		// ALL or any unknown filter should just let them all through
-		case ALL:
-		default:
-			return true;
-		}
-	}
+	}	
 }

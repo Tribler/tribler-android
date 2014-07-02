@@ -16,6 +16,7 @@ public class Settings {
 
 	private static File mThumbFolder = null;
 	private static Context mContext;
+	@SuppressWarnings("unused")
 	private static XMLRPCThumbFolderManager mFolderManager;
 
 	public static File getThumbFolder() {
@@ -63,9 +64,5 @@ public class Settings {
 
 	public static void setup(Context context) {
 		mContext = context;
-	}
-
-	public static void loadThumbFolder() {
-		mFolderManager.getThumbFolder();
 	}
 }

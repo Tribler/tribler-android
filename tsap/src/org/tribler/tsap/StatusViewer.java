@@ -55,6 +55,7 @@ public class StatusViewer {
 			@Override
 			public void run() {
 				mMessage.setVisibility(View.VISIBLE);
+				mMessage.setText(R.string.empty);
 				mProgressBar.setVisibility(View.INVISIBLE);
 				mEnabled = true;
 			}

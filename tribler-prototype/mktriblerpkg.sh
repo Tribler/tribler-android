@@ -20,11 +20,6 @@ MD5SUM=`md5sum Tribler-0.1.0.tar.gz`
 echo $MD5SUM > Tribler-0.1.0.tar.gz.md5
 cat Tribler-0.1.0.tar.gz.md5
 
-if [ ! -e "${P4A_PATH}" ]; then
-	echo -e "P4A_PATH not set, autosetting the md5sum in the recipe is not possible.\nPress any key if you want to continue to upload this package"
-	read
-fi
-
 echo "Copy to server.."
 scp Tribler-0.1.0.tar.gz Tribler-0.1.0.tar.gz.md5 fr:/var/www/default/tsap/
 
@@ -33,10 +28,10 @@ if [ $? -ne 0 ]; then
     exit
 fi
 
-if [ -f "${P4A_PATH}/recipes/Tribler/recipe.sh" ]
+if [ -f "./python-for-android/recipes/Tribler/recipe.sh" ]
 then
-	echo "Replacing MD5SUM in ${P4A_PATH}/recipes/Tribler/recipe.sh"
-	pushd "${P4A_PATH}/recipes/Tribler" > /dev/null
+	echo "Replacing MD5SUM in python-for-android/recipes/Tribler/recipe.sh"
+	pushd "./python-for-android/recipes/Tribler" > /dev/null
 	MD5SUM=`echo -e $MD5SUM | cut -d' ' -f1`
 	mv recipe.sh recipe.sh.orig
 	sed -e "s/^MD5_Tribler=.*/MD5_Tribler=$MD5SUM/" recipe.sh.orig > recipe.sh

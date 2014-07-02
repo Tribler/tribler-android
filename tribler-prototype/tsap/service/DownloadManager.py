@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 from Tribler.Core.TorrentDef import TorrentDef
 from Tribler.Core.simpledefs import DOWNLOAD, UPLOAD
 from Tribler.Main.globals import DefaultDownloadStartupConfig
+from Tribler.Policies.RateManager import UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager
 
 from Tribler.Core.Video.VideoPlayer import VideoPlayer
 
@@ -32,6 +33,7 @@ from Tribler.Core.TorrentDef import TorrentDefNoMetainfo
 DOWNLOAD_UPDATE_DELAY = 2.0
 DOWNLOAD_CHECKPOINT_INTERVAL = 300.0
 DOWNLOAD_UPDATE_CACHE = 300.0
+RATELIMIT_UPDATE_DELAY = 15.0
 
 
 class DownloadManager():
@@ -43,6 +45,7 @@ class DownloadManager():
     _dllock = threading.Lock()
     _session = None
     _dispersy = None
+    _ratelimiter = None
     _remote_lock = None
 
     _misc_db = None
@@ -67,6 +70,7 @@ class DownloadManager():
 
         self._session = session
         self._remote_lock = threading.Lock()
+        self._ratelimiter = UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager()
 
         self._connect()
 
@@ -103,6 +107,9 @@ class DownloadManager():
             # Schedule download checkpoints
             threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
 
+            # Schedule Ratelimiter callback
+            self._session.set_download_states_callback(self._ratelimit_speed)
+
         else:
             raise RuntimeError('TorrentManager already connected')
 
@@ -138,6 +145,46 @@ class DownloadManager():
         #test
         xmlrpc.register_function(self.launch_vlc, "downloads.launch_vlc")
 
+    def set_max_download(self, maxspeed):
+        """
+        Set the global maximum download speed.
+        :param maxspeed: Maximum download speed in KiB/s, 0 for unlimited
+        :return: Boolean indicating success.
+        """
+        return self._ratelimiter.set_global_max_speed(DOWNLOAD, maxspeed)
+
+    def set_max_upload(self, maxspeed):
+        """
+        Set the global maximum upload speed.
+        :param maxspeed: Maximum upload speed in KiB/s, 0 for unlimited
+        :return: Boolean indicating success.
+        """
+        self._ratelimiter.set_global_max_speed(UPLOAD, maxspeed)
+
+    def get_max_download(self):
+        """
+        Get the global maximum download speed.
+        :return: The maximum download speed in KiB/s
+        """
+        return self._ratelimiter.get_global_max_speed(DOWNLOAD)
+
+    def get_max_upload(self):
+        """
+        Get the global maximum upload speed.
+        :return: The maximum upload speed in KiB/s
+        """
+        return self._ratelimiter.get_global_max_speed(UPLOAD)
+
+
+    def _ratelimit_speed(self, dslist):
+        """
+        Divides any set speedlimits between registered downloads.
+        :return: Nothing.
+        """
+        self._ratelimiter.adjust_speeds()
+
+        return (RATELIMIT_UPDATE_DELAY, [])
+
     def add_torrent(self, infohash, name):
         """
         Add a download to the download list by its infohash.
@@ -155,8 +202,6 @@ class DownloadManager():
 
                 defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
                 dscfg = defaultDLConfig.copy()
-
-                #dscfg.set_dest_dir(self._session.)
 
                 dl = self._session.start_download(tdef, dscfg)
                 dl.set_state_callback(self._update_dl_state, delay=1)
@@ -187,8 +232,10 @@ class DownloadManager():
             if dldict:
                 if dldict['infohash'] in self._downloads.keys():
                     self._downloads[dldict['infohash']].update(dldict)
+                    self._ratelimiter.add_downloadstate(ds)
                 else:
                     self._downloads[dldict['infohash']] = dldict
+                    self._ratelimiter.add_downloadstate(ds)
             else:
                 _logger.warn("Error updating download state")
 
@@ -504,8 +551,8 @@ class DownloadManager():
 
     def _getDownloadState(self, dstate, vod=False, progress=False, files=False, network=False):
         """
-        Convert a LibTorrentDownloadImpl object to a dictionary.
-        :param dstate: A LibTorrentDownloadImpl object.
+        Convert a DownloadState object to a dictionary.
+        :param dstate: A DownloadState object.
         :param vod: Include info about vod.
         :param progress: Include info about download progress.
         :param files: Include info about files.

@@ -60,21 +60,23 @@ class TSAP():
         self.tribler = TriblerSession(self.xmlrpc)
         self.tribler.start_session()
 
+        # Wait for dispersy to initialize
         while not self.tribler._dispersy_init:
             time.sleep(0.1)
 
-        _logger.error("Loading ConfigurationManager")
-        self.sm = SettingsManager(self.tribler.get_session(), self.xmlrpc)
-
         # Disable ChannelManager
         #_logger.error("Loading ChannelManager")
-        #self.cm = ChannelManager(self.tribler.get_session(), self.xmlrpc)
+        #self.cm = ChannelManager.getInstance(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Loading TorrentManager")
-        self.tm = TorrentManager(self.tribler.get_session(), self.xmlrpc)
+        self.tm = TorrentManager.getInstance(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Loading DownloadManager")
-        self.dm = DownloadManager(self.tribler.get_session(), self.xmlrpc)
+        self.dm = DownloadManager.getInstance(self.tribler.get_session(), self.xmlrpc)
+
+        _logger.error("Loading ConfigurationManager")
+        # Load this last because it sets settings in other managers
+        self.sm = SettingsManager.getInstance(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port))
         self.xmlrpc.start_server()

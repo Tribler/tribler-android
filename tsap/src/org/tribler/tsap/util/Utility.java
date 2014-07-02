@@ -3,7 +3,6 @@ package org.tribler.tsap.util;
 import java.util.Map;
 
 import org.tribler.tsap.settings.Settings;
-import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
 import org.tribler.tsap.thumbgrid.ThumbItem;
 
 /**
@@ -134,21 +133,6 @@ public class Utility {
 		{
 			return returnValue;
 		}
-	}
-	
-	public static TORRENT_HEALTH calculateTorrentHealth(int seeders, int leechers)
-	{
-		if (seeders == -1 || leechers == -1)
-		{
-			return TORRENT_HEALTH.UNKNOWN;
-		}
-		
-		if (seeders == 0)
-		{
-			return TORRENT_HEALTH.RED;
-		}
-		
-		return ((leechers / seeders) > 0.5) ? TORRENT_HEALTH.YELLOW : TORRENT_HEALTH.GREEN;
 	}
 	
 	/**

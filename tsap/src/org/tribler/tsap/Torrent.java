@@ -3,6 +3,8 @@ package org.tribler.tsap;
 import java.io.File;
 import java.io.Serializable;
 
+import org.tribler.tsap.thumbgrid.TORRENT_HEALTH;
+
 /**
  * Class representing a basic Torrent file containing the metadata of a torrent
  * including its name, infohash, etc.
@@ -154,6 +156,22 @@ public class Torrent implements Serializable {
 	 */
 	public void setCategory(String category) {
 		this.category = category;
+	}	
+	
+	/**
+	 * @return the health of the torrent
+	 */
+	public TORRENT_HEALTH getHealth() {
+		if (seeders == -1 || leechers == -1) {
+			return TORRENT_HEALTH.UNKNOWN;
+		}
+
+		if (seeders == 0) {
+			return TORRENT_HEALTH.RED;
+		}
+
+		return ((leechers / seeders) > 0.5) ? TORRENT_HEALTH.YELLOW
+				: TORRENT_HEALTH.GREEN;
 	}
 
 }

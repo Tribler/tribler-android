@@ -112,17 +112,31 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private void updateDialog() {
 		int statusCode = mDownload.getDownloadStatus().getStatus();
 		if (statusCode == 3) {
-			aDialog.setMessage("Video starts playing in about "
-					+ Utility.convertSecondsToString(mDownload.getVOD_ETA())
-					+ " ("
-					+ Utility.convertBytesPerSecToString(mDownload
-							.getDownloadStatus().getDownloadSpeed()) + ").");
+			updateVODMessage();
 		} else {
-			aDialog.setMessage("Download status: "
-					+ Utility.convertDownloadStateIntToMessage(statusCode)
-					+ ((statusCode == 2) ? " ("
-							+ Math.round(mDownload.getDownloadStatus()
-									.getProgress() * 100) + "%)" : ""));
+			updateStatusMessage(statusCode);
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void updateVODMessage() {
+		aDialog.setMessage("Video starts playing in about "
+				+ Utility.convertSecondsToString(mDownload.getVOD_ETA())
+				+ " ("
+				+ Utility.convertBytesPerSecToString(mDownload
+						.getDownloadStatus().getDownloadSpeed()) + ").");
+	}
+
+	/**
+	 * @param statusCode
+	 */
+	private void updateStatusMessage(int statusCode) {
+		aDialog.setMessage("Download status: "
+				+ Utility.convertDownloadStateIntToMessage(statusCode)
+				+ ((statusCode == 2) ? " ("
+						+ Math.round(mDownload.getDownloadStatus()
+								.getProgress() * 100) + "%)" : ""));
 	}
 }

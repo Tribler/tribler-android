@@ -156,8 +156,8 @@ public class Torrent implements Serializable {
 	 */
 	public void setCategory(String category) {
 		this.category = category;
-	}	
-	
+	}
+
 	/**
 	 * @return the health of the torrent
 	 */
@@ -172,6 +172,14 @@ public class Torrent implements Serializable {
 
 		return ((leechers / seeders) > 0.5) ? TORRENT_HEALTH.YELLOW
 				: TORRENT_HEALTH.GREEN;
+	}
+
+	/**
+	 * @return the string representation of a torrent (=name)
+	 */
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }

@@ -26,7 +26,7 @@ public class XMLRPCThumbFolderManagerTest extends TestCase {
 	public void testGetThumbFolder() {
 		mManager.onConnectionEstablished();
 		try {
-			Thread.sleep(1);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			fail("Caught InterruptedException, which caused the test to fail.");
 		}

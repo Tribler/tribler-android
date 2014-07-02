@@ -2,7 +2,6 @@
 # Written by Wendo Sabée
 # Manages local settings. SETTINGS ARE NOT SAVED LOCALLY BETWEEN SESSIONS (for now)!
 
-import threading
 import os
 import ast
 
@@ -12,80 +11,22 @@ _logger = logging.getLogger(__name__)
 
 from Tribler.Category.Category import Category
 
-# Tribler defs
-from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES, \
-    NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
-    DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, dlstatus_strings
-
-
 from DownloadManager import DownloadManager
+from BaseManager import BaseManager
 
 ENVIRONMENT_SETTINGS_PREFIX = "TRIBLER_SETTING_"
 
-class SettingsManager():
-    # Code to make this a singleton
-    __single = None
 
-    connected = False
-
-    _dllock = threading.Lock()
-    _session = None
-    _dispersy = None
-    _remote_lock = None
-
-    _misc_db = None
-    _torrent_db = None
-    _channelcast_db = None
-    _votecast_db = None
-
-    _downloads = {}
-
-    def __init__(self, session, xmlrpc=None):
-        """
-        Constructor for the SettingsManager that loads all db connections.
-        :param session: The Tribler session that the SettingsManager should apply to.
-        :param xmlrpc: The XML-RPC Manager that the SettingsManager should apply to. If specified, the SettingsManager
-        registers its public functions with the XMLRpcManager.
-        :return:
-        """
-        if SettingsManager.__single:
-            raise RuntimeError("SettingsManager is singleton")
-
-        self.connected = False
-
-        self._session = session
-        self._remote_lock = threading.Lock()
-
-        self._connect()
-
-        self._load_settings_from_env()
-
-        if xmlrpc:
-            self._xmlrpc_register(xmlrpc)
-
-    def getInstance(*args, **kw):
-        if SettingsManager.__single is None:
-            SettingsManager.__single = SettingsManager(*args, **kw)
-        return SettingsManager.__single
-    getInstance = staticmethod(getInstance)
-
-    def delInstance(*args, **kw):
-        SettingsManager.__single = None
-    delInstance = staticmethod(delInstance)
-
+class SettingsManager(BaseManager):
     def _connect(self):
         """
-        Load database handles and Dispersy.
+        Load settings from environment variables.
         :return: Nothing.
         """
-        if not self.connected:
-            self.connected = True
-            #self._misc_db = self._session.open_dbhandler(NTFY_MISC)
-            #self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
-            #self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
-            #self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
+        if not self._connected:
+            self._connected = True
 
-            #self._dispersy = self._session.lm.dispersy
+            self._load_settings_from_env()
         else:
             raise RuntimeError('SettingsManager already connected')
 

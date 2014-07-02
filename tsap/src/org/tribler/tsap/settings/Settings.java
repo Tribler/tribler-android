@@ -9,6 +9,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+/**
+ * Class from which the apps settings can be retrieved
+ * 
+ * @author Dirk Schut & Niels Spruit
+ * 
+ */
 public class Settings {
 	public enum TorrentType {
 		VIDEO, ALL
@@ -19,26 +25,45 @@ public class Settings {
 	@SuppressWarnings("unused")
 	private static XMLRPCThumbFolderManager mFolderManager;
 
+	/**
+	 * @return the file location of the thumbnail folder
+	 */
 	public static File getThumbFolder() {
 		return mThumbFolder;
 	}
 
+	/**
+	 * Set the thumbnail folder setting to thumbFolder
+	 * 
+	 * @param thumbFolder
+	 */
 	public static void XMLRPCSetThumbFolder(File thumbFolder) {
 		mThumbFolder = thumbFolder;
 	}
 
+	/**
+	 * @return the value of the maximum download rate setting
+	 */
 	public static int getMaxDownloadRate() {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
-		return Integer.valueOf(sharedPref.getString("pref_maxDownloadRate", "0"));
+		return Integer.valueOf(sharedPref
+				.getString("pref_maxDownloadRate", "0"));
 	}
 
+	/**
+	 * @return the value of the maximum upload rate setting
+	 */
 	public static int getMaxUploadRate() {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		return Integer.valueOf(sharedPref.getString("pref_maxUploadRate", "0"));
 	}
 
+	/**
+	 * @return a boolean indicating whether Tribler's family filter is enabled
+	 *         or disabled
+	 */
 	public static boolean getFamilyFilterOn() {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
@@ -57,11 +82,22 @@ public class Settings {
 		return TorrentType.ALL;
 	}
 
+	/**
+	 * Sets up this class (initializes context and connection)
+	 * 
+	 * @param context
+	 * @param connection
+	 */
 	public static void setup(Context context, XMLRPCConnection connection) {
 		mFolderManager = new XMLRPCThumbFolderManager(connection);
 		mContext = context;
 	}
 
+	/**
+	 * Sets up this class (initializes context)
+	 * 
+	 * @param context
+	 */
 	public static void setup(Context context) {
 		mContext = context;
 	}

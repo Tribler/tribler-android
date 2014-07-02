@@ -9,9 +9,21 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
+/**
+ * Preference showing the licences of the used open source software
+ * 
+ * @author Niels Spruit
+ * 
+ */
 public class OSLicencesPreference extends DialogPreference implements
 		OnPreferenceClickListener {
 
+	/**
+	 * Initializes the layout of the dialog and its buttons
+	 * 
+	 * @param context
+	 * @param attrs
+	 */
 	public OSLicencesPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setDialogLayoutResource(R.layout.os_licences_dialog);
@@ -23,6 +35,9 @@ public class OSLicencesPreference extends DialogPreference implements
 		setOnPreferenceClickListener(this);
 	}
 
+	/**
+	 * Loads the licences (stored in a html file) into the WebView of the dialog
+	 */
 	@Override
 	public boolean onPreferenceClick(Preference arg0) {
 		WebView webView = (WebView) getDialog().findViewById(

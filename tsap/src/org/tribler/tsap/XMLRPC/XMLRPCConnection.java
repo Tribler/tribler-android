@@ -2,7 +2,6 @@ package org.tribler.tsap.XMLRPC;
 
 import java.util.ArrayList;
 
-import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.util.Poller;
 
 import android.app.Activity;
@@ -12,13 +11,13 @@ import de.timroes.axmlrpc.XMLRPCException;
 
 public class XMLRPCConnection implements Poller.IPollListener {
 	private XMLRPCClient mClient;
-	ArrayList<IConnectionListener> mListeners;
-	boolean mConnected = false, mJustStarted = true;
-	Poller mPoller;
-	Activity mActivity;
-	static XMLRPCConnection mInstance = null;
+	private ArrayList<IConnectionListener> mListeners;
+	private boolean mConnected = false, mJustStarted = true;
+	private Poller mPoller;
+	private Activity mActivity;
+	private static XMLRPCConnection mInstance = null;
 
-	private XMLRPCConnection() {
+	protected XMLRPCConnection() {
 	};
 
 	public void setup(XMLRPCClient client, Activity activity) {

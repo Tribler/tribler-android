@@ -9,10 +9,10 @@ import java.io.Serializable;
  * @author Niels Spruit
  * 
  */
-public class DownloadStatus implements Serializable{
+public class DownloadStatus implements Serializable {
 
 	private static final long serialVersionUID = -3074099633347590607L;
-	
+
 	private int status;
 	private double downloadSpeed;
 	private double uploadSpeed;
@@ -22,8 +22,8 @@ public class DownloadStatus implements Serializable{
 	/**
 	 * Constructor: initializes the instance variables
 	 * 
-	 * @param status	
-	 * 			The status code of the download
+	 * @param status
+	 *            The status code of the download
 	 * @param downloadSpeed
 	 *            The download speed of the download
 	 * @param uploadSpeed
@@ -69,12 +69,11 @@ public class DownloadStatus implements Serializable{
 	public double getETA() {
 		return eta;
 	}
-	
+
 	/**
 	 * @return the status code of the download
 	 */
-	public int getStatus()
-	{
+	public int getStatus() {
 		return status;
 	}
 

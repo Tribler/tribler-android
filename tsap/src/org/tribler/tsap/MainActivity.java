@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements
 	 * navigation drawer.
 	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
-	
+
 	private ThumbGridFragment mThumbGridFragment = new ThumbGridFragment();
 	private DownloadListFragment mDownloadFragment = new DownloadListFragment();
 	private SettingsFragment mSettingsFragment = new SettingsFragment();
@@ -65,7 +65,19 @@ public class MainActivity extends Activity implements
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
 				(DrawerLayout) findViewById(R.id.drawer_layout));
 
-		// Send the current context to VLC
+		setVLCContext();
+
+		DownloadListAdapter adapter = new DownloadListAdapter(this,
+				R.layout.download_list_item);
+		XMLRPCDownloadManager.getInstance().setUp(adapter,
+				XMLRPCConnection.getInstance(), this);
+		Settings.setup(this, XMLRPCConnection.getInstance());
+	}
+
+	/**
+	 * Send the current context to VLC
+	 */
+	private void setVLCContext() {
 		VLCApplication.setContext(getApplicationContext());
 		try {
 			URL url = new URL("http://127.0.0.1:8000/tribler");
@@ -74,10 +86,6 @@ public class MainActivity extends Activity implements
 			Log.e("DownloadListFragment", "URL was malformed:\n");
 			e.printStackTrace();
 		}
-		DownloadListAdapter adapter = new DownloadListAdapter(this,
-				R.layout.download_list_item);
-		XMLRPCDownloadManager.getInstance().setUp(adapter, XMLRPCConnection.getInstance(), this);
-		Settings.setup(this, XMLRPCConnection.getInstance());
 	}
 
 	/**
@@ -88,8 +96,8 @@ public class MainActivity extends Activity implements
 	 */
 	@Override
 	public void onBackPressed() {
-		if (mThumbGridFragment.isVisible()
-				|| mDownloadFragment.isVisible() || mSettingsFragment.isVisible()) {
+		if (mThumbGridFragment.isVisible() || mDownloadFragment.isVisible()
+				|| mSettingsFragment.isVisible()) {
 			new OnQuitDialog(this).show();
 		} else
 			super.onBackPressed();

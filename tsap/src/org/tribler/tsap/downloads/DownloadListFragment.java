@@ -16,6 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * Fragment showing a list of the current downloads
+ * 
+ * @author Dirk Schut
+ * 
+ */
 public class DownloadListFragment extends ListFragment implements
 		IConnectionListener {
 
@@ -40,6 +46,9 @@ public class DownloadListFragment extends ListFragment implements
 		mConnection = XMLRPCConnection.getInstance();
 	}
 
+	/**
+	 * Initialized the layout
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

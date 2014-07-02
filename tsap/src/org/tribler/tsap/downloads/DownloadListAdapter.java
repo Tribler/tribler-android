@@ -13,6 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Adapter holding the data of the download list fragment
+ * 
+ * @author Dirk Schut
+ * 
+ */
 public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 	protected int resource;
 	protected LayoutInflater inflater;
@@ -45,7 +51,18 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		} else {
 			view = convertView;
 		}
-		
+
+		setStatusView(view, download);
+		return view;
+	}
+
+	/**
+	 * Sets the values of the values to the current status of the download
+	 * 
+	 * @param view
+	 * @param download
+	 */
+	private void setStatusView(View view, Download download) {
 		int downStatus = download.getDownloadStatus().getStatus();
 
 		((TextView) view.findViewById(R.id.download_name)).setText(download
@@ -63,12 +80,12 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		((TextView) view.findViewById(R.id.download_speed_up)).setText("Up: "
 				+ Utility.convertBytesPerSecToString(download
 						.getDownloadStatus().getUploadSpeed()));
-		((TextView) view.findViewById(R.id.download_eta)).setText((downStatus == 3) ? "ETA: "
-				+ Utility.convertSecondsToString(download.getDownloadStatus()
-						.getETA()) : "");
+		((TextView) view.findViewById(R.id.download_eta))
+				.setText((downStatus == 3) ? "ETA: "
+						+ Utility.convertSecondsToString(download
+								.getDownloadStatus().getETA()) : "");
 		((ProgressBar) view.findViewById(R.id.download_progress_bar))
 				.setProgress((int) (download.getDownloadStatus().getProgress() * 100));
-		return view;
 	}
 
 	/**
@@ -85,6 +102,11 @@ public class DownloadListAdapter extends AbstractArrayListAdapter<Download> {
 		}
 	}
 
+	/**
+	 * @param infoHash
+	 *            The infohash we are looking for
+	 * @return The download with infoHash as its infohash
+	 */
 	public Download getDownload(String infoHash) {
 		Download currItem;
 		for (int i = 0; i < getCount(); i++) {

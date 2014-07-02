@@ -28,7 +28,7 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 		Observer {
 
 	private final int MAX_SHUTDOWN_TIMEOUT = 7; // in seconds
-	
+
 	private Context mContext;
 
 	/**
@@ -54,35 +54,46 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 	@Override
 	public void onClick(DialogInterface arg0, int buttonClicked) {
 		if (buttonClicked == BUTTON_POSITIVE) {
-			// show new non-cancelable dialog
-			AlertDialog shutdownProgress = new AlertDialog.Builder(mContext)
-					.setMessage(mContext.getString(R.string.on_quit_shutdown_message))
-					.setCancelable(false)
-					.setTitle(mContext.getString(R.string.on_quit_title))
-					.show();
-			
-			// perform XML-RPC call to shutdown tribler, which notifies this
-			// dialog as soon as shutdown is done
-			try {
-				URL url = new URL("http://127.0.0.1:8000/tribler");
-				new XMLRPCShutdownManager(url, this).shutdown();
-			} catch (MalformedURLException e) {
-				Log.e("OnQuitDialog", "URL was malformed:\n");
-				e.printStackTrace();
-			}
-			
+			showDialog();
+			performShutDownCall();
+
 			// To prevent the app from hanging, force a shutdown after
 			// MAX_SHUTDOWN_TIMEOUT seconds
 			Timer timeoutTimer = new Timer();
 			timeoutTimer.schedule(new TimerTask() {
 				@Override
-				public void run()
-				{
-					Log.w("XMLRPCShutdownManager", "Tribler took too long to close, shutting down anyway..");
+				public void run() {
+					Log.w("XMLRPCShutdownManager",
+							"Tribler took too long to close, shutting down anyway..");
 					shutdownService();
 				}
 			}, MAX_SHUTDOWN_TIMEOUT * 1000);
 		}
+	}
+
+	/**
+	 * Perform XML-RPC call to shutdown Tribler, which notifies this dialog as
+	 * soon as shutdown is done
+	 */
+	private void performShutDownCall() {
+		try {
+			URL url = new URL("http://127.0.0.1:8000/tribler");
+			new XMLRPCShutdownManager(url, this).shutdown();
+		} catch (MalformedURLException e) {
+			Log.e("OnQuitDialog", "URL was malformed:\n");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Show a new non-cancelable dialog
+	 */
+	private void showDialog() {
+		new AlertDialog.Builder(mContext)
+				.setMessage(
+						mContext.getString(R.string.on_quit_shutdown_message))
+				.setCancelable(false)
+				.setTitle(mContext.getString(R.string.on_quit_title)).show();
 	}
 
 	/**
@@ -93,15 +104,17 @@ public class OnQuitDialog extends AlertDialog implements OnClickListener,
 	public void update(Observable observable, Object data) {
 		shutdownService();
 	}
-	
-	private void shutdownService()
-	{
+
+	/**
+	 * Shuts down the Tribler service and returns to the home screen
+	 */
+	private void shutdownService() {
 		Intent startMain = new Intent(Intent.ACTION_MAIN);
 		startMain.addCategory(Intent.CATEGORY_HOME);
 		startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(startMain);
 		PythonService.stop();
-		((MainActivity) mContext).finish();	
+		((MainActivity) mContext).finish();
 	}
 
 }

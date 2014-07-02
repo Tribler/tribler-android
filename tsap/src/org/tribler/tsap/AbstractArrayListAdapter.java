@@ -32,7 +32,8 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	 * @param initialContent
 	 *            The initial content
 	 */
-	public AbstractArrayListAdapter(Activity activity, Collection<T> initialContent) {
+	public AbstractArrayListAdapter(Activity activity,
+			Collection<T> initialContent) {
 		mActivity = activity;
 		mContent = new ArrayList<T>();
 		mContent.addAll(initialContent);
@@ -60,8 +61,8 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 	}
 
 	/**
-	 * Returns the Id of the item at a certain position.
-	 * Just like in ArrayAdapter this function just returns the position.
+	 * Returns the Id of the item at a certain position. Just like in
+	 * ArrayAdapter this function just returns the position.
 	 * 
 	 * @param position
 	 *            the position to retrieve the item from
@@ -80,7 +81,10 @@ public abstract class AbstractArrayListAdapter<T> extends BaseAdapter {
 		}
 		notifyChangesToUiThread();
 	}
-	
+
+	/**
+	 * Notifies that the data has changed on the UI thread
+	 */
 	protected void notifyChangesToUiThread() {
 		mActivity.runOnUiThread(new Runnable() {
 			@Override

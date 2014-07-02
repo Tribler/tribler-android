@@ -17,7 +17,7 @@ import android.util.Log;
  * 
  */
 public class XMLRPCShutdownManager extends Observable {
-	
+
 	/**
 	 * Constructor: initializes the XMLRPCClient and add obs to this class'
 	 * observers

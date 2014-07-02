@@ -5,16 +5,33 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Class that puts status messages (including a progress spinner) on the screen
+ * whenever the app is waiting for an event
+ * 
+ * @author Dirk Schut
+ * 
+ */
 public class StatusViewer {
-	ProgressBar mProgressBar;
-	TextView mMessage;
-	Activity mActivity;
-	boolean mEnabled = true;
+	private ProgressBar mProgressBar;
+	private TextView mMessage;
+	private Activity mActivity;
+	private boolean mEnabled = true;
 
+	/**
+	 * @param activity
+	 *            The activity to show messages in
+	 */
 	public StatusViewer(Activity activity) {
 		mActivity = activity;
 	}
 
+	/**
+	 * Updates the views of the progress bar and status text
+	 * 
+	 * @param progressBar
+	 * @param message
+	 */
 	public void updateViews(ProgressBar progressBar, TextView message) {
 		mProgressBar = progressBar;
 		mMessage = message;
@@ -23,6 +40,14 @@ public class StatusViewer {
 		}
 	}
 
+	/**
+	 * Sets the message of the message view
+	 * 
+	 * @param messageId
+	 *            Resource containing the message
+	 * @param progressBarVisibible
+	 *            Indicates whether the progress bar should be visible
+	 */
 	public void setMessage(final int messageId,
 			final boolean progressBarVisibible) {
 		mActivity.runOnUiThread(new Runnable() {
@@ -39,6 +64,9 @@ public class StatusViewer {
 		});
 	}
 
+	/**
+	 * Disables the status viewer (removes views from the screen)
+	 */
 	public void disable() {
 		mActivity.runOnUiThread(new Runnable() {
 			@Override
@@ -50,6 +78,9 @@ public class StatusViewer {
 		});
 	}
 
+	/**
+	 * Enables the status viewer (puts the views from the screen)
+	 */
 	public void enable() {
 		mActivity.runOnUiThread(new Runnable() {
 			@Override

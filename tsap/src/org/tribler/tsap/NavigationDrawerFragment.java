@@ -129,12 +129,12 @@ public class NavigationDrawerFragment extends Fragment {
 						selectItem(position);
 					}
 				});
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(),
-				R.layout.navigation_drawer_item,
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar()
+				.getThemedContext(), R.layout.navigation_drawer_item,
 				android.R.id.text1, new String[] {
 						getString(R.string.title_section_home),
 						getString(R.string.title_section_downloads),
-						getString(R.string.title_section_settings)}));
+						getString(R.string.title_section_settings) }));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
 	}
@@ -348,7 +348,7 @@ public class NavigationDrawerFragment extends Fragment {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setTitle(R.string.app_name);
 	}
-	
+
 	/**
 	 * If the drawer is open, show the global app actions in the action bar. See
 	 * also {@link #showGlobalContextActionBar()}, which controls the top-left

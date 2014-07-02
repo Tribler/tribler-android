@@ -1,5 +1,7 @@
 package org.tribler.tsap.downloads;
 
+import java.io.Serializable;
+
 /**
  * Class representing the download status of a torrent, including its
  * upload/download speed, progress and ETA.
@@ -7,8 +9,10 @@ package org.tribler.tsap.downloads;
  * @author Niels Spruit
  * 
  */
-public class DownloadStatus {
+public class DownloadStatus implements Serializable{
 
+	private static final long serialVersionUID = -3074099633347590607L;
+	
 	private int status;
 	private double downloadSpeed;
 	private double uploadSpeed;

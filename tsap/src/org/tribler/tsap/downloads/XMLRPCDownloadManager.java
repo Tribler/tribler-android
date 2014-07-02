@@ -76,8 +76,7 @@ public class XMLRPCDownloadManager implements IPollListener {
 	private Download convertMapToDownload(Map<String, Object> map) {
 		int seeders = Utility.getFromMap(map, "num_seeders", (int) -1);
 		int leechers = Utility.getFromMap(map, "num_leechers", (int) -1);
-		long size = Long.parseLong(Utility.getFromMap(map, "length", "-1")
-				.trim());
+		long size = Utility.getFromMap(map, "length", -1);
 		String infoHash = Utility.getFromMap(map, "infohash", "unknown");
 		String name = Utility.getFromMap(map, "name", "unknown");
 		String category = Utility.getFromMap(map, "category", "Unknown");

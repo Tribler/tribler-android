@@ -13,12 +13,13 @@ import de.timroes.axmlrpc.XMLRPCException;
 public class XMLRPCConnection implements Poller.IPollListener {
 	private XMLRPCClient mClient;
 	ArrayList<IConnectionListener> mListeners;
-	boolean mConnected = false;
+	boolean mConnected = false, mJustStarted = true;
 	Poller mPoller;
 	Activity mActivity;
 	static XMLRPCConnection mInstance = null;
-	
-	private XMLRPCConnection() {};
+
+	private XMLRPCConnection() {
+	};
 
 	public void setup(XMLRPCClient client, Activity activity) {
 		mClient = client;
@@ -27,6 +28,7 @@ public class XMLRPCConnection implements Poller.IPollListener {
 		mListeners = new ArrayList<IConnectionListener>();
 		mActivity = activity;
 	}
+
 	public static XMLRPCConnection getInstance() {
 		if (mInstance == null) {
 			mInstance = new XMLRPCConnection();
@@ -36,7 +38,8 @@ public class XMLRPCConnection implements Poller.IPollListener {
 
 	public Object call(String functionName, Object... params) {
 		if (!mConnected) {
-			Log.e("XMLRPCConnection", "Tried calling xml-rpc function while the connection was not established.");
+			Log.e("XMLRPCConnection",
+					"Tried calling xml-rpc function while the connection was not established.");
 			return null;
 		}
 		try {
@@ -46,17 +49,19 @@ public class XMLRPCConnection implements Poller.IPollListener {
 
 		} catch (XMLRPCException e) {
 			notifyConnectionLost();
-			Log.i("XMLRPCConnection", "Connection Lost. Trying to re-establish connection.");
+			Log.i("XMLRPCConnection",
+					"Connection Lost. Trying to re-establish connection.");
 			mPoller.start();
+			mConnected = false;
 			return e;
 		}
 	}
 
 	public void addListener(IConnectionListener listener) {
 		mListeners.add(listener);
-		if(mConnected)
+		if (mConnected)
 			listener.onConnectionEstablished();
-		else
+		else if (!mJustStarted)
 			listener.onConnectionLost();
 	}
 
@@ -72,6 +77,7 @@ public class XMLRPCConnection implements Poller.IPollListener {
 			}
 		}.notifyAll(mActivity);
 	}
+
 	private void notifyConnectionLost() {
 		new UIThreadListenerNotifier() {
 			@Override
@@ -84,39 +90,47 @@ public class XMLRPCConnection implements Poller.IPollListener {
 	@Override
 	public void onPoll() {
 		try {
-			Object[] arrayResult = (Object[])mClient.call("system.listMethods");
-			
+			Object[] arrayResult = (Object[]) mClient
+					.call("system.listMethods");
+
 			Log.i("XMLRPCConnection", "Listing available functions");
 			for (int i = 0; i < arrayResult.length; i++) {
 				Log.i("XMLRPCConnection", " " + (String) arrayResult[i]);
 			}
-			
+
 			notifyConnectionEstablished();
 			mConnected = true;
+			mJustStarted = false;
 			mPoller.stop();
 			Log.i("XMLRPCConnection", "Stopped poller.");
 		} catch (XMLRPCException e) {
 		}
 	}
-	
-	public boolean isConnected()
-	{
+
+	public boolean isConnected() {
 		return mConnected;
 	}
-	
+
+	public boolean isJustStarted() {
+		return mJustStarted;
+	}
+
 	public interface IConnectionListener {
 		public void onConnectionEstablished();
+
 		public void onConnectionLost();
 	}
-	
-	private abstract class UIThreadListenerNotifier implements Runnable{
+
+	private abstract class UIThreadListenerNotifier implements Runnable {
 		abstract void notifyListener(IConnectionListener listener);
+
 		@Override
 		public void run() {
 			for (int i = mListeners.size() - 1; i >= 0; i--) {
 				notifyListener(mListeners.get(i));
 			}
 		}
+
 		public void notifyAll(Activity activity) {
 			activity.runOnUiThread(this);
 		}

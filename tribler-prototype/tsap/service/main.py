@@ -57,7 +57,7 @@ class TSAP():
         self.xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8000)
 
         _logger.error("Loading TriblerSessionService")
-        self.tribler = TriblerSession(self.xmlrpc)
+        self.tribler = TriblerSession.getInstance(self.xmlrpc)
         self.tribler.start_session()
 
         # Wait for dispersy to initialize

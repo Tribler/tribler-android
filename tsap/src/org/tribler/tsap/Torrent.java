@@ -178,5 +178,24 @@ public class Torrent implements Serializable {
 	public String toString() {
 		return name;
 	}
+	
+	/**
+	* The default equals function, only checks on infohash
+	* @param obj The object to be compared with
+	* @return True if equal infohashes, otherwise false.
+	*/
+	public boolean equals(Object obj)
+	{
+		// Pre-check if we are the same
+		if (this == obj)
+		return true;
+		
+		// Only check infohash if it's actually a ThumbItem
+		if (!(obj instanceof Torrent))
+		return false;
+		
+		// Compare infohashes
+		return ((Torrent) obj).getInfoHash().equals(this.getInfoHash());
+	}
 
 }

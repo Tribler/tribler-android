@@ -24,7 +24,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 	private ThumbAdapter mAdapter;
 	private XMLRPCConnection mConnection;
 	private StatusViewer mStatusViewer;
-	private boolean mJustStarted = true;
+	private boolean mJustStarted = true, mInBetweenSearches = false;
 	private int mLastFoundResults = 0;
 
 	/**
@@ -53,10 +53,15 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 	private void searchRemote(final String keywords) {
 		Log.v("XMPLRCTorrentManager", "Remote search for \"" + keywords
 				+ "\" launched.");
-		new XMLRPCCallTask().call("torrents.search_remote", mConnection,
+		new XMLRPCCallTask() {
+			@Override
+			public void onSucces(Object result) {
+				mInBetweenSearches = false;
+				mStatusViewer.setMessage(R.string.thumb_grid_search_submitted, true);
+			}
+		}.call("torrents.search_remote", mConnection,
 				keywords);
-		mStatusViewer.setMessage(R.string.thumb_grid_search_submitted, true);
-		// TODO: communicate if the search succeeded.
+		// TODO: communicate if the search fails.
 	}
 
 	/**
@@ -160,6 +165,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 	 *            The query of the torrents to look for
 	 */
 	public void search(String keywords) {
+		mInBetweenSearches = true;
 		mAdapter.clear();
 		mLastFoundResults = 0;
 		mStatusViewer.enable();
@@ -175,7 +181,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 	@Override
 	public void onPoll() {
 		int foundResults = getRemoteResultsCount();
-		if (foundResults > mLastFoundResults) {
+		if (foundResults > mLastFoundResults && !mInBetweenSearches) {
 			mLastFoundResults = foundResults;
 			addRemoteResults();
 			mJustStarted = false;

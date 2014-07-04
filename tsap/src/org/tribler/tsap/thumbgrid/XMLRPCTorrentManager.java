@@ -55,7 +55,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 				+ "\" launched.");
 		new XMLRPCCallTask() {
 			@Override
-			public void onSucces() {
+			public void onSucces(Object result) {
 				mInBetweenSearches = false;
 				mStatusViewer.setMessage(R.string.thumb_grid_search_submitted, true);
 			}

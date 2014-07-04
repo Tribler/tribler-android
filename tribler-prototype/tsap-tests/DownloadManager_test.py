@@ -27,7 +27,7 @@ class DownloadByInfohash(unittest.TestCase):
     @pytest.mark.timeout(10)
     def testA_Methods(self):
         """
-        Tests if the channels.* methods exist
+        Tests if the downloads.* methods exist
         :return: Nothing.
         """
         methods = self.xmlrpc.system.listMethods()
@@ -111,7 +111,7 @@ class DownloadByInfohash(unittest.TestCase):
 
     def testC_AddAndRemoveSintel(self):
         """
-        Search for 'Eztv' and check results.
+        Add and remove Sintel torrent.
         :return: Nothing.
         """
 
@@ -138,7 +138,7 @@ class DownloadByInfohash(unittest.TestCase):
     @unittest.skipIf(not DOWNLOAD_TORRENT_TESTS, "DOWNLOAD_TORRENT_TESTS is False")
     def testD_DownloadSintel(self):
         """
-        Search for 'Eztv' and check results.
+        Full Sintel torrent download.
         :return: Nothing.
         """
 

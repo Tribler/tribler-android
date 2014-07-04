@@ -1,5 +1,6 @@
 # Generate pylint report
 pylint -f parseable ../tsap/service/ | tee pylint.out
+sed -i s#.*workspace/## pylint.out
 
 # Clean test venv
 rm -rf runtests

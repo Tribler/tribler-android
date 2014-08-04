@@ -9,7 +9,7 @@ import org.tribler.tsap.util.Utility;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
@@ -33,7 +33,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	private boolean needsToBeDownloaded;
 	private MainThreadPoller mPoller;
 	private VODDialogFragment vodDialog;
-	private AlertDialog aDialog;
+	private ProgressDialog pDialog;
 	private boolean inVODMode = false;
 	private Activity mActivity;
 	private Download mDownload;
@@ -93,7 +93,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	public void onPoll() {
 		XMLRPCDownloadManager.getInstance().getProgressInfo(infoHash);
 		mDownload = XMLRPCDownloadManager.getInstance().getCurrentDownload();
-		aDialog = (AlertDialog) vodDialog.getDialog();
+		pDialog = (ProgressDialog) vodDialog.getDialog();
 		if (mDownload != null) {
 			if (!mDownload.getTorrent().getInfoHash().equals(infoHash))
 				return;
@@ -116,9 +116,9 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 					mActivity.getApplicationContext(),
 					VideoPlayerActivity.class);
 			mActivity.startActivity(intent);
-			aDialog.cancel();
+			pDialog.dismiss();
 		} else
-			aDialog.setMessage("No video file could be found in the torrent");
+			pDialog.setMessage("No video file could be found in the torrent");
 
 		mPoller.stop();
 	}
@@ -139,7 +139,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	 * Updates the message of the dialog to the current download status
 	 */
 	private void updateDialog() {
-		if (aDialog != null) {
+		if (pDialog != null) {
 			int statusCode = mDownload.getDownloadStatus().getStatus();
 			if (statusCode == 3)
 				updateVODMessage();
@@ -152,11 +152,12 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	 * Updates the dialog message to show the VOD ETA
 	 */
 	private void updateVODMessage() {
-		aDialog.setMessage("Video starts playing in about "
+		pDialog.setMessage("Video starts playing in about "
 				+ Utility.convertSecondsToString(mDownload.getVOD_ETA())
 				+ " ("
 				+ Utility.convertBytesPerSecToString(mDownload
 						.getDownloadStatus().getDownloadSpeed()) + ").");
+		pDialog.setProgress((int) Math.ceil(mDownload.getDownloadStatus().getProgress()*100));
 	}
 
 	/**
@@ -166,7 +167,7 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	 *            The status code of the download
 	 */
 	private void updateMessageToStatus(int statusCode) {
-		aDialog.setMessage("Download status: "
+		pDialog.setMessage("Download status: "
 				+ Utility.convertDownloadStateIntToMessage(statusCode)
 				+ ((statusCode == 2) ? " ("
 						+ Math.round(mDownload.getDownloadStatus()

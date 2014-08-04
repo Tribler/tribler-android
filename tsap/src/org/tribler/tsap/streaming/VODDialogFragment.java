@@ -4,10 +4,8 @@ import org.tribler.tsap.R;
 import org.tribler.tsap.util.Poller;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -36,22 +34,22 @@ public class VODDialogFragment extends DialogFragment {
 	}
 
 	/**
-	 * Creates the actual dialog
+	 * Creates the actual dialog, now in progress dialog.
 	 */
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		// Use the Builder class for convenient dialog construction
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setMessage(getString(R.string.vod_dialog_initial_message))
-				.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								// User cancelled the dialog
-							}
-						});
-
-		// Create the AlertDialog object and return it
-		return builder.create();
+	public ProgressDialog onCreateDialog(Bundle savedInstanceState) {
+		
+		//create progressDialog:
+		final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMax(100);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setProgress(0);
+		progressDialog.setProgressNumberFormat(null);
+		progressDialog.setTitle(getString(R.string.vod_dialog_title));
+		progressDialog.setMessage(getString(R.string.vod_dialog_initial_message));
+		progressDialog.show();
+		// Create the ProgressDialog object and return it
+		return progressDialog;
 	}
 
 	/**

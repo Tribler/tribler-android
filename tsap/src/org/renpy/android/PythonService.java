@@ -28,7 +28,6 @@ public class PythonService extends Service implements Runnable {
 
 	// Argument to pass to Python code,
 	private String pythonServiceArgument;
-
 	private Notification notification;
 	private String serviceTitle;
 	private static PythonService pyService;

@@ -69,8 +69,10 @@ public class MainActivity extends Activity implements
 
 		DownloadListAdapter adapter = new DownloadListAdapter(this,
 				R.layout.download_list_item);
+		Log.d("TSAP-Main", "set up xml-rpc stuff:");
 		XMLRPCDownloadManager.getInstance().setUp(adapter,
 				XMLRPCConnection.getInstance(), this);
+		Log.d("TSAP-Main", "set up xml-rpc settings:");
 		Settings.setup(this, XMLRPCConnection.getInstance());
 	}
 

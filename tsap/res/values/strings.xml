@@ -93,6 +93,7 @@
     <string name="on_quit_title">Quit</string>
 
     <!-- Strings for VODDialog -->
+    <string name="vod_dialog_title">Starting Stream</string>
     <string name="vod_dialog_initial_message">Please wait before the video starts playing&#8230;</string>
 
     <!-- Strings for PythonActivity -->

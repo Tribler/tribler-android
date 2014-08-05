@@ -40,7 +40,7 @@ public class StatusViewerTest extends
 	}
 
 	private void singleMessageTest(int messageResource, boolean visibility) {
-		statusViewer.setMessage(messageResource, visibility);
+		statusViewer.setMessage(messageResource, null, visibility);
 		int progressBarVisibility;
 		if (visibility) {
 			progressBarVisibility = View.VISIBLE;
@@ -62,7 +62,7 @@ public class StatusViewerTest extends
 	public void testDisable() {
 		singleMessageTest(R.string.connection_failed, true);
 		statusViewer.disable();
-		statusViewer.setMessage(R.string.cancel, false);
+		statusViewer.setMessage(R.string.cancel, null, false);
 		checkSingleMessage(R.string.connection_failed, View.GONE, View.GONE);
 	}
 

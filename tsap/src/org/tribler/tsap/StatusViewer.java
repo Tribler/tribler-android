@@ -45,10 +45,13 @@ public class StatusViewer {
 	 * 
 	 * @param messageId
 	 *            Resource containing the message
+	 * @param appendString
+	 *            sets any string behind the messagId if necessary
 	 * @param progressBarVisibible
 	 *            Indicates whether the progress bar should be visible
+	 *            
 	 */
-	public void setMessage(final int messageId,
+	public void setMessage(final int messageId, final String appendString,
 			final boolean progressBarVisibible) {
 		mActivity.runOnUiThread(new Runnable() {
 			@Override
@@ -59,6 +62,8 @@ public class StatusViewer {
 					else
 						mProgressBar.setVisibility(View.INVISIBLE);
 					mMessage.setText(messageId);
+					if(appendString != null) 
+						mMessage.append(appendString);
 				}
 			}
 		});

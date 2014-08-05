@@ -57,7 +57,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 			@Override
 			public void onSucces(Object result) {
 				mInBetweenSearches = false;
-				mStatusViewer.setMessage(R.string.thumb_grid_search_submitted, true);
+				mStatusViewer.setMessage(R.string.thumb_grid_search_submitted, keywords, true);
 			}
 		}.call("torrents.search_remote", mConnection,
 				keywords);
@@ -188,7 +188,7 @@ public class XMLRPCTorrentManager implements Poller.IPollListener {
 			Log.e("TorrentManager", "New torrents found!");
 		} else if (mJustStarted) {
 			mJustStarted = false;
-			mStatusViewer.setMessage(R.string.thumb_grid_server_started, false);
+			mStatusViewer.setMessage(R.string.thumb_grid_server_started, null, false);
 		}
 	}
 }

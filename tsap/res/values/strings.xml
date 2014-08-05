@@ -65,7 +65,7 @@
    	<string name="connection_failed">Could not connect to Tribler.</string>
 
     <!-- Status Strings from ThumbGridFragment -->
-    <string name="thumb_grid_search_submitted">"Searching&#8230;"</string>
+    <string name="thumb_grid_search_submitted">"Searching for: "</string>
     <string name="thumb_grid_server_started">"Type in keywords to start searching."</string>
     <string name="thumb_grid_searchview">Search videos</string>
 

@@ -44,7 +44,9 @@ public class VideoInfoFragmentTest extends
 				.beginTransaction();
 		transaction.replace(R.id.container, mVideoInfoFrag);
 		transaction.addToBackStack(null);
-		transaction.commit();
+		//we don't care about state loss from 
+		//previous stuff here (otherwise use commit());
+		transaction.commitAllowingStateLoss(); 
 	}
 
 	/**

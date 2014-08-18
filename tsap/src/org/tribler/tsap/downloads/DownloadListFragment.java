@@ -3,6 +3,7 @@ package org.tribler.tsap.downloads;
 import java.io.Serializable;
 
 import org.tribler.tsap.R;
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection.IConnectionListener;
 import org.tribler.tsap.util.Poller;
@@ -10,9 +11,15 @@ import org.tribler.tsap.util.Poller;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,6 +62,9 @@ public class DownloadListFragment extends ListFragment implements
 		View v = inflater.inflate(R.layout.fragment_download_list, null);
 		mEmptyTextView = (TextView) v.findViewById(android.R.id.empty);
 		mEmptyTextView.setText(R.string.connection_loading);
+		ListView lv = (ListView) v.findViewById(android.R.id.list);
+		if(lv != null) 
+			registerForContextMenu(lv);
 		return v;
 	}
 
@@ -110,5 +120,59 @@ public class DownloadListFragment extends ListFragment implements
 	public void onConnectionLost() {
 		mEmptyTextView.setText(R.string.connection_failed);
 		mPoller.stop();
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.menu_download_longclick, menu);
+		
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		Torrent torrent = ((DownloadListAdapter) getListAdapter()).getItem(
+				info.position).getTorrent();
+		menu.setHeaderTitle(torrent.getName());
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		int menuItemIndex = item.getItemId();
+		Download download = ((DownloadListAdapter) getListAdapter()).getItem(
+				info.position);
+		Torrent torrent = download.getTorrent();
+		
+		switch (menuItemIndex) {
+		case R.id.delete:
+			deleteTorrent(torrent);
+			break;
+		case R.id.stream:
+			streamTorrent(torrent);
+			break;
+		case R.id.info:
+			infoTorrent(download);
+			break;
+		default:
+			return super.onContextItemSelected(item);
+		}
+		return true;
+	}
+
+	private void infoTorrent(Download download) {
+		Intent i = new Intent(getActivity().getApplicationContext(),
+				DownloadActivity.class);
+		i.putExtra(DownloadActivity.INTENT_MESSAGE,
+				(Serializable) download);
+		startActivity(i);
+	}
+
+	private void streamTorrent(Torrent torrent) {
+		DownloadActivity.onStreamPressed(torrent, getActivity());
+	}
+
+	private void deleteTorrent(Torrent torrent) {
+		DownloadActivity.onRemovePressed(torrent, getActivity(), false);
 	}
 }

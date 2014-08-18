@@ -9,6 +9,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="loadingText">Loading&#8230;</string>
     <string name="action_search">Search</string>
+    <string name="action_download">Download</string>
+    <string name="action_stream">Stream</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_info">Torrent Info</string>
     <string name="video_info_title">Sintel 2010</string>
     <string name="video_details_type">Type:</string>
     <string name="video_details_filesize">Filesize:</string>

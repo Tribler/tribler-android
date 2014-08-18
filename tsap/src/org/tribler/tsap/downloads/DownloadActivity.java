@@ -11,12 +11,14 @@ import org.tribler.tsap.util.Utility;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -125,73 +127,6 @@ public class DownloadActivity extends Activity implements IPollListener {
 	}
 
 	/**
-	 * Sets the stream button listener to PlayButtonListener
-	 */
-	private void setStreamButtonListener() {
-		Button streamButton = (Button) mView
-				.findViewById(R.id.download_info_stream_button);
-		View.OnClickListener streamButtonOnClickListener = new PlayButtonListener(
-				mTorrent, this, false);
-		streamButton.setOnClickListener(streamButtonOnClickListener);
-	}
-
-	/**
-	 * Sets the listener of the remove download button and its dialog
-	 * 
-	 * @param resource
-	 */
-	private void setTorrentRemoveButtonListener(int resource) {
-		Button removeButton = (Button) mView.findViewById(resource);
-		final DownloadActivity a = this;
-
-		View.OnClickListener removeButtonOnClickListener = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// Show dialog
-				AlertDialog.Builder alertRemove = new AlertDialog.Builder(
-						v.getContext());
-				alertRemove
-						.setTitle(R.string.remove_download_dialog_title)
-						.setMessage(R.string.remove_download_dialog_message)
-						// Android.R.string.yes == Ok -
-						// https://code.google.com/p/android/issues/detail?id=3713
-						.setPositiveButton(R.string.yes,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										XMLRPCDownloadManager.getInstance()
-												.deleteTorrent(
-														mTorrent.getInfoHash(),
-														true);
-										a.onBackPressed();
-									}
-								})
-						// Android.R.string.no == Cancel -
-						// https://code.google.com/p/android/issues/detail?id=3713
-						.setNegativeButton(R.string.no,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										XMLRPCDownloadManager.getInstance()
-												.deleteTorrent(
-														mTorrent.getInfoHash(),
-														false);
-										a.onBackPressed();
-									}
-								})
-						.setNeutralButton(android.R.string.cancel,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-									}
-								}).show();
-			}
-		};
-		removeButton.setOnClickListener(removeButtonOnClickListener);
-	}
-
-	/**
 	 * Initializes the view and the instance variables
 	 */
 	@Override
@@ -206,8 +141,6 @@ public class DownloadActivity extends Activity implements IPollListener {
 
 		setupActionBar(mTorrent.getName());
 		fillLayout();
-		setStreamButtonListener();
-		setTorrentRemoveButtonListener(R.id.download_info_delete_torrent_button);
 
 		mPoller = new MainThreadPoller(this, 2000, this);
 		mPoller.start();
@@ -238,10 +171,18 @@ public class DownloadActivity extends Activity implements IPollListener {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		if (menuItem.getItemId() == android.R.id.home) {
+		// Handle presses on the action bar items
+		switch (menuItem.getItemId()) {
+		case android.R.id.home:
 			onBackPressed();
 			return true;
-		} else {
+		case R.id.action_remove:
+			onRemovePressed(mTorrent, this, true);
+			return true;
+		case R.id.action_stream:
+			onStreamPressed(mTorrent, this);
+			return true;
+		default:
 			return super.onOptionsItemSelected(menuItem);
 		}
 	}
@@ -261,5 +202,80 @@ public class DownloadActivity extends Activity implements IPollListener {
 			mDownload = currDownload;
 			fillLayout();
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_download_activity, menu);
+		return true;
+	}
+
+	/**
+	 * Will start the stream by simulating a buttonclick
+	 * 
+	 * @param torrent
+	 *            the torrent to be removed
+	 * @param activity
+	 *            activity from which the method is called
+	 */
+	public static void onStreamPressed(Torrent torrent, Activity activity) {
+		PlayButtonListener onClickListener = new PlayButtonListener(torrent,
+				activity, false);
+		onClickListener.onClick();
+	}
+
+	/**
+	 * 
+	 * Will remove the torrent and ask if also the data should be deleted
+	 * 
+	 * @param torrent
+	 *            the torrent to be removed
+	 * @param activity
+	 *            activity from which the method is called
+	 * @param onBackPress
+	 *            if the back button should be pressed after removing the
+	 *            torrent
+	 */
+	public static void onRemovePressed(final Torrent torrent,
+			final Activity activity, final boolean onBackPress) {
+		// Show dialog
+		AlertDialog.Builder alertRemove = new AlertDialog.Builder(activity);
+		alertRemove
+				.setTitle(R.string.remove_download_dialog_title)
+				.setMessage(R.string.remove_download_dialog_message)
+				// Android.R.string.yes == Ok -
+				// https://code.google.com/p/android/issues/detail?id=3713
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								XMLRPCDownloadManager.getInstance()
+										.deleteTorrent(torrent.getInfoHash(),
+												true);
+								if (onBackPress)
+									activity.onBackPressed();
+							}
+						})
+				// Android.R.string.no == Cancel -
+				// https://code.google.com/p/android/issues/detail?id=3713
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								XMLRPCDownloadManager.getInstance()
+										.deleteTorrent(torrent.getInfoHash(),
+												false);
+								if (onBackPress)
+									activity.onBackPressed();
+							}
+						})
+				.setNeutralButton(android.R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+							}
+						}).show();
 	}
 }

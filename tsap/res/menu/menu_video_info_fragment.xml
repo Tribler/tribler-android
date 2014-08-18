@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item
+        android:id="@+id/action_download"
+        android:icon="@drawable/ic_action_download"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:title="@string/action_download"/>
+    
+    <item
+        android:id="@+id/action_stream"
+        android:icon="@drawable/ic_action_play"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:title="@string/action_stream"/>
+
+</menu>

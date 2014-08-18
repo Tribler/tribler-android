@@ -155,7 +155,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.thumbgrid_fragment, menu);
+		inflater.inflate(R.menu.menu_thumbgrid_fragment, menu);
 		MenuItem searchMenuItem = menu.findItem(R.id.action_search_thumbgrid);
 		SearchView searchView = (SearchView) MenuItemCompat
 				.getActionView(searchMenuItem);

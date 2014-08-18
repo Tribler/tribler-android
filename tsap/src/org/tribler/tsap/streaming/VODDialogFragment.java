@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.widget.Button;
 
 /**
  * Class showing a dialog (when the 'Play video' button is pressed) that is used
@@ -20,7 +19,6 @@ import android.widget.Button;
 public class VODDialogFragment extends DialogFragment {
 
 	private Poller mPoller;
-	private Button mButton;
 
 	/**
 	 * @param mPoller
@@ -28,9 +26,8 @@ public class VODDialogFragment extends DialogFragment {
 	 * @param mButton
 	 *            The button that was clicked to open this dialog
 	 */
-	public VODDialogFragment(Poller mPoller, Button mButton) {
+	public VODDialogFragment(Poller mPoller) {
 		this.mPoller = mPoller;
-		this.mButton = mButton;
 	}
 
 	/**
@@ -60,7 +57,6 @@ public class VODDialogFragment extends DialogFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		mPoller.stop();
-		mButton.setEnabled(true);
 	}
 
 }

@@ -12,9 +12,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
 /**
  * Class that makes sure that a torrent is downloaded (if needed), shows a
@@ -24,7 +21,7 @@ import android.widget.Button;
  * @author Niels Spruit
  * 
  */
-public class PlayButtonListener implements OnClickListener, IPollListener {
+public class PlayButtonListener implements IPollListener {
 
 	private final int POLLER_INTERVAL = 1000; // in ms
 
@@ -56,23 +53,18 @@ public class PlayButtonListener implements OnClickListener, IPollListener {
 	}
 
 	/**
-	 * When the 'Play video' button is clicked, this method will start
+	 * When the 'Play video' button is pressed, this method will start
 	 * downloading the torrent (if necessary), disable the button and show the
 	 * VOD dialog
 	 */
-	@Override
-	public void onClick(View buttonClicked) {
+	public void onClick() {
 		// start downloading the torrent
-		Button button = (Button) buttonClicked;
 		if (needsToBeDownloaded) {
 			startDownload();
 		}
 
-		// disable the play button
-		button.setEnabled(false);
-
 		// start waiting for VOD
-		vodDialog = new VODDialogFragment(mPoller, button);
+		vodDialog = new VODDialogFragment(mPoller);
 		vodDialog.show(mActivity.getFragmentManager(), "wait_vod");
 		mPoller.start();
 	}

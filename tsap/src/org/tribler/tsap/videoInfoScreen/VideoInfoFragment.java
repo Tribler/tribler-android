@@ -11,9 +11,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,9 +49,11 @@ public class VideoInfoFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_video_info, container, false);
 		context = container.getContext();
-		if (getArguments() != null)
+		if (getArguments() != null) {
 			thumbData = (Torrent) getArguments().getSerializable("thumbData");
-
+			setHasOptionsMenu(true);
+		}
+		
 		setValues();
 		return view;
 	}
@@ -86,38 +90,37 @@ public class VideoInfoFragment extends Fragment {
 				.findViewById(R.id.video_info_thumbnail);
 		ThumbnailUtils.loadThumbnail(thumbData.getThumbnailFile(), thumb,
 				context);
-
-		setPlayButtonListener();
-		setDownloadButtonListener();
 	}
 
-	/**
-	 * Sets the listener of the 'Play video' button to a listener that starts
-	 * VLC when the button is pressed
-	 */
-	private void setPlayButtonListener() {
-		final Button viewButton = (Button) view
-				.findViewById(R.id.video_info_stream_video);
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_video_info_fragment, menu);
+		//super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_download:
+			onDownloadPressed();
+			return true;
+		case R.id.action_stream:
+			onStreamPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public void onStreamPressed() {
 		PlayButtonListener onClickListener = new PlayButtonListener(thumbData,
 				getActivity(), true);
-		viewButton.setOnClickListener(onClickListener);
+		onClickListener.onClick();
 	}
 
-	/**
-	 * Sets the listener of the 'Download video' button to a listener that
-	 * starts downloading the selected torrent when the button is pressed
-	 */
-	private void setDownloadButtonListener() {
-		Button downloadButton = (Button) view
-				.findViewById(R.id.video_info_download_video);
-		View.OnClickListener onClickListener = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				XMLRPCDownloadManager.getInstance().downloadTorrent(
-						thumbData.getInfoHash(), thumbData.getName());
-			}
-		};
-		downloadButton.setOnClickListener(onClickListener);
+	public void onDownloadPressed() {
+		XMLRPCDownloadManager.getInstance().downloadTorrent(
+				thumbData.getInfoHash(), thumbData.getName());
 	}
-
 }

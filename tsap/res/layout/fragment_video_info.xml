@@ -23,13 +23,34 @@
             android:textSize="23sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/video_info_thumbnail"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/video_info_title"
+            android:contentDescription="@string/video_info_thumbnail_descr"
+            android:src="@drawable/default_thumb" />
+
+        <TextView
+            android:id="@+id/video_info_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/video_info_thumbnail"
+            android:contentDescription="@string/video_info_descr_descr"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/video_details_description_example"
+            android:textSize="18sp" />
+
         <LinearLayout
             android:id="@+id/video_info_details_titles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/video_info_title"
+            android:layout_toRightOf="@id/video_info_thumbnail"
             android:orientation="vertical"
+            android:paddingLeft="10dp"
             android:paddingRight="10dp" >
 
             <TextView
@@ -71,8 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/video_info_title"
             android:layout_toRightOf="@id/video_info_details_titles"
-            android:orientation="vertical"
-            android:paddingRight="10dp" >
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/video_details_type"
@@ -102,44 +122,6 @@
                 android:text="@string/video_details_leechers_example"
                 android:textSize="18sp" />
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/video_info_thumbnail"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/video_info_title"
-            android:layout_toRightOf="@id/video_info_details"
-            android:contentDescription="@string/video_info_thumbnail_descr"
-            android:src="@drawable/default_thumb" />
-
-        <Button
-            android:id="@+id/video_info_stream_video"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/video_info_thumbnail"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/video_info_stream_button"
-            android:text="@string/video_info_stream_button" />
-
-        <Button
-            android:id="@+id/video_info_download_video"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/video_info_stream_video"
-            android:contentDescription="@string/video_info_download_button"
-            android:text="@string/video_info_download_button" />
-
-        <TextView
-            android:id="@+id/video_info_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/video_info_download_video"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:contentDescription="@string/video_info_descr_descr"
-            android:text="@string/video_details_description_example"
-            android:textSize="18sp" />
     </RelativeLayout>
 
 </ScrollView>

@@ -2,20 +2,26 @@ package org.tribler.tsap.thumbgrid;
 
 import org.tribler.tsap.R;
 import org.tribler.tsap.StatusViewer;
+import org.tribler.tsap.Torrent;
 import org.tribler.tsap.XMLRPC.XMLRPCConnection;
+import org.tribler.tsap.downloads.DownloadActivity;
 import org.tribler.tsap.util.Poller;
 import org.tribler.tsap.videoInfoScreen.VideoInfoFragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -81,7 +87,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 		GridView gridView = (GridView) mView.findViewById(R.id.ThumbsGrid);
 		gridView.setAdapter(mThumbAdapter);
 		gridView.setOnItemClickListener(initiliazeOnItemClickListener());
-
+		registerForContextMenu(gridView);
+		
 		updateStatusViewer();
 		return mView;
 	}
@@ -110,20 +117,11 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
-				VideoInfoFragment vidFrag = new VideoInfoFragment();
-				Bundle args = new Bundle();
-				args.putSerializable("thumbData",
-						mThumbAdapter.getItem(position));
-				vidFrag.setArguments(args);
-
-				FragmentTransaction transaction = getFragmentManager()
-						.beginTransaction();
-				transaction.replace(R.id.container, vidFrag);
-				transaction.addToBackStack(null);
-				transaction.commit();
+				showVideoInfo(position);
 			}
 		};
 	}
+
 
 	/**
 	 * Stops listening the the connection and stops the poller
@@ -204,6 +202,12 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 	@Override
 	public boolean onQueryTextSubmit(String query) {
 		Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+		InputMethodManager inputManager = 
+		        (InputMethodManager) getActivity().
+		            getSystemService(Context.INPUT_METHOD_SERVICE); 
+		inputManager.hideSoftInputFromWindow(
+				getActivity().getCurrentFocus().getWindowToken(),
+		        InputMethodManager.HIDE_NOT_ALWAYS); 
 		mTorrentManager.search(query);
 		return true;
 	}
@@ -225,5 +229,67 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 	public void onConnectionLost() {
 		mStatusViewer.setMessage(R.string.connection_failed, null, false);
 		mPoller.stop();
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.menu_thumb_longclick, menu);
+		
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		Torrent torrent = mThumbAdapter.getItem(info.position);
+		menu.setHeaderTitle(torrent.getName());
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		int menuItemIndex = item.getItemId();
+
+		Torrent torrent =  mThumbAdapter.getItem(info.position);
+		
+		switch (menuItemIndex) {
+		case R.id.thumb_download:
+			downloadTorrent(torrent);
+			break;
+		case R.id.thumb_stream:
+			streamTorrent(torrent);
+			break;
+		case R.id.thumb_info:
+			infoTorrent(info.position);
+			break;
+		default:
+			return super.onContextItemSelected(item);
+		}
+		return true;
+	}
+	
+	private void showVideoInfo(int position) {
+		VideoInfoFragment vidFrag = new VideoInfoFragment();
+		Bundle args = new Bundle();
+		args.putSerializable("thumbData",
+				mThumbAdapter.getItem(position));
+		vidFrag.setArguments(args);
+
+		FragmentTransaction transaction = getFragmentManager()
+				.beginTransaction();
+		transaction.replace(R.id.container, vidFrag);
+		transaction.addToBackStack(null);
+		transaction.commit();
+	}
+	
+	private void infoTorrent(int position) {
+		showVideoInfo(position);
+	}
+
+	private void streamTorrent(Torrent torrent) {
+		DownloadActivity.onStreamPressed(torrent, getActivity());
+	}
+
+	private void downloadTorrent(Torrent torrent) {
+		DownloadActivity.onDownloadPressed(torrent);
 	}
 }

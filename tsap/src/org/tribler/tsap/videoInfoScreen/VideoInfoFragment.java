@@ -2,6 +2,7 @@ package org.tribler.tsap.videoInfoScreen;
 
 import org.tribler.tsap.R;
 import org.tribler.tsap.Torrent;
+import org.tribler.tsap.downloads.DownloadActivity;
 import org.tribler.tsap.downloads.XMLRPCDownloadManager;
 import org.tribler.tsap.streaming.PlayButtonListener;
 import org.tribler.tsap.util.ThumbnailUtils;
@@ -114,13 +115,10 @@ public class VideoInfoFragment extends Fragment {
 	}
 
 	public void onStreamPressed() {
-		PlayButtonListener onClickListener = new PlayButtonListener(thumbData,
-				getActivity(), true);
-		onClickListener.onClick();
+		DownloadActivity.onStreamPressed(thumbData, getActivity());
 	}
 
 	public void onDownloadPressed() {
-		XMLRPCDownloadManager.getInstance().downloadTorrent(
-				thumbData.getInfoHash(), thumbData.getName());
+		DownloadActivity.onDownloadPressed(thumbData);
 	}
 }

@@ -212,6 +212,17 @@ public class DownloadActivity extends Activity implements IPollListener {
 	}
 
 	/**
+	 * Will download the selected torrent.
+	 * 
+	 * @param torrent
+	 *            the Torrent to be downloaded
+	 */
+	public static void onDownloadPressed(Torrent torrent) {
+		XMLRPCDownloadManager.getInstance().downloadTorrent(
+				torrent.getInfoHash(), torrent.getName());
+	}
+
+	/**
 	 * Will start the stream by simulating a buttonclick
 	 * 
 	 * @param torrent

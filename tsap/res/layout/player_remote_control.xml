@@ -245,7 +245,7 @@
             android:layout_height="80dp"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/player_overlay_header"
-            android:src="@drawable/ic_cone_o" />
+            android:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/player_overlay_loading_text"

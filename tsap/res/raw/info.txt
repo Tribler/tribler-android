@@ -1,6 +1,6 @@
 <h3>Tribler Play</h3>
 Version 1.0<br>
 Copyright 2014<br>
-<b>https://github.com/wtud/tsap</b><br><br>
+<b>https://github.com/javto/tsap</b><br><br>
 
 

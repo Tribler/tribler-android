@@ -21,91 +21,109 @@ import android.util.Log;
 
 class AssetExtract {
 
-    private AssetManager mAssetManager = null;
+	private AssetManager mAssetManager = null;
 
-    public AssetExtract(Activity act) {
-        mAssetManager = act.getAssets();
-    }
+	public AssetExtract(Activity act) {
+		mAssetManager = act.getAssets();
+	}
 
-    public boolean extractTar(String asset, String target) {
+	@SuppressWarnings("resource")
+	public boolean extractTar(String asset, String target) {
 
-        byte buf[] = new byte[1024 * 1024];
+		byte buf[] = new byte[1024 * 1024];
 
-        InputStream assetStream = null;
-        TarInputStream tis = null;
+		InputStream assetStream = null;
+		TarInputStream tis = null;
 
-        try {
-            assetStream = mAssetManager.open(asset, AssetManager.ACCESS_STREAMING);
-            tis = new TarInputStream(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(assetStream, 8192)), 8192));
-        } catch (IOException e) {
-            Log.e("python", "opening up extract tar", e);
-            return false;
-        }
+		try {
+			assetStream = mAssetManager.open(asset,
+					AssetManager.ACCESS_STREAMING);
+			tis = new TarInputStream(new BufferedInputStream(
+					new GZIPInputStream(new BufferedInputStream(assetStream,
+							8192)), 8192));
+		} catch (IOException e) {
+			Log.e("python", "opening up extract tar", e);
+			closeStreams(tis, assetStream);
+			return false;
+		}
 
-        while (true) {
-            TarEntry entry = null;
+		while (true) {
+			TarEntry entry = null;
 
-            try {
-                entry = tis.getNextEntry();
-            } catch ( java.io.IOException e ) {
-                Log.e("python", "extracting tar", e);
-                return false;
-            }
+			try {
+				entry = tis.getNextEntry();
+			} catch (java.io.IOException e) {
+				Log.e("python", "extracting tar", e);
+				closeStreams(tis, assetStream);
+				return false;
+			}
 
-            if ( entry == null ) {
-                break;
-            }
+			if (entry == null) {
+				break;
+			}
 
-            Log.i("python", "extracting " + entry.getName());
+			Log.i("python", "extracting " + entry.getName());
 
-            if (entry.isDirectory()) {
+			if (entry.isDirectory()) {
 
-                try {
-                    new File(target +"/" + entry.getName()).mkdirs();
-                } catch ( SecurityException e ) { };
+				try {
+					new File(target + "/" + entry.getName()).mkdirs();
+				} catch (SecurityException e) {
+				}
+				;
 
-                continue;
-            }
+				continue;
+			}
 
-            OutputStream out = null;
-            String path = target + "/" + entry.getName();
+			OutputStream out = null;
+			String path = target + "/" + entry.getName();
 
-            try {
-                out = new BufferedOutputStream(new FileOutputStream(path), 8192);
-            } catch ( FileNotFoundException e ) {
-            } catch ( SecurityException e ) { };
+			try {
+				out = new BufferedOutputStream(new FileOutputStream(path), 8192);
+			} catch (FileNotFoundException e) {
+			} catch (SecurityException e) {
+			}
+			;
 
-            if ( out == null ) {
-                Log.e("python", "could not open " + path);
-                return false;
-            }
+			if (out == null) {
+				Log.e("python", "could not open " + path);
+				closeStreams(tis, assetStream);
+				return false;
+			}
 
-            try {
-                while (true) {
-                    int len = tis.read(buf);
+			try {
+				while (true) {
+					int len = tis.read(buf);
 
-                    if (len == -1) {
-                        break;
-                    }
+					if (len == -1) {
+						break;
+					}
 
-                    out.write(buf, 0, len);
-                }
+					out.write(buf, 0, len);
+				}
 
-                out.flush();
-                out.close();
-            } catch ( java.io.IOException e ) {
-                Log.e("python", "extracting zip", e);
-                return false;
-            }
-        }
+				out.flush();
+				out.close();
+			} catch (java.io.IOException e) {
+				Log.e("python", "extracting zip", e);
+				closeStreams(tis, assetStream);
+				return false;
+			}
+		}
 
-        try {
-            tis.close();
-            assetStream.close();
-        } catch (IOException e) {
-            // pass
-        }
+		closeStreams(tis, assetStream);
 
-        return true;
-    }
+		return true;
+	}
+
+	private void closeStreams(TarInputStream tis, InputStream assetStream) {
+		try {
+			if (tis != null)
+				tis.close();
+			if (assetStream != null)
+				assetStream.close();
+		} catch (IOException e) {
+			// pass
+		}
+	}
 }

@@ -58,7 +58,7 @@ public class DownloadListFragment extends ListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_download_list, null);
+		View v = inflater.inflate(R.layout.fragment_download_list, container, false);
 		mEmptyTextView = (TextView) v.findViewById(android.R.id.empty);
 		mEmptyTextView.setText(R.string.connection_loading);
 		ListView lv = (ListView) v.findViewById(android.R.id.list);

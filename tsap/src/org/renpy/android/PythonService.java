@@ -64,6 +64,7 @@ public class PythonService extends Service implements Runnable {
 		return START_NOT_STICKY;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void updateNotification(CharSequence text) {
 		Context context = getApplicationContext();
 		notification = new Notification(context.getApplicationInfo().icon,

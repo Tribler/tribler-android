@@ -47,7 +47,6 @@ import org.videolan.libvlc.Media;
 //import org.videolan.vlc.gui.NativeCrashActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.TypedArray;

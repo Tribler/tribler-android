@@ -3,6 +3,9 @@
 # Written by Wendo Sabée
 # The main class that loads the Tribler session, all managers and sets up a XML-RPC server
 
+# Version number that Kivy's Buildozer requires:
+__version__ = "0.0.1"
+
 USE_TWISTED_XMLRPC = False
 
 import threading

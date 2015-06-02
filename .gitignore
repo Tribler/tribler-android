@@ -1,3 +1,7 @@
+# Buildozer
+tribler-prototype/.buildozer/*
+tribler-prototype/bin/*
+
 # p4a
 tribler-prototype/Tribler-0.1.0/Tribler
 tribler-prototype/tsap/Tribler
@@ -72,7 +76,7 @@ libsqlite3.so
 libpython2.7.so
 
 # Other
-*~
+*.*~
 lint-results.xml
 junitreports/
 *.mp3

@@ -11,7 +11,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 # Tribler defs
-from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES, \
+from Tribler.Core.simpledefs import NTFY_TORRENTS, NTFY_MYPREFERENCES, \
     NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
@@ -20,7 +20,7 @@ from Tribler.Main.Utility.GuiDBTuples import Torrent, Channel, ChannelTorrent, R
 
 # Tribler communities
 from Tribler.community.search.community import SearchCommunity
-from Tribler.Core.Search.SearchManager import split_into_keywords
+from Tribler.Core.Utilities.search_utils import split_into_keywords
 from Tribler.dispersy.util import call_on_reactor_thread
 from Tribler.Core.CacheDB.sqlitecachedb import bin2str, str2bin, forceAndReturnDBThread, forceDBThread
 from Tribler.Category.Category import Category
@@ -32,7 +32,6 @@ class TorrentManager(BaseManager):
     _dispersy = None
     _remote_lock = None
 
-    _misc_db = None
     _torrent_db = None
     _channelcast_db = None
     _votecast_db = None
@@ -51,20 +50,12 @@ class TorrentManager(BaseManager):
             self._connected = True
             self._remote_lock = threading.Lock()
 
-            self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
             self._metadata_db = self._session.open_dbhandler(NTFY_METADATA)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
 
             self._category = Category.getInstance()
-            self._category_names = {}
-            self._xxx_category = -1
-            for key, id in self._misc_db._category_name2id_dict.iteritems():
-                self._category_names[id] = key
-
-                if key.lower() == "xxx":
-                    self._xxx_category = id
 
             self._dispersy = self._session.lm.dispersy
         else:
@@ -92,8 +83,8 @@ class TorrentManager(BaseManager):
         keywords = split_into_keywords(unicode(filter))
         keywords = [keyword for keyword in keywords if len(keyword) > 1]
 
-        TORRENT_REQ_COLUMNS = ['T.torrent_id', 'infohash', 'swift_hash', 'swift_torrent_hash', 'T.name', 'torrent_file_name', 'length', 'category_id', 'status_id', 'num_seeders', 'num_leechers', 'C.id', 'T.dispersy_id', 'C.name', 'T.name', 'C.description', 'C.time_stamp', 'C.inserted']
-        TUMBNAILTORRENT_REQ_COLUMNS = ['torrent_id', 'Torrent.infohash', 'swift_hash', 'swift_torrent_hash', 'name', 'torrent_file_name', 'length', 'category_id', 'status_id', 'num_seeders', 'num_leechers']
+        # TODO: I changed code to work with the newest Tribler, don't know if line below is still correct:
+        TORRENT_REQ_COLUMNS = ['T.torrent_id', 'infohash', 'T.name', 'torrent_file_name', 'length', 'category', 'status', 'num_seeders', 'num_leechers', 'C.id', 'T.dispersy_id', 'C.name', 'T.name', 'C.description', 'C.time_stamp', 'C.inserted']
 
         @forceAndReturnDBThread
         def local_search(keywords):
@@ -122,7 +113,6 @@ class TorrentManager(BaseManager):
                     #else:
                     t = Torrent(*a[:11] + [False])
 
-                    t.misc_db = self._misc_db
                     t.torrent_db = self._torrent_db
                     t.channelcast_db = self._channelcast_db
                     #t.metadata_db = self._metadata_db
@@ -169,7 +159,7 @@ class TorrentManager(BaseManager):
         if self._dispersy:
             for community in self._dispersy.get_communities():
                 if isinstance(community, SearchCommunity):
-                    nr_requests_made = community.create_search(self._keywords, self._search_remote_callback)
+                    nr_requests_made = community.create_search(self._keywords) #, self._search_remote_callback)
                     if not nr_requests_made:
                         _logger.error("@@@@ Could not send search in SearchCommunity, no verified candidates found")
                     break
@@ -204,12 +194,14 @@ class TorrentManager(BaseManager):
 
         for result in results:
             try:
-                categories = result[4]
-                category_id = self._misc_db.categoryName2Id(categories)
-
-                remoteHit = RemoteTorrent(-1, result[0], result[8], result[9], result[1], result[2], category_id,
-                                          self._misc_db.torrentStatusName2Id(u'good'), result[6], result[7],
-                                          set([candidate]))
+                infohash = result[0]
+                name = result[1]
+                length = result[2]
+                category = result[4]
+                num_seeders = result[6]
+                num_leechers = result[7]
+                # TODO: I changed code to work with the newest Tribler, don't know if this is correct:
+                remoteHit = RemoteTorrent(-1, infohash, name, length, category, u'good', num_seeders, num_leechers, set([candidate]))
 
                 # Guess matches
                 #keywordset = set(keywords)
@@ -228,11 +220,10 @@ class TorrentManager(BaseManager):
                 #    if ext in keywordset:
                 #        matches['fileextensions'].add(ext)
                 #remoteHit.assignRelevance(matches)
-                remoteHit.misc_db = self._misc_db
                 remoteHit.torrent_db = self._torrent_db
                 remoteHit.channelcast_db = self._channelcast_db
 
-                if remoteHit.category_id == self._xxx_category and self._category.family_filter_enabled():
+                if remoteHit.category.lower() == u'xxx' and self._category.family_filter_enabled():
                     _logger.info("Ignore XXX torrent: %s" % remoteHit.name)
                 else:
                     # Add to result list.
@@ -380,16 +371,14 @@ class TorrentManager(BaseManager):
             self.magnetstatus = None
         """
 
-        return {'infohash': binascii.hexlify(tr.infohash) if tr.infohash else False,
-                'swift_hash': binascii.hexlify(tr.swift_hash) if tr.swift_hash else False,
-                'swift_torrent_hash': binascii.hexlify(
-                    tr.swift_torrent_hash).upper() if tr.swift_torrent_hash else False,
-                'torrent_file_name': tr.torrent_file_name or False,
+        # TODO: I changed code to work with the newest Tribler, don't know if this is still correct:
+        return {'torrent_id':tr.torrent_id,
+                'infohash': binascii.hexlify(tr.infohash) if tr.infohash else False,
+                #'torrent_file_name': tr.torrent_file_name or False,
                 'name': tr.name,
                 'length': str(tr.length) if tr.length else "-1",
-                'category_id': tr.category_id,
-                'category': self._category_names[tr.category_id],
-                'status_id': tr.status_id,
+                'category': tr.category,
+                'status': tr.status,
                 'num_seeders': tr.num_seeders if tr.num_seeders else -1,
                 'num_leechers': tr.num_leechers if tr.num_leechers else -1,
                 'relevance': tr.relevance_score if tr.relevance_score else -1,

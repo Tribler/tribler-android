@@ -11,7 +11,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 # Tribler defs
-from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES, \
+from Tribler.Core.simpledefs import NTFY_TORRENTS, NTFY_MYPREFERENCES, \
     NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
 
@@ -20,7 +20,7 @@ from Tribler.Main.Utility.GuiDBTuples import Channel, RemoteChannel, ChannelTorr
 
 # Tribler communities
 from Tribler.community.allchannel.community import AllChannelCommunity
-from Tribler.Core.Search.SearchManager import split_into_keywords
+from Tribler.Core.Utilities.search_utils import split_into_keywords
 
 from BaseManager import BaseManager
 
@@ -29,7 +29,6 @@ class ChannelManager(BaseManager):
     _dispersy = None
     _remote_lock = None
 
-    _misc_db = None
     _torrent_db = None
     _channelcast_db = None
     _votecast_db = None
@@ -47,7 +46,6 @@ class ChannelManager(BaseManager):
 
         if not self._connected:
             self._connected = True
-            self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
@@ -135,7 +133,7 @@ class ChannelManager(BaseManager):
         if self._dispersy:
             for community in self._dispersy.get_communities():
                 if isinstance(community, AllChannelCommunity):
-                    nr_requests_made = community.create_channelsearch(self._keywords, self._search_remote_callback)
+                    nr_requests_made = community.create_channelsearch(self._keywords) #, self._search_remote_callback)
                     if not nr_requests_made:
                         _logger.info("Could not send search in AllChannelCommunity, no verified candidates found")
                     break
@@ -295,7 +293,7 @@ class ChannelManager(BaseManager):
         :return: A Channel object.
         """
         channel = self._channelcast_db.getChannel(channel_id)
-        return self._getChannel(channel)
+        return self._get_channel(channel)
 
     def _get_channel(self, channel):
         """

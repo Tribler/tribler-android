@@ -13,10 +13,9 @@ _logger = logging.getLogger(__name__)
 from Tribler.Core.TorrentDef import TorrentDef
 from Tribler.Core.simpledefs import DOWNLOAD, UPLOAD
 from Tribler.Main.globals import DefaultDownloadStartupConfig
-from Tribler.Policies.RateManager import UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager
 
 # Tribler defs
-from Tribler.Core.simpledefs import NTFY_MISC, NTFY_TORRENTS, NTFY_MYPREFERENCES, \
+from Tribler.Core.simpledefs import NTFY_TORRENTS, NTFY_MYPREFERENCES, \
     NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, dlstatus_strings
 
@@ -36,10 +35,8 @@ from BaseManager import BaseManager
 class DownloadManager(BaseManager):
     _dllock = threading.Lock()
     _dispersy = None
-    _ratelimiter = None
     _remote_lock = None
 
-    _misc_db = None
     _torrent_db = None
     _channelcast_db = None
     _votecast_db = None
@@ -54,9 +51,7 @@ class DownloadManager(BaseManager):
         if not self._connected:
             self._connected = True
             self._remote_lock = threading.Lock()
-            self._ratelimiter = UserDefinedMaxAlwaysOtherwiseDividedOverActiveSwarmsRateManager()
 
-            self._misc_db = self._session.open_dbhandler(NTFY_MISC)
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
@@ -70,7 +65,8 @@ class DownloadManager(BaseManager):
             threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
 
             # Schedule Ratelimiter callback
-            self._session.set_download_states_callback(self._ratelimit_speed)
+            #TODO: removed this since _ratelimit_speed is no longer supported but this might be needed
+            #self._session.set_download_states_callback(self._ratelimit_speed)
 
         else:
             raise RuntimeError('TorrentManager already connected')
@@ -106,46 +102,6 @@ class DownloadManager(BaseManager):
 
         #test
         xmlrpc.register_function(self.launch_vlc, "downloads.launch_vlc")
-
-    def set_max_download(self, maxspeed):
-        """
-        Set the global maximum download speed.
-        :param maxspeed: Maximum download speed in KiB/s, 0 for unlimited
-        :return: Boolean indicating success.
-        """
-        return self._ratelimiter.set_global_max_speed(DOWNLOAD, maxspeed)
-
-    def set_max_upload(self, maxspeed):
-        """
-        Set the global maximum upload speed.
-        :param maxspeed: Maximum upload speed in KiB/s, 0 for unlimited
-        :return: Boolean indicating success.
-        """
-        self._ratelimiter.set_global_max_speed(UPLOAD, maxspeed)
-
-    def get_max_download(self):
-        """
-        Get the global maximum download speed.
-        :return: The maximum download speed in KiB/s
-        """
-        return self._ratelimiter.get_global_max_speed(DOWNLOAD)
-
-    def get_max_upload(self):
-        """
-        Get the global maximum upload speed.
-        :return: The maximum upload speed in KiB/s
-        """
-        return self._ratelimiter.get_global_max_speed(UPLOAD)
-
-
-    def _ratelimit_speed(self, dslist):
-        """
-        Divides any set speedlimits between registered downloads.
-        :return: Nothing.
-        """
-        self._ratelimiter.adjust_speeds()
-
-        return (RATELIMIT_UPDATE_DELAY, [])
 
     def add_torrent(self, infohash, name):
         """
@@ -194,10 +150,12 @@ class DownloadManager(BaseManager):
             if dldict:
                 if dldict['infohash'] in self._downloads.keys():
                     self._downloads[dldict['infohash']].update(dldict)
-                    self._ratelimiter.add_downloadstate(ds)
+                    # TODO: Not supported in Tribler but might be needed
+                    #self._ratelimiter.add_downloadstate(ds)
                 else:
                     self._downloads[dldict['infohash']] = dldict
-                    self._ratelimiter.add_downloadstate(ds)
+                    # TODO: Not supported in Tribler but might be needed
+                    #self._ratelimiter.add_downloadstate(ds)
             else:
                 _logger.warn("Error updating download state")
 
@@ -417,7 +375,6 @@ class DownloadManager(BaseManager):
         dict = self._torrent_db.getTorrent(infohash, keys=['C.torrent_id', 'infohash', 'swift_hash', 'swift_torrent_hash', 'name', 'torrent_file_name', 'length', 'category_id', 'status_id', 'num_seeders', 'num_leechers'])
         if dict:
             t = Torrent(dict['C.torrent_id'], dict['infohash'], dict['swift_hash'], dict['swift_torrent_hash'], dict['name'], dict['torrent_file_name'], dict['length'], dict['category_id'], dict['status_id'], dict['num_seeders'], dict['num_leechers'], None)
-            t.misc_db = self._misc_db
             t.torrent_db = self._torrent_db
             t.channelcast_db = self._channelcast_db
             # TODO: ENABLE metadata_db WHEN METADATA COMMUNITY IS ENABLED

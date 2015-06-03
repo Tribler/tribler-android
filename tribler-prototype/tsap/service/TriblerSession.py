@@ -20,15 +20,15 @@ import twisted
 
 # Tribler
 from Tribler.Core.Session import Session
+from Tribler.Core.TorrentDef import TorrentDef
+from Tribler.Core.simpledefs import dlstatus_strings, UPLOAD, DOWNLOAD, DLMODE_VOD
+from Tribler.Core.DownloadConfig import DownloadStartupConfig, get_default_dscfg_filename
 from Tribler.Core.SessionConfig import SessionStartupConfig
 from Tribler.dispersy.util import call_on_reactor_thread
 from Tribler.Core.osutils import is_android
-from Tribler.Core.RawServer.RawServer import RawServer
 from Tribler.dispersy.dispersy import Dispersy
 from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
-
-from Tribler.Main.globals import DefaultDownloadStartupConfig, get_default_dscfg_filename
-from Tribler.Core.simpledefs import STATEDIR_DLPSTATE_DIR, STATEDIR_TORRENTCOLL_DIR, STATEDIR_SWIFTRESEED_DIR
+from Tribler.Main.globals import DefaultDownloadStartupConfig
 
 
 from BaseManager import BaseManager
@@ -122,18 +122,19 @@ class TriblerSession(BaseManager):
             self._sconfig.set_state_dir(os.environ['TRIBLER_STATE_DIR'])
             _logger.info("No previous configuration file found, creating one in %s" % os.environ['TRIBLER_STATE_DIR'])
 
+        # Set torrent collecting directory:
         dlcfgfilename = get_default_dscfg_filename(self._sconfig.get_state_dir())
         _logger.debug("main: Download config %s", dlcfgfilename)
         try:
             defaultDLConfig = DefaultDownloadStartupConfig.load(dlcfgfilename)
         except:
             defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
-
         if not defaultDLConfig.get_dest_dir():
             defaultDLConfig.set_dest_dir(os.environ['TRIBLER_DOWNLOAD_DIR'])
-            self._sconfig.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_TORRENTCOLL_DIR))
-            self._sconfig.set_swift_meta_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_SWIFTRESEED_DIR))
+            #TODO: I think this can be deleted (that's what happened in Tribler) but not sure:
+            #self._session.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_TORRENTCOLL_DIR))
 
+        # Create download directory:
         if not os.path.isdir(defaultDLConfig.get_dest_dir()):
             try:
                 _logger.info("Creating download directory: %s" % defaultDLConfig.get_dest_dir())
@@ -141,29 +142,27 @@ class TriblerSession(BaseManager):
             except:
                 _logger.error("Couldn't create download directory! (%s)" % defaultDLConfig.get_dest_dir())
 
-        # Disable unneeded dependencies
+        # Configure the session object:
+        self._sconfig.set_libtorrent(True)
+        self._sconfig.set_libtorrent(True)
+        # Disable unwanted dependencies:
+        self._sconfig.set_torrent_store(False)
+        self._sconfig.set_videoplayer(False)
         self._sconfig.set_torrent_checking(False)
         self._sconfig.set_multicast_local_peer_discovery(False)
-        #self._sconfig.set_megacache(False)
-        #self._sconfig.set_swift_proc(False)
         self._sconfig.set_mainline_dht(False)
-        #self._sconfig.set_torrent_collecting(False)
-        #self._sconfig.set_libtorrent(False)
         self._sconfig.set_dht_torrent_collecting(False)
-        #self._sconfig.set_videoplayer(False)
-
-        self._sconfig.set_dispersy_tunnel_over_swift(False)
         self._sconfig.set_torrent_collecting_max_torrents(5000)
 
-        # Start session
-        _logger.info("Starting tribler session")
+        _logger.info("Starting Tribler session..")
         self._session = Session(self._sconfig)
+        upgrader = self._session.prestart()
+        while not upgrader.is_done:
+            time.sleep(0.1)
         self._session.start()
+        _logger.info("Tribler session started!")
 
-        self._swift = self._session.get_swift_proc() and self._session.get_swift_process()
         self._dispersy = self._session.get_dispersy_instance()
-
-        _logger.info("libTribler session started!")
         self.define_communities()
 
     # Dispersy init communitites callback function

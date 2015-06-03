@@ -56,7 +56,7 @@ public class XMLRPCSettingsManager {
 	 * @param maxSpeed
 	 *            The value to set the maximum download rate to
 	 */
-	public void setMaxDownloadSpeed(int maxSpeed) {
+	/*public void setMaxDownloadSpeed(int maxSpeed) {
 		new XMLRPCCallTask() {
 			@Override
 			public void onSucces(Object result) {
@@ -67,7 +67,7 @@ public class XMLRPCSettingsManager {
 				}
 			}
 		}.call("settings.set_max_download", mConnection, maxSpeed);
-	}
+	}*/
 
 	/**
 	 * Makes and XML-RPC call to Tribler to set the maximum download speed
@@ -76,7 +76,8 @@ public class XMLRPCSettingsManager {
 	 * @param maxSpeed
 	 *            The value to set the maximum download rate to
 	 */
-	public void setMaxUploadSpeed(int maxSpeed) {
+	//TODO: No longer supported in Tribler
+	/*public void setMaxUploadSpeed(int maxSpeed) {
 		new XMLRPCCallTask() {
 			@Override
 			public void onSucces(Object result) {
@@ -87,5 +88,5 @@ public class XMLRPCSettingsManager {
 				}
 			}
 		}.call("settings.set_max_upload", mConnection, maxSpeed);
-	}
+	}*/
 }

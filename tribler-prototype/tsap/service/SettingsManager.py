@@ -39,10 +39,6 @@ class SettingsManager(BaseManager):
         xmlrpc.register_function(self.get_thumbs_directory, "settings.get_thumbs_directory")
         xmlrpc.register_function(self.get_family_filter, "settings.get_family_filter")
         xmlrpc.register_function(self.set_family_filter, "settings.set_family_filter")
-        xmlrpc.register_function(self.set_max_download, "settings.set_max_download")
-        xmlrpc.register_function(self.get_max_download, "settings.get_max_download")
-        xmlrpc.register_function(self.set_max_download, "settings.set_max_upload")
-        xmlrpc.register_function(self.get_max_download, "settings.get_max_upload")
 
     def _load_settings_from_env(self):
         """

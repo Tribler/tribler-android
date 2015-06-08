@@ -69,7 +69,7 @@ class DownloadManager(BaseManager):
             #self._session.set_download_states_callback(self._ratelimit_speed)
 
         else:
-            raise RuntimeError('TorrentManager already connected')
+            raise RuntimeError('DownloadManager already connected')
 
     def _run_session_checkpoint(self):
         """

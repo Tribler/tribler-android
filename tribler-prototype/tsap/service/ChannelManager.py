@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 # Tribler defs
 from Tribler.Core.simpledefs import NTFY_TORRENTS, NTFY_MYPREFERENCES, \
     NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
-    DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
+    DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, SIGNAL_ALLCHANNEL_COMMUNITY, SIGNAL_ON_SEARCH_RESULTS
 
 # DB Tuples
 from Tribler.Main.Utility.GuiDBTuples import Channel, RemoteChannel, ChannelTorrent, RemoteChannelTorrent
@@ -133,7 +133,8 @@ class ChannelManager(BaseManager):
         if self._dispersy:
             for community in self._dispersy.get_communities():
                 if isinstance(community, AllChannelCommunity):
-                    nr_requests_made = community.create_channelsearch(self._keywords) #, self._search_remote_callback)
+                    self._session.add_observer(self._search_remote_callback, SIGNAL_ALLCHANNEL_COMMUNITY, [SIGNAL_ON_SEARCH_RESULTS])
+                    nr_requests_made = community.create_channelsearch(self._keywords)
                     if not nr_requests_made:
                         _logger.info("Could not send search in AllChannelCommunity, no verified candidates found")
                     break
@@ -146,13 +147,14 @@ class ChannelManager(BaseManager):
 
         return nr_requests_made
 
-    def _search_remote_callback(self, kws, answers):
+    def _search_remote_callback(self, results):
         """
         Callback that is called by Dispersy on incoming search results.
-        :param kws: Keyword that these results belong to.
-        :param answers: List of results.
+        :param results: Dictionary with keywords and list of torrent results.
         :return: Nothing.
         """
+        kws = results['keywords']
+        answers = results['torrents']
         _logger.error("@@@@@@@@@ DISPERY CALLBACK!")
         _logger.error("@@@@@ CALL BACK DATA: %s\n%s" % (kws, answers))
 

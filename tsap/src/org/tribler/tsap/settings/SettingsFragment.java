@@ -42,11 +42,9 @@ public class SettingsFragment extends PreferenceFragment implements
 		if (key.equals("pref_familyFilter")) {
 			mSettingsManager.setFamilyFilter(Settings.getFamilyFilterOn());
 		} else if (key.equals("pref_maxDownloadRate")) {
-			//TODO: No longer supported in Tribler
-			//mSettingsManager.setMaxDownloadSpeed(Settings.getMaxDownloadRate());
+			mSettingsManager.setMaxDownloadSpeed(Settings.getMaxDownloadRate());
 		} else if (key.equals("pref_maxUploadRate")) {
-			//TODO: No longer supported in Tribler
-			//mSettingsManager.setMaxUploadSpeed(Settings.getMaxUploadRate());
+			mSettingsManager.setMaxUploadSpeed(Settings.getMaxUploadRate());
 		}
 	}
 

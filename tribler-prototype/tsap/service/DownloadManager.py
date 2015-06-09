@@ -64,10 +64,6 @@ class DownloadManager(BaseManager):
             # Schedule download checkpoints
             threading.Timer(DOWNLOAD_CHECKPOINT_INTERVAL, self._run_session_checkpoint, ()).start()
 
-            # Schedule Ratelimiter callback
-            #TODO: removed this since _ratelimit_speed is no longer supported but this might be needed
-            #self._session.set_download_states_callback(self._ratelimit_speed)
-
         else:
             raise RuntimeError('DownloadManager already connected')
 
@@ -103,6 +99,22 @@ class DownloadManager(BaseManager):
         #test
         xmlrpc.register_function(self.launch_vlc, "downloads.launch_vlc")
 
+    def set_max_download(self, maxspeed):
+        """
+        Set the global maximum download speed.
+        :param maxspeed: Maximum download speed in KiB/s, 0 for unlimited
+        :return: Boolean indicating success.
+        """
+        self._session.set_max_download_speed(maxspeed)
+
+    def set_max_upload(self, maxspeed):
+        """
+        Set the global maximum upload speed.
+        :param maxspeed: Maximum upload speed in KiB/s, 0 for unlimited
+        :return: Boolean indicating success.
+        """
+        self._session.set_max_upload_speed(maxspeed)
+
     def add_torrent(self, infohash, name):
         """
         Add a download to the download list by its infohash.
@@ -121,21 +133,18 @@ class DownloadManager(BaseManager):
                 defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
                 dscfg = defaultDLConfig.copy()
 
-                print "STARTING DOWNLOAD!"
                 dl = self._session.start_download(tdef, dscfg)
                 dl.set_state_callback(self._update_dl_state, delay=1)
 
                 self._session.checkpoint()
 
             except Exception, e:
-                print "DOWNLOAD EXCEPTION.. %s", e.args
                 _logger.error("Error adding torrent (infohash=%s,name=%s) (%s)" % (infohash, name, e.args))
                 return False
 
             return True
 
         self._session.lm.rawserver.add_task(add_torrent_callback, delay=1)
-        print "ADDING TORRENT"
         return True
 
     def _update_dl_state(self, ds):
@@ -153,11 +162,11 @@ class DownloadManager(BaseManager):
             if dldict:
                 if dldict['infohash'] in self._downloads.keys():
                     self._downloads[dldict['infohash']].update(dldict)
-                    # TODO: Not supported in Tribler but might be needed
+                    # TODO: Not supported in Tribler anymore but might be needed
                     #self._ratelimiter.add_downloadstate(ds)
                 else:
                     self._downloads[dldict['infohash']] = dldict
-                    # TODO: Not supported in Tribler but might be needed
+                    # TODO: Not supported in Tribler anymore but might be needed
                     #self._ratelimiter.add_downloadstate(ds)
             else:
                 _logger.warn("Error updating download state")
@@ -481,11 +490,11 @@ class DownloadManager(BaseManager):
                                'status_string': dlstatus_strings[dstate.get_status()],
                                })
             if vod:
-                dlinfo.update({'vod_eta': False if dstate.stats is None else dstate.stats['vod_playable'], #dstate.get_vod_playable_after()
+                dlinfo.update({'vod_eta': float(2 ** 31) if dstate.stats is None else dstate.stats['vod_playable_after'], #dstate.get_vod_playable_after()
                                'vod_prebuffer_progress': dstate.get_vod_prebuffering_progress(),
                                'vod_consec_prebuffer_progress': dstate.get_vod_prebuffering_progress_consec(),
                                'vod': dstate.is_vod(),
-                               'vod_playable': float(2 ** 31) if dstate.stats is None else dstate.stats['vod_playable_after'], #dstate.get_vod_playable()
+                               'vod_playable': False if dstate.stats is None else dstate.stats['vod_playable'], #dstate.get_vod_playable()
                                })
                 
             return dlinfo

@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 # Tribler defs
 from Tribler.Core.simpledefs import NTFY_TORRENTS, NTFY_MYPREFERENCES, \
     NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
-    DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK
+    DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, SIGNAL_SEARCH_COMMUNITY, SIGNAL_ON_SEARCH_RESULTS
 
 # DB Tuples
 from Tribler.Main.Utility.GuiDBTuples import Torrent, Channel, ChannelTorrent, RemoteChannelTorrent, RemoteTorrent, MetadataModification
@@ -83,8 +83,9 @@ class TorrentManager(BaseManager):
         keywords = split_into_keywords(unicode(filter))
         keywords = [keyword for keyword in keywords if len(keyword) > 1]
 
-        # TODO: I changed code to work with the newest Tribler, don't know if line below is still correct:
-        TORRENT_REQ_COLUMNS = ['T.torrent_id', 'infohash', 'T.name', 'torrent_file_name', 'length', 'category', 'status', 'num_seeders', 'num_leechers', 'C.id', 'T.dispersy_id', 'C.name', 'T.name', 'C.description', 'C.time_stamp', 'C.inserted']
+        # T is the Torrent (when local) table or CollectedTorrent view (external), C is the _ChannelTorrents table
+        TORRENT_REQ_COLUMNS = ['T.torrent_id', 'infohash', 'T.name', 'length', 'category', 'status', 'num_seeders', 'num_leechers', 'C.id', 'T.dispersy_id', 'C.name', 'T.name', 'C.description', 'C.time_stamp', 'C.inserted']
+        #TUMBNAILTORRENT_REQ_COLUMNS = ['torrent_id', 'Torrent.infohash', 'name', 'length', 'category', 'status', 'num_seeders', 'num_leechers']
 
         @forceAndReturnDBThread
         def local_search(keywords):
@@ -159,7 +160,8 @@ class TorrentManager(BaseManager):
         if self._dispersy:
             for community in self._dispersy.get_communities():
                 if isinstance(community, SearchCommunity):
-                    nr_requests_made = community.create_search(self._keywords) #, self._search_remote_callback)
+                    self._session.add_observer(self._search_remote_callback, SIGNAL_SEARCH_COMMUNITY, [SIGNAL_ON_SEARCH_RESULTS])
+                    nr_requests_made = community.create_search(self._keywords)
                     if not nr_requests_made:
                         _logger.error("@@@@ Could not send search in SearchCommunity, no verified candidates found")
                     break
@@ -180,11 +182,14 @@ class TorrentManager(BaseManager):
     def _search_remote_callback(self, keywords, results, candidate):
         """
         Callback that is called by Dispersy on incoming Torrent search results.
-        :param keywords: Keywords that these results belong to.
-        :param results: List of results.
-        :param candidate: The peer that has the full torrent file.
+        :param search_results: A dictionary with keywords to which the results belong,
+        a list of the results themselves and a candidate: the peer that has the full
+        torrent file.
         :return: Nothing.
         """
+        keywords = search_results['keywords']
+        results = search_results['results']
+        candidate = search_results['candidate']
         _logger.info("******************** got %s unfiltered results for %s %s %s" % (len(results), keywords, candidate, time()))
 
         # Ignore searches we don't want (anymore)
@@ -200,7 +205,6 @@ class TorrentManager(BaseManager):
                 category = result[4]
                 num_seeders = result[6]
                 num_leechers = result[7]
-                # TODO: I changed code to work with the newest Tribler, don't know if this is correct:
                 remoteHit = RemoteTorrent(-1, infohash, name, length, category, u'good', num_seeders, num_leechers, set([candidate]))
 
                 # Guess matches
@@ -371,10 +375,7 @@ class TorrentManager(BaseManager):
             self.magnetstatus = None
         """
 
-        # TODO: I changed code to work with the newest Tribler, don't know if this is still correct:
-        return {'torrent_id':tr.torrent_id,
-                'infohash': binascii.hexlify(tr.infohash) if tr.infohash else False,
-                #'torrent_file_name': tr.torrent_file_name or False,
+        return {'infohash': binascii.hexlify(tr.infohash) if tr.infohash else False,
                 'name': tr.name,
                 'length': str(tr.length) if tr.length else "-1",
                 'category': tr.category,

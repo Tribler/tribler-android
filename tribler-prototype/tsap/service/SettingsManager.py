@@ -39,6 +39,8 @@ class SettingsManager(BaseManager):
         xmlrpc.register_function(self.get_thumbs_directory, "settings.get_thumbs_directory")
         xmlrpc.register_function(self.get_family_filter, "settings.get_family_filter")
         xmlrpc.register_function(self.set_family_filter, "settings.set_family_filter")
+        xmlrpc.register_function(self.set_max_download, "settings.set_max_download")
+        xmlrpc.register_function(self.set_max_download, "settings.set_max_upload")
 
     def _load_settings_from_env(self):
         """
@@ -109,16 +111,6 @@ class SettingsManager(BaseManager):
         except:
             return False
 
-    def get_max_download(self):
-        """
-        Gets the maximum download speed from the rate limiter
-        :return: Maximum download speed in KiB/s
-        """
-        try:
-            return DownloadManager.getInstance().get_max_download()
-        except:
-            return False
-
     def set_max_upload(self, speed):
         """
         Sets the maximum upload speed in the rate limiter.
@@ -128,15 +120,5 @@ class SettingsManager(BaseManager):
         try:
             DownloadManager.getInstance().set_max_upload(speed)
             return True
-        except:
-            return False
-
-    def get_max_upload(self):
-        """
-        Gets the maximum upload speed from the rate limiter
-        :return: Maximum upload speed in KiB/s
-        """
-        try:
-            return DownloadManager.getInstance().get_max_upload()
         except:
             return False

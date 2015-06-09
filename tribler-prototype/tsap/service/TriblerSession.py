@@ -176,8 +176,7 @@ class TriblerSession(BaseManager):
         Load the dispersy communities. This function must be run on the Twisted reactor thread.
         :return: Nothing.
         """
-        # FIXME: temp disabled
-        """integrate_with_tribler = True
+        integrate_with_tribler = True
         comm_args = {'integrate_with_tribler': integrate_with_tribler}
 
         from Tribler.community.search.community import SearchCommunity
@@ -213,7 +212,7 @@ class TriblerSession(BaseManager):
         #                                       kargs=comm_args)
         #_logger.debug("Currently loaded dispersy communities: %s" % comm)
         #comm = self._dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
-        #_logger.debug("Currently loaded dispersy communities: %s" % comm)"""
+        #_logger.debug("Currently loaded dispersy communities: %s" % comm)
 
         self._running = True
 

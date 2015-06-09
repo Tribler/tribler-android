@@ -209,7 +209,7 @@ class DownloadManager(BaseManager):
         """
         with self._dllock:
             print "-----------------------------------------CHECKING KEYS. "
-            for key, value in self._downloads:
+            for key in self._downloads.keys():
                 print "-----------------------------------------CONTAINS KEY: " + str(key)
             print "-----------------------------------------DONE CHECKING KEYS (should have given at least 1 result). "
             if infohash in self._downloads.keys():

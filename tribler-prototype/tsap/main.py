@@ -150,9 +150,9 @@ class TriblerPlay(App):
         tdef = TorrentDef.load_from_url(URL)
         if tdef is None:
             raise TypeError('Torrent could not be loaded from ' + URL + '. Check if you\'ve got an internet connection.')
-        self.info_hash = tdef.get_infohash()
+        self.info_hash = hexlify(tdef.get_infohash())
         #self.tribler.get_session().set_install_dir(FILES_DIR + u'/lib/python2.7/site-packages')
-        self.dm.add_torrent(hexlify(self.info_hash), tdef.get_name())
+        self.dm.add_torrent(self.info_hash, tdef.get_name())
 
         Clock.schedule_interval(self.poller, 1.0)
         # TODO: end test streaming.
@@ -176,16 +176,26 @@ class TriblerPlay(App):
         print "----------------------Download progress so far: " + str(download.progress)
 
         download_progress = self.dm.get_progress(self.info_hash)
+        if download_progress == False:
+            print "----------------------Can't query progress yet."
+            return
+
+        #print "----------------------vod_prebuf_frac = " + download_progress['vod_prebuf_frac']
+        #print "----------------------down = " + download_progress['down']
+        print "----------------------vod_eta = " + str(download_progress['vod_eta'])
+        print "----------------------vod_playable = " + str(download_progress['vod_playable'])
         if download_progress["vod_playable"]:
-            print "----------------------Download is VOD playable."
+            print "----------------------Download is VOD playable, starting external VLC player."
             self.started_streaming = True
-            self.start_external_android_player(self.vod_uri)
-        elif download_progress["status"] == 3 and not self.in_vod_mode:
+            self.start_external_android_player()
+        elif (download_progress["status"] == 3 or download_progress["status"] == 4 or download_progress["status"] == 5) and not self.in_vod_mode:
             print "----------------------Going into VOD mode."
             self.in_vod_mode = True
             self.vod_uri = self.dm.start_vod(self.info_hash)
             if self.vod_uri is False:
                 raise TypeError('Could not start VOD download mode.')
+        else:
+            print "----------------------Not yet in VOD mode (and therefor also not yet started streaming)."
 
     def start_external_android_player(self):
         self.text_input.text = self.vod_uri # TODO: remove me, this is only for testing

@@ -1,5 +1,6 @@
 # coding: utf-8
 
+"""
 # Written by Wendo Sabée
 # This file does little more than running ./service/main.py
 
@@ -35,4 +36,179 @@ if __name__ == '__main__':
         import subprocess
 
         os.chdir(os.path.join(os.getcwd(), 'service'))
-        subprocess.call(["python", "main.py"])
+        subprocess.call(["python", "main.py"])"""
+
+__version__ = "0.0.1"
+
+import kivy
+kivy.require('1.9.0')
+
+import time
+from kivy.app import App
+from kivy.clock import Clock
+from kivy.uix.textinput import TextInput
+from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
+import os, sys
+import android
+from binascii import hexlify, unhexlify
+
+# SETUP ENVIRONMENT, DO THIS FIRST
+from service.Environment import init_environment
+init_environment()
+
+# Init logger
+import logging
+logging.basicConfig(level=logging.INFO)
+_logger = logging.getLogger(__name__)
+
+arg = os.getenv('PYTHON_SERVICE_ARGUMENT')
+
+# Setup the environment:
+from jnius import autoclass
+PythonActivity = autoclass('org.renpy.android.PythonActivity')
+FILES_DIR = PythonActivity.mActivity.getFilesDir().getAbsolutePath()
+os.environ["PYTHON_EGG_CACHE"] = FILES_DIR + '/files/.python-eggs' # TODO: set proper environment (it's already set in Environment.py)
+
+from Tribler.Core.TorrentDef import TorrentDef
+
+from service.XMLRpc import XMLRPCServer
+from service.TriblerSession import TriblerSession
+from service.ChannelManager import ChannelManager
+from service.TorrentManager import TorrentManager
+from service.DownloadManager import DownloadManager
+from service.SettingsManager import SettingsManager
+
+Intent = autoclass('android.content.Intent')
+Uri = autoclass('android.net.Uri')
+
+#URL = u'http://tracker.tasvideos.org/eryisaction-tas-bernka_512kb.mp4.torrent'
+URL = u'http://www.mininova.org/get/3191238'
+
+class TriblerPlay(App):
+
+    tribler = None
+    xmlrpc = None
+    dm = None
+    tm = None
+    cm = None
+
+    info_hash = None
+    in_vod_mode = False
+    started_streaming = False
+    vod_uri = None
+
+    # Called by Kivy
+    def build(self):
+        self.text_input = TextInput(text='Placeholder')
+        return self.text_input
+
+    def setup(self):
+        """
+        This sets up a Tribler session, loads the managers and the XML-RPC server.
+        :return: Nothing.
+        """
+
+        _logger.error("Loading XMLRPCServer")
+        print "Loading XMLRPCServer"
+        self.xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8000)
+
+        _logger.error("Loading TriblerSessionService")
+        print "Loading TriblerSessionService"
+        self.tribler = TriblerSession(self.xmlrpc)
+        self.tribler.start_session()
+
+        # Wait for dispersy to initialize
+        print "Waiting for Dispersy to initialize"
+        while not self.tribler.is_running():
+            time.sleep(0.1)
+        print "Dispersy is initialized!"
+
+        # Disable ChannelManager
+        #_logger.error("Loading ChannelManager")
+        #self.cm = ChannelManager.getInstance(self.tribler.get_session(), self.xmlrpc)
+
+        _logger.error("Loading TorrentManager")
+        print "Loading TorrentManager"
+        self.tm = TorrentManager.getInstance(self.tribler.get_session(), self.xmlrpc)
+
+        _logger.error("Loading DownloadManager")
+        print "Loading DownloadManager"
+        self.dm = DownloadManager.getInstance(self.tribler.get_session(), self.xmlrpc)
+
+        _logger.error("Loading ConfigurationManager")
+        print "Loading ConfigurationManager"
+        # Load this last because it sets settings in other managers
+        self.sm = SettingsManager.getInstance(self.tribler.get_session(), self.xmlrpc)
+
+        _logger.error("Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port))
+        print "Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port)
+        self.xmlrpc.start_server()
+
+        # TODO: test streaming:
+        tdef = TorrentDef.load_from_url(URL)
+        if tdef is None:
+            raise TypeError('Torrent could not be loaded from ' + URL + '. Check if you\'ve got an internet connection.')
+        self.info_hash = tdef.get_infohash()
+        #self.tribler.get_session().set_install_dir(FILES_DIR + u'/lib/python2.7/site-packages')
+        self.dm.add_torrent(hexlify(self.info_hash), tdef.get_name())
+
+        Clock.schedule_interval(self.poller, 1.0)
+        # TODO: end test streaming.
+
+    def stop(self):
+        self.tribler.stop_session()
+        self.xmlrpc = None
+
+    def keep_running(self):
+        return self.tribler.is_running()
+
+    def poller(self, dt):
+        if self.started_streaming:
+            return
+
+        downloads = self.tribler.get_session().get_downloads()
+        if len(downloads) == 0:
+            print "Download not started yet."
+            return
+        download = downloads[0]
+        print "Download progress so far: " + str(download.progress)
+
+        download_progress = self.dm.get_progress(self.info_hash)
+        if download_progress["vod_playable"]:
+            self.started_streaming = True
+            self.start_external_android_player(self.vod_uri)
+        elif download_progress["status"] == 3 and not self.in_vod_mode:
+            self.in_vod_mode = True
+            self.vod_uri = self.dm.start_vod(self.info_hash)
+            if self.vod_uri is False:
+                raise TypeError('Could not start VOD download mode.')
+
+    def start_external_android_player(self):
+        self.text_input.text = self.vod_uri # TODO: remove me, this is only for testing
+
+        # Start the action chooser intent:
+        intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(Uri.parse(self.vod_uri), "video/*")
+        PythonActivity.mActivity.startActivity(Intent.createChooser(intent, "Complete action using"))
+
+    def on_start(self):
+        pass
+
+    def on_stop(self):
+        pass
+
+    def on_pause(self):
+        pass
+
+    def on_resume(self):
+        pass
+
+if __name__ == '__main__':
+    print "STARTING TRIBLER PLAY"
+    tribler_play = TriblerPlay()
+    tribler_play.setup()
+    tribler_play.run()
+
+    # Needed when using the twisted XMLRPC server
+    while tribler_play.keep_running():
+        time.sleep(1)

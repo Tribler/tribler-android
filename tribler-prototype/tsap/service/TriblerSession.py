@@ -30,7 +30,6 @@ from Tribler.dispersy.dispersy import Dispersy
 from Tribler.Core.Utilities.twisted_thread import reactor, stop_reactor
 from Tribler.Main.globals import DefaultDownloadStartupConfig
 
-
 from BaseManager import BaseManager
 
 class TriblerSession(BaseManager):
@@ -151,12 +150,8 @@ class TriblerSession(BaseManager):
         self._sconfig.set_install_dir(install_dir)
         # TODO: ^End of temporary test.
 
-        # Configure the session config:
-        self._sconfig.set_libtorrent(True)
-        self._sconfig.set_libtorrent(True)
         # Disable unwanted dependencies:
-        self._sconfig.set_torrent_store(False)
-        self._sconfig.set_videoplayer(False)
+        self._sconfig.set_torrent_store(False) # TODO: temporarily disabled till leveldb/plyvel works
         self._sconfig.set_torrent_checking(False)
         self._sconfig.set_multicast_local_peer_discovery(False)
         self._sconfig.set_mainline_dht(False)
@@ -181,7 +176,8 @@ class TriblerSession(BaseManager):
         Load the dispersy communities. This function must be run on the Twisted reactor thread.
         :return: Nothing.
         """
-        integrate_with_tribler = True
+        # FIXME: temp disabled
+        """integrate_with_tribler = True
         comm_args = {'integrate_with_tribler': integrate_with_tribler}
 
         from Tribler.community.search.community import SearchCommunity
@@ -217,7 +213,7 @@ class TriblerSession(BaseManager):
         #                                       kargs=comm_args)
         #_logger.debug("Currently loaded dispersy communities: %s" % comm)
         #comm = self._dispersy.define_auto_load(PreviewChannelCommunity, self._session.dispersy_member, kargs=comm_args)
-        #_logger.debug("Currently loaded dispersy communities: %s" % comm)
+        #_logger.debug("Currently loaded dispersy communities: %s" % comm)"""
 
         self._running = True
 

@@ -32,7 +32,7 @@ class BaseManager(object):
     def getInstance(cls, *args, **kw):
         if cls.__single is None:
             cls.__single = cls(*args, **kw)
-        return BaseManager.__single
+        return cls.__single #return BaseManager.__single
 
     @classmethod
     def delInstance(cls, *args, **kw):

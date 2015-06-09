@@ -10,7 +10,8 @@ package.name = tsap
 package.domain = org.tribler
 
 # (str) Source code where the main.py live
-source.dir = ./tsap/service
+source.dir = ./tsap
+#./tsap/service
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas

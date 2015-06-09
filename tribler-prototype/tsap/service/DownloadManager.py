@@ -121,18 +121,21 @@ class DownloadManager(BaseManager):
                 defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
                 dscfg = defaultDLConfig.copy()
 
+                print "STARTING DOWNLOAD!"
                 dl = self._session.start_download(tdef, dscfg)
                 dl.set_state_callback(self._update_dl_state, delay=1)
 
                 self._session.checkpoint()
 
             except Exception, e:
+                print "DOWNLOAD EXCEPTION.. %s", e.args
                 _logger.error("Error adding torrent (infohash=%s,name=%s) (%s)" % (infohash, name, e.args))
                 return False
 
             return True
 
         self._session.lm.rawserver.add_task(add_torrent_callback, delay=1)
+        print "ADDING TORRENT"
         return True
 
     def _update_dl_state(self, ds):
@@ -478,11 +481,11 @@ class DownloadManager(BaseManager):
                                'status_string': dlstatus_strings[dstate.get_status()],
                                })
             if vod:
-                dlinfo.update({'vod_eta': dstate.get_vod_playable_after(),
+                dlinfo.update({'vod_eta': False if dstate.stats is None else dstate.stats['vod_playable'], #dstate.get_vod_playable_after()
                                'vod_prebuffer_progress': dstate.get_vod_prebuffering_progress(),
                                'vod_consec_prebuffer_progress': dstate.get_vod_prebuffering_progress_consec(),
                                'vod': dstate.is_vod(),
-                               'vod_playable': dstate.get_vod_playable(),
+                               'vod_playable': float(2 ** 31) if dstate.stats is None else dstate.stats['vod_playable_after'], #dstate.get_vod_playable()
                                })
                 
             return dlinfo

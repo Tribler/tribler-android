@@ -212,7 +212,7 @@ class TriblerPlay(App):
         pass
 
     def on_pause(self):
-        pass
+        return True # Needed to start external VLC
 
     def on_resume(self):
         pass

@@ -208,6 +208,10 @@ class DownloadManager(BaseManager):
         :return: Progress of a torrent or False on failure.
         """
         with self._dllock:
+            print "-----------------------------------------CHECKING KEYS. "
+            for key, value in self._downloads:
+                print "-----------------------------------------CONTAINS KEY: " + str(key)
+            print "-----------------------------------------DONE CHECKING KEYS (should have given at least 1 result). "
             if infohash in self._downloads.keys():
                 return self._downloads[infohash]
             else:

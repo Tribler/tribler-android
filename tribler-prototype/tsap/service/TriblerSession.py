@@ -196,7 +196,7 @@ class TriblerSession(BaseManager):
 
         # load metadata community
         comm = self._dispersy.define_auto_load(MetadataCommunity, self._session.dispersy_member, load=True,
-                                               kargs=comm_args)
+                                               kargs={}) # TODO: used to be kargs=comm_args, but MetadataCommunity uses _integrate_with_tribler (notice lower dash) and even that won't work
         _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
         # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing

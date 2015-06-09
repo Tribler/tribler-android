@@ -100,6 +100,8 @@ class TriblerPlay(App):
     # Called by Kivy
     def build(self):
         self.text_input = TextInput(text='Placeholder')
+        print "----------------------RUNNING TRIBLER SETUP"
+        tribler_play.setup()
         return self.text_input
 
     def setup(self):
@@ -109,39 +111,39 @@ class TriblerPlay(App):
         """
 
         _logger.error("Loading XMLRPCServer")
-        print "Loading XMLRPCServer"
+        print "----------------------Loading XMLRPCServer"
         self.xmlrpc = XMLRPCServer(iface="0.0.0.0", port=8000)
 
         _logger.error("Loading TriblerSessionService")
-        print "Loading TriblerSessionService"
+        print "----------------------Loading TriblerSessionService"
         self.tribler = TriblerSession(self.xmlrpc)
         self.tribler.start_session()
 
         # Wait for dispersy to initialize
-        print "Waiting for Dispersy to initialize"
+        print "----------------------Waiting for Dispersy to initialize"
         while not self.tribler.is_running():
             time.sleep(0.1)
-        print "Dispersy is initialized!"
+        print "----------------------Dispersy is initialized!"
 
         # Disable ChannelManager
         #_logger.error("Loading ChannelManager")
         #self.cm = ChannelManager.getInstance(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Loading TorrentManager")
-        print "Loading TorrentManager"
+        print "----------------------Loading TorrentManager"
         self.tm = TorrentManager.getInstance(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Loading DownloadManager")
-        print "Loading DownloadManager"
+        print "----------------------Loading DownloadManager"
         self.dm = DownloadManager.getInstance(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Loading ConfigurationManager")
-        print "Loading ConfigurationManager"
+        print "----------------------Loading ConfigurationManager"
         # Load this last because it sets settings in other managers
         self.sm = SettingsManager.getInstance(self.tribler.get_session(), self.xmlrpc)
 
         _logger.error("Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port))
-        print "Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port)
+        print "----------------------Now running XMLRPC on http://%s:%s/tribler" % (self.xmlrpc._iface, self.xmlrpc._port)
         self.xmlrpc.start_server()
 
         # TODO: test streaming:
@@ -168,16 +170,18 @@ class TriblerPlay(App):
 
         downloads = self.tribler.get_session().get_downloads()
         if len(downloads) == 0:
-            print "Download not started yet."
+            print "----------------------Download not started yet."
             return
         download = downloads[0]
-        print "Download progress so far: " + str(download.progress)
+        print "----------------------Download progress so far: " + str(download.progress)
 
         download_progress = self.dm.get_progress(self.info_hash)
         if download_progress["vod_playable"]:
+            print "----------------------Download is VOD playable."
             self.started_streaming = True
             self.start_external_android_player(self.vod_uri)
         elif download_progress["status"] == 3 and not self.in_vod_mode:
+            print "----------------------Going into VOD mode."
             self.in_vod_mode = True
             self.vod_uri = self.dm.start_vod(self.info_hash)
             if self.vod_uri is False:
@@ -204,9 +208,8 @@ class TriblerPlay(App):
         pass
 
 if __name__ == '__main__':
-    print "STARTING TRIBLER PLAY"
+    print "----------------------STARTING TRIBLER PLAY"
     tribler_play = TriblerPlay()
-    tribler_play.setup()
     tribler_play.run()
 
     # Needed when using the twisted XMLRPC server

@@ -154,7 +154,7 @@ class TriblerPlay(App):
         #self.tribler.get_session().set_install_dir(FILES_DIR + u'/lib/python2.7/site-packages')
         self.dm.add_torrent(self.info_hash, tdef.get_name())
 
-        Clock.schedule_interval(self.poller, 1.0)
+        Clock.schedule_interval(lambda dt: self.poller(), 3.0)
         # TODO: end test streaming.
 
     def stop(self):
@@ -164,10 +164,20 @@ class TriblerPlay(App):
     def keep_running(self):
         return self.tribler.is_running()
 
-    def poller(self, dt):
+    def poller(self):
         if self.started_streaming:
             return
 
+        # Torrents Collected
+        print("TORRENTSTORE")
+        try:
+            iter = self.tribler.get_session().lm.torrent_store.iteritems()
+            iter.next()
+            print("ITER NEXT!")
+            self.tribler.get_session().lm.torrent_store.flush()
+        except:
+            pass
+            
         downloads = self.tribler.get_session().get_downloads()
         if len(downloads) == 0:
             print "----------------------Download not started yet."

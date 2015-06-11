@@ -111,11 +111,12 @@ public class PythonService extends Service implements Runnable {
 		}
 
 		nativeInitJavaEnv();
-		nativeSetEnv("ANDROID_SDK", Integer.toString(Build.VERSION.SDK_INT));
+		//TODO: Temporary disabled
+		/*nativeSetEnv("ANDROID_SDK", Integer.toString(Build.VERSION.SDK_INT));
 		nativeSetEnv(
 				"ANDROID_DOWNLOAD_DIRECTORY",
 				Environment.getExternalStoragePublicDirectory(
-						Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+						Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());*/
 		setSettings();
 		nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
 				pythonServiceArgument);
@@ -123,10 +124,11 @@ public class PythonService extends Service implements Runnable {
 
 	private void setSettings() {
 		Settings.setup(getApplicationContext());
-		nativeSetEnv("TRIBLER_SETTING_FAMILY_FILTER",
+		//TODO: Temporary disabled
+		/*nativeSetEnv("TRIBLER_SETTING_FAMILY_FILTER",
 				Boolean.toString(Settings.getFamilyFilterOn()));		
 		nativeSetEnv("TRIBLER_SETTING_MAX_DOWNLOAD", Integer.toString(Settings.getMaxDownloadRate()));
-		nativeSetEnv("TRIBLER_SETTING_MAX_UPLOAD", Integer.toString(Settings.getMaxUploadRate()));
+		nativeSetEnv("TRIBLER_SETTING_MAX_UPLOAD", Integer.toString(Settings.getMaxUploadRate()));*/
 	}
 
 	public static void stop() {
@@ -140,6 +142,7 @@ public class PythonService extends Service implements Runnable {
 
 	public static native void nativeInitJavaEnv();
 
-	public static native void nativeSetEnv(String name, String value);
+	//TODO: Temporary disabled
+	//public static native void nativeSetEnv(String name, String value);
 
 }

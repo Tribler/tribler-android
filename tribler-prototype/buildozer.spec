@@ -62,6 +62,7 @@ fullscreen = 0
 
 # (list) Permissions
 android.permissions = INTERNET
+#ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, INTERNET
 
 # (int) Android API to use
 android.api = 19

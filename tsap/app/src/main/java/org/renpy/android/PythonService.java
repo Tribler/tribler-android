@@ -38,6 +38,11 @@ public class PythonService extends Service implements Runnable {
 	}
 
 	@Override
+	public void onCreate() {
+		super.onCreate();
+	}
+
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (pythonThread != null) {
 			Log.v("python service", "service exists, do not start again");
@@ -104,19 +109,31 @@ public class PythonService extends Service implements Runnable {
 		System.load(getFilesDir() + "/lib/python2.7/lib-dynload/unicodedata.so");
 
 		try {
+			System.loadLibrary("ctypes");
+			System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_ctypes.so");
+		} catch(UnsatisfiedLinkError e) {
+		}
+
+		try {
 			System.loadLibrary("sqlite3");
 			System.load(getFilesDir()
 					+ "/lib/python2.7/lib-dynload/_sqlite3.so");
 		} catch (UnsatisfiedLinkError e) {
 		}
 
+		try {
+			System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imaging.so");
+			System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingft.so");
+			System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_imagingmath.so");
+		} catch(UnsatisfiedLinkError e) {
+		}
+
 		nativeInitJavaEnv();
-		//TODO: Temporary disabled
-		/*nativeSetEnv("ANDROID_SDK", Integer.toString(Build.VERSION.SDK_INT));
+		nativeSetEnv("ANDROID_SDK", Integer.toString(Build.VERSION.SDK_INT));
 		nativeSetEnv(
 				"ANDROID_DOWNLOAD_DIRECTORY",
 				Environment.getExternalStoragePublicDirectory(
-						Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());*/
+						Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
 		setSettings();
 		nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
 				pythonServiceArgument);
@@ -124,25 +141,23 @@ public class PythonService extends Service implements Runnable {
 
 	private void setSettings() {
 		Settings.setup(getApplicationContext());
-		//TODO: Temporary disabled
-		/*nativeSetEnv("TRIBLER_SETTING_FAMILY_FILTER",
+		nativeSetEnv("TRIBLER_SETTING_FAMILY_FILTER",
 				Boolean.toString(Settings.getFamilyFilterOn()));		
 		nativeSetEnv("TRIBLER_SETTING_MAX_DOWNLOAD", Integer.toString(Settings.getMaxDownloadRate()));
-		nativeSetEnv("TRIBLER_SETTING_MAX_UPLOAD", Integer.toString(Settings.getMaxUploadRate()));*/
+		nativeSetEnv("TRIBLER_SETTING_MAX_UPLOAD", Integer.toString(Settings.getMaxUploadRate()));
 	}
 
 	public static void stop() {
 		pyService.stopSelf();
 	}
 
-	// Native part (don't remove!)
+	// Native part (don't remove!). This is from the sdl_main library.
 	public static native void nativeStart(String androidPrivate,
 			String androidArgument, String pythonHome, String pythonPath,
 			String pythonServiceArgument);
 
 	public static native void nativeInitJavaEnv();
 
-	//TODO: Temporary disabled
-	//public static native void nativeSetEnv(String name, String value);
+	public static native void nativeSetEnv(String name, String value);
 
 }

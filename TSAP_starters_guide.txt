@@ -8,4 +8,4 @@ cd tribler-prototype
 start the build process, this will also change the tsap directory in the previous directory (it will add the libs and change some source files)
 ./build.sh
 
-we can now work on the app with eclipse by importing existing android code in to the workspace
+we can now work on the app with Android Studio by importing existing android code into the workspace

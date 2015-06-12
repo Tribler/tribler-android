@@ -2,32 +2,35 @@
 // spaces amount
 package org.renpy.android;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.zip.GZIPInputStream;
-
-import org.xeustechnologies.jtar.TarEntry;
-import org.xeustechnologies.jtar.TarInputStream;
+import java.io.*;
 
 import android.app.Activity;
-import android.content.res.AssetManager;
 import android.util.Log;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.File;
+
+import java.util.zip.GZIPInputStream;
+
+import android.content.res.AssetManager;
+
+import org.kamranzafar.jtar.*;
 
 class AssetExtract {
 
 	private AssetManager mAssetManager = null;
+	private Activity mActivity = null;
 
-	public AssetExtract(Activity act) {
+	AssetExtract(Activity act) {
+		mActivity = act;
 		mAssetManager = act.getAssets();
 	}
 
-	@SuppressWarnings("resource")
 	public boolean extractTar(String asset, String target) {
 
 		byte buf[] = new byte[1024 * 1024];
@@ -36,14 +39,10 @@ class AssetExtract {
 		TarInputStream tis = null;
 
 		try {
-			assetStream = mAssetManager.open(asset,
-					AssetManager.ACCESS_STREAMING);
-			tis = new TarInputStream(new BufferedInputStream(
-					new GZIPInputStream(new BufferedInputStream(assetStream,
-							8192)), 8192));
+			assetStream = mAssetManager.open(asset, AssetManager.ACCESS_STREAMING);
+			tis = new TarInputStream(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(assetStream, 8192)), 8192));
 		} catch (IOException e) {
 			Log.e("python", "opening up extract tar", e);
-			closeStreams(tis, assetStream);
 			return false;
 		}
 
@@ -52,13 +51,12 @@ class AssetExtract {
 
 			try {
 				entry = tis.getNextEntry();
-			} catch (java.io.IOException e) {
+			} catch ( java.io.IOException e ) {
 				Log.e("python", "extracting tar", e);
-				closeStreams(tis, assetStream);
 				return false;
 			}
 
-			if (entry == null) {
+			if ( entry == null ) {
 				break;
 			}
 
@@ -67,10 +65,8 @@ class AssetExtract {
 			if (entry.isDirectory()) {
 
 				try {
-					new File(target + "/" + entry.getName()).mkdirs();
-				} catch (SecurityException e) {
-				}
-				;
+					new File(target +"/" + entry.getName()).mkdirs();
+				} catch ( SecurityException e ) { };
 
 				continue;
 			}
@@ -80,14 +76,11 @@ class AssetExtract {
 
 			try {
 				out = new BufferedOutputStream(new FileOutputStream(path), 8192);
-			} catch (FileNotFoundException e) {
-			} catch (SecurityException e) {
-			}
-			;
+			} catch ( FileNotFoundException e ) {
+			} catch ( SecurityException e ) { };
 
-			if (out == null) {
+			if ( out == null ) {
 				Log.e("python", "could not open " + path);
-				closeStreams(tis, assetStream);
 				return false;
 			}
 
@@ -104,26 +97,19 @@ class AssetExtract {
 
 				out.flush();
 				out.close();
-			} catch (java.io.IOException e) {
+			} catch ( java.io.IOException e ) {
 				Log.e("python", "extracting zip", e);
-				closeStreams(tis, assetStream);
 				return false;
 			}
 		}
 
-		closeStreams(tis, assetStream);
-
-		return true;
-	}
-
-	private void closeStreams(TarInputStream tis, InputStream assetStream) {
 		try {
-			if (tis != null)
-				tis.close();
-			if (assetStream != null)
-				assetStream.close();
+			tis.close();
+			assetStream.close();
 		} catch (IOException e) {
 			// pass
 		}
+
+		return true;
 	}
 }

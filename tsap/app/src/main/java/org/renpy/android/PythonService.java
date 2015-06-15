@@ -55,7 +55,6 @@ public class PythonService extends Service implements Runnable {
 		// service code is located in current directory (not in /service
 		// anymore!)
 		androidArgument = extras.getString("androidArgument");
-		Log.d("ok", "Androidargument = " + androidArgument);
 		pythonHome = extras.getString("pythonHome");
 		pythonPath = extras.getString("pythonPath");
 		pythonServiceArgument = extras.getString("pythonServiceArgument");

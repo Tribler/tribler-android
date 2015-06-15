@@ -167,17 +167,7 @@ class TriblerPlay(App):
     def poller(self):
         if self.started_streaming:
             return
-
-        # Torrents Collected
-        print("TORRENTSTORE")
-        try:
-            iter = self.tribler.get_session().lm.torrent_store.iteritems()
-            iter.next()
-            print("ITER NEXT!")
-            self.tribler.get_session().lm.torrent_store.flush()
-        except:
-            pass
-            
+          
         downloads = self.tribler.get_session().get_downloads()
         if len(downloads) == 0:
             print "----------------------Download not started yet."

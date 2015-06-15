@@ -179,7 +179,7 @@ class TorrentManager(BaseManager):
 
 
     @call_on_reactor_thread
-    def _search_remote_callback(self, search_results):
+    def _search_remote_callback(self, subject, change_type, object_id, search_results):
         """
         Callback that is called by Dispersy on incoming Torrent search results.
         :param search_results: A dictionary with keywords to which the results belong,

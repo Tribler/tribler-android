@@ -150,7 +150,7 @@ class TriblerSession(BaseManager):
         # TODO: ^End of temporary test.
 
         # Disable unwanted dependencies:
-        self._sconfig.set_torrent_store(True) # TODO: temporarily disabled till leveldb/plyvel works
+        self._sconfig.set_torrent_store(True)
         self._sconfig.set_torrent_checking(True)
         self._sconfig.set_multicast_local_peer_discovery(False)
         self._sconfig.set_mainline_dht(True)

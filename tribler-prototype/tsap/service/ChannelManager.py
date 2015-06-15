@@ -147,7 +147,7 @@ class ChannelManager(BaseManager):
 
         return nr_requests_made
 
-    def _search_remote_callback(self, results):
+    def _search_remote_callback(self, subject, change_type, object_id, results):
         """
         Callback that is called by Dispersy on incoming search results.
         :param results: Dictionary with keywords and list of torrent results.

@@ -5,6 +5,7 @@
 import threading
 import binascii
 from time import time
+import sys
 
 # Init logger
 import logging
@@ -202,7 +203,7 @@ class TorrentManager(BaseManager):
                 infohash = result[0]
                 name = result[1]
                 length = result[2]
-                category = result[4]
+                category = result[4][0] #FIXME
                 num_seeders = result[6]
                 num_leechers = result[7]
                 remoteHit = RemoteTorrent(-1, infohash, name, length, category, u'good', num_seeders, num_leechers, set([candidate]))
@@ -232,7 +233,8 @@ class TorrentManager(BaseManager):
                 else:
                     # Add to result list.
                     self._add_remote_result(remoteHit)
-            except:
+            except Exception, e:
+                _logger.info("Ignored one result in results from %s because of the following exception: %s" % (keywords, e))
                 pass
 
         return

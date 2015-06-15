@@ -76,7 +76,7 @@ public class XMLRPCConnection implements Poller.IPollListener {
 		} catch (XMLRPCException e) {
 			notifyConnectionLost();
 			Log.i("XMLRPCConnection",
-					"Connection Lost. Trying to re-establish connection.");
+					"Connection Lost. Trying to re-establish connection. Error: " + e.getMessage() + " Caused by: " + e.getCause());
 			mPoller.start();
 			mConnected = false;
 			return e;

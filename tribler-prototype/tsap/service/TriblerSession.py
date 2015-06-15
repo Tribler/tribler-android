@@ -130,8 +130,7 @@ class TriblerSession(BaseManager):
             defaultDLConfig = DefaultDownloadStartupConfig.getInstance()
         if not defaultDLConfig.get_dest_dir():
             defaultDLConfig.set_dest_dir(os.environ['TRIBLER_DOWNLOAD_DIR'])
-            #TODO: I think this can be deleted (that's what happened in Tribler) but not sure:
-            #self._session.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR'], ".%s" % STATEDIR_TORRENTCOLL_DIR))
+            self._sconfig.set_torrent_collecting_dir(os.path.join(os.environ['TRIBLER_DOWNLOAD_DIR']))
 
         # Create download directory:
         if not os.path.isdir(defaultDLConfig.get_dest_dir()):

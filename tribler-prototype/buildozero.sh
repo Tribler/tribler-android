@@ -26,6 +26,11 @@ rm "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak"
 # Run buildozer to generate a distribution:
 buildozer android debug
 
+# Undo our earlier change:
+mv "${PY4APATH}/src/jni/sdl_main/sdl_main.c" "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak"
+sed s/PythonService_nativeSetEnv/SDLSurfaceView_nativeSetEnv/ "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak" > "${PY4APATH}/src/jni/sdl_main/sdl_main.c"
+rm "${PY4APATH}/src/jni/sdl_main/sdl_main.c.bak"
+
 echo "----------Buildozer is done. Taking over.----------"
 
 # Copy the .so files to the libs folder in tsap:

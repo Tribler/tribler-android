@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "play.tribler.org.tribler_play"
+        applicationId "org.tribler.tsap"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

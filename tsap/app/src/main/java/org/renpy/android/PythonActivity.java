@@ -33,9 +33,12 @@ public class PythonActivity extends Activity implements Runnable {
 	// Intent used to start the PythonService (needed for stopping the service)
 	private Intent serviceIntent = null;
 
+	public static PythonActivity mActivity = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.mActivity = this;
 		externalStorage = new File(Environment.getExternalStorageDirectory(),
 				"." + getPackageName());
 
@@ -44,13 +47,15 @@ public class PythonActivity extends Activity implements Runnable {
 		// part of that intent to determine the file to launch. We
 		// also use the android.txt file to determine the orientation.
 		//
+
+
 		// Otherwise, we use the public data, if we have it, or the
 		// private data if we do not.
 		if (getIntent() != null && getIntent().getAction() != null
 				&& getIntent().getAction().equals("org.renpy.LAUNCH")) {
 			mPath = new File(getIntent().getData().getSchemeSpecificPart());
 		} else if (getString(R.string.public_version) != null) {
-			mPath = externalStorage;
+			mPath = getFilesDir(); //externalStorage; #FIXME
 		} else {
 			mPath = getFilesDir();
 		}
@@ -106,8 +111,10 @@ public class PythonActivity extends Activity implements Runnable {
 
 		// If no version, no unpacking is necessary.
 		if (data_version == null) {
+			Log.v(TAG, "Could not extract any " + resource + " resources.");
 			return;
 		}
+		Log.v(TAG, "Extracting " + resource + " resources.");
 
 		// Check the current disk version, if any.
 		String filesDir = target.getAbsolutePath();

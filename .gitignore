@@ -26,7 +26,7 @@ bin/
 gen/
 
 # Gradle files
-.gradle/
+.gradle
 build/
 
 # Local configuration file (sdk path, etc)
@@ -51,6 +51,9 @@ local.properties
 .settings/
 .loadpath
 tests/.classpath
+
+# Android Studio
+*.iml
 
 # javadoc
 tsap/doc/*

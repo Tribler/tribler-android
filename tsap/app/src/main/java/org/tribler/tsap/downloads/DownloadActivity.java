@@ -231,7 +231,7 @@ public class DownloadActivity extends Activity implements IPollListener {
 	 */
 	public static void onStreamPressed(Torrent torrent, Activity activity) {
 		PlayButtonListener onClickListener = new PlayButtonListener(torrent,
-				activity, false);
+				activity, true);
 		onClickListener.onClick();
 	}
 

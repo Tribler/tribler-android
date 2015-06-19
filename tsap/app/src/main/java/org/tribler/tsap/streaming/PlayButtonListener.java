@@ -144,7 +144,7 @@ public class PlayButtonListener implements IPollListener {
 	 * Updates the dialog message to show the VOD ETA
 	 */
 	private void updateVODMessage() {
-		pDialog.setMessage("Video starts playing in about "
+		pDialog.setMessage("Video starts playing in "
 				+ Utility.convertSecondsToString(mDownload.getVOD_ETA())
 				+ " ("
 				+ Utility.convertBytesPerSecToString(mDownload

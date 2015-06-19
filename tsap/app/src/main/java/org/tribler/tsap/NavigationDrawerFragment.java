@@ -131,10 +131,10 @@ public class NavigationDrawerFragment extends Fragment {
 				});
 		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar()
 				.getThemedContext(), R.layout.navigation_drawer_item,
-				android.R.id.text1, new String[] {
-						getString(R.string.title_section_home),
-						getString(R.string.title_section_downloads),
-						getString(R.string.title_section_settings) }));
+				android.R.id.text1, new String[]{
+				getString(R.string.title_section_home),
+				getString(R.string.title_section_downloads),
+				getString(R.string.title_section_settings)}));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
 	}

@@ -388,9 +388,9 @@ class DownloadManager(BaseManager):
         pass
 
     def _get_torrent_from_infohash(self, infohash):
-        dict = self._torrent_db.getTorrent(infohash, keys=['C.torrent_id', 'infohash', 'swift_hash', 'swift_torrent_hash', 'name', 'torrent_file_name', 'length', 'category_id', 'status_id', 'num_seeders', 'num_leechers'])
+        dict = self._torrent_db.getTorrent(infohash, keys=['C.torrent_id', 'infohash', 'name', 'length', 'category', 'status', 'num_seeders', 'num_leechers'])
         if dict:
-            t = Torrent(dict['C.torrent_id'], dict['infohash'], dict['swift_hash'], dict['swift_torrent_hash'], dict['name'], dict['torrent_file_name'], dict['length'], dict['category_id'], dict['status_id'], dict['num_seeders'], dict['num_leechers'], None)
+            t = Torrent(dict['C.torrent_id'], dict['infohash'], dict['name'], dict['length'], dict['category'], dict['status'], dict['num_seeders'], dict['num_leechers'], None)
             t.torrent_db = self._torrent_db
             t.channelcast_db = self._channelcast_db
             # TODO: ENABLE metadata_db WHEN METADATA COMMUNITY IS ENABLED

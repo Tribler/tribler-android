@@ -122,9 +122,8 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 		};
 	}
 
-
 	/**
-	 * Stops listening the the connection and stops the poller
+	 * Stops listening to the connection and stops the poller
 	 */
 	@Override
 	public void onPause() {
@@ -134,7 +133,7 @@ public class ThumbGridFragment extends Fragment implements OnQueryTextListener,
 	}
 
 	/**
-	 * Starts listening the the connection
+	 * Starts listening to the connection
 	 */
 	@Override
 	public void onResume() {

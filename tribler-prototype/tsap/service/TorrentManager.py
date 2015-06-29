@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 # Tribler defs
 from Tribler.Core.simpledefs import NTFY_TORRENTS, NTFY_MYPREFERENCES, \
-    NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
+    NTFY_VOTECAST, NTFY_CHANNELCAST, \
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, SIGNAL_SEARCH_COMMUNITY, SIGNAL_ON_SEARCH_RESULTS
 
 # DB Tuples
@@ -36,7 +36,6 @@ class TorrentManager(BaseManager):
     _torrent_db = None
     _channelcast_db = None
     _votecast_db = None
-    _metadata_db = None
 
     _keywords = []
     _results = []
@@ -52,7 +51,6 @@ class TorrentManager(BaseManager):
             self._remote_lock = threading.Lock()
 
             self._torrent_db = self._session.open_dbhandler(NTFY_TORRENTS)
-            self._metadata_db = self._session.open_dbhandler(NTFY_METADATA)
             self._channelcast_db = self._session.open_dbhandler(NTFY_CHANNELCAST)
             self._votecast_db = self._session.open_dbhandler(NTFY_VOTECAST)
 
@@ -117,7 +115,6 @@ class TorrentManager(BaseManager):
 
                     t.torrent_db = self._torrent_db
                     t.channelcast_db = self._channelcast_db
-                    #t.metadata_db = self._metadata_db
                     t.assignRelevance(a[-11])
                     return t
 
@@ -324,22 +321,7 @@ class TorrentManager(BaseManager):
                 pass
 
         return torrents
-
-    def get_torrent_metadata(self, torrent):
-        message_list = self._metadata_db.getMetadataMessageList(
-            torrent.infohash, torrent.swift_hash,
-            columns=("message_id",))
-        if not message_list:
-            return []
-
-        metadata_mod_list = []
-        for message_id, in message_list:
-            data_list = self._metadata_db.getMetadataData(message_id)
-            for key, value in data_list:
-                metadata_mod_list.append(MetadataModification(torrent, message_id, key, value))
-
-        return metadata_mod_list
-
+        
     def _prepare_torrent(self, tr):
         """
         Convert a Torrent object to a Torrent dictionary.
@@ -368,7 +350,6 @@ class TorrentManager(BaseManager):
             self.misc_db = None
             self.torrent_db = None
             self.channelcast_db = None
-            self.metadata_db = None
 
             self.relevance_score = None
             self.query_candidates = None

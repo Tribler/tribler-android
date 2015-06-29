@@ -16,7 +16,7 @@ from Tribler.Main.globals import DefaultDownloadStartupConfig
 
 # Tribler defs
 from Tribler.Core.simpledefs import NTFY_TORRENTS, NTFY_MYPREFERENCES, \
-    NTFY_VOTECAST, NTFY_CHANNELCAST, NTFY_METADATA, \
+    NTFY_VOTECAST, NTFY_CHANNELCAST, \
     DLSTATUS_METADATA, DLSTATUS_WAITING4HASHCHECK, dlstatus_strings
 
 # DB Tuples
@@ -144,7 +144,7 @@ class DownloadManager(BaseManager):
 
             return True
 
-        self._session.lm.rawserver.add_task(add_torrent_callback, delay=1)
+        self._session.lm.threadpool.add_task(add_torrent_callback, delay=1)
         return True
 
     def _update_dl_state(self, ds):
@@ -198,7 +198,7 @@ class DownloadManager(BaseManager):
                 _logger.error("Couldn't remove torrent with infohash %s (%s)" % (infohash, e.args))
                 return False
 
-        self._session.lm.rawserver.add_task(remove_torrent_callback, delay=1)
+        self._session.lm.threadpool.add_task(remove_torrent_callback, delay=1)
         return True
 
     def get_progress(self, infohash):
@@ -393,12 +393,9 @@ class DownloadManager(BaseManager):
             t = Torrent(dict['C.torrent_id'], dict['infohash'], dict['name'], dict['length'], dict['category'], dict['status'], dict['num_seeders'], dict['num_leechers'], None)
             t.torrent_db = self._torrent_db
             t.channelcast_db = self._channelcast_db
-            # TODO: ENABLE metadata_db WHEN METADATA COMMUNITY IS ENABLED
-            t.metadata_db = None  #self._metadata_db
 
             # prefetching channel, metadata
             _ = t.channel
-            _ = t.metadata
             return t
 
     def launch_vlc(self, infohash):

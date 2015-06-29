@@ -6,6 +6,10 @@ Tribler Play is an application that runs the [Tribler](https://github.com/trible
 In case you want a quick .apk to install you have to download the latest build from the Tribler CI server (private access). All over HTTP for easy intercept.  
 
 ## How to build
+First clone Tribler Play:  
+```bash
+git clone git@github.com:Darsestheus/tribler-play.git  
+```
 In order to build Tribler Play you will need to package the Python code including its libraries for Android. This can be done by first installing buildozer:  
 ```bash
 pip install buildozer  

@@ -147,6 +147,7 @@ class TriblerSession(BaseManager):
         install_dir = files_dir + u'/lib/python2.7/site-packages'
         _logger.info("Set tribler_install_dir to %s" % install_dir)
         self._sconfig.set_install_dir(install_dir)
+        self._sconfig.set_state_dir(files_dir + '.Tribler')
         # TODO: ^End of temporary test.
 
         # Disable unwanted dependencies:

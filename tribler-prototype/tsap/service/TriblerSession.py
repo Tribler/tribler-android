@@ -153,9 +153,10 @@ class TriblerSession(BaseManager):
         # Disable unwanted dependencies:
         self._sconfig.set_torrent_store(True)
         self._sconfig.set_torrent_checking(True)
-        self._sconfig.set_multicast_local_peer_discovery(False)
+        self._sconfig.set_multicast_local_peer_discovery(True)
         self._sconfig.set_mainline_dht(True)
         self._sconfig.set_dht_torrent_collecting(True)
+        self._sconfig.set_enable_channel_search(False)
         self._sconfig.set_torrent_collecting_max_torrents(5000)
 
         _logger.info("Starting Tribler session..")
@@ -180,24 +181,12 @@ class TriblerSession(BaseManager):
         comm_args = {'integrate_with_tribler': integrate_with_tribler}
 
         from Tribler.community.search.community import SearchCommunity
-        from Tribler.community.allchannel.community import AllChannelCommunity
-        from Tribler.community.channel.community import ChannelCommunity
-        from Tribler.community.channel.preview import PreviewChannelCommunity
-        from Tribler.community.metadata.community import MetadataCommunity
 
         _logger.info("Preparing to load dispersy communities...")
 
         comm = self._dispersy.define_auto_load(SearchCommunity, self._session.dispersy_member, load=True,
                                                kargs=comm_args)
         _logger.debug("Currently loaded dispersy communities: %s" % comm)
-        #comm = self._dispersy.define_auto_load(AllChannelCommunity, self._session.dispersy_member, load=True,
-        #                                       kargs=comm_args)
-        #_logger.debug("Currently loaded dispersy communities: %s" % comm)
-
-        # load metadata community
-        #comm = self._dispersy.define_auto_load(MetadataCommunity, self._session.dispersy_member, load=True,
-         #                                      kargs=comm_args) # TODO: used to be kargs=comm_args, but MetadataCommunity uses _integrate_with_tribler (notice lower dash) and even that won't work
-        _logger.info("@@@@@@@@@@ Loaded dispersy communities: %s" % comm)
 
         # 17/07/13 Boudewijn: the missing-member message send by the BarterCommunity on the swift port is crashing
         # 6.1 clients.  We will disable the BarterCommunity for version 6.2, giving people some time to upgrade

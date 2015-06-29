@@ -3,10 +3,10 @@
 Tribler Play is an application that runs the [Tribler](https://github.com/tribler/tribler) core on Android using [Python for Android](https://github.com/kivy/python-for-android/), with a native Android Java GUI. You can search for torrents using the decentralized [Dispersy](http://github/tribler/dispersy) network, and stream media files over BitTorrent using the built-in [VLC for Android](http://www.videolan.org/vlc/download-android.html) player.
 
 ## How to install
-In case you want a quick .apk to install you have to download the latest build from the Tribler CI server. All over HTTP for easy intercept.  
+In case you want a quick .apk to install you have to download the latest build from the Tribler CI server (private access). All over HTTP for easy intercept.  
 
 ## How to build
-In order to build Tribler Play you will need to package the Python code including its libraries for Android. This can be done by using buildozer:  
+In order to build Tribler Play you will need to package the Python code including its libraries for Android. This can be done by first installing buildozer:  
 ```bash
 pip install buildozer  
 ```
@@ -42,7 +42,7 @@ export APP_ANDROID_P4A_DIR="/home/youruser/Android/python-for-android/"
 ```
 
 ### Buildozer hack to keep your build directory
-After every succesful buildozer build, buildozer will delete your build directory in python-for-android (P4A). This is not really a problem, except when you add or update Python dependencies, because that would require buildozer to rebuild from scratch again to include your changes. Since the build process takes quite a long time, if might be useful to prevent buildozer from throwing its build folder away after a succesful build. Open the following file:
+After every successful buildozer build, buildozer will delete your build directory in python-for-android (P4A). This is not really a problem, except when you add or update Python dependencies, because that would require buildozer to rebuild from scratch again to include your changes. Since the build process takes quite a long time, if might be useful to prevent buildozer from throwing its build folder away after a successful build. Open the following file:
 ```bash
 sudo vim /usr/local/lib/python2.7/dist-packages/buildozer-0.28dev-py2.7.egg/buildozer/targets/android.py
 ```

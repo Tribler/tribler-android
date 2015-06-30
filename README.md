@@ -1,4 +1,4 @@
-# Tribler Play
+# Tribler Android - Beta Port
 
 Tribler Play is an application that runs the [Tribler](https://github.com/tribler/tribler) core on Android using [Python for Android](https://github.com/kivy/python-for-android/), with a native Android Java GUI. You can search for torrents using the decentralized [Dispersy](http://github/tribler/dispersy) network, and stream media files over BitTorrent using the built-in [VLC for Android](http://www.videolan.org/vlc/download-android.html) player.
 
